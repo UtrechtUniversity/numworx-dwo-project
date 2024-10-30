@@ -92,7 +92,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanelProperties;
 import fi.dwo.dwojapplet.gui.action.GuiAction;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
-import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2.CreateVariantAction;
+import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2.VariantListener;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.KoppelPanel;
@@ -117,6 +117,25 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 public class LeerdomeinEditPanel2 extends JPanel
 		implements TreeSelectionListener, ExportPanel, WindowListener, ItemListener {
 	
+	public class VariantListener implements ItemListener {
+
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				DomStudentModelVariant v = (DomStudentModelVariant) e.getItem();
+				NodeLeaf leaf = (NodeLeaf) ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject();
+				leaf.setVariant(v);
+				if (!editable) {
+					setDescription(leaf);
+					validate();
+					repaint();
+				}
+			}
+
+		}
+
+	}
+
 	@SuppressWarnings("serial")
 	class CreateVariantAction extends AbstractAction {
 		CreateVariantAction() {
@@ -129,7 +148,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			panel.add(new JLabel("Variant"));
 			JTextField name = new JTextField(); name.setColumns(10);
 			panel.add(name);
-			int r = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, panel, toString(), JOptionPane.OK_CANCEL_OPTION);
+			int r = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, panel, toString(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 			if (r == JOptionPane.OK_OPTION && !name.getText().trim().isEmpty()) {
 				LOG.info("selected " + name.getText());
 				DomStudentModelVariant n = new DomStudentModelVariant(name.getText().trim());
@@ -137,26 +156,20 @@ public class LeerdomeinEditPanel2 extends JPanel
 				NodeLeaf leaf = (NodeLeaf) ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject();
 				if (leaf.getVariants().add(n)) {
 					if (model.getSize() == 0) model.addElement(new DomStudentModelVariant());
-					model.addElement(n);					
+					model.addElement(n);
+					leaf.setVariant(model.getElementAt(0));
 				};
 			}
 
 		}
-
-		
-		
-		
 		
 		public String toString() {
 			return getValue(NAME).toString();
 		}
 	}
 
-
-
-
 	public static final Integer DEFAULT_NODE_SIZE = 24;
-  static final String WISKOPDR_SIG = "H4sIAAAAAA";
+    static final String WISKOPDR_SIG = "H4sIAAAAAA";
 	static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
 
 	static class VoorkennisAction extends AbstractAction {
@@ -1027,6 +1040,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 			}
 		});
+		
+		variantBox.addItemListener(new VariantListener());
 	}
 	
     private void packWindow() {
@@ -1369,10 +1384,12 @@ public class LeerdomeinEditPanel2 extends JPanel
 			nodeSizeChoice.setSelectedItem(ns);
 		    MutableComboBoxModel<DomStudentModelVariant> m = new DefaultComboBoxModel<DomStudentModelVariant>();
 			if (info.getVariants() != null) { 
-				m.addElement(new DomStudentModelVariant());
+				((NodeLeaf) u).getVariants().add(new DomStudentModelVariant()); // only if not there already
 				info.getVariants().forEach(m::addElement);
+				
 			} 
 			variantBox.setModel(m);
+			variantBox.setSelectedItem(((NodeLeaf) u).getVariant());
 			variantBox.setVisible(true);
 			
 		} else {
@@ -1381,10 +1398,73 @@ public class LeerdomeinEditPanel2 extends JPanel
 		}
 	}
 
+	private String updateDescription(String description, Map<String,Boolean> layers) {
+		Object o = StringCodeObject.decodeStringToObject(description,wo);
+		Map m = (Map)o;
+		Object oo = m.get("instellingen");
+		if (oo instanceof String) oo = StringCodeObject.decodeStringToObject(oo.toString(),wo);
+		Map mm = (Map) oo;
+		String[] layerNames = (String[]) mm.get("layerNames");
+		if (layerNames != null) { 
+			boolean[] layerVisible = (boolean[]) mm.get("layerVisible");
+			for(Map.Entry<String, Boolean> entry: layers.entrySet()) 
+				setLayer(entry.getKey(), entry.getValue(), layerNames, layerVisible);
+			oo = StringCodeObject.encodeObjectToString(mm);
+			m.put("instellingen", oo);
+			description = StringCodeObject.encodeObjectToString(o);
+		}
+		return description;
+	}
+	
+	private void setLayer(String key, Boolean value, String[] names, boolean[] values) {
+		for (int i = 0; i < names.length; i++) {
+			if (key.equals(names[i]))
+				values[i] = value;
+		}
+	}
+	
+	ClassLoader wo;
+	{
+		try {
+			wo = WiskOpdrCache.getInstance().getClassLoader();
+		} catch(Throwable oops) {}
+	}
+	
+	private Map<String,Boolean> getLayers(String description) {
+		Object o = StringCodeObject.decodeStringToObject(description, wo);
+		Map m = (Map)o;
+		Object oo = m.get("instellingen");
+		if (oo instanceof String) oo = StringCodeObject.decodeStringToObject(oo.toString(), wo);
+		m = (Map) oo;
+		Map<String,Boolean> result = new TreeMap<>();
+		String[] layerNames = (String[]) m.get("layerNames");
+		if (layerNames != null) {
+			boolean[] layerVisible = (boolean[]) m.get("layerVisible");
+			for(int i = 0; i < layerNames.length; i++) {
+				result.put((String) layerNames[i], layerVisible[i]);
+			}
+		}
+		return result;
+	}
+	
+	
+	
+	
 	void setDescription(Object u) {
 		if (u instanceof Node) {
 			String description = ((Node) u).getDescription();
 			if (description == null || description.startsWith(WISKOPDR_SIG) || description.isEmpty()) {
+
+				// wat staat er 
+				if (u instanceof NodeLeaf) {
+					NodeLeaf nl = (NodeLeaf) u;
+					DomStudentModelVariant v = nl.getVariant();
+					if (v != null) {
+						description = updateDescription(description, v.getLayers());
+					}					
+				}
+				
+				
 				if (editable) {
 					Locale locale = getLocale();
 					wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description, locale, container.getWidth(),
@@ -1459,6 +1539,12 @@ public class LeerdomeinEditPanel2 extends JPanel
 				n.setTitle(string);
 				model.nodeChanged(node);
 				String description = wiskOpdrEditPanel == null ? n.getDescription() : wiskOpdrEditPanel.getText();
+				if (u instanceof NodeLeaf) {
+					DomStudentModelVariant v = ((NodeLeaf) u).getVariant();
+					if (v != null) {
+						v.setLayers(getLayers(description));
+					}
+				}
 				n.setDescription(description);
 				n.setDescriptionAsJSON(toJSON(description)); // could be lazy...
 			}
@@ -1471,6 +1557,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 				n.setLearn((Double) learn.getValue());
 				n.setSlip((Double) slip.getValue());
 				n.setNodeSize((Integer) nodeSizeChoice.getSelectedItem());
+				n.setVariant(n.getVariant());
 			}
 		}
 	}

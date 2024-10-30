@@ -32,7 +32,7 @@ public class WrappedSet extends AbstractSet<DomStudentModelVariant> implements S
 		for(DomStudentModelVariant e: c) {
 			result |= add(e);
 		}
-		return false;
+		return result;
 	}
 
 	@Override
@@ -87,6 +87,12 @@ public class WrappedSet extends AbstractSet<DomStudentModelVariant> implements S
 	public SortedSet<DomStudentModelVariant> tailSet(DomStudentModelVariant fromElement) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public synchronized void replace(DomStudentModelVariant variant) {
+		wrap.remove(variant);
+		add(variant);
+		
 	}
 
 	
