@@ -108,7 +108,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<warSourceDirectory>war</warSourceDirectory>
-					<warSourceIncludes>DWOplayer.jsp,KeyboardGWT.css,DWOplayer.css,${runTarget},GeoGebra.html,MCSquared.jsp,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml</warSourceIncludes>
+					<warSourceIncludes>DWOplayer.jsp,KeyboardGWT.css,DWOplayer.css,${runTarget},GeoGebra.html,MCSquared.jsp,images/**,scripts/**,WEB-INF/lib/*,WEB-INF/web.xml,PrintPlayer.css</warSourceIncludes>
 					<classifier>${warClassifier}</classifier>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<packagingIncludes>**</packagingIncludes>
