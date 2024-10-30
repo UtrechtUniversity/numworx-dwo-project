@@ -714,7 +714,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	
 	public void setAttempt()
 	{
-		if(dwologger != null) {
+		if(dwologger != null && ingevuld) {
 			Map<String, Object> map = buildLogParameters();
 			dwologger.log(map);
 		}
