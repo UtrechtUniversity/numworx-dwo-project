@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.osgi.util.function.Predicate;
 import org.osgi.util.promise.Deferred;
@@ -16,6 +17,7 @@ import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
+import nl.uu.fi.dwo.mobile.client.ui.PageTracker;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -185,6 +187,8 @@ public class LoginActivity extends AbstractActivity
 //		this.next = next;
 //	}
 
+	@Inject PageTracker tracker;
+	
 	@Inject LoginActivity(ClientFactory clientFactory, DWOplayerParameters p, RPCHandler rpc, PlaceController placeController, DwoGlobalVars vars) {
 		this.clientFactory = clientFactory;
 		this.PARAMETERS = p;
@@ -206,6 +210,7 @@ public class LoginActivity extends AbstractActivity
 		final boolean logout = vars.withUser();
 		WaitScreen.instance().w();
 		headerView.hide();
+		tracker.logoff();
 		clientFactory.logout().onResolve (
 		
 		new Runnable() {
@@ -250,12 +255,14 @@ public class LoginActivity extends AbstractActivity
 				{
 					panel.setWidget(new Label());
 					RootLayoutPanel.get().setVisible(false);
+					tracker.logoff();
 					logout();
 					return;
 				} 
 				if (isSaml()) {
 					panel.setWidget(new Label());
 					if (logout) {
+						tracker.logoff();
 						logout();
 						return;
 					}
@@ -267,6 +274,7 @@ public class LoginActivity extends AbstractActivity
 						promise = rpc.getUserFromAuthToken(authToken);
 					}
 					else {
+						tracker.logoff();
 						logout();
 						return;
 					}
@@ -345,12 +353,13 @@ public class LoginActivity extends AbstractActivity
 		);
 	}
 
+	@Inject Provider<Login_Stap3> stap3;
 	private void rearm(Promise<DomUserFullwLoginContext> promise) {
 		promise
 		.then(LOGIN_STAP1)
 		.filter(LOGIN_LIMITED)
 		.then(LOGIN_STAP2, FAILURE1).map(nop -> next)
-		.then(new Login_Stap3(clientFactory, headerView, vars), FAILURE2);
+		.then(stap3.get(), FAILURE2);
 	}
 
 	private void resolve() {

@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLoginEvent;
+import nl.uu.fi.dwo.mobile.client.ui.PageTracker;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -68,6 +69,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 	@SuppressWarnings("rawtypes")
 	@Inject NeedLogin OOPS;
 	@Inject Lazy<LastActivity> last;
+	@Inject PageTracker tracker;
 	
 	private List<SelectModuleItem> currentModel;
 	private TreeModuleView view;
@@ -197,7 +199,7 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 			((HasBack) place).setBack(item);
 		}
 		String url = mapper.getToken(place);
-		History.replaceItem(url);
+		tracker.replaceItem(url, true);
 	}
 	
 

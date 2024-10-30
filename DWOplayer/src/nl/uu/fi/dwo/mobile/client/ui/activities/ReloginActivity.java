@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 import java.util.NoSuchElementException;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
@@ -43,6 +44,7 @@ public class ReloginActivity extends AbstractActivity {
 	private String password;
 	@Inject PlaceController placeController;
 	@Inject RPCHandler rpc;
+	@Inject Provider<Login_Stap3> stap3;
 	
 	private SecuredUserAccountManager manager = new SecuredUserAccountManager();
 
@@ -94,7 +96,7 @@ public class ReloginActivity extends AbstractActivity {
 		})
 		.then(new LoginActivity.Login_Stap1(rpc, vars))
 		.then(new LoginActivity.Login_Stap2(vars), FAILURE1).map(nop -> next)
-		.then(new Login_Stap3(clientFactory, headerView, vars));
+		.then(stap3.get());
 	}
 
 	protected Promise<DomUserFullwLoginContext> getUserFullwLoginContext() {
