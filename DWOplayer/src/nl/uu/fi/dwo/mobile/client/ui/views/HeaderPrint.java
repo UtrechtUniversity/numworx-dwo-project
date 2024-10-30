@@ -1,0 +1,41 @@
+package nl.uu.fi.dwo.mobile.client.ui.views;
+
+import java.util.Date;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
+
+import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+
+public class HeaderPrint extends Composite {
+
+	private static HeaderPrintUiBinder uiBinder = GWT.create(HeaderPrintUiBinder.class);
+
+	interface HeaderPrintUiBinder extends UiBinder<Widget, HeaderPrint> {
+	}
+
+	@UiField
+	Label name, activity, description;
+	
+	public HeaderPrint() {
+		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	public HeaderPrint(Memento memento) {
+		this();
+		name.setText(memento.getLearnerName());
+		double score = memento.getScore();
+		String duration = memento.getValue(Memento.TOTAL_TIME);
+		Date now = new Date();
+		description.setText("Score: " + score + " in " + duration + ". " + now);
+		String sconame = memento.getValue("dme.sco_name");
+		String team  = memento.getValue("dme.team");
+		activity.setText("\"" + sconame  + "\" in " + team);
+	}
+
+}

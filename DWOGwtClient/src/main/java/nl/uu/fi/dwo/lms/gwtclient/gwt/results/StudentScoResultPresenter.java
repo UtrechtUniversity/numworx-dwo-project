@@ -142,6 +142,9 @@ public class StudentScoResultPresenter {
     userState.put("cmi.learner_id", learnerId);
     String learnerName = mapRealm(student); // FULL NAME!!!!
     userState.put("cmi.learner_name", learnerName);
+    userState.put("dme.sco_name", ssc.getLabel());
+    userState.put("dme.team", domschoolclass.getLabel());
+    userState.put("cmi.total_time", ssc.getStudentSco().getTotalTime());
 // if premium && completed
 // find out if we have studentmodel in launchdata.
     if ( AboType.premium == dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getAboType() && ResultsService.COMPLETED.equals(userState.get(ResultsService.COMPLETION_STATUS))) {

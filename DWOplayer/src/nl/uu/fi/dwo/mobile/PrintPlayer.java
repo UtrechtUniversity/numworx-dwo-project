@@ -48,6 +48,8 @@ import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
+import nl.uu.fi.dwo.mobile.client.ui.views.HeaderPrint;
+import nl.uu.fi.dwo.mobile.client.ui.views.PrintSeparator;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -122,10 +124,18 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 			zetMaat();
 
 			Scorm2004IF api = view.getApi();
+			HeaderPrint header = new HeaderPrint(view.activity.memento());
 			RootPanel.get().add(view);
 			PromiseCallback<Void> init = new PromiseCallback<>();
 			api.Initialize(init); // need some extra async bootstrapping.
 			return init.getPromise();
+		});
+		v = v.then(result -> { 
+			HeaderPrint header = new HeaderPrint(view.activity.memento());
+			RootPanel.get().add(header);
+			RootPanel.get().add(view);
+			
+			return result;
 		});
 		v.then(result ->
 		{
@@ -227,14 +237,18 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 		HashMap<String, Object> launchdata = view.launchData;
 		OpdrNav on = view.getOpdrNav();
 		int max = on.getAantalOpdrachten();
-		int cur = m.getCurrentOpdracht();
+		int cur = m.getCurrentOpdracht()+1;
 		while (cur < max) {
-			m.setCurrentOpdracht(cur+1);
+			PrintSeparator ps = new PrintSeparator(cur);
+			RootPanel.get().add(ps);
+			m.setCurrentOpdracht(cur);
 			ViewModuleViewImpl other = (ViewModuleViewImpl) component.view();
 			RootPanel.get().add(other);
 			other.setupView(launchdata);
 			cur++;
 		}
+		PrintSeparator ps = new PrintSeparator(cur);
+		RootPanel.get().add(ps);		
 	    RootLayoutPanel.get().getElement().getStyle().setDisplay(Display.NONE); // No rootlayoutpanel here.
 		return p;
 	}
