@@ -20,6 +20,7 @@ import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -1115,6 +1116,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
 	
 	public void setZelftoetsNagekeken(boolean zelftoetsNagekeken) {
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
 		this.zelftoetsNagekeken = JSONBoolean.getInstance(zelftoetsNagekeken);
 		this.onsState.put(ZELFTOETS_NAGEKEKEN, this.zelftoetsNagekeken);
 	}
@@ -1135,7 +1137,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	}
 
 	public void setAantalNakijken(int[] aantalNakijken) {
-		if(aantalNakijken == null)
+		if(aantalNakijken == null || (view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) )
 		{
 			this.aantalNakijken = null;
 		} else 
@@ -1304,6 +1306,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	 */
 	public void setZelftoetsHighScore(double score)
 	{
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
+
 		if (zelftoetsHighScore == null || (score > getZelftoetsHighScore()))
 		{
 			zelftoetsHighScore = new JSONNumber(score);
@@ -1319,6 +1323,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	 */
 	public void setScoresZelftoetsHistorie(int[] scores)
 	{
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
+
 		JSONArray array = new JSONArray();
 
 		for (int j = 0; j < scores.length; j++)
@@ -1333,6 +1339,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public void setScoresZelftoets(int[][] scores)
 	{
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
+
 		JSONArray array = new JSONArray();
 
 		for (int i = 0; i < scores.length; i++)
@@ -1422,6 +1430,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public void setIsCorrectZelftoets(Boolean[][] isCorrect)
 	{
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
+
 		JSONArray array = new JSONArray();
 
 		for (int i = 0; i < isCorrect.length; i++)
@@ -1441,6 +1451,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public void setNakijkenZelftoetsPending(boolean[][] nakijkenZelftoetsPending)
 	{
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
+
 		JSONArray array = new JSONArray();
 
 		for (int i = 0; i < nakijkenZelftoetsPending.length; i++)

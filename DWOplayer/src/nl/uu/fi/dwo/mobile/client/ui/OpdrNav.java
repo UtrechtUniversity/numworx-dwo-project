@@ -1636,6 +1636,20 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 	}
 
+	public void kijkPaginaNa() {
+		int j = currentOpdracht;
+		pause();
+		ScoreNavIF source = entry.scoreNav;
+		entry.kijkNa();
+		entry.zetNagekeken(true);
+		if (entry.bolletjesZichtbaar())
+			setButtonCorrect(buttons.get(j), isCorrect(currentActiviteit,j), j);
+		source.setItemScore(j, scores[currentActiviteit][j]);
+		source.setTotaalScore((int) getScore());
+		unpause();
+	}
+	
+	
 	public void kijkToetsNa()
 	{
 		setNakijkenZelftoetsPending();
@@ -1653,7 +1667,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		memento.setScoresZelftoets(getScores());
 		memento.setIsCorrectZelftoets(isCorrect);
 		
-		// scores en isCorrect overzetten naar soresZelftoets en isCorrectZelftoets
+		// scores en isCorrect overzetten naar scoresZelftoets en isCorrectZelftoets
 		setScoresZelftoets(scores);
 		setIsCorrectZelftoets(isCorrect);
 

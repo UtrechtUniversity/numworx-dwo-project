@@ -512,6 +512,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 				sbw.widthZelftoetsGeschiedenis = zelftoetsGeschiedenisButton.getOffsetWidth() + margin;
 			}
 		}
+
+// De checker gaat er vanuit dat mode = ZELF_TOETS. Dat hoeft niet zo te zijn.
+// wordt ook gebruikt als 'pagina brede kijkna' Dat is niet de bedoeling
+		if (on.getMode() == OpdrNavIF.ZELFTOETS)
 		scoreNav.setKijkNa(new ScoreNavIF.Checker()
 		{
 			@Override
@@ -549,6 +553,34 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 				return defer.getPromise();
 			}
 		});
+		else {
+			scoreNav.setKijkNa( (source) -> {
+				final Deferred<Void> defer = new Deferred<Void>();
+				activity.agent().addBarrier(defer.getPromise());
+				p();
+				OpdrNav.defer(new ScheduledCommand()
+				{
+
+					@Override
+					public void execute()
+					{
+						on.kijkPaginaNa();
+						
+						v();
+						
+						// focus weghalen uit antwoordvak als afdekpanel
+						if (isDisabled())
+						{
+							getKeyboard().setEditor(null);
+							getKeyboard().blur();
+						}
+						//on.saveCurrentState();
+						defer.resolve(null);
+					}
+				});
+				return defer.getPromise();
+			});
+		}
 		
 		// vorige/volgende knop toevoegen
 		scoreNav.setVorigeVisible(vorigeKnopZichtbaar);
