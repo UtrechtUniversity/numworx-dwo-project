@@ -46,7 +46,7 @@ public abstract class ActivityComponent implements ActivityInterface {
 	@Override
 	public Lazy<ScoreWidgetIF> scoreWidgetIF() {
 		return () -> {
-			if (isTest() && vars().isPresent()) { return scoremanager(); }
+			//if (isTest() && vars().isPresent()) { return scoremanager(); }
 			return api(); 
 		};
 	}
