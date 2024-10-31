@@ -93,7 +93,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	static final String SCORE_RAW = "cmi.score.raw";
 	static final String EXIT_STATUS = "cmi.exit";
 	private static final String SESSION_TIME = "cmi.session_time";
-	private static final String TOTAL_TIME = "cmi.total_time";
+	public static final String TOTAL_TIME = "cmi.total_time";
 	public static final String COMPLETION_STATUS = "cmi.completion_status";
 	public static final String COMPLETED = "completed";
 	//public static final String STUDENT_MODEL = "dme.student_model";
@@ -110,7 +110,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String SHARE_MAP = "shareMap";
-    protected final Scorm2004IF api;
+    public final Scorm2004IF api;
 	private ViewModuleView view; 
 	private JSONObject suspendData;
 	private JSONObject onsState, shareMap;
@@ -412,7 +412,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 	}
 
-	String getValue(String key)
+	public String getValue(String key)
 	{
 		try
 		{

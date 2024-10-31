@@ -1,18 +1,23 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 public class DomStudentModelVariant implements Comparable<DomStudentModelVariant> {
 	private static final String DEFAULT_VARIANT = "";
 
 	private String name;
+	private TreeMap<String,Boolean> layers = new TreeMap<>();
 	
 	public DomStudentModelVariant() { }
 	public DomStudentModelVariant(String name) { this.name = name; }
 	
 	public DomStudentModelVariant(DomStudentModelVariant v) {
-		this(v.name); 
-	// more to follow.....	
+		this(v.name);
+		if (v.layers != null) {
+			layers = new TreeMap<>(v.layers);
+		}
 	}
 	
 	
@@ -51,6 +56,16 @@ public class DomStudentModelVariant implements Comparable<DomStudentModelVariant
 		String t1 = Objects.toString(name, "");
 		String t2 = Objects.toString(o.name, "");
 		return t1.compareTo(t2);
+	}
+	public Map<String,Boolean> getLayers() {
+		return layers;
+	}
+
+	public void setLayers(Map<String,Boolean> layers) {
+		if (layers != null)
+			this.layers = new TreeMap<>(layers);
+		else 
+			this.layers = new TreeMap<>();
 	}
 	
 }

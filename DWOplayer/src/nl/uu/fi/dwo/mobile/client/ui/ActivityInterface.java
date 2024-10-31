@@ -6,9 +6,11 @@ import java.util.Optional;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
+import nl.uu.fi.dwo.mobile.client.sco.ScoreWidgetIF;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 
@@ -49,4 +51,6 @@ public interface ActivityInterface {
 	default Memento memento() {
 		return null;
 	}
+	
+	default Lazy<ScoreWidgetIF> scoreWidgetIF() { return this::api; }
 }
