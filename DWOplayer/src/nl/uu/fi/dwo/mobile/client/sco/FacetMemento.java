@@ -86,7 +86,7 @@ public class FacetMemento extends Memento {
 	}
 
 	@Override
-	String getValue(String key) {
+	public String getValue(String key) {
 		if(SUSPEND_DATA == key)
 		{
 			try {
