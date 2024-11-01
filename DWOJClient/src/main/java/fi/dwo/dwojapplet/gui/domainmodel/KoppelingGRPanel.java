@@ -5,10 +5,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.ItemSelectable;
 import java.awt.event.ActionListener;
-import java.util.Locale;
-
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JComponent;
@@ -20,7 +20,7 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
 import fi.dwo.commons.system.TextMapper;
 
-public class KoppelingGRPanel extends JPanel implements Constants {
+public class KoppelingGRPanel extends JPanel implements Constants, ItemListener {
 
     private JPanel topPanel;
 	private JPanel mainPanel;
@@ -32,12 +32,6 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 	
 	private Font font = new Font("SansSerif", Font.PLAIN, 12);
 	private final Color colorBlue1 = COLOR15; // new Color(49, 71, 112);
-//	private final Color colorBlue2 = new Color(38, 115, 182);
-//	private final Color colorBlue3 = COLOR13; // new Color(120, 150, 202);
-//	private final Color colorBlue4 = new Color(180,195,228);
-//	private final Color colorBlue5 = new Color(211,229,244);
-//	private final Color colorBlue6 = new Color(231,242,250);
-//	private final Color colorGray1 = new Color(206, 207, 208);
 	private final Color colorGray2 = COLOR21; // new Color(221, 223, 225);
 	private final Color colorGray3 = COLOR20; // new Color(237, 239, 241);
 	
@@ -83,6 +77,8 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 	}
 	
 	boolean filter = true;
+	private String variant;
+	
 	private void makeGUI() {
 		topPanel = new JPanel(new BorderLayout());
 		topPanel.setBackground(colorBlue1);
@@ -116,9 +112,11 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 		cb = new JCheckBox[aantalJaarlagen][maxAantalHoofdstukken];
 		for(int i=0 ; i<aantalJaarlagen ; i++) {
 			for(int j=0 ; j<aantalHoofdstukken[i] ; j++) {
+				JCheckBox c = 
 				cb[i][j] = new JCheckBox("");
-				cb[i][j].setBounds(120+50*j,60+30*i,50,20);
-				mainPanel.add(cb[i][j]);
+				c.addItemListener(this);				
+				c.setBounds(120+50*j,60+30*i,50,20);
+				mainPanel.add(c);
 			}
 		}
 		
@@ -194,53 +192,14 @@ public class KoppelingGRPanel extends JPanel implements Constants {
 		return box;
 	}
 
-//	private Box vb(Component... c) {
-//		Box box = Box.createVerticalBox();
-//		for (int i = 0; c != null && i < c.length; i++)
-//			box.add(c[i]);
-//		return box;
-//	}
-
 	private static Component hgl() {
 		return Box.createHorizontalGlue();
 	}
-
-//	private Component vgl() {
-//		return Box.createVerticalGlue();
-//	}
 
 	private Component hst(int n) {
 		return Box.createHorizontalStrut(n);
 	}
 
-//	private Component vst(int n) {
-//		return Box.createVerticalStrut(n);
-//	}
-//
-//	private Component ra(int w, int h) {
-//		return Box.createRigidArea(new Dimension(w, h));
-//	}
-	
-//	private Component ln(int w, int h) {
-//		  Component c =  ln(h);
-//		  c.setPreferredSize(new Dimension(w,h));
-//		  c.setMinimumSize(new Dimension(w,h));
-//		  c.setMaximumSize(new Dimension(w,h));
-//		  return c;
-//	}
-	
-//	private Component ln(int h) {
-//		  JPanel p = new JPanel() {
-//		      public void paintComponent(Graphics g) {
-//		        g.setColor(colorBlue4);  
-//		        g.drawLine(0, getHeight()/2, getWidth(), getHeight()/2);
-//		        //g.drawLine(0, getHeight()/2+1, getWidth(), getHeight()/2+1);
-//		      }
-//		  };
-//		  p.setPreferredSize(new Dimension(1,h));
-//		  p.setMaximumSize(new Dimension(1000,h));
-//		  return p;
-//	}
 	
 	public JButton ok() { return okButton; }
 	public JButton cancel() { return cancelButton; }
@@ -253,7 +212,39 @@ public class KoppelingGRPanel extends JPanel implements Constants {
         cbi[j].setSelected(statei[j]);
     }
   }
+  
+  public void setCurrentVariant(String v) { // switch to if checkbox set...
+	  this.variant = v;
+	  if (v != null && !v.isEmpty()) {
+		  titleLabel.setText(KOPPELING_LEERDOEL + " " + v);
+	  } else {
+		  titleLabel.setText(KOPPELING_LEERDOEL);
+	  }
+  }
+  
+  public void setVariants(String[][] variants) {
+	    for(int i = 0; i < variants.length; i++) {
+	        JCheckBox[] cbi = cb[i];
+	        String[] statei = variants[i];
+	        for (int j= 0; j < statei.length; j++) 
+	        {  cbi[j].setToolTipText(statei[j]);
+	           cbi[j].setText(statei[j]);
+	        }
+	      }	  
+  }
 
+  public String[][] getVariants() {
+	String state[][] = new String[cb.length][];
+    for(int i = 0; i < cb.length; i++) {
+    	JCheckBox[] cbi = cb[i];
+    	String[] statei = new String[aantalHoofdstukken[i]];
+    	for(int j = 0; j < statei.length; j++)
+    		statei[j] = cbi[j].getToolTipText();
+    	state[i] = statei;
+    }
+    return state;	  
+  }
+  
   public boolean[][] getState() {
     boolean state[][] = new boolean[cb.length][];
     for(int i = 0; i < cb.length; i++) {
@@ -289,5 +280,18 @@ public class KoppelingGRPanel extends JPanel implements Constants {
       }
     }
   }
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		ItemSelectable cbi = e.getItemSelectable();
+		if (e.getStateChange() == ItemEvent.SELECTED) {
+			((JComponent) cbi).setToolTipText(variant);
+			((JCheckBox) cbi).setText(variant);
+			
+		} else {
+			((JComponent) cbi).setToolTipText(null);
+			((JCheckBox) cbi).setText("");
+		}
+	}
 	
 }
