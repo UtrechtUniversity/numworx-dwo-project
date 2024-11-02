@@ -142,7 +142,11 @@ public class StudentScoResultPresenter {
     userState.put("dme.authorization", RestAuthenticator.instance.getAuthorization());
     String learnerId = getLearnerId(studentid.toString(), domschoolclass.getId());
     userState.put("cmi.learner_id", learnerId);
-    String learnerName = mapRealm(student); // FULL NAME!!!!
+// uitzoeken waarom er voor het ene of andere format wordt gekozen.
+// afspraken met mc2?
+    
+    String learnerName; //  = mapRealm(student); // FULL NAME!!!!
+    learnerName = student.getUniqueDisplayName(); // voor printheader
     userState.put("cmi.learner_name", learnerName);
 // find the name of the sco
     LOG.severe("HIER DEBUG");

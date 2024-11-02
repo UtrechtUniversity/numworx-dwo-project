@@ -5,9 +5,11 @@
 	
 	</ui:style>
 	<g:HTMLPanel>
+	  <div style='margin-left: 3em' >
 		<g:Label ui:field="name">Name</g:Label>
 		<g:Label ui:field="activity">Activity</g:Label>
 		<g:Label ui:field="description">Description</g:Label>
-		<hr />
+	  </div>
+      <hr />
 	</g:HTMLPanel>
 </ui:UiBinder> 
