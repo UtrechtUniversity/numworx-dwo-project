@@ -47,6 +47,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent.Event
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacherv2;
@@ -142,9 +144,13 @@ public class StudentScoResultPresenter {
     userState.put("cmi.learner_id", learnerId);
     String learnerName = mapRealm(student); // FULL NAME!!!!
     userState.put("cmi.learner_name", learnerName);
-    userState.put("dme.sco_name", ssc.getLabel());
+// find the name of the sco
+    LOG.severe("HIER DEBUG");
+    String sco_name = findScoName(context);
+    userState.put("dme.sco_name", sco_name);
+
     userState.put("dme.team", domschoolclass.getLabel());
-    userState.put("cmi.total_time", ssc.getStudentSco().getTotalTime());
+    userState.put("cmi.total_time", ssc.getStudentSco().getTotalTime()); // FIXME in scorm 1.2 format!!!!!
 // if premium && completed
 // find out if we have studentmodel in launchdata.
     if ( AboType.premium == dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getAboType() && ResultsService.COMPLETED.equals(userState.get(ResultsService.COMPLETION_STATUS))) {
@@ -173,6 +179,15 @@ public class StudentScoResultPresenter {
     }
     initTail(ssc, context);
   }
+
+/*
+ * stolen from StudentScoResultDisplay.js
+ */
+private static native String findScoName(JavaScriptObject state)/*-{
+	var activeActivity;
+	activeActivity = state.resultsTree.children[state.activeSchoolClass].children[state.activeModule].children[state.activeActivity];
+	return activeActivity.label;
+}-*/;
 
 protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context) {
 	setAPI(this);
