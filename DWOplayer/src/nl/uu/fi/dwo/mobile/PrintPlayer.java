@@ -54,6 +54,12 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
+
+/**
+ * FIXME Deze heeft een referentie aan com.googlecode.mgwt.ui.client.widget.main 
+ * die moet worden weggewerkt!
+ * daar komt ook de .landscape vandaan!@!!!
+ */
 public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, ClosingHandler {
 
 	public PrintPlayer() {
@@ -184,18 +190,20 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 	protected void zetMaat() {
 		view.zetMaat();
 	}
-
+/** 
+ * Helemaal uitzetten. Deze setup heeft zijeffecten. We doen alles default.
+ */
 	protected void MGWTsetup() {
-		//MGWT Settings//
-		ViewPort viewport = new MGWTSettings.ViewPort();
-		//viewport.setTargetDensity(DENSITY.MEDIUM);
-		//viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
-		MGWTSettings settings = new MGWTSettings();
-		settings.setViewPort(viewport);
-		//settings.setAddGlosToIcon(true);
-		settings.setFullscreen(true);
-		settings.setPreventScrolling(false);
-		MGWT.applySettings(settings);
+//		//MGWT Settings//
+//		ViewPort viewport = new MGWTSettings.ViewPort();
+//		//viewport.setTargetDensity(DENSITY.MEDIUM);
+//		//viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
+//		MGWTSettings settings = new MGWTSettings();
+//		settings.setViewPort(viewport);
+//		//settings.setAddGlosToIcon(true);
+//		settings.setFullscreen(true);
+//		settings.setPreventScrolling(false);
+//		MGWT.applySettings(settings);
 	}
 
 	@Override
