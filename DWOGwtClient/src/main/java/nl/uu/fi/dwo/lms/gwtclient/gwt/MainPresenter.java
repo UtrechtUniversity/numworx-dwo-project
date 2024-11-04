@@ -144,10 +144,10 @@ public class MainPresenter implements ValueChangeHandler<String> {
     
 
     @Inject ModulesPresenter modules;
-    @Inject MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, BootPanelController source) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        anEventBus.addHandler(ValueChangeEvent.getType(), this);
+        anEventBus.addHandlerToSource(ValueChangeEvent.getType(), source, this);
     }
 
     public void init() {

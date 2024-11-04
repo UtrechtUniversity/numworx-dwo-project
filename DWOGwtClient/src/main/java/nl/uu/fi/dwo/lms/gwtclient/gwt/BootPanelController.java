@@ -321,7 +321,7 @@ public class BootPanelController {
         profile = 77;
         stage = 1;
         
-        History.addValueChangeHandler(evt -> this.eventBus.fireEvent(evt));
+        History.addValueChangeHandler(evt -> this.eventBus.fireEventFromSource(evt, this));
     }
 
     static void sendSwitchEvent(SwitchViewEvent.SelectedView view) {

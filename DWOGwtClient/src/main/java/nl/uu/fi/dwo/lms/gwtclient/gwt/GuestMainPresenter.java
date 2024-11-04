@@ -13,8 +13,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
 public class GuestMainPresenter extends MainPresenter {
     private static final Logger LOG = Logger.getLogger(GuestMainPresenter.class.getName());
 
-	@Inject GuestMainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
-		super(anEventBus, aDwoGlobalVars);
+	@Inject GuestMainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, BootPanelController source) {
+		super(anEventBus, aDwoGlobalVars, source);
 	}
 
 	@Override @JsMethod
