@@ -8,7 +8,7 @@ public class DomStudentModelVariant implements Comparable<DomStudentModelVariant
 	private static final String DEFAULT_VARIANT = "";
 
 	private String name;
-	private TreeMap<String,Boolean> layers = new TreeMap<>();
+	private Map<String,Boolean> layers = new TreeMap<>();
 	
 	public DomStudentModelVariant() { }
 	public DomStudentModelVariant(String name) { this.name = name; }
