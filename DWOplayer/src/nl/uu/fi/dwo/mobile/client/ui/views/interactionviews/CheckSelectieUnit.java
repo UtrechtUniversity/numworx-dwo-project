@@ -554,6 +554,12 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
 				dwologger.log(map);
+			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
+				dwologger.log(map);
+			} else if ((mode == OpdrNavIF.OEFENEN|| mode == OpdrNavIF.OEFENEN_STRAFPUNTEN) && this.ingevuld && isVeranderdNaNakijken)	{
+				this.nagekeken = nagekeken = true;
+				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
+				dwologger.log(map);
 			} else {
 				dwologger.updateLog(map);
 			}
@@ -565,14 +571,14 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         if(randomizedPositionsY != null) 
         	h.put("randomizedPositionsY", randomizedPositionsY);
         if(randomSequence!=null)
-        h.put("randomSequence", randomSequence);
-        h.put("ingevuld", new Boolean(ingevuld));
-        h.put("nagekeken", new Boolean(nagekeken));
+        	h.put("randomSequence", randomSequence);
+        h.put("ingevuld", Boolean.valueOf(ingevuld));
+        h.put("nagekeken", Boolean.valueOf(nagekeken));
         h.put("editable", Boolean.valueOf(editable));
-		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
+		h.put("isVeranderdNaNakijken", Boolean.valueOf(isVeranderdNaNakijken));
         h.put("attempts", attempts);
-        h.put("attemptsCount", new Integer(attemptsCount));
-        h.put("errorCount", new Integer(errorCount));
+        h.put("attemptsCount", Integer.valueOf(attemptsCount));
+        h.put("errorCount", Integer.valueOf(errorCount));
         
         if(correctie != null) correctie.correctie(h);
         return h;
