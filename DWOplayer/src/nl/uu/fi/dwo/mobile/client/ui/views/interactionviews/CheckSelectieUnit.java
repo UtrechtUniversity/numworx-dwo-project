@@ -550,15 +550,11 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    if (this.ingevuld) comRoot.setVisited(); // zie Scorewidget: "Gedaan" subtieler maken
 		if(dwologger != null) {
 			Map<String, Object> map = buildLogParameters();
-			if (mode == OpdrNavIF.EINDTOETS && this.ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+			if (mode != OpdrNavIF.ZELFTOETS && this.ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
 				dwologger.log(map);
 			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
-				dwologger.log(map);
-			} else if ((mode == OpdrNavIF.OEFENEN|| mode == OpdrNavIF.OEFENEN_STRAFPUNTEN) && this.ingevuld && isVeranderdNaNakijken)	{
-				this.nagekeken = nagekeken = true;
-				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
 				dwologger.log(map);
 			} else {
 				dwologger.updateLog(map);
