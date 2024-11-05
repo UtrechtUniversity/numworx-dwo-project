@@ -1,6 +1,9 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.safecss.shared.SafeStyles;
+import com.google.gwt.safecss.shared.SafeStylesBuilder;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.ui.Widget;
@@ -12,9 +15,14 @@ public class Util {
 	}
 
 	interface Template extends SafeHtmlTemplates {
-		@SafeHtmlTemplates.Template("<div class='score-template'><div class='score-incorrect' style='width:{0}%' ></div><div class='score-correct' style='width:{1}%'></div></div>")
-		SafeHtml content(double incorrect, double correct);
+//		@SafeHtmlTemplates.Template("<div class='score-template'><div class='score-incorrect' style='width:{0}%' ></div><div class='score-correct' style='width:{1}%'></div></div>")
+//		SafeHtml content(double incorrect, double correct);
 
+		@SafeHtmlTemplates.Template("<div class='score-template'><div class='score-incorrect' style='{0}' ></div><div class='score-correct' style='{1}'></div></div>")
+		SafeHtml content(SafeStyles incorrect, SafeStyles correct);
+
+		
+		
 		@SafeHtmlTemplates.Template("<div class='score-treeItem' style='margin-right:{3}em'><span class='score-title'>{0}</span><div class='score-template'><div class='score-incorrect' style='width:{1}%'></div><div class='score-correct' style='width:{2}%'></div></div></div>")
 		SafeHtml treeItem(String test, double incorrect, double correct, int margin);
 	}
@@ -29,7 +37,9 @@ public class Util {
 //naar percentages 0 .. 50%
 		red *= 100;
 		green *= 100;
-		SafeHtml sh = scoreTemplate.content(red, green);
+		SafeStyles redStyle = new SafeStylesBuilder().width(red, Unit.PCT).toSafeStyles();
+		SafeStyles greenStyle = new SafeStylesBuilder().width(green, Unit.PCT).toSafeStyles();
+		SafeHtml sh = scoreTemplate.content(redStyle, greenStyle);
 		return sh;
 	}
 
