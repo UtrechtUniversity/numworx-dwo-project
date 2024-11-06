@@ -1703,7 +1703,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 
 		if(logging instanceof DWOLogger) {
 			Map<String, Object> map = buildLoggingMap();
-			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+			if (mode != OpdrNavIF.ZELFTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
 				nagekeken = true;
 				zetIsVeranderdNaNakijken(false);
 				h.put("nagekeken", (nagekeken));

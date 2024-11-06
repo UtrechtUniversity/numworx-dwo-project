@@ -744,7 +744,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 
 		if(logging instanceof DWOLogger) {
 			Map<String, Object> map = buildLogParameters();
-			if (mode == OpdrNavIF.EINDTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+			if (mode != OpdrNavIF.ZELFTOETS && ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
 				logging.log(map);
@@ -829,10 +829,20 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		log.put("response", formule.trim());
 		log.put("score", Collections.singletonMap("raw", score));
 		log.put("step", "");
+//		String feedback = getFeedback();
+//		if (feedback != null && !feedback.isEmpty())
+//			log.put("feedback", feedback);
 		return log;
 	}
 	
 	
+	private String getFeedback() {
+		String fbTekst = null;
+//		if (feedbackTekst.isVisible() && feedbackTekst.getParent() != null)
+//			fbTekst = feedbackTekst.getText(); // geen tekst maar tekstvak
+		return fbTekst;
+	}
+
 	public void setState(HashMap<String, Object> h)
 	{
 		if( h == null) return; // setStateNull();
@@ -982,7 +992,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		zetIsVeranderdNaNakijken(false);
 		
 		kijkNa(true, false);
-		setAttempt();
+		if (ingevuld) setAttempt();
 	}
 	
 	private void kijkNa(boolean show, boolean setState)
