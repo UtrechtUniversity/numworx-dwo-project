@@ -841,6 +841,11 @@
   	<servlet-name>updownload</servlet-name>
   	<servlet-class>nl.numworx.uploadwidgetgwt.server.Download</servlet-class>
   </servlet>
+    <servlet>
+  	<servlet-name>proxy</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.Proxy</servlet-class>
+  </servlet>
+
 ]]></upload.servlet>
 	<upload.servlet.mapping><![CDATA[
   <servlet-mapping>
@@ -858,6 +863,10 @@
   <servlet-mapping>
   	<servlet-name>testblob</servlet-name>
   	<url-pattern>/dwo/dav/testblob/*</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+  	<servlet-name>proxy</servlet-name>
+  	<url-pattern>/proxy/*</url-pattern>
   </servlet-mapping>
 ]]></upload.servlet.mapping>		
 			</properties>

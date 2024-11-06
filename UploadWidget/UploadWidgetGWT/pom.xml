@@ -14,7 +14,7 @@
     <!-- Convenience property to set the GWT version. NIET UPGRADEN NAAR 2.10.0, Geeft CORS errors
     DAN EERST CROSS-ORIGIN HEADERS TOEVOEGEN.
      -->
-    <gwt.version>2.9.0</gwt.version>
+    <gwt.version>2.10.0</gwt.version>
 
     <!-- GWT 2.8 requires 1.8 -->
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -123,6 +123,12 @@
   		<scope>provided</scope>
   		<classifier>sources</classifier>
   	</dependency>
+  	<dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5</version>
+    </dependency>
+
   </dependencies>
 
   <build>

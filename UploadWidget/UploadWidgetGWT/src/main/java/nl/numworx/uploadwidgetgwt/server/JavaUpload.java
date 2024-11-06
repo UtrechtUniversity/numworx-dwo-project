@@ -127,7 +127,9 @@ public class JavaUpload extends HttpServlet implements Constants {
 			log("result " + found);
 // bij instance andere logica, groter publiek		
 			if ( (instance && found.isPresent()) || store.ownedBy(found, actor)) {
-				resp.sendRedirect(found.get().url);
+				//resp.sendRedirect(found.get().url);
+				String proxy = Proxy.encode(found.get().url, System.getProperty("ALLOW_ORIGIN"));
+				resp.sendRedirect(proxy);
 				return;
 			}
  		} 
