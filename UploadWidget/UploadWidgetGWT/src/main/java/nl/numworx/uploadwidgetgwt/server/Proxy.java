@@ -2,7 +2,6 @@ package nl.numworx.uploadwidgetgwt.server;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.ClientPNames;
@@ -45,12 +43,16 @@ public class Proxy extends HttpServlet {
 		pathinfo = pathinfo.split("/")[1];
 		url = decode(pathinfo);
 		
-		
+		log("doGet " + url);
 		HttpUriRequest request = new HttpGet(url);		
 		HttpResponse response = proxyClient.execute(request);
 		
 		int code = response.getStatusLine().getStatusCode();
 		if (code != 200) {
+			log("Error doGet " + response.getStatusLine() );
+			for(org.apache.http.Header h: response.getAllHeaders()) {
+				log("response " + h.getName() + " : " + h.getValue());
+			}
 			resp.sendError(code);
 			return; // jammer dan...
 		}
@@ -64,7 +66,7 @@ public class Proxy extends HttpServlet {
 	}
 
 	private String decode(String pathinfo) {
-		return new String(Base64.getDecoder().decode(pathinfo), StandardCharsets.UTF_8);
+		return new String(Base64.getUrlDecoder().decode(pathinfo), StandardCharsets.UTF_8);
 	}
 
 	@Override
@@ -92,8 +94,12 @@ public class Proxy extends HttpServlet {
 	}
 
 	public static String encode(String url, String base) {
-		String proxy = Base64.getEncoder().withoutPadding().encodeToString(url.getBytes(StandardCharsets.UTF_8));
+		String proxy = Base64.getUrlEncoder().withoutPadding().encodeToString(url.getBytes(StandardCharsets.UTF_8));
 		String suffix = ""; // from url between last / and ?
+		int q = url.indexOf('?');
+		if (q == -1) q = url.length();
+		int s = url.lastIndexOf('/', q);
+		suffix = url.substring(s+1 , q);
 		return base + "/proxy/" + proxy + "/" + suffix;
 	}
 
