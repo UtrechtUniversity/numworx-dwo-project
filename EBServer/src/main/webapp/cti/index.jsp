@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <% 
-	int profile = 114;
+	int profile = 115;
 	String locale = "nl";
 	String base = "/react/";
 %>
@@ -11,7 +11,7 @@
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width">
-        <title>React Modules</title>
+        <title>Co-Teach Informatica (CTI)</title>
     	<link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
 	    <script>
 	        token = "/dwo/oauth2/entree";
