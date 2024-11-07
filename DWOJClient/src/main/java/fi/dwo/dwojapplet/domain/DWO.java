@@ -166,7 +166,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
     private String userName;
 
-    private String passWord;
+    private String passWord, refreshToken;
 
     private int courseViewNr;
 
@@ -204,7 +204,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
                     "No logging.properties file found in current directory. Using default.");
             try {
                 final InputStream inputStream2 = DWO.class.getResourceAsStream("/logging.properties");
-                LogManager.getLogManager().readConfiguration(inputStream2);
+                if (inputStream2 != null) LogManager.getLogManager().readConfiguration(inputStream2);
                 Logger.getAnonymousLogger().log(Level.INFO, "logging.properties file read from property folder.");
             } catch (final IOException e2) {
                 Logger.getAnonymousLogger().severe("Could not load internal logging.properties file.");
@@ -534,9 +534,15 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 		DwoHelper.setDefaultPassword(password2);
 	}
     
+    public void setRefreshToken(String token) {
+    	firePropertyChange("refreshToken", refreshToken, token);
+    	refreshToken = token;
+    }
+    
     public void clrPassword() {
     	firePropertyChange("passWord", passWord, "");
     	passWord = "";
+    	setRefreshToken("");
     }
 
 	private void setUserName(String username2) {
@@ -1602,7 +1608,7 @@ LOG.info("time results = " + (-t) + " ms");
 
         if (userName == null) {
             String lclUserName = getParameter("userName");
-            if (lclUserName != null && "".equals(lclUserName)) {
+            if ("".equals(lclUserName)) {
                 lclUserName = null;
             } else if (lclUserName != null) {
                 this.userName = lclUserName;
@@ -1615,6 +1621,16 @@ LOG.info("time results = " + (-t) + " ms");
             } else if (lclPassword != null) {
                 this.passWord = lclPassword;
             }
+        }
+        refreshToken = getParameter("refreshToken");
+        if (refreshToken != null && ! refreshToken.isEmpty()) {
+        	try {
+        		GuiCreator.instance().loginWithRefreshToken(refreshToken);
+        		return;
+        	} catch (Exception exc) {
+        		setRefreshToken("");
+        		LOG.log(Level.WARNING, "login with refreshToken", exc);
+        	}
         }
 
         if (userName != null && passWord != null) {
@@ -1962,7 +1978,7 @@ LOG.info("time results = " + (-t) + " ms");
 			
         	
         };
-        mf.setTitle("Numworx author");
+        mf.setTitle("Numworx Author");
         mf.pack();
         // Start applet.
         mf.setVisible(true);

@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.mobile.client.sco.SCORM_guest;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactoryImpl;
 import nl.uu.fi.dwo.mobile.client.ui.ConfirmEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
+import nl.uu.fi.dwo.mobile.client.ui.PageTracker;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
@@ -60,6 +61,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		@Inject Lazy<CoursesOfClasToSelectItems> coursesToItems;
 		@Inject NeedLogin oops;
 		@Inject Lazy<LastExamActivity> lastExam;
+		@Inject PageTracker tracker;
 	    final Provider<? extends TreeModuleView> treeModuleViewProvider;
 	    TreeModuleView treeModuleView;
 	    final private DwoGlobalVars instance;
@@ -236,7 +238,7 @@ public final class DWO2ClientFactoryImpl extends ClientFactoryImpl {
 		public void goTo(Place place) {
 			if (instance.isAutoLogin()) {
 				String token = mapper.get().getToken(place);
-				History.replaceItem(token);
+				tracker.replaceItem(token, true);
 				instance.setAutoLogin(false);
 //				fire(token); // debugger
 				return;

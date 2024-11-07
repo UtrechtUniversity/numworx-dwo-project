@@ -144,10 +144,10 @@ public class MainPresenter implements ValueChangeHandler<String> {
     
 
     @Inject ModulesPresenter modules;
-    @Inject MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+    @Inject MainPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, BootPanelController source) {
         eventBus = anEventBus;
         dwoGlobalVars = aDwoGlobalVars;
-        anEventBus.addHandler(ValueChangeEvent.getType(), this);
+        anEventBus.addHandlerToSource(ValueChangeEvent.getType(), source, this);
     }
 
     public void init() {
@@ -224,7 +224,7 @@ public class MainPresenter implements ValueChangeHandler<String> {
 		p.then(modules::logout)
         .then(resolved -> { 
             if (resolved.getValue()) {
-              return dwoGlobalVars.logout()
+              return dwoGlobalVars.logout(true)
                   .map(r -> Boolean.TRUE)
                   .fallbackTo(Promises.resolved(Boolean.TRUE));
             }

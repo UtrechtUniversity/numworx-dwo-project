@@ -40,6 +40,7 @@ import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.xss.SecFilter;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.JwtParser;
@@ -270,6 +271,9 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         }
         setUsername(sc);
         return sc;
+	} catch(ExpiredJwtException e) {
+	  LOG.log(Level.INFO, e.toString());
+	  return null;
     } catch (Exception e) {
       LOG.log(Level.WARNING, "error in token", e);
       return null;

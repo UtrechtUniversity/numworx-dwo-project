@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -11,12 +12,15 @@ import java.util.UUID;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 
 public class NodeLeaf implements Node {
 
   final boolean copy;
   private int path;
   private Map<String, Map<String,Set<Integer>>> methode;
+
+  private DomStudentModelVariant variant;
   
   public int getPath() {
     return path;
@@ -53,6 +57,7 @@ public class NodeLeaf implements Node {
       methode = this.info.getMethods();
     }
     setTitle(title);
+    setDefaultVariant();
   }
 
   public NodeLeaf(String string) {
@@ -86,6 +91,7 @@ public class NodeLeaf implements Node {
     } else {
       methode = info.getMethods();
     }
+    setDefaultVariant();
   }
 
   public NodeLeaf(String subtitle1, DomStudentModelContextInfo info2, String locale, boolean b) {
@@ -103,6 +109,14 @@ public class NodeLeaf implements Node {
       methode = this.info.getMethods();
     }
     setTitle(subtitle1);
+    setDefaultVariant();
+  }
+
+  protected void setDefaultVariant() {
+	List<DomStudentModelVariant> variants = this.info.getVariants();
+	if (variants != null && !variants.isEmpty()) {
+    	variant=(variants.get(0));
+    }
   }
 
   public String toString() {
@@ -223,6 +237,23 @@ public class NodeLeaf implements Node {
     else info.setMethodInfo(new ArrayList<>(methodeInfos));  
   }
   
+  public WrappedSet getVariants() {
+	  if (info.getVariants() == null) {
+		  info.setVariants(new ArrayList<>());
+	  }
+	  return new WrappedSet(info.getVariants());
+  }
+
+public DomStudentModelVariant getVariant() {
+	return variant;
+}
+
+public void setVariant(DomStudentModelVariant variant) {
+	this.variant = variant;
+	if (variant != null) {
+		getVariants().replace(variant);
+	}
+}
   
   
 }

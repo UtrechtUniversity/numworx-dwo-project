@@ -8,7 +8,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>DWO</artifactId>
-    <version>2.5.35</version>
+    <version>2.5.36</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,13 +22,13 @@
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
        <module>../DWO-rest-lib</module>
-<!--       <module>../DWO-gwt-lib</module>-->
+       <module>../DWO-gwt-lib</module>
   	   <module>../Account</module>
 <!-- 	 	<module>../DWOformule</module> -->
 <!-- 	 	<module>../DWOmAccess</module> -->
-<!--        <module>../DWO-commons-lib</module>-->
+        <module>../DWO-commons-lib</module>
 <!--        <module>../DWO-jclient-lib</module>-->
-<!--  	 	<module>../DWO-apps</module>-->
+  	 	<module>../DWO-apps</module>
 <!-- 		<module>../chatgwt</module> -->
  	 	<module>../DWOGwtClient</module> 
 <!--  	 	<module>../DWOinteraction</module>-->
@@ -37,7 +37,7 @@
      	<module>../DWOplayer</module>
 <!--	    <module>../edexml</module>-->
 <!--         <module>../KeyboardGWT</module> -->
-<!--     	<module>../UploadWidget</module>-->
+     	<module>../UploadWidget</module>
 <!--      	<module>../WriteMathGWT</module> -->
 <!--		<module>../osiris-import</module>-->
 <!-- 		<module>../notebook</module> -->
@@ -54,18 +54,18 @@
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.35</version>
+    			<version>2.5.36</version>
     		</dependency>
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.35</version>
+    			<version>2.5.36</version>
 			<classifier>sources</classifier>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo</groupId>
     			<artifactId>DWO-commons-lib</artifactId>
-    			<version>2.5.33</version>
+    			<version>2.5.36</version>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
@@ -75,30 +75,30 @@
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.34</version>
+            <version>2.5.36</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.34</version>
+            <version>2.5.36</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.35</version>
+        	<version>2.5.36</version>
         	<type>war</type>
         </dependency>
          <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.35</version>
+        	<version>2.5.36</version>
         	<classifier>classes</classifier>
         </dependency>
          <dependency>
          	<groupId>nl.uu.fi.dwo</groupId>
          	<artifactId>DWOJClient</artifactId>
-         	<version>2.5.35</version>
+         	<version>2.5.36</version>
          </dependency>
          <dependency>
          	<groupId>fi.beans</groupId>
@@ -108,29 +108,29 @@
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-api</artifactId>
-			<version>0.0.14</version>
+			<version>0.0.15</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-jxb</artifactId>
-			<version>0.0.14</version>
+			<version>0.0.16</version>
 		</dependency>
 		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.35</version>
+	  		<version>2.5.36</version>
 	  		<classifier>classes</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.35</version>
+	  		<version>2.5.36</version>
 	  		<classifier>sources</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.35</version>
+	  		<version>2.5.36</version>
   			<type>war</type>
 		</dependency>
 		<dependency>

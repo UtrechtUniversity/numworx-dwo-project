@@ -250,9 +250,17 @@ public class DWOLogger implements Logging {
 	public void getStateHook(Map<String,Object> state) {
 		if(attempts != null)
 			state.put("log", attempts);
+		if (delegate != null) {
+			delegate.getStateHook(state);
+		}
 	} // put objects into state
 
-	public void setStateHook(Map<String,Object> state) {} // get objects from state (if global logging on)
+	@Override
+	public void setStateHook(Map<String,Object> state) {
+		if (delegate != null) {
+			delegate.setStateHook(state);
+		}
+	} // get objects from state (if global logging on)
 
 	public Logging getLogger() {
 		return delegate == null ? this : delegate;
@@ -289,6 +297,13 @@ public class DWOLogger implements Logging {
 	@Override
 	public String[] getSMForeknowledge() {
 		return delegate != null ? delegate.getSMForeknowledge(): null;
+	}
+
+	@Override
+	public void setSMGuess(Number smGuess) {
+		if (delegate != null) {
+			delegate.setSMGuess(smGuess);
+		}
 	}
 	
 }

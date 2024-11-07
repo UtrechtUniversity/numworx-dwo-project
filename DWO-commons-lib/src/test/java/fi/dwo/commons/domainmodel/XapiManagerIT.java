@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.rest.dom.xapi.Activity;
 import nl.uu.fi.dwo.rest.dom.xapi.Agent;
 import nl.uu.fi.dwo.rest.dom.xapi.StateDocument;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
+import nl.uu.fi.dwo.rest.dom.xapi.StatementRef;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsQuery;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
 import nl.uu.fi.dwo.rest.dom.xapi.Verb;
@@ -114,7 +115,7 @@ public class XapiManagerIT {
 	    out.verb.display = Collections.singletonMap("en-US", "voided");
 	    out.object = new Activity();
 	    out.object.id = id;
-	    out.object.objectType = Activity.STATEMENT_REF;
+	    out.object.objectType = StatementRef.STATEMENT_REF;
 	    Promise<?> p = manager.saveStatement(out);
 	    Promise<StatementsResult> q = p.then( s -> {  
 	        StatementsQuery query = new StatementsQuery();

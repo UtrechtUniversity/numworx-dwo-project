@@ -1,6 +1,5 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,14 +16,12 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import dagger.Lazy;
 import dagger.MembersInjector;
 import dagger.Reusable;
-import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
@@ -34,6 +31,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
+import nl.uu.fi.dwo.mobile.client.ui.PageTracker;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -80,6 +78,7 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 	@SuppressWarnings("rawtypes")
 	@Inject NeedLogin oops;
 	@Inject PlaceController controller;
+	@Inject PageTracker tracker;
 	
 	private AnchorContext defaultContext;
 	private DWOplayerParameters PARAMETERS;
@@ -141,12 +140,12 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 			if (p.getValue()) {
 				Window.alert("Error: need a Premium subscription");
 				started = false;
-				History.back();
+				tracker.back();
 			}
 			return null;
 		}, p -> { 
 			started = false;
-			if (!oops.needed(oops.apply(p))) History.back();
+			if (!oops.needed(oops.apply(p))) tracker.back();
 		});
 		
 		

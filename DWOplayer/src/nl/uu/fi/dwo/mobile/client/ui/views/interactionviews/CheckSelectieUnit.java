@@ -229,11 +229,22 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		positionsRandomized = true;
 	}	
 	
+/**
+ * Externe kijkna. Doe alles wat de UI zou doen.
+ */
 	public void kijkNa()
+	{
+		kijkNa_intern();
+		attemptsCount++;
+		setAttempt();
+		adviseMe();
+	}
+
+	// voorheen kijkna, wordt alleen intern aangeroepen.
+	private void kijkNa_intern()
     {
 		// reset isVeranderdNaNakijken
 		zetIsVeranderdNaNakijken(false);
-
 		kijkNa(true);
 		
     }
@@ -475,7 +486,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	}
 
     public void kijkNa(int stapNr)
-    { 	kijkNa();
+    { 	kijkNa_intern();
     }
     
     public void verhoogErrorCount()
@@ -539,9 +550,11 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	    if (this.ingevuld) comRoot.setVisited(); // zie Scorewidget: "Gedaan" subtieler maken
 		if(dwologger != null) {
 			Map<String, Object> map = buildLogParameters();
-			if (mode == OpdrNavIF.EINDTOETS && this.ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
+			if (mode != OpdrNavIF.ZELFTOETS && this.ingevuld && (!nagekeken || isVeranderdNaNakijken) ) {
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
+				dwologger.log(map);
+			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
 				dwologger.log(map);
 			} else {
 				dwologger.updateLog(map);
@@ -554,14 +567,14 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         if(randomizedPositionsY != null) 
         	h.put("randomizedPositionsY", randomizedPositionsY);
         if(randomSequence!=null)
-        h.put("randomSequence", randomSequence);
-        h.put("ingevuld", new Boolean(ingevuld));
-        h.put("nagekeken", new Boolean(nagekeken));
+        	h.put("randomSequence", randomSequence);
+        h.put("ingevuld", Boolean.valueOf(ingevuld));
+        h.put("nagekeken", Boolean.valueOf(nagekeken));
         h.put("editable", Boolean.valueOf(editable));
-		h.put("isVeranderdNaNakijken", new Boolean(isVeranderdNaNakijken));
+		h.put("isVeranderdNaNakijken", Boolean.valueOf(isVeranderdNaNakijken));
         h.put("attempts", attempts);
-        h.put("attemptsCount", new Integer(attemptsCount));
-        h.put("errorCount", new Integer(errorCount));
+        h.put("attemptsCount", Integer.valueOf(attemptsCount));
+        h.put("errorCount", Integer.valueOf(errorCount));
         
         if(correctie != null) correctie.correctie(h);
         return h;
@@ -694,7 +707,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         		|| (nagekeken && !isVeranderdNaNakijken && (mode != OpdrNavIF.EINDTOETS || LessonMode.browse == comRoot.getLessonMode()))
         		||Review.isReview(comRoot)))
         {
-        	kijkNa();
+        	kijkNa_intern();
         	if(feedbackPanel!=null)
         		feedbackPanel.hide();
         }
@@ -703,7 +716,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 	
 	public void setAttempt()
 	{
-		if(dwologger != null) {
+		if(dwologger != null && ingevuld) {
 			Map<String, Object> map = buildLogParameters();
 			dwologger.log(map);
 		}
@@ -834,19 +847,19 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		this.isVeranderdNaNakijken = b;
 	}
 	
-	public void stop()
-	{
-		kijkNa();
-		
-	}
+//	public void stop()
+//	{
+//		kijkNa_intern();
+//		
+//	}
 
-	public void start()
-	{
-	}
-
-	public void destroy()
-	{
-	}
+//	public void start()
+//	{
+//	}
+//
+//	public void destroy()
+//	{
+//	}
 
 	public void opnieuw()
 	{
@@ -952,18 +965,10 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 				knopImageString = map.getString("knopImageString");
 		}
 
-		String[] smObjectives = JSONUtilities.toStringArray(launchData.get("smObjectives"));
-		String[] smForeknowledge = JSONUtilities.toStringArray(launchData.get("smForeknowledge"));
-		if(logOption || smObjectives != null) {
+		{
 			LogBuilder builder = activity.logBuilder()
-					.setLogOption(logOption)
-					.setLogID(logID)
-					.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten())
-					.setMaxScore(scoreMax)
-					.setLogObjectives(logObjectives)
-					.setSmObjectives(smObjectives)
-					.setSmForeknowledge(smForeknowledge)
-					.setTeltMee(teltMee);
+					.setLaunchData(map)
+					.setClassName("fi.wiskopdr.CheckUnitPanel/" + getAantalSelectieObjecten());
 			
 			dwologger = builder.build();
 		}
@@ -1098,9 +1103,6 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 				//e.stopPropagation();
 				if(!editable) return;
 				kijkNa();
-				attemptsCount++;
-				setAttempt();
-				adviseMe();
 			}
 		
 			

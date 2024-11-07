@@ -177,7 +177,7 @@ public class OpdrNavContext implements OpdrNavIF {
 	public void fireEvent(CBookEvent event) {
 		if(connector != null)
 		{
-			event.setSource(UUID);
+			//event.setSource(UUID);
 			getEventBus().fireEventFromSource(event, UUID + "." + event.getCommand());
 		}
 		///comRoot.fireEvent(event); // global event, logging, etc

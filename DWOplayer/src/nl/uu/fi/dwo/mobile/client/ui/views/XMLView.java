@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
@@ -63,7 +64,7 @@ public abstract class XMLView {
 
 	protected NeedLogin<JSONValue> OOPS = NeedLogin.instance();
 	private final boolean RESPONSIVE = DWOplayer.RESPONSIVE;
-    protected HashMap<String, Object> launchData;
+    public HashMap<String, Object> launchData;
 	protected ObjectMap instellingen;
 	protected int font_size = 12;
 	protected String font_name = "Arial";

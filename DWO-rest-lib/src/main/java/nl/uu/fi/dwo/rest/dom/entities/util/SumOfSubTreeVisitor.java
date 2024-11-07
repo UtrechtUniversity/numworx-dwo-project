@@ -10,7 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 
 public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 
-	  private static String buildTime(String totalTime) {
+	private static String buildTime(String totalTime) {
 		    if (totalTime == null || totalTime.isEmpty()) return "";
  		    if(totalTime.startsWith("00:00:0"))
 		      totalTime = totalTime.substring(7) + "s";
@@ -30,7 +30,7 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 	
 	@Override
 	public void visitCourseInClass(DomResultCourseInClass course) {
-		if (DomResultScore.isVisibleForTeachers(course.getViewState())) {
+		if (isVisible(course)) {
 			course.setScore(0.0);
 			course.setScoCount(0.0);
 			course.setStudentScoCount(0.0);
@@ -78,6 +78,11 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 			course.setTitle("");
 			course.setDescription("");
 		}
+	}
+
+
+	protected boolean isVisible(DomResultCourseInClass course) {
+		return true; // || DomResultScore.isVisibleForTeachers(course.getViewState());
 	}
 
 	@Override

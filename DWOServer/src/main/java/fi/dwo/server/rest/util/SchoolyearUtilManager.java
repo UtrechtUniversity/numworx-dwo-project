@@ -13,6 +13,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolData;
 import fi.dwo.server.PersistentDataManagers.core.SchoolDataManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolDataUtilManager;
 import nl.numworx.schoolyear.jclient.SchoolyearClient;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -38,7 +39,7 @@ public class SchoolyearUtilManager {
 	
 	public static SchoolyearClient build(PersistentSchool school) throws Dwo2Exception {
 		if (school.hasKiosk()) {
-			PersistentSchoolData data = SchoolDataManager.findEntity(school.getSchoolID());
+			PersistentSchoolData data = SchoolDataUtilManager.find(school);
 			if (data == null) data = new PersistentSchoolData();
 			return build(data);
 		}
@@ -48,7 +49,7 @@ public class SchoolyearUtilManager {
 	public static SchoolyearClient build(DomSchool school) throws Dwo2Exception {
 		if (school.hasKiosk()) {
 			Long id = MySQLPersistenceId.getNativeId(school);
-			PersistentSchoolData data = SchoolDataManager.findEntity(id);
+			PersistentSchoolData data = SchoolDataUtilManager.find(new PersistentSchool(id));
 			if (data == null) data = new PersistentSchoolData();
 			return build(data);			
 		}

@@ -2,11 +2,14 @@ package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -21,6 +24,7 @@ import javax.swing.tree.TreePath;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 
 abstract class MethodeAction extends AbstractAction implements TreeSelectionListener {
 
@@ -77,15 +81,31 @@ abstract class MethodeAction extends AbstractAction implements TreeSelectionList
     ConfirmDialog dialog = new ConfirmDialog(owner, "");
     KoppelingGRPanel panel = createKoppelingPanel(false);
     boolean[][] state = new boolean[aantalHoofdstukken.length][];
+    String[][] variants = new String[aantalHoofdstukken.length][]; 
     for(int i = 0; i < aantalHoofdstukken.length; i++) {
       state[i] = new boolean[aantalHoofdstukken[i]];
+      variants[i] = new String[aantalHoofdstukken[i]];
       Set<Integer> set = methode.getOrDefault(grJaarlagen[i], Collections.emptySet());
       for( Integer j: set) {
         state[i][j-1] = true;
       }
     }
     panel.setState(state);
-    
+    DomStudentModelVariant lv = leaf.getVariant();
+	panel.setCurrentVariant(lv != null ? lv.getName(): null);
+    List<DomStudentModelMethodInfo> lm = leaf.getMethodeInfos();
+    if (lm != null) {
+    	for(DomStudentModelMethodInfo m: lm) {
+    		if (m.getMethod().equals(name)) {
+    			for(int i = 0; i < grJaarlagen.length; i++) {
+    				if (m.getBook().equals(grJaarlagen[i])) {
+    					variants[i][m.getChapter()-1] = m.getVariant();
+    				}
+    			}
+    		}
+    	}
+    }
+    panel.setVariants(variants);
     dialog.setContentPane(panel);
     if(readonly) {
       panel.ok().addActionListener(dialog::cancel);
@@ -102,6 +122,31 @@ abstract class MethodeAction extends AbstractAction implements TreeSelectionList
     dialog.show();
     if (dialog.getOption() == JOptionPane.OK_OPTION) {
       Map<String, Set<Integer>> map = getMethodMap(panel);
+      variants = panel.getVariants();
+      lm = leaf.getMethodeInfos();
+      boolean hasextra = false;
+      for(int i = 0; i < variants.length; i++) {
+    	  for(int j = 0; j < variants[i].length; j++) {
+    		  String v = variants[i][j];
+    		   {
+    			  String book = grJaarlagen[i];
+    			  Integer chapter = j+1;
+    			  if (lm == null) lm = new ArrayList<>();
+    			  Optional<DomStudentModelMethodInfo> opt = lm.stream()
+    					.filter(t -> t.getMethod().equals(name) && t.getBook().equals(book) && t.getChapter().equals(chapter))
+    					.findAny();
+    			  if (opt.isPresent()) {
+    				  opt.get().setVariant(v);
+    			  } else if (v != null) {
+    				  DomStudentModelMethodInfo extra = new DomStudentModelMethodInfo(name, book, chapter);
+    				  extra.setVariant(v);
+    				  lm.add(extra);
+    				  hasextra = true;
+    			  }			  
+    		  }
+    	  }
+       }
+  	  if(hasextra) leaf.setMethodeInfos(lm);
       leaf.getMethode().put(name, map);
 // Sync methodeinfos
       if (leaf.getMethodeInfos() != null) {

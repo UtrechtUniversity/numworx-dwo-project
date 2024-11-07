@@ -25,6 +25,11 @@
   	<servlet-class>nl.numworx.uploadwidgetgwt.server.Token</servlet-class>
   </servlet>
   
+  <servlet>
+  	<servlet-name>proxy</servlet-name>
+  	<servlet-class>nl.numworx.uploadwidgetgwt.server.Proxy</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
   	<servlet-name>upload</servlet-name>
     <url-pattern>*.gupld</url-pattern>
@@ -49,6 +54,10 @@
   	<url-pattern>/dwo/rest/oauth2/token</url-pattern>
   </servlet-mapping>
 
+  <servlet-mapping>
+  	<servlet-name>proxy</servlet-name>
+  	<url-pattern>/proxy/*</url-pattern>
+  </servlet-mapping>
 
 
   <!-- Default page to serve -->

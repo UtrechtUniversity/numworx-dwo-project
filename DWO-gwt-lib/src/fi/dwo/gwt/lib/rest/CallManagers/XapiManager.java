@@ -108,7 +108,7 @@ public class XapiManager {
     if (document.etag != null) {     
       headers.put("If-Match", document.etag);
     } else {
-      headers.put("If-None-Match", "*");        // optional, 
+      //headers.put("If-None-Match", "*");        // optional, niet goed voor lrsql
     }
     headers.put("Content-Type", document.contentType);
     for(Map.Entry<String, String> entry : query.entrySet()) {

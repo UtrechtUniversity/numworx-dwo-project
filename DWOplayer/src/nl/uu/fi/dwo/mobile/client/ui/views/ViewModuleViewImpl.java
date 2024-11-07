@@ -48,7 +48,6 @@ import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.FormuleEditorWithSte
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.InteractionViewWithMisconceptions;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 import nl.uu.fi.dwo.mobile.utils.TekstBuffer;
-import nl.uu.fi.dwo.mobile.utils.VariableCollection;
 import nl.uu.fi.dwo.mobile.utils.RandomValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
@@ -71,8 +70,6 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
-import com.google.gwt.layout.client.Layout.AnimationCallback;
-import com.google.gwt.layout.client.Layout.Layer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -146,7 +143,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	OpdrNav on;
 	String location;
 	
-	private Widget mainPanel;
+	protected Widget mainPanel;
 	@UiField(provided=true) SimplePanel contentScrollPanel =
 		new ScrollPanel() { 
 		@Override
@@ -515,6 +512,10 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 				sbw.widthZelftoetsGeschiedenis = zelftoetsGeschiedenisButton.getOffsetWidth() + margin;
 			}
 		}
+
+// De checker gaat er vanuit dat mode = ZELF_TOETS. Dat hoeft niet zo te zijn.
+// wordt ook gebruikt als 'pagina brede kijkna' Dat is niet de bedoeling
+		if (on.getMode() == OpdrNavIF.ZELFTOETS)
 		scoreNav.setKijkNa(new ScoreNavIF.Checker()
 		{
 			@Override
@@ -552,6 +553,34 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 				return defer.getPromise();
 			}
 		});
+		else {
+			scoreNav.setKijkNa( (source) -> {
+				final Deferred<Void> defer = new Deferred<Void>();
+				activity.agent().addBarrier(defer.getPromise());
+				p();
+				OpdrNav.defer(new ScheduledCommand()
+				{
+
+					@Override
+					public void execute()
+					{
+						on.kijkPaginaNa();
+						
+						v();
+						
+						// focus weghalen uit antwoordvak als afdekpanel
+						if (isDisabled())
+						{
+							getKeyboard().setEditor(null);
+							getKeyboard().blur();
+						}
+						//on.saveCurrentState();
+						defer.resolve(null);
+					}
+				});
+				return defer.getPromise();
+			});
+		}
 		
 		// vorige/volgende knop toevoegen
 		scoreNav.setVorigeVisible(vorigeKnopZichtbaar);
@@ -1285,8 +1314,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		
 		zetVorigeKnoppenEnabled(opdrNr > 0);
 		zetNakijkKnopEnabled();
-		if (!isDisabled() && isDesktop())
-			hoofdPanel.tabFocus(null, false);
+// bij voortschrijdend inzicht uitgezet
+//		if (!isDisabled() && isDesktop())
+//			hoofdPanel.tabFocus(null, false);
 	}
 	
 	/**
@@ -1793,7 +1823,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	}
 
 
-	public OpdrNavIF getOpdrNav()
+	public OpdrNav getOpdrNav()
 	{
 		return on;
 	}

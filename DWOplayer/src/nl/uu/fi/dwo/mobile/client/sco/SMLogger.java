@@ -264,6 +264,14 @@ public class SMLogger implements Logging {
   }
 
   @Override
+public void setSMGuess(Number smGuess) {
+	if (smGuess != null) {
+		extensions.guess = smGuess.doubleValue();
+	}
+	delegate.setSMGuess(smGuess);
+}
+
+@Override
   public String[] getSMForeknowledge() {
 	  return extensions.foreknowledge == null ? null : extensions.foreknowledge.toArray(new String[0]);
   }

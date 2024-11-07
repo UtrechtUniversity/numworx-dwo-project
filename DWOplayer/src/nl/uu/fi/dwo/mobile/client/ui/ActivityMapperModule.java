@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Provider;
@@ -25,6 +26,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.ModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.UpActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ViewModuleActivity;
+import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.last;
 import nl.uu.fi.dwo.mobile.client.ui.places.m;
 import nl.uu.fi.dwo.mobile.client.ui.places.up;
@@ -94,19 +96,33 @@ public abstract class ActivityMapperModule {
 //		return new TreeModuleActivity(trInjector, item);
 //	}
 
+	static class ViewXSActivity extends ViewModuleActivity {
+		private final xs place;
+
+		ViewXSActivity(MembersInjector<ViewModuleActivity> injector, SelectModuleItem sco, 
+				xs place) {
+			super(injector, sco, place);
+			sco.setPlace(place);
+			this.place = place;
+		}
+
+		@Override
+		protected void setTrail(List<SelectModuleItem> trail) {
+			super.setTrail(Collections.singletonList(place.getBack()));
+		}
+	}
+
 	@Provides @IntoMap @ClassKey(xs.class)
 	static Activity xsActivity( PlaceController controller, MembersInjector<ViewModuleActivity> vmInjector, RPCHandler rpc, DwoGlobalVars vars, Provider<NoCourseView> noCourseView) {
 		xs place = (xs) controller.getWhere();
 		PersistenceId id = place.getID();
 		SelectModuleItem item = SelectModuleItemHolder.getScoByID(id);
 		if (item != null) {
-			item.setPlace(place);
-			final ViewModuleActivity viewModuleActivity = new ViewModuleActivity(vmInjector, item, place);
+			final ViewModuleActivity viewModuleActivity = new ViewXSActivity(vmInjector, item, place);
 			return viewModuleActivity;
 		}
 		DelayedActivity<SelectModuleItem> activity = new DelayedActivity<>((item2) -> {
-			item2.setPlace(place);			
-			return new ViewModuleActivity(vmInjector, item2, place);				
+			return new ViewXSActivity(vmInjector, item2, place);				
 		}, noCourseView);
 		Promise<DomScoContext> sco;
 		DomSchoolClass schoolClass = vars.getCurrentSchoolClass();

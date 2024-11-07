@@ -3,8 +3,10 @@ package nl.uu.fi.dwo.rest.dom.entities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -29,6 +31,7 @@ public class DomStudentModelContextInfo {
     private Integer nodeSize; // of in methodInfo
     
     private List<DomStudentModelMethodInfo> methodInfo;
+    private List<DomStudentModelVariant> variants;
 
     public DomStudentModelContextInfo(DomStudentModelContextInfo info) {
     	title = info.getTitle(); if(title != null) title = new TreeMap<>(title);
@@ -50,7 +53,11 @@ public class DomStudentModelContextInfo {
     	if(info.getMethodInfo() != null) {
     	  methodInfo = info.getMethodInfo().stream().map(DomStudentModelMethodInfo::new).collect(Collectors.toList());
     	}
-    	
+    	if (info.getVariants() != null) {
+    		variants = info.getVariants().stream()
+    				.map(DomStudentModelVariant::new)
+    				.collect(Collectors.toList());
+    	}
     }
     
     private static Map<String, Set<Integer>> copyOf(Map<String, Set<Integer>> map) {
@@ -242,6 +249,14 @@ public class DomStudentModelContextInfo {
 
 	public void setMethodInfo(List<DomStudentModelMethodInfo> methodInfo) {
 		this.methodInfo = methodInfo;
+	}
+
+	public List<DomStudentModelVariant> getVariants() {
+		return variants;
+	}
+
+	public void setVariants(List<DomStudentModelVariant> variants) {
+		this.variants = variants;
 	}
 
 	public Integer getNodeSize() {

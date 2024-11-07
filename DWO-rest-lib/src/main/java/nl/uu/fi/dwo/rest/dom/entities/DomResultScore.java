@@ -116,8 +116,14 @@ public abstract class DomResultScore<T extends DomResultScore> {
         this.studentScoCount = studentScoCount;
     }
 
+    /**
+     * is visible for teachers: always!
+     * @param state
+     * @return
+     */
     public static boolean isVisibleForTeachers(ViewState state) {
-        return (state == ViewState.studentsAndTeachers || state == ViewState.teachers || state == ViewState.students);
+    	return true;
+        //return (state == ViewState.studentsAndTeachers || state == ViewState.teachers || state == ViewState.students);
     }
 
     @SuppressWarnings("unchecked")
@@ -357,9 +363,10 @@ public abstract class DomResultScore<T extends DomResultScore> {
      * @param nStudents
      * @param courseLeaves
      * @param sparseMatrix
+     * @deprecated not used
      */
     @SuppressWarnings("unchecked")
-	public void collectScoresPerCourseOverSchoolClass(DomResultSchoolClass schoolClass, int nStudents, Map<PersistenceId, DomResultCourseInClass> courseLeaves, Map<PersistenceId, Map<PersistenceId, DomResultCourseInClass>> sparseMatrix) {
+	private void collectScoresPerCourseOverSchoolClass(DomResultSchoolClass schoolClass, int nStudents, Map<PersistenceId, DomResultCourseInClass> courseLeaves, Map<PersistenceId, Map<PersistenceId, DomResultCourseInClass>> sparseMatrix) {
         if (this.children.isEmpty()) {
             return;
         }

@@ -348,7 +348,7 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
 		    && body.getId().equals(DatatypeConverter.printHexBinary(l.getSecretKey()))
 		    && body.getNotBefore().equals(new Date(l.getLastLogin()/1000L * 1000L))
 		    )     {
-		  if (!System.getProperty("DWO_ENV", "app").contains("saml") || u.isSingleSchoolAccount())
+		  if (!SecuredUserAccountManager.isOIDC(System.getProperty("DWO_ENV", "app")) || u.isSingleSchoolAccount())
 		  {
 			  l.setSecretKey(null);
 			  l.setLastLogin(System.currentTimeMillis());

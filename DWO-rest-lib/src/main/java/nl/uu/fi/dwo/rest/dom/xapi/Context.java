@@ -8,6 +8,6 @@ public class Context {
   public String revision;
   public String platform;
   public String language;
-  //public StatementRef statement;
+  public StatementRef statement;
   public Extensions extensions;
 }

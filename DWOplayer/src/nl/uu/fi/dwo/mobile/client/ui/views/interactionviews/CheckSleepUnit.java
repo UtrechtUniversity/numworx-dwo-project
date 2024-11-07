@@ -936,7 +936,9 @@ public class CheckSleepUnit implements InteractionStub, CBookEventListener {
 			
 			if(logOption) {
 				String[] smForeknowledge = JSONUtilities.toStringArray(launchData.get("smForeknowledge"));
-				dwologger = activity.logBuilder().setLogOption(logOption)
+				dwologger = activity.logBuilder()
+				.setLaunchData(map)		
+				.setLogOption(logOption)
 				.setLogID(logID)
 				.setClassName("fi.wiskopdr.CheckSleepUnitPanel/" + getAantalSleepObjects() + "," + getAantalDoelObjects())
 				.setMaxScore(scoreMax)

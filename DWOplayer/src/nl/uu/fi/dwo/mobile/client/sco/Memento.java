@@ -20,6 +20,7 @@ import org.fusesource.restygwt.client.JsonEncoderDecoder;
 import org.osgi.util.promise.Promise;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
+import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.Role;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -28,6 +29,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger.LogStrategy;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -92,7 +94,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	static final String SCORE_RAW = "cmi.score.raw";
 	static final String EXIT_STATUS = "cmi.exit";
 	private static final String SESSION_TIME = "cmi.session_time";
-	private static final String TOTAL_TIME = "cmi.total_time";
+	public static final String TOTAL_TIME = "cmi.total_time";
 	public static final String COMPLETION_STATUS = "cmi.completion_status";
 	public static final String COMPLETED = "completed";
 	//public static final String STUDENT_MODEL = "dme.student_model";
@@ -109,7 +111,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public static final String LESSON_MODE = "cmi.mode";
 	public static final String SHARE_MAP = "shareMap";
-    protected final Scorm2004IF api;
+    public final Scorm2004IF api;
 	private ViewModuleView view; 
 	private JSONObject suspendData;
 	private JSONObject onsState, shareMap;
@@ -162,9 +164,13 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	private Number score;
 	private JSONArray aantalNakijken;
 	private LessonMode cmi_mode;
-	protected ActivityComponent activity;
+	protected ActivityInterface activity;
+	
+	Memento(ActivityInterface a) {
+		this(a, a.api());
+	}
 
-	Memento(ActivityComponent a, Scorm2004IF api) {
+	Memento(ActivityInterface a, Scorm2004IF api) {
 		this.activity = a;
 		this.api = api;
 		register();
@@ -407,7 +413,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		}
 	}
 
-	String getValue(String key)
+	public String getValue(String key)
 	{
 		try
 		{
@@ -1110,6 +1116,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
 	
 	public void setZelftoetsNagekeken(boolean zelftoetsNagekeken) {
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
 		this.zelftoetsNagekeken = JSONBoolean.getInstance(zelftoetsNagekeken);
 		this.onsState.put(ZELFTOETS_NAGEKEKEN, this.zelftoetsNagekeken);
 	}
@@ -1130,7 +1137,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	}
 
 	public void setAantalNakijken(int[] aantalNakijken) {
-		if(aantalNakijken == null)
+		if(aantalNakijken == null || (view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) )
 		{
 			this.aantalNakijken = null;
 		} else 
@@ -1299,6 +1306,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	 */
 	public void setZelftoetsHighScore(double score)
 	{
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
+
 		if (zelftoetsHighScore == null || (score > getZelftoetsHighScore()))
 		{
 			zelftoetsHighScore = new JSONNumber(score);
@@ -1314,6 +1323,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	 */
 	public void setScoresZelftoetsHistorie(int[] scores)
 	{
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
+
 		JSONArray array = new JSONArray();
 
 		for (int j = 0; j < scores.length; j++)
@@ -1328,6 +1339,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public void setScoresZelftoets(int[][] scores)
 	{
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
+
 		JSONArray array = new JSONArray();
 
 		for (int i = 0; i < scores.length; i++)
@@ -1417,6 +1430,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public void setIsCorrectZelftoets(Boolean[][] isCorrect)
 	{
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
+
 		JSONArray array = new JSONArray();
 
 		for (int i = 0; i < isCorrect.length; i++)
@@ -1436,6 +1451,8 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	public void setNakijkenZelftoetsPending(boolean[][] nakijkenZelftoetsPending)
 	{
+		if(view.getOpdrNav().getMode() != OpdrNavIF.ZELFTOETS) return;
+
 		JSONArray array = new JSONArray();
 
 		for (int i = 0; i < nakijkenZelftoetsPending.length; i++)

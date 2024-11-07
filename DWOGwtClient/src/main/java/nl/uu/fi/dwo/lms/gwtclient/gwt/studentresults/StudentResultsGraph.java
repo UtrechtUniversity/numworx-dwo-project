@@ -912,7 +912,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			popup.setGlassStyleName("score-frame-Glass");
 			popup.getElement().getStyle().setZIndex(10000);
 			int popupHeight = Math.min(400, Window.getClientHeight()-40); // xx is verticale marge, randjes, titel
-			description.get(current, obj.getInfo()).then(p -> {
+			description.get(current, obj.getInfo(), info).then(p -> {
 				Widget w = p.getValue();
 				w.addStyleDependentName("Graph");
 				w = new ScrollPanel(w);
@@ -987,7 +987,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		initTitle();
 		
 		voorkennistitle = new DockLayoutPanel(Unit.EM);
-		voorkennistitle.getElement().getStyle().setBackgroundColor("#1B75BB");
+		voorkennistitle.addStyleName("filter-title");
 		add(voorkennistitle);
 		
 		setWidgetLeftRight(voorkennistitle, 0, Unit.EM, 0, Unit.EM);

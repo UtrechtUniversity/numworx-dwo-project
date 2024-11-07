@@ -2,9 +2,7 @@ package nl.uu.fi.dwo.mobile.client.ui.activities;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +21,6 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
-import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
@@ -32,6 +29,7 @@ import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLoginEvent;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLoginHandler;
+import nl.uu.fi.dwo.mobile.client.ui.PageTracker;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -39,11 +37,11 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.HasBack;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.places.xs;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
 import nl.uu.fi.dwo.mobile.client.ui.views.EmptyView;
 import nl.uu.fi.dwo.mobile.client.ui.views.GotoController;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
-import nl.uu.fi.dwo.mobile.client.ui.views.HeaderViewSEB;
 import nl.uu.fi.dwo.mobile.client.ui.views.MessageDialog;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
@@ -62,7 +60,6 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -96,6 +93,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject NeedLogin oops;
 	@Inject @Named("profile") int profile;
 	@Inject Lazy<LastExamActivity> lastExam;
+	@Inject PageTracker tracker;
 
 	private DWOplayerParameters PARAMETERS;
 	@Inject void setParameters(DWOplayerParameters p) {
@@ -284,8 +282,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 					trail.add(parent);
 				parent = parent.getParent();
 			}
-			view.setTrail(trail);
-			headerView.setTrail(trail);
+			setTrail(trail);
 			view.setTitle(sco.getName());
 			Window.setTitle(sco.getName());
 			view.setScoType(sco.getScoType());
@@ -309,7 +306,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				//Window.alert(caught.getMessage());
 				started = false;
 				view = null;
-				if (!oops.needed(oops.apply(Promises.failed(caught)))) History.back();
+				if (!oops.needed(oops.apply(Promises.failed(caught)))) tracker.back();
 			}
 
 			@Override
@@ -323,7 +320,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 					where.setLocation(location);
 					sco.setPlace(where);
 					Window.setTitle(sco.getName() + " - " + location);
-					History.replaceItem(mapper.getToken(where), false);	
+					tracker.replaceItem(mapper.getToken(where), false);	
 				}
 					started = !Memento.COMPLETED.equals(view.getApi().GetValue(Memento.COMPLETION_STATUS));
 					view.setupModule(sco.getName(), PARAMETERS.getLaunchData() + sco.getID())
@@ -333,10 +330,10 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 							started = false;
 							Place back = headerView.getUpPlace();
 							if (back != null) goTo(back); else
-							History.back();
+							tracker.back();
 						}
 						return null;
-					}, p -> { started = false; if (!oops.needed(p))History.back(); })
+					}, p -> { started = false; if (!oops.needed(p))tracker.back(); })
 					.onResolve(() -> {
 						if (started && hash != null) {
 							gotoElement(hash);
@@ -348,6 +345,11 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		};
 		view.getApi().Initialize(callback);
 		}
+	}
+
+	protected void setTrail(List<SelectModuleItem> trail) {
+		view.setTrail(trail);
+		headerView.setTrail(trail);
 	}
 
 	private boolean profileCheck() {
@@ -366,7 +368,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				{
 					started = false;
 					panel.setWidget(new Label("Activiteit verlopen"));
-					History.back();
+					tracker.back();
 					view = null;
 					return true;
 				} else if (notAfter != null) {
@@ -379,7 +381,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 						public void run() {
 							tm = null;
 							started = false;
-							History.back();
+							tracker.back();
 						}};
 					tm.schedule((int)timeToGo); 
 				}
@@ -444,7 +446,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			else
 			{
 				if (sco.getParent() == null)
-					History.back();
+					tracker.back();
 				else
 					goTo(sco.getParent().getPlace());
 			}
@@ -515,10 +517,9 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 			id = id.split(":",2)[1]; // has ':'
 			item = SelectModuleItemHolder.getItemByID(id);
 			((HasBack) place).setBack(item);
+		} else if (place instanceof xs) {
+			((xs) place).setBack(sco);
 		}
-
-		
-		
 		goTo(place);
 	}
 
@@ -601,9 +602,9 @@ public void onNeedLogin(NeedLoginEvent ev) {
 		where.setHash(hash);
 		String token = mapper.getToken(where);
 		if (view.magterug())
-			History.newItem(token, false);
+			tracker.newItem(token, false);
 		else 
-			History.replaceItem(token, false);
+			tracker.replaceItem(token, false);
 		Window.setTitle(sco.getName() + " - " + location);
 //		fire(token);
 	}

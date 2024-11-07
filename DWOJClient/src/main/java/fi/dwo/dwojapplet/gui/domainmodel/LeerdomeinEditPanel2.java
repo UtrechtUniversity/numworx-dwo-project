@@ -50,6 +50,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
@@ -60,6 +61,7 @@ import javax.swing.plaf.basic.BasicMenuBarUI;
 import javax.swing.plaf.basic.BasicMenuUI;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeModel;
@@ -70,6 +72,7 @@ import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
 import fi.beans.dwomaccess.JSONEncoder;
+import fi.beans.mainframe.AppletStub;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
@@ -89,6 +92,7 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.TeacherStudentModelPanelProperties;
 import fi.dwo.dwojapplet.gui.action.GuiAction;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
+import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2.VariantListener;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.KoppelPanel;
@@ -104,6 +108,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -111,8 +116,60 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class LeerdomeinEditPanel2 extends JPanel
 		implements TreeSelectionListener, ExportPanel, WindowListener, ItemListener {
+	
+	public class VariantListener implements ItemListener {
+
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				DomStudentModelVariant v = (DomStudentModelVariant) e.getItem();
+				NodeLeaf leaf = (NodeLeaf) ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject();
+				leaf.setVariant(v);
+				if (!editable) {
+					setDescription(leaf);
+					validate();
+					repaint();
+				}
+			}
+
+		}
+
+	}
+
+	@SuppressWarnings("serial")
+	class CreateVariantAction extends AbstractAction {
+		CreateVariantAction() {
+			super("Nieuwe variant...");
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JPanel panel = new JPanel();
+			// vullen
+			panel.add(new JLabel("Variant"));
+			JTextField name = new JTextField(); name.setColumns(10);
+			panel.add(name);
+			int r = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, panel, toString(), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+			if (r == JOptionPane.OK_OPTION && !name.getText().trim().isEmpty()) {
+				LOG.info("selected " + name.getText());
+				DomStudentModelVariant n = new DomStudentModelVariant(name.getText().trim());
+				MutableComboBoxModel<DomStudentModelVariant> model = (MutableComboBoxModel<DomStudentModelVariant>) variantBox.getModel();
+				NodeLeaf leaf = (NodeLeaf) ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject();
+				if (leaf.getVariants().add(n)) {
+					if (model.getSize() == 0) model.addElement(new DomStudentModelVariant());
+					model.addElement(n);
+					leaf.setVariant(model.getElementAt(0));
+				};
+			}
+
+		}
+		
+		public String toString() {
+			return getValue(NAME).toString();
+		}
+	}
+
 	public static final Integer DEFAULT_NODE_SIZE = 24;
-  static final String WISKOPDR_SIG = "H4sIAAAAAA";
+    static final String WISKOPDR_SIG = "H4sIAAAAAA";
 	static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
 
 	static class VoorkennisAction extends AbstractAction {
@@ -743,7 +800,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 		StandardAction action = new StandardAction();
         if (action.isEnabled())
           Instellingen.add(new JMenuItem(action));
-		
+		CreateVariantAction cva = new CreateVariantAction();
+		Instellingen.add(new JMenuItem(cva));
 		bar.add(Box.createHorizontalGlue());
 
 		add(split, BorderLayout.CENTER);
@@ -821,7 +879,16 @@ public class LeerdomeinEditPanel2 extends JPanel
 		subtitle.setFont(font.deriveFont(14f));
 		container = new JPanel(new GridLayout(1, 1));
 		container.setPreferredSize(new Dimension(500, 325));
-		rightBox.add(subtitle, BorderLayout.NORTH);
+// variant next to subtitle
+		Box rightNorth = Box.createHorizontalBox();
+		rightNorth.add(subtitle);
+		rightNorth.add(Box.createHorizontalGlue());
+		MutableComboBoxModel<DomStudentModelVariant> varianten = new DefaultComboBoxModel<DomStudentModelVariant>();
+		variantBox = new JComboBox<>(varianten);
+		variantBox.setBackground(Constants.COLOR13);
+		variantBox.setForeground(Color.white);
+		rightNorth.add(variantBox);
+		rightBox.add(rightNorth, BorderLayout.NORTH);
 		rightBox.add(container, BorderLayout.CENTER);
 
 		settingsRO = Box.createHorizontalBox();
@@ -973,6 +1040,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 			}
 		});
+		
+		variantBox.addItemListener(new VariantListener());
 	}
 	
     private void packWindow() {
@@ -1154,6 +1223,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		this.model.setRoot(root = new InvisibleNode(vector, true, true));
 		insert(vector, root);
 		this.subtitle.setText("");
+		this.variantBox.setModel(new DefaultComboBoxModel<DomStudentModelVariant>());
 		// text.setEditable(false);
 		// OPSLAAN_ACTION.setDescription("");
 		this.model.nodeStructureChanged(root);
@@ -1202,6 +1272,7 @@ public class LeerdomeinEditPanel2 extends JPanel
   private AnyMethodAction methodeAction2;
   private JCheckBox methodBox;
   private MethodListener methodListener;
+  private JComboBox<DomStudentModelVariant> variantBox;
 
 	static {
 		Genson genson = new GensonBuilder().create();
@@ -1223,7 +1294,6 @@ public class LeerdomeinEditPanel2 extends JPanel
 		return resultModel;
 	}
 
-	@SuppressWarnings("unchecked")
 	private DomStudentModelStructure getTreeModel() {
 		DomStudentModelStructure result = new DomStudentModelStructure();
 		Node u;
@@ -1284,8 +1354,10 @@ public class LeerdomeinEditPanel2 extends JPanel
 		TreePath path = tree.getSelectionPath();
 		if (path == null) {
 			subtitle.setText("");
+			variantBox.setModel(new DefaultComboBoxModel<DomStudentModelVariant>());
 			setDescription("");
 			settings.setVisible(false);
+			variantBox.setVisible(false);
 			return;
 		}
 		InvisibleNode node = (InvisibleNode) path.getLastPathComponent();
@@ -1310,16 +1382,89 @@ public class LeerdomeinEditPanel2 extends JPanel
 			Integer ns = info.getNodeSize();
 			if (ns == null) ns = DEFAULT_NODE_SIZE;
 			nodeSizeChoice.setSelectedItem(ns);
+		    MutableComboBoxModel<DomStudentModelVariant> m = new DefaultComboBoxModel<DomStudentModelVariant>();
+			if (info.getVariants() != null) { 
+				((NodeLeaf) u).getVariants().add(new DomStudentModelVariant()); // only if not there already
+				info.getVariants().forEach(m::addElement);
+				
+			} 
+			variantBox.setModel(m);
+			variantBox.setSelectedItem(((NodeLeaf) u).getVariant());
+			variantBox.setVisible(true);
 			
 		} else {
 			settings.setVisible(false);
+			variantBox.setVisible(false);
 		}
 	}
 
+	private String updateDescription(String description, Map<String,Boolean> layers) {
+		Object o = StringCodeObject.decodeStringToObject(description,wo);
+		Map m = (Map)o;
+		Object oo = m.get("instellingen");
+		if (oo instanceof String) oo = StringCodeObject.decodeStringToObject(oo.toString(),wo);
+		Map mm = (Map) oo;
+		String[] layerNames = (String[]) mm.get("layerNames");
+		if (layerNames != null) { 
+			boolean[] layerVisible = (boolean[]) mm.get("layerVisible");
+			for(Map.Entry<String, Boolean> entry: layers.entrySet()) 
+				setLayer(entry.getKey(), entry.getValue(), layerNames, layerVisible);
+			oo = StringCodeObject.encodeObjectToString(mm);
+			m.put("instellingen", oo);
+			description = StringCodeObject.encodeObjectToString(o);
+		}
+		return description;
+	}
+	
+	private void setLayer(String key, Boolean value, String[] names, boolean[] values) {
+		for (int i = 0; i < names.length; i++) {
+			if (key.equals(names[i]))
+				values[i] = value;
+		}
+	}
+	
+	ClassLoader wo;
+	{
+		try {
+			wo = WiskOpdrCache.getInstance().getClassLoader();
+		} catch(Throwable oops) {}
+	}
+	
+	private Map<String,Boolean> getLayers(String description) {
+		Object o = StringCodeObject.decodeStringToObject(description, wo);
+		Map m = (Map)o;
+		Object oo = m.get("instellingen");
+		if (oo instanceof String) oo = StringCodeObject.decodeStringToObject(oo.toString(), wo);
+		m = (Map) oo;
+		Map<String,Boolean> result = new TreeMap<>();
+		String[] layerNames = (String[]) m.get("layerNames");
+		if (layerNames != null) {
+			boolean[] layerVisible = (boolean[]) m.get("layerVisible");
+			for(int i = 0; i < layerNames.length; i++) {
+				result.put((String) layerNames[i], layerVisible[i]);
+			}
+		}
+		return result;
+	}
+	
+	
+	
+	
 	void setDescription(Object u) {
 		if (u instanceof Node) {
 			String description = ((Node) u).getDescription();
 			if (description == null || description.startsWith(WISKOPDR_SIG) || description.isEmpty()) {
+
+				// wat staat er 
+				if (u instanceof NodeLeaf) {
+					NodeLeaf nl = (NodeLeaf) u;
+					DomStudentModelVariant v = nl.getVariant();
+					if (v != null) {
+						description = updateDescription(description, v.getLayers());
+					}					
+				}
+				
+				
 				if (editable) {
 					Locale locale = getLocale();
 					wiskOpdrEditPanel = WiskOpdr.getWiskOpdrEditPanel(description, locale, container.getWidth(),
@@ -1331,7 +1476,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 					wiskOpdrEditPanel.setFocusable(true);
 					wiskOpdrEditPanel.requestFocusInWindow();
 				} else {
-					WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description);
+					AppletStub stub = new DummyStub();
+					WiskOpdrPanel panel = WiskOpdr.getWiskOpdrPanel(description, getLocale(), stub);
 					panel.setBackground(Color.WHITE);
 					JScrollPane pane = new JScrollPane(panel);
 					pane.setBorder(BorderFactory.createEmptyBorder());
@@ -1393,6 +1539,12 @@ public class LeerdomeinEditPanel2 extends JPanel
 				n.setTitle(string);
 				model.nodeChanged(node);
 				String description = wiskOpdrEditPanel == null ? n.getDescription() : wiskOpdrEditPanel.getText();
+				if (u instanceof NodeLeaf) {
+					DomStudentModelVariant v = ((NodeLeaf) u).getVariant();
+					if (v != null) {
+						v.setLayers(getLayers(description));
+					}
+				}
 				n.setDescription(description);
 				n.setDescriptionAsJSON(toJSON(description)); // could be lazy...
 			}
@@ -1405,6 +1557,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 				n.setLearn((Double) learn.getValue());
 				n.setSlip((Double) slip.getValue());
 				n.setNodeSize((Integer) nodeSizeChoice.getSelectedItem());
+				n.setVariant(n.getVariant());
 			}
 		}
 	}

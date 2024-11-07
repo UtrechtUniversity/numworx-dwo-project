@@ -1,0 +1,15 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel>
+	  <div style='margin-left: 3em' >
+		<g:Label ui:field="name">Name</g:Label>
+		<g:Label ui:field="activity">Activity</g:Label>
+		<g:Label ui:field="description">Description</g:Label>
+	  </div>
+      <hr />
+	</g:HTMLPanel>
+</ui:UiBinder> 

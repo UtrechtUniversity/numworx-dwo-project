@@ -5,7 +5,7 @@
 	String dwo_env = System.getProperty("DWO_ENV", "app");
 	String profileExtension = System.getProperty("PROFILE_EXTENSION","");
 	String auth = "BASIC";
-	if (dwo_env.contains("saml")) auth = "BEARER";
+	if (dwo_env.contains("saml")||dwo_env.contains("entree")) auth = "BEARER";
 %>
 #Property file. It should be located in the working directory of the DWO application.
 #resourceURLPath should point to a webserver supplying the applet jar files loaded by WiskOpdr.

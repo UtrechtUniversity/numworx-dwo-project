@@ -1,0 +1,23 @@
+@import url("DWOplayer.css");
+
+@media only print {
+	.screenonly {
+		display:none;
+	}
+}
+
+.screenonly {
+	height: 3.5em;
+	width: 100%;
+}
+.printbutton {
+	float: right;
+	margin-top: 1em;
+	margin-right: 2em;
+	width: 9em;
+}
+
+.contentPanel {
+	display: block;
+	overflow-x: visible;
+}

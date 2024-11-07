@@ -4,6 +4,8 @@ import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.Guest;
 import fi.dwo.dwojapplet.gui.GuiCreator;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -19,7 +21,11 @@ public class LogoutAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-        GuiCreator.instance().logoff();
+    	DomLoginContext context = DwoHelper.getCurrentLoginContext();
+    	if (context != null) {
+    		context.setSecretKey(null); // really, really logout. void secret key & refresh_token 
+    	}
+        GuiCreator.instance().logoff(); // normally logout van keep secret key -> keep refresh_token valid.
     }
 
 }

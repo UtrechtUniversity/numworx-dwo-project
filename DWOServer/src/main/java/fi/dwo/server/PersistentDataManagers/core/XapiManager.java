@@ -10,6 +10,7 @@ import javax.ws.rs.core.UriInfo;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.util.SchoolDataUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.xapi.Account;
@@ -35,7 +36,7 @@ public class XapiManager {
     String auth = System.getProperty("XAPI_AUTH", "ODg5MTZhOWRiNTI1YTM0NDRkZmE0MzliZjMxMDc5NTAzZDcyZDUyODpjYzY3YzA2Zjc3MDFhMDgzY2I2MzBhZGYyMDhjMjQ3YmYyMzhhODQz");
     lrs.setAuth("Basic " + auth);
 
-    PersistentSchoolData data = SchoolDataManager.findEntity(school.getSchoolID());
+    PersistentSchoolData data = SchoolDataUtilManager.find(school);
     if (data != null) {
     	JsonReader reader = Json.createReader(new StringReader(data.getSchoolData()));
     	JsonObject object = reader.readObject();

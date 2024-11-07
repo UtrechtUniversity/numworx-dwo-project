@@ -20,6 +20,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchoolData;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.core.SchoolDataManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolDataUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolDataFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
@@ -40,7 +41,7 @@ public class SecuredDwoAdminSchoolDataManager {
 	public DomSchoolDataFull get(@Context SecurityContext sc, RestSchool rest) throws Dwo2Exception {
 		AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin();
 		Long id = MySQLPersistenceId.getNativeId(rest.getDomSchool());
-		PersistentSchoolData data = SchoolDataManager.findEntity(id);
+		PersistentSchoolData data = SchoolDataUtilManager.findEntity(id);
 		if (data == null) {
 			data = new PersistentSchoolData(id);
 			data.setOptlock(0L);
@@ -70,7 +71,7 @@ public class SecuredDwoAdminSchoolDataManager {
     public DomSchoolDataFull update(@Context SecurityContext sc, RestSchoolDataFull rest) throws Dwo2Exception {
 		AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin();
 		Long id = MySQLPersistenceId.getNativeId(rest.getData());
-		PersistentSchoolData data = SchoolDataManager.findEntity(id);
+		PersistentSchoolData data = SchoolDataUtilManager.findEntity(id);
 		if (data == null) {
 			data = new PersistentSchoolData(id);
 			SchoolDataManager.create(data);
@@ -88,7 +89,7 @@ public class SecuredDwoAdminSchoolDataManager {
         
 		data.setSchoolData(value);
 		data.setDelState(DelState.not);
-		data = SchoolDataManager.edit(data);
+		data = SchoolDataUtilManager.edit(data);
 		return data.buildDomSchoolDataFull();
     }
     
@@ -98,12 +99,12 @@ public class SecuredDwoAdminSchoolDataManager {
     public Boolean removeSchool(@Context SecurityContext sc, RestSchoolDataFull rest) throws Dwo2Exception {
 		AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.ADMIN).buildDwoAdmin();
 		Long id = MySQLPersistenceId.getNativeId(rest.getData());
-		PersistentSchoolData data = SchoolDataManager.findEntity(id);
+		PersistentSchoolData data = SchoolDataUtilManager.findEntity(id);
 		if (data != null) {
 			data.setDelState(DelState.deleted);
 			data.setOptlock(rest.getData().getOptLock());
 			data.setSchoolData("{}");
-			SchoolDataManager.edit(data);
+			SchoolDataUtilManager.edit(data);
 		}
     	return Boolean.TRUE;
     }

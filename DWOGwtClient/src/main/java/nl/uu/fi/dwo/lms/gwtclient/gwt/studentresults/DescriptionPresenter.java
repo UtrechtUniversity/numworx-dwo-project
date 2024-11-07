@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
 import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -11,6 +13,11 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.ui.Frame;
@@ -22,6 +29,8 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 
 public class DescriptionPresenter {
 	private static final Logger LOG = Logger.getLogger(DescriptionPresenter.class.getName());
@@ -173,6 +182,39 @@ public class DescriptionPresenter {
 					json = text;
 					text = DescriptionPresenter.WISKOPDR_SIG;
 				}
+				Widget description = this.createDescription(text, json);
+				return Promises.resolved(description);
+			});
+			
+		}
+		public Promise<Widget> get(DomStudentModelContextId current, DomStudentModelContextInfo info, DomStudentModelMethodInfo method) {
+			return service.getDescription(current, info)
+			   .then(p -> {
+				String text = p.getValue();
+				String json = null;
+				if (text.startsWith("{")) {
+					json = text;
+					text = DescriptionPresenter.WISKOPDR_SIG;
+				}
+				if (json != null && info != null && info.getVariants() != null && method != null) {
+					String string = method.getVariant();
+					Optional<DomStudentModelVariant> opt = info.getVariants().stream().filter(t -> Objects.equals(t.getName(),string)).findAny();
+					if (opt.isPresent()) {
+						Map<String, Boolean> layers = opt.get().getLayers();
+						JSONValue v = JSONParser.parseStrict(json);
+						JSONObject instellingen = v.isObject().get("instellingen").isObject();
+						JSONArray names = instellingen.get("layerNames").isArray();
+						JSONArray values = instellingen.get("layerVisible").isArray();
+						for(int i = 0; i < names.size(); i++) {
+							String n = names.get(i).isString().stringValue();
+							Boolean visible = layers.getOrDefault(n, Boolean.FALSE);
+							values.set(i, JSONBoolean.getInstance(visible));
+						}
+						json = v.toString();
+					}
+				}
+				
+				
 				Widget description = this.createDescription(text, json);
 				return Promises.resolved(description);
 			});

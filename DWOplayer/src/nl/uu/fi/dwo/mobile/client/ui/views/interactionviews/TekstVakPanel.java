@@ -2148,7 +2148,14 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 			setVisibility((nagekeken||activity.isEindtoetsVerzegeld())&&layerVisible);
 		else
 			setVisibility(shouldVisible);
-		
+
+		if (lastEvent != null) {
+			boolean small = lastEvent.booleanValue();
+			lastEvent = null;
+			Scheduler.get().scheduleDeferred(() -> 
+				fireLayoutAction(small) // delay after all of setState()
+			);
+		}
 	}
 /**
  *  Always set state to something. Pick up shared state.
@@ -5691,6 +5698,16 @@ private Object CamelCase(String name) {
 		zetVolledigeBreedte0alt(breedte);
 	}
 
+	
+	Boolean lastEvent = null;
+	private void fireLayoutAction(boolean small) {
+		if (lastEvent != null && small == lastEvent.booleanValue()) return;
+		final CBookEvent ev = new CBookEvent(small ? "action.smalllayout": "action.widelayout");
+		Scheduler.get().scheduleDeferred(() -> comRoot.fireEvent(ev));
+		lastEvent = Boolean.valueOf(small);
+	}
+	
+	
 	private void zetVolledigeBreedte0alt(int breedte) {
 		
 			// 1. deze kolom is uitgezoemd:
@@ -5704,26 +5721,28 @@ private Object CamelCase(String name) {
 				return;
 			}
 			// 2. dit is een response tekstvakpanel met 1 tekstvak
-			if (responsive && RESPONSIVE) {
-				zetVolledigeBreedte1(breedte); // boekhouding....
+			if (responsive && RESPONSIVE && visible) {
+				//zetVolledigeBreedte1(breedte); // boekhouding....
 				int w;	 			
 			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
-			    if (w < responsiveMinWidth ) {
-			    		w = breedte;
+			    boolean small = w < responsiveMinWidth;
+				if (small ) {
+			    		w = breedte;			    		
 			    }
 			    else {
 			    		w = w-1; // correctie voor afrondingen naar boven
 			    }
 			    if(w > responsiveMaxWidth)
 			    		w = responsiveMaxWidth;						
-				if(Math.abs(this.breedte - w)>1 ) {
-					tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
-					this.breedte = w;
-					breedtes.set(0,(double)w);
-					
-					tekstVakken[0][0].reLayout();
-				}
-				
+//				if(Math.abs(this.breedte - w)>1 ) {
+//					tekstVakken[0][0].setSize(w, tekstVakken[0][0].getHeight());
+//					this.breedte = w;
+//					breedtes.set(0,(double)w);
+//					
+//					tekstVakken[0][0].reLayout();
+//				}
+			    zetVolledigeBreedte1(w);
+				fireLayoutAction(small);
 				return;
 			}
 		if (volledigeBreedte && breedtes != null) {		// alle andere gevallen
@@ -5749,7 +5768,8 @@ private Object CamelCase(String name) {
 			int w = breedte;
  			
 			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
-			    if(responsiveFactor*breedte + responsiveConstant< responsiveMinWidth || zoomKolom != null ) {
+			    boolean small = responsiveFactor*breedte + responsiveConstant< responsiveMinWidth || zoomKolom != null;
+				if(small ) {
 			    		w = breedte;
 			    }
 			    else {
@@ -5771,6 +5791,7 @@ private Object CamelCase(String name) {
 				
 				tekstVakken[0][0].reLayout();
 			}
+			fireLayoutAction(small);
 		}
   }
 
@@ -5785,10 +5806,12 @@ private Object CamelCase(String name) {
   }
 
   private void zetVolledigeBreedte1(int breedte) {
-//	if(Math.abs(this.breedte - breedte)<2)
-//		return;
+	int huidigebreedte = visible ? this.breedte : this.breedte_oud;
+	if(Math.abs(huidigebreedte - breedte)<2)
+	{	LOG.info("zetVolledigebreedte weinig verschil");
+		return;
+	}
 	int aantalKolommen = breedtes.size();
-    int huidigebreedte = visible ? this.breedte : this.breedte_oud;
 	int teVerdelenBreedte = huidigebreedte - (aantalKolommen-1)*cellSpaceColumn;
     double factor = 1.0*(breedte-(aantalKolommen-1)*cellSpaceColumn)/teVerdelenBreedte;
     double restbreedte = breedte-(aantalKolommen-1)*cellSpaceColumn;				

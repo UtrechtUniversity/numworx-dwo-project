@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.studentmodel.AbstractStudentModelPresenter;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 
 public class EastPanel extends ResizeComposite {
@@ -62,13 +63,17 @@ public class EastPanel extends ResizeComposite {
 	}
 
 	private final DescriptionPresenter service;
-		
+
 	public void setDescription(DomStudentModelContextId model, DomStudentModelContextInfo info) {
+		setDescription(model, info, null);
+	}
+
+	public void setDescription(DomStudentModelContextId model, DomStudentModelContextInfo info, DomStudentModelMethodInfo method) {
 		String text = getTitle(info);
 		if (text.startsWith("W:")) text = text.substring(2).trim();
 		title.setText(text);
 		
-		service.get(model, info)
+		service.get(model, info, method)
 		.then(p -> { Widget value = p.getValue();
 			description.setWidget(value);
 			return p;
