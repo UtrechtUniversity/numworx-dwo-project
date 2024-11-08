@@ -513,9 +513,9 @@ public class BootPanelController {
         this.session = session;
         
         if (session) {
-        	viewFactory.getMainView().setIdleTimeout(MainPresenter.IDLE); // 10 sec, word 900,000ms
+        	presenterFactory.getMainPresenter().setIdleTimeout(MainPresenter.IDLE); // 10 sec, word 900,000ms
         } else {
-        	viewFactory.getMainView().unsetIdleTimeout();
+        	presenterFactory.getMainPresenter().unsetIdleTimeout();
         }
     }
 
