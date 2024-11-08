@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.mobile.client.ui.views;
 
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
 import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
-public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF, ResizeHandler {
+public class DescriptionViewImpl extends XMLView implements DescriptionView, OpdrNavIF, ResizeHandler, Closeable {
 	
 	static final Logger LOG = Logger.getLogger(DescriptionViewImpl.class.getName());
 	
@@ -171,6 +172,9 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		setupModule(id);
 	}
 	
+	public void close() {
+		activity.close();
+	}
 
   @Override
   protected Promise<JSONValue> getJSONLaunchDataBytes(String file) {

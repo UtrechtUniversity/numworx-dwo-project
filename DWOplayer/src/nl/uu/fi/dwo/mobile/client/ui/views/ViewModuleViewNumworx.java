@@ -177,6 +177,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 
 	public void close() {
 		clearKruimels();
+		activity.close();
 		delegate.close();
 	}
 

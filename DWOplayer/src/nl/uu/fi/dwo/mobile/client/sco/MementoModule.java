@@ -4,6 +4,9 @@ import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Provider;
 
+import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.ResettableEventBus;
+
 import dagger.Module;
 import dagger.Provides;
 import nl.uu.fi.dwo.mobile.client.dagger.ActivityScope;
@@ -17,4 +20,6 @@ public class MementoModule {
 	}
 	
 	@ActivityScope @Named("API") @Provides protected Scorm2004IF api(@Named("parentAPI") Provider<Scorm2004IF> api) { return api.get(); }
+
+	@ActivityScope @Provides static protected ResettableEventBus eventbus(EventBus bus) { return new ResettableEventBus(bus); }
 }

@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import javax.inject.Named;
 
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.ResettableEventBus;
 
 import dagger.Lazy;
 import dagger.Subcomponent;
@@ -27,7 +28,7 @@ import nl.uu.fi.dwo.mobile.utils.Logging;
 @ActivityScope
 public abstract class ActivityComponent implements ActivityInterface {
 
-	public abstract EventBus getEventBus();
+	public abstract ResettableEventBus getEventBus();
 	public abstract DWOplayerParameters parameters();
 	public abstract TrafficAgent agent();
 	public abstract Optional<DwoGlobalVars> vars();
@@ -46,7 +47,7 @@ public abstract class ActivityComponent implements ActivityInterface {
 	@Override
 	public Lazy<ScoreWidgetIF> scoreWidgetIF() {
 		return () -> {
-			//if (isTest() && vars().isPresent()) { return scoremanager(); }
+			if (isTest() && vars().isPresent()) { return scoremanager(); }
 			return api(); 
 		};
 	}
@@ -98,5 +99,9 @@ public abstract class ActivityComponent implements ActivityInterface {
 	@Override
 	public String getStubView() {
 		return parameters().getStubView();
+	}
+	
+	public void close() { 
+		getEventBus().removeHandlers();
 	}
 }
