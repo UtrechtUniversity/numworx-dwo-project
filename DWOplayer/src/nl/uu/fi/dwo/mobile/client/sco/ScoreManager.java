@@ -22,10 +22,15 @@ import org.osgi.util.promise.Promises;
 import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.interaction.client.JSONUtilities;
+import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
+import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.dagger.ActivityScope;
+import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 
 @ActivityScope
-public class ScoreManager implements ScoreWidgetIF {
+public class ScoreManager implements ScoreWidgetIF, CBookEventListener {
 	
 	final Scorm2004IF delegate; // not sure 
 	final EventBus bus;
@@ -41,6 +46,7 @@ public class ScoreManager implements ScoreWidgetIF {
 			cache = instance.get().getScoreCache();
 		}
 		//bus.addHandler(event.type, this); // dat wordt de lazy updater 
+		OpdrNav.getEventBus().addHandler(CBookEvent.TYPE, this);
 	}
 
 	@Override
@@ -117,5 +123,14 @@ public class ScoreManager implements ScoreWidgetIF {
 		Mapper mapper = new Mapper(names, defer);
 		Promises.all(all.values()).map(mapper).then(null, mapper).onResolve(mapper); // must be Asynchroon.
 		return defer.getPromise();
+	}
+
+	@Override
+	public void acceptCBookEvent(CBookEvent event) {
+		if ("setChanged".equals(event.getCommand())) {
+			ObjectMap parameters = JSONUtilities.wrapMap(event.getParameters());
+			
+		}
+		
 	}
 }

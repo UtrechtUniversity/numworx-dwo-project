@@ -666,6 +666,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// anders gaat oefenen met geen correctie eerdere pagina's mis na
 		// kijkNa()
 		Map<String, Object> hashmap = new HashMap<>();
+		hashmap.put("unitId", entry.getUnitId());
 		hashmap.put("location", currentOpdracht);
 		hashmap.put("success", check);
 		hashmap.put("score.raw", scores[currentActiviteit][currentOpdracht]);
