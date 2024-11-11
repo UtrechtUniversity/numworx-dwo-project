@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -224,6 +225,16 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
   @Override
   public void appletResize(int width, int height) {
 	  if (delegate != null) delegate.appletResize(width, height);
+  }
+
+  public void setLayersVisible(Map<String,Boolean> layerinfo) {
+    System.out.println("LAYER INFO " + layerinfo);
+	try {
+		Method m = component.getClass().getMethod("setLayersVisible", Map.class);
+		m.invoke(component, layerinfo);
+	} catch(Exception e) {
+		LOG.log(Level.SEVERE, "setLayersVisible", e);			
+	}    
   }
 
 }

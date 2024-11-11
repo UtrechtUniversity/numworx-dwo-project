@@ -129,6 +129,9 @@ public class LeerdomeinEditPanel2 extends JPanel
 					setDescription(leaf);
 					validate();
 					repaint();
+				} else {
+					Map<String, Boolean> layersinfo = v.getLayers();
+					wiskOpdrEditPanel.setLayersVisible(layersinfo);
 				}
 			}
 
