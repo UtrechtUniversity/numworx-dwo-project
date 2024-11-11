@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import='java.util.regex.*' %>
+<%@ page import='fi.dwo.server.BUILD' %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +10,7 @@ String hash = request.getParameter("hash");
 String player = "/gwtclient/index.html";
 String token = "/dwo/saml/login";
 String dwo_env = System.getProperty("DWO_ENV","app");
+String tstamp = BUILD.timeStamp;
 
 if ( hash != null && (hash.isEmpty() || Pattern.matches("#[a-z]+:\\d*", hash))) // Deeplink
 	player = "/dwo/tablet/DWOplayer.jsp";
@@ -36,7 +38,7 @@ if ("shibboleth".equals(request.getAuthType()) || dwo_env.contains("saml")) {
     <link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
     <script>
     	endpoint = "<%=player%>"
-    	search = "?base=/en/he/&profile=100&locale=en"
+    	search = "?base=/en/he/&profile=100&locale=en&t=<%=tstamp%>"
     	hash= "<%=hash%>"
         clientId = "<%=clientId%>"
         token="<%=token%>"
