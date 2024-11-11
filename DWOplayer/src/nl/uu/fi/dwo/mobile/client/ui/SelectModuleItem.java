@@ -200,6 +200,7 @@ public class SelectModuleItem
 			scoType = ScoType.ZELFTOETS;
 		}
 		studentModelId = sco.getStudentModelContext();
+		original = sco;
 	}
 
 	public String getName()

@@ -23,7 +23,7 @@
     <modules>
 <!--       <module>../DWO-rest-lib</module>-->
 <!--       <module>../DWO-gwt-lib</module>-->
-<!--  	   <module>../Account</module>-->
+  	   <module>../Account</module>
 <!-- 	 	<module>../DWOformule</module> -->
 <!-- 	 	<module>../DWOmAccess</module> -->
 <!--        <module>../DWO-commons-lib</module>-->

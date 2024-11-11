@@ -23,6 +23,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.ResettableEventBus;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.account.client.ScoreCache;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -38,7 +39,7 @@ public class ScoreManager implements ScoreWidgetIF, CBookEventListener {
 	final EventBus bus;
 	final Optional<DwoGlobalVars> vars;
 	
-	Map<String, Promise<Map<String,String>>> cache;
+	ScoreCache cache;
 
 	@Inject ScoreManager(@Named("API") Scorm2004IF api, ResettableEventBus bus, Optional<DwoGlobalVars> instance) {
 		this.delegate = api;

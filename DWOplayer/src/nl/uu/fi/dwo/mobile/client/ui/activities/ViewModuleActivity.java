@@ -90,6 +90,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject RPCHandler rpc;
 	@Inject HeaderView headerView;
 	@Inject PlaceHistoryMapper mapper;
+	@SuppressWarnings("rawtypes")
 	@Inject NeedLogin oops;
 	@Inject @Named("profile") int profile;
 	@Inject Lazy<LastExamActivity> lastExam;
@@ -272,6 +273,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		headerView.hide();
 		panel.setWidget(view); // terug naar af. problemen met gekke scrolls
 		{
+			vars.scoreCache().ifPresent(sc -> sc.init(sco.original()));
 			final String id = sco.getID().toString();
 			DWOplayer.insertCSS(id);
 			List<SelectModuleItem> trail = new ArrayList<SelectModuleItem>();
