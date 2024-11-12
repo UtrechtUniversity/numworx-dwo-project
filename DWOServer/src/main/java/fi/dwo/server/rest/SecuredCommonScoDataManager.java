@@ -862,7 +862,9 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				orScores = orScores.getJsonArray(0);
 				n = orScores.getJsonNumber(pagenr).numberValue();
 			} catch(Exception oops) {
-				n = 0; // there is ALWAYS a value
+				if (!(COMPLETE.equals(pssc.getCompletionStatus())))
+						return ""; // no value if not complete
+				n = 0; // there is a value if complete
 			}
 			if (COMPLETE.equals(pssc.getCompletionStatus()) && pssd.getCocd() != null) {
 				Scorm2Xml xml = new Scorm2Xml(pssd.getCocd());
