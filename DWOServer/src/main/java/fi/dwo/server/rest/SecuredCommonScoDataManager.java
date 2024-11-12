@@ -857,8 +857,15 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 			}
 			if (onsState == null) return "";
 			JsonArray orScores = onsState.getJsonArray("orScores");
-			orScores = orScores.getJsonArray(0);
-			Number n = orScores.getJsonNumber(pagenr).numberValue();
+			Number n;
+			try {
+				orScores = orScores.getJsonArray(0);
+				n = orScores.getJsonNumber(pagenr).numberValue();
+			} catch(Exception oops) {
+				if (!(COMPLETE.equals(pssc.getCompletionStatus())))
+						return ""; // no value if not complete
+				n = 0; // there is a value if complete
+			}
 			if (COMPLETE.equals(pssc.getCompletionStatus()) && pssd.getCocd() != null) {
 				Scorm2Xml xml = new Scorm2Xml(pssd.getCocd());
 				String json = xml.LMSGetValue(REVIEW_DATA);
