@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
+import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.keyboard.client.Combined;
@@ -159,7 +160,8 @@ public class DWOKeyboard extends FlowPanel implements StatusBarIF, FormuleClipbo
 				storage = null; // jammer dan.
 			}
 		}
-		CopyToClipboard.setText(clipboard);
+		CopyToClipboard.setText(clipboard); // sets focus to invisible textarea
+		FocusOnTouch.focus(); // keep focus in correct window.
 	}
 
 	@Override
