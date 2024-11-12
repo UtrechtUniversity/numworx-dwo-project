@@ -74,20 +74,21 @@ public class PageTracker implements ValueChangeHandler<String>, Historian {
 
 	public void logon() {
 		RoleType role = vars.getRoleType();
+		if (role == RoleType.STUDENT) {
 		DomSchool school = vars.getSchool();
 		String rights = school.getSchoolRights();
 		String token = historian.getToken();
 		LOG.warning(" started logging for " + role + " " + rights + " " + token);
 		// het idee is student + t in rights, de t van track
-		if (role == RoleType.STUDENT && rights.contains("t")) {
+		if (rights.contains("t")) {
 			if (reg == null) reg = historian.addValueChangeHandler(this);
 			log = rpc.get().getLRS().map(x -> x::saveStatement);
 	        if (xw != null) {
 	        	log = log.map(m -> xw.map(w -> w.wrap(m)).orElse(m));
 	        }
-		} else {
-			log = null;
-		}
+	        return;
+		} }
+		log = null;
 	}
 	
 	public void logoff() {
