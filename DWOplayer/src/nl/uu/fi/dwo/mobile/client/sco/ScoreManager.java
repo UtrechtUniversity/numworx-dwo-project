@@ -31,6 +31,7 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.client.dagger.ActivityScope;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.rest.dom.entities.DomId;
 
 @ActivityScope
 public class ScoreManager implements ScoreWidgetIF, CBookEventListener {
@@ -41,12 +42,13 @@ public class ScoreManager implements ScoreWidgetIF, CBookEventListener {
 	
 	ScoreCache cache;
 
-	@Inject ScoreManager(@Named("API") Scorm2004IF api, ResettableEventBus bus, Optional<DwoGlobalVars> instance) {
+	@Inject ScoreManager(@Named("API") Scorm2004IF api, ResettableEventBus bus, Optional<DwoGlobalVars> instance, DomId item) {
 		this.delegate = api;
 		this.bus = bus; // 
 		this.vars = instance;
 		if (instance.isPresent()) {
 			cache = instance.get().getScoreCache();
+			cache.init(item);
 		}
 		bus.addHandler(CBookEvent.TYPE, this);
 	}
