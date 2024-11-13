@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 
 import org.osgi.util.promise.Promise;
@@ -39,7 +40,7 @@ public class PageTracker implements ValueChangeHandler<String>, Historian {
 	private DwoGlobalVars vars;
 	@Inject Lazy<RPCHandler> rpc;
 	private Promise<LogStrategy> log;
-	@Inject Optional<XapiWrapper> xw;
+	@Inject Provider<Optional<XapiWrapper>> xw;
 	private UrlBuilder home;
 
 	@Inject PageTracker(DwoGlobalVars vars, Historian historian) {
@@ -84,7 +85,8 @@ public class PageTracker implements ValueChangeHandler<String>, Historian {
 			if (reg == null) reg = historian.addValueChangeHandler(this);
 			log = rpc.get().getLRS().map(x -> x::saveStatement);
 	        if (xw != null) {
-	        	log = log.map(m -> xw.map(w -> w.wrap(m)).orElse(m));
+				Optional<XapiWrapper> oxw = xw.get();
+	        	log = log.map(m -> oxw.map(w -> w.wrap(m)).orElse(m));
 	        }
 	        return;
 		} }

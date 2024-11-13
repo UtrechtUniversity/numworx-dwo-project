@@ -81,6 +81,16 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	    initialize(activity.api());
 	}
 
+	
+	
+	@Override
+	public void setSco(SelectModuleItem sco) {
+		activity.item(sco.original());
+		ViewModuleViewBuilder.super.setSco(sco);
+	}
+
+
+
 	public void initialize(Scorm2004IF api) {
       delegate = new ViewModuleViewImpl(activity, rpc, false, api);
       final int correctie = 10; // width popup 

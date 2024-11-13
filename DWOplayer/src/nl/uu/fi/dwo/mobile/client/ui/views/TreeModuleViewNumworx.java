@@ -676,8 +676,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				}
 				
 			};
-			ActivityComponent build = builder.mementoModule(module).build();
-			build.vars().ifPresent(vars -> vars.scoreCache().ifPresent(sc -> sc.init(item.original())));
+			ActivityComponent build = builder.mementoModule(module).build().item(item.original());
 			w = new DescriptionViewImpl(width, rpc, item.getID(), this, build);
 		} else
 		if(description.startsWith("<html>")) {

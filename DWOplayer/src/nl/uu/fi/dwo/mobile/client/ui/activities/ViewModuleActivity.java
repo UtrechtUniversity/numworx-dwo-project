@@ -285,20 +285,21 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				parent = parent.getParent();
 			}
 			setTrail(trail);
-			view.setTitle(sco.getName());
+			view.setSco(sco);
+			//view.setTitle(sco.getName());
 			Window.setTitle(sco.getName());
-			view.setScoType(sco.getScoType());
+			//view.setScoType(sco.getScoType());
 			view.setPresenter(this);
 			headerView.setPresenter(this);
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
-			view.setUnitId(id);
-			PersistenceId modelid = sco.getStudentModelId();
-
-			if(modelid != null) {
-				view.setModel(Promises.resolved(new DomStudentModelContextId(modelid)));
-			} else
-				view.setModel(null);
+			//view.setUnitId(id);
+//			PersistenceId modelid = sco.getStudentModelId();
+//
+//			if(modelid != null) {
+//				view.setModel(Promises.resolved(new DomStudentModelContextId(modelid)));
+//			} else
+//				view.setModel(null);
 			
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 

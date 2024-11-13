@@ -60,7 +60,6 @@ public abstract class ActivityComponent implements ActivityInterface {
 		ActivityComponent build();
 		Builder mementoModule(MementoModule module);
 		Builder loggingModule(SMLogger.LoggingModule module);
-		@BindsInstance Builder item(@Nullable DomId item);
 	}
 
 	@Named("premium")
@@ -106,5 +105,10 @@ public abstract class ActivityComponent implements ActivityInterface {
 	
 	public void close() { 
 		getEventBus().removeHandlers();
+	}
+
+	public ActivityComponent item(DomId original) {
+		vars().ifPresent(v -> v.scoreCache().ifPresent(c -> c.init(original)));
+		return this;
 	}
 }

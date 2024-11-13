@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.List;
 
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
@@ -10,6 +11,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
@@ -58,4 +60,16 @@ public interface ViewModuleView extends IsWidget
     	getApi().SetValue(Memento.LOCATION, location);
     }
 	default boolean magterug() { return true; }
+	
+	default void setSco(SelectModuleItem sco) {
+		setScoType(sco.getScoType());
+		setTitle(sco.getName());
+		setUnitId(sco.getID().toString());
+		PersistenceId modelid = sco.getStudentModelId();
+
+		if(modelid != null) {
+			setModel(Promises.resolved(new DomStudentModelContextId(modelid)));
+		} else
+			setModel(null);
+	}
 }

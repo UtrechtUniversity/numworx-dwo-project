@@ -15,8 +15,9 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 public abstract class XapiModule {
 	@Reusable
 	@Provides static Optional<XapiWrapper> wrap(Provider<XapiWrapper> provider, DwoGlobalVars vars, DWOplayerParameters PARAMETERS) { 
-		if (vars.getRoleType() != RoleType.STUDENT 
-				|| PARAMETERS.inExam() 
+		if (//vars.getRoleType() != RoleType.STUDENT 
+			//	|| 
+				PARAMETERS.inExam() 
 				|| !PARAMETERS.getDwoEnv().contains("test")
 		)
 			return Optional.empty();

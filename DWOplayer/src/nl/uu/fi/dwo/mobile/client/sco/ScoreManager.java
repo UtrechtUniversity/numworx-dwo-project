@@ -42,15 +42,19 @@ public class ScoreManager implements ScoreWidgetIF, CBookEventListener {
 	
 	ScoreCache cache;
 
-	@Inject ScoreManager(@Named("API") Scorm2004IF api, ResettableEventBus bus, Optional<DwoGlobalVars> instance, DomId item) {
+	@Inject ScoreManager(@Named("API") Scorm2004IF api, ResettableEventBus bus, Optional<DwoGlobalVars> instance) {
 		this.delegate = api;
 		this.bus = bus; // 
 		this.vars = instance;
 		if (instance.isPresent()) {
 			cache = instance.get().getScoreCache();
-			cache.init(item);
+			//cache.init(item);
 		}
 		bus.addHandler(CBookEvent.TYPE, this);
+	}
+	
+	/*@Inject*/ void setId(DomId item) {
+		if(cache != null) cache.init(item);
 	}
 
 	@Override
