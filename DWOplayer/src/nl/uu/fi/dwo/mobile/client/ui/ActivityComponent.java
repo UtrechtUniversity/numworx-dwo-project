@@ -9,6 +9,7 @@ import javax.inject.Named;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.ResettableEventBus;
 
+import dagger.BindsInstance;
 import dagger.Lazy;
 import dagger.Subcomponent;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -23,6 +24,7 @@ import nl.uu.fi.dwo.mobile.client.sco.ScoreWidgetIF;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.rest.dom.entities.DomId;
 
 @Subcomponent(modules= {MementoModule.class, SMLogger.LoggingModule.class} )
 @ActivityScope
@@ -58,6 +60,7 @@ public abstract class ActivityComponent implements ActivityInterface {
 		ActivityComponent build();
 		Builder mementoModule(MementoModule module);
 		Builder loggingModule(SMLogger.LoggingModule module);
+		@BindsInstance Builder item(@Nullable DomId item);
 	}
 
 	@Named("premium")

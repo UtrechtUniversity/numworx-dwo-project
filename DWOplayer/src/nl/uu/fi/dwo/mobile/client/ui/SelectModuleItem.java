@@ -13,6 +13,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewModulePlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.DomId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
@@ -47,7 +48,8 @@ public class SelectModuleItem
 	
 	private String name;
 	private String description;
-	private Object id, original;
+	private Object id;
+	private DomId  original;
 	private boolean showScore, fromSchool;
 	private int sequencenr;
 	private String image;
@@ -76,16 +78,7 @@ public class SelectModuleItem
 
 	private SelectModuleItem() {}
 	
-//	public SelectModuleItem(Object id, String name, String file)
-//	{
-//		this.id = id;
-//		this.name = name;
-//		this.file = file;
-//		this.type = Type.SCO;
-//		this.showScore = true; // the default
-//	}
-
-	public SelectModuleItem(Map<String,Object> map, Type type)
+	private SelectModuleItem(Map<String,Object> map, Type type)
 	{
 		switch(type) {
 		case MODULE:
@@ -151,23 +144,6 @@ public class SelectModuleItem
 		return fromSchool;
 	}
 	
-//	public SelectModuleItem(Object id, Node node)
-//	{
-//		this.id = id;
-//		this.showScore = false;
-//		for (int i = 0; i < node.getChildNodes().getLength(); i++)
-//		{
-//
-//			Node curr = node.getChildNodes().item(i);
-//			if (curr.getNodeName().equalsIgnoreCase("name"))
-//				this.name = curr.getChildNodes().toString();
-//			if (curr.getNodeName().equalsIgnoreCase("file"))
-//				this.file = curr.getChildNodes().toString();
-//
-//		}
-//		Logger.getLogger("SelectModuleItem").log(Level.INFO,this.name + " " + this.file);
-//	}
-
 	public SelectModuleItem(Object id, Type module) {
 		this.type = module;
 		this.id = id;
@@ -377,8 +353,8 @@ public class SelectModuleItem
 		return studentModelId;
 	}
 
-	public Object original() {
-		return original == null ? id : original;
+	public DomId original() {
+		return original;
 	}
 
 	public void setDomClassCourseStudent(DomCourseStudent course, DomClassCourse cc) {
@@ -387,7 +363,7 @@ public class SelectModuleItem
 		type = withChildren != null && withChildren.booleanValue() ? Type.FOLDER : Type.MODULE;
 		description = course.getDescription();
 		fromSchool = course.getSchoolId() != null;
-		id = PersistenceIdDecoderInterface.instance.idOf(course.getId(), PersistenceClassType.PersistentCourse);
+		id = PersistenceIdDecoderInterface.instance.idOf(course.getId(), PersistenceClassType.PersistentCourse);		
 		parent = PersistenceIdDecoderInterface.instance.idOf(course.getParentID(), PersistenceClassType.PersistentCourse);
 		name = course.getName();
 		Long sequence = course.getSequenceNr();
