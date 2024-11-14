@@ -1709,7 +1709,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 				h.put("nagekeken", (nagekeken));
 				h.put("isVeranderdNaNakijken", (isVeranderdNaNakijken));
 				logging.log(map);
-			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
+			} else if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
 				logging.log(map);
 			} else {
 				logging.updateLog(map);
