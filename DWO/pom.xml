@@ -21,7 +21,7 @@
     
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
-<!--       <module>../DWO-rest-lib</module>-->
+       <module>../DWO-rest-lib</module>
 <!--       <module>../DWO-gwt-lib</module>-->
   	   <module>../Account</module>
 <!-- 	 	<module>../DWOformule</module> -->
@@ -54,12 +54,12 @@
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.36</version>
+    			<version>2.5.37-SNAPSHOT</version>
     		</dependency>
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.36</version>
+    			<version>2.5.37-SNAPSHOT</version>
 			<classifier>sources</classifier>
     		</dependency>
     		<dependency>
