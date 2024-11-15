@@ -2218,7 +2218,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					h.put("nagekeken", Boolean.TRUE);
 					h.put("isVeranderdNaNakijken", Boolean.FALSE);
 					dwologger.log(map);
-				} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
+				} else if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
 					dwologger.log(map);
 				} else {
 					dwologger.updateLog(map);

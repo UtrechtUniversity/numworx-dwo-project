@@ -554,7 +554,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
 				dwologger.log(map);
-			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
+			} else if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
 				dwologger.log(map);
 			} else {
 				dwologger.updateLog(map);

@@ -748,7 +748,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
 				logging.log(map);
-			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
+			} else if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
 				logging.log(map);
 			} else {
 				logging.updateLog(map);
