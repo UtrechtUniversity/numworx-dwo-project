@@ -8,11 +8,13 @@ import java.util.Optional;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ResizeLayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -279,7 +281,11 @@ public class WidgetPlayer implements EntryPoint, InteractionStub, ActivityInterf
 		  case 9: delegate = new TekstVakWidget(this); break; // TekstVakWidget extends TekstVakPanel
 		}
 
-		RootLayoutPanel.get().add(FocusOnTouch.wrap(delegate.asWidget()));
+		FocusPanel wrap = FocusOnTouch.wrap(delegate.asWidget());
+		wrap.addStyleName("focus");
+// We doen ons best om de maat correct te krijgen, maar als het niet lukt, dan maar scrollen.
+		wrap.getElement().getStyle().setOverflow(Style.Overflow.AUTO);
+		RootLayoutPanel.get().add(wrap);
         Stub.publish(delegate);
 	}
 
