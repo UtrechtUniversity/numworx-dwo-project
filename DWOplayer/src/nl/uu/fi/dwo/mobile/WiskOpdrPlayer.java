@@ -26,10 +26,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
-//import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 
-import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleEvent;
-import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleHandler;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -45,13 +43,12 @@ import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
-import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
-public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener, ClosingHandler, IdleHandler {
+public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener, ClosingHandler, IdleDetect.IdleHandler {
 
 	public WiskOpdrPlayer() {
 		super();
@@ -79,12 +76,15 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 
 	@Inject protected ViewModuleViewImpl view;
 	@Inject protected EventBus bus;
+	 
+	 
 	private String PREFIX;
 	@Inject void setParameters(DWOplayerParameters p) {
 	  this.PREFIX = p.getLaunchData();
 	}
 	
-	@Inject void setIdleDetect(IdleDetect detector) {
+	private void startIdleDetect() {
+		IdleDetect detector = new IdleDetect(bus);
 		detector.addIdleHandler(this);
 		detector.start();
 	}
@@ -171,6 +171,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 				api.SetValue(Memento.LOCATION, location);
 			}
 			ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
+			startIdleDetect();
 			onValueChange(event);
 			return null;
 		}, fail -> {
@@ -389,11 +390,11 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
   }
 
 	@Override
-	public void onIdle(IdleEvent ev) {
+	public void onIdle(IdleDetect.IdleEvent ev) {
 	    if (ev.isSlow()) {
 	       Actions.MAYBELOGOUT.execute();    
 	    } else {
-	    	logger.info("idle timeout " + ev);
+	    	logger.fine("idle timeout " + ev);
 	    }	
 	}
 	
