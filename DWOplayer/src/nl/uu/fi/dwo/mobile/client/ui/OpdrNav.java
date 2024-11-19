@@ -665,17 +665,20 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// entry.stelNavigatieIn(); gebeurt al op een andere plek; niet hier
 		// anders gaat oefenen met geen correctie eerdere pagina's mis na
 		// kijkNa()
-		Map<String, Object> hashmap = new HashMap<>();
-		hashmap.put("unitId", entry.getUnitId());
-		hashmap.put("location", currentOpdracht);
-		hashmap.put("success", check);
-		hashmap.put("score.raw", scores[currentActiviteit][currentOpdracht]);
-		hashmap.put("visited", visited[currentActiviteit][currentOpdracht]);
-		ObjectMap map = JSONUtilities.wrapMap(Collections.singletonMap("parameters", hashmap));
-		CBookEvent changed = new CBookEvent("setChanged", map);
-// XXX toch ergens deze 2 bussen samenvoegen?
-		getEventBus().fireEvent(changed); // voor score widget
-		entry.activity.getEventBus().fireEvent(changed);
+		// niet versturen als verzegeld.
+		if (!isVerzegeld()) {		
+			Map<String, Object> hashmap = new HashMap<>();
+			hashmap.put("unitId", entry.getUnitId());
+			hashmap.put("location", currentOpdracht);
+			hashmap.put("success", check);
+			hashmap.put("score.raw", scores[currentActiviteit][currentOpdracht]);
+			hashmap.put("visited", visited[currentActiviteit][currentOpdracht]);
+			ObjectMap map = JSONUtilities.wrapMap(Collections.singletonMap("parameters", hashmap));
+			CBookEvent changed = new CBookEvent("setChanged", map);
+	// XXX toch ergens deze 2 bussen samenvoegen?
+			getEventBus().fireEvent(changed); // voor score widget
+			entry.activity.getEventBus().fireEvent(changed); // voor score manager
+		}
 	}
 
 	public void setVisited() {

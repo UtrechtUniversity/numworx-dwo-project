@@ -547,6 +547,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	}-*/;
 	
 	CBookEventListener setNotEditableListener;
+	private boolean seal;
 	
 	private HandlerRegistration addCBookEventListener(String command, final JavaScriptObject listener) {
 		CBookEventListener javalistener = new CBookEventListener() {
@@ -558,7 +559,14 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			}
 		};
 		if("action.setNotEditable".equals(command))
+		{
 			setNotEditableListener = javalistener;
+		    if (seal) 
+		    {	seal = false;
+				frame.setStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().StubView_readonly(), false);
+				javalistener.acceptCBookEvent(new CBookEvent("action.setNotEditable"));
+		    }
+		}
 		return comRoot.addCBookEventListener(command, javalistener);
 	}
 	
@@ -1076,6 +1084,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			if(setNotEditableListener != null) {
 				setNotEditableListener.acceptCBookEvent(event);
 			} else {
+				seal = true;
 				frame.setStyleName(DWOplayer.DWO_BUNDLE.dwoplayercss().StubView_readonly(), true);
 			}
 		}

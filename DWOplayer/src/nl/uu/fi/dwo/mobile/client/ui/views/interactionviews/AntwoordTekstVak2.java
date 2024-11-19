@@ -682,7 +682,7 @@ public class AntwoordTekstVak2 implements InteractionView, FacetAware, TekstElem
 				this.nagekeken = nagekeken = true;
 				zetIsVeranderdNaNakijken(isVeranderdNaNakijken = false);
 				logging.log(map);
-			} if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
+			} else if (mode == OpdrNavIF.ZELFTOETS && ingevuld) { 
 				logging.log(map);
 			} else {
 				logging.updateLog(map);

@@ -28,7 +28,8 @@ public class ReviewLogging implements Logging {
 
 	@Override
 	public void updateLog(Map<String, ?> map) {
-		log(map);
+		if (SMLogger.CORRECTED == map.get("verb"))
+			delegate.updateLog(map);
 	}
 
 	@Override
