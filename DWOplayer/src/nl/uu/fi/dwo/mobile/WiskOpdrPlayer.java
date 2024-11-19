@@ -28,6 +28,8 @@ import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 //import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort.DENSITY;
 
+import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleEvent;
+import fi.dwo.gwt.lib.rest.ui.IdleDetect.IdleHandler;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -41,13 +43,15 @@ import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger.LoggingModule;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
-public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener, ClosingHandler {
+public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, CBookEventListener, ClosingHandler, IdleHandler {
 
 	public WiskOpdrPlayer() {
 		super();
@@ -78,6 +82,11 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	private String PREFIX;
 	@Inject void setParameters(DWOplayerParameters p) {
 	  this.PREFIX = p.getLaunchData();
+	}
+	
+	@Inject void setIdleDetect(IdleDetect detector) {
+		detector.addIdleHandler(this);
+		detector.start();
 	}
 
 	private static native String getBase() /*-{
@@ -378,6 +387,15 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
   public void onWindowClosing(ClosingEvent event) {
     view.abort();    
   }
+
+	@Override
+	public void onIdle(IdleEvent ev) {
+	    if (ev.isSlow()) {
+	       Actions.MAYBELOGOUT.execute();    
+	    } else {
+	    	logger.info("idle timeout " + ev);
+	    }	
+	}
 	
 	
 }
