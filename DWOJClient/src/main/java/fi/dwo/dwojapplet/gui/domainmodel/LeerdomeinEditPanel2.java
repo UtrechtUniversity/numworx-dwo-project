@@ -39,6 +39,7 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -132,6 +133,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 				} else {
 					Map<String, Boolean> layersinfo = v.getLayers();
 					wiskOpdrEditPanel.setLayersVisible(layersinfo);
+					Action a = v.getName() == null ? voorkennisActionRW : deselectionsActionRW;
+					voorkennis.setAction(a);
 				}
 			}
 
@@ -174,6 +177,106 @@ public class LeerdomeinEditPanel2 extends JPanel
 	public static final Integer DEFAULT_NODE_SIZE = 24;
     static final String WISKOPDR_SIG = "H4sIAAAAAA";
 	static final Logger LOG = Logger.getLogger(LeerdomeinEditPanel2.class.getName());
+	
+	static class DeselectionAction extends AbstractAction {
+
+		private DeselectionAction() {
+			super(TextMapper.getText("Voorkennis Variant"));
+		}
+
+		DeselectionAction(boolean b, Component parent, JTree tree, EditableGraph graph) {
+			this();
+			readonly = b;
+			this.parent = parent;
+			this.tree = tree;
+			this.model = tree.getModel();
+			this.graph = graph;
+			
+		}
+		boolean readonly;
+		JTree tree;
+		Component parent;
+        private EditableGraph graph;
+        private TreeModel model;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			DomStudentModelVariant variant;
+			TreePath path = tree.getSelectionPath();
+			if (path == null)
+				return;
+			if(!readonly) graph.updateModel(model);
+			
+			InvisibleNode root;
+			root = (InvisibleNode) model.getRoot();
+
+			Object node = path.getLastPathComponent();
+			if (node instanceof MutableTreeNode) {
+				InvisibleNode mutable = (InvisibleNode) node;
+				Object o = mutable.getUserObject();
+				if (o instanceof NodeLeaf) {
+					NodeLeaf leaf = (NodeLeaf) o;
+					variant = leaf.getVariant();
+					List<String> ids = leaf.getVoorkennis();
+					if (ids == null)
+						ids = Collections.emptyList();
+					List<String> copy = new ArrayList<>(ids);
+					copy.removeAll(variant.getDeselections());
+					Set<String> org = new TreeSet<>(ids);
+					copy.add(leaf.getId());
+					NodeVector v = (NodeVector) root.getUserObject();
+					StudentModelChoicePanel panel = new StudentModelChoicePanel(v, readonly, org);
+					panel.setObjectives(copy);
+					if (readonly) {
+						// JOptionPane.showMessageDialog(parent, panel, e.getActionCommand(),
+						// JOptionPane.PLAIN_MESSAGE);
+						ConfirmDialog d = new ConfirmDialog(parent, e.getActionCommand());
+						d.setContentPane(panel);
+						d.pack();
+						d.center();
+						d.show();
+					} else {
+						// int r = JOptionPane.showConfirmDialog(parent, panel, e.getActionCommand(),
+						// JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+						ConfirmDialog confirm = new ConfirmDialog(parent, e.getActionCommand());
+						confirm.getContentPane().setLayout(new BorderLayout());
+						confirm.getContentPane().add(panel);
+						JButton okb = new JButton(TextMapper.getText(TextMapper.BTN_OK));
+						okb.addActionListener(confirm::ok);
+						okb.setBackground(GuiConstants.HEADER_COLOR);
+						JPanel south = new JPanel(new FlowLayout(FlowLayout.CENTER));
+						south.setBackground(Constants.COLOR21);
+						south.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+						south.add(okb);
+						JButton cancel = new JButton(TextMapper.getText(TextMapper.BTN_CANCEL));
+						cancel.addActionListener(confirm::cancel);
+						cancel.setBackground(GuiConstants.HEADER_COLOR);
+						okb.setPreferredSize(cancel.getPreferredSize());
+						south.add(cancel);
+						confirm.getContentPane().add(south, BorderLayout.SOUTH);
+						confirm.pack();
+						confirm.center();
+						confirm.show();
+						int r = confirm.getOption();
+
+						if (r == JOptionPane.OK_OPTION) {
+							panel.makeChoices();
+							List<String> list = panel.getObjectives();
+							org.removeAll(list);
+							variant.setDeselections(org);
+							graph.setModel(tree.getModel(),null, null);
+						}
+					}
+				}
+			}
+		}
+		
+	}
+	
+	
+	
+	
 
 	static class VoorkennisAction extends AbstractAction {
 
@@ -685,6 +788,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	private final TeacherStudentModelPanelProperties prop;
     private JComboBox<DomMethod> methodSelect;
     private List<String> koppeling = Collections.emptyList();
+	private DeselectionAction deselectionsActionRW;
 
 	private static final Font font = new Font("SansSerif", Font.PLAIN, 12);
 
@@ -927,7 +1031,9 @@ public class LeerdomeinEditPanel2 extends JPanel
 		settings.setBorder(BorderFactory.createCompoundBorder(outer, inner));
 
 		Box bkt = Box.createHorizontalBox();
-		JButton voorkennis = new JButton(new VoorkennisAction(false, this, tree, graph));
+		voorkennisActionRW = new VoorkennisAction(false, this, tree, graph);
+		deselectionsActionRW = new DeselectionAction(false, this, tree, graph);
+		voorkennis = new JButton(voorkennisActionRW);
 		voorkennis.setFont(font);
 		voorkennis.setPreferredSize(new Dimension(120, 20));
 		bkt.add(voorkennis);
@@ -1392,8 +1498,12 @@ public class LeerdomeinEditPanel2 extends JPanel
 				
 			} 
 			variantBox.setModel(m);
-			variantBox.setSelectedItem(((NodeLeaf) u).getVariant());
+			DomStudentModelVariant variant = ((NodeLeaf) u).getVariant();
+			variantBox.setSelectedItem(variant);
 			variantBox.setVisible(true);
+			javax.swing.Action action = deselectionsActionRW;
+			if (variant == null || variant.getName() == null) action = voorkennisActionRW;
+			voorkennis.setAction(action);
 			
 		} else {
 			settings.setVisible(false);
@@ -1427,6 +1537,8 @@ public class LeerdomeinEditPanel2 extends JPanel
 	}
 	
 	ClassLoader wo;
+	private JButton voorkennis;
+	private VoorkennisAction voorkennisActionRW;
 	{
 		try {
 			wo = WiskOpdrCache.getInstance().getClassLoader();
