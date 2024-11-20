@@ -27,7 +27,7 @@ import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.MGWTSettings;
 import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 
-import fi.dwo.gwt.lib.rest.ui.IdleDetect;
+//import fi.dwo.gwt.lib.rest.ui.IdleDetect;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -43,6 +43,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
+import nl.uu.fi.dwo.mobile.client.ui.IdleDetect;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
@@ -76,6 +77,10 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 
 	@Inject protected ViewModuleViewImpl view;
 	@Inject protected EventBus bus;
+	@Inject void setIdleDetect(IdleDetect detector) {
+		detector.addIdleHandler(this);
+		detector.start();		
+	}
 	 
 	 
 	private String PREFIX;
@@ -83,11 +88,11 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 	  this.PREFIX = p.getLaunchData();
 	}
 	
-	private void startIdleDetect() {
-		IdleDetect detector = new IdleDetect(bus);
-		detector.addIdleHandler(this);
-		detector.start();
-	}
+//	private void startIdleDetect() {
+//		IdleDetect detector = new IdleDetect(bus);
+//		detector.addIdleHandler(this);
+//		detector.start();
+//	}
 
 	private static native String getBase() /*-{
 		return $wnd.deploy;
@@ -171,7 +176,7 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 				api.SetValue(Memento.LOCATION, location);
 			}
 			ValueChangeEvent<String> event = new InitialValueChangeEvent(target);
-			startIdleDetect();
+			//startIdleDetect();
 			onValueChange(event);
 			return null;
 		}, fail -> {
