@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -36,8 +37,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -209,7 +214,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			
 			InvisibleNode root;
 			root = (InvisibleNode) model.getRoot();
-
+			Map<String, NodeLeaf> leafs = getLeafs(model, root);
 			Object node = path.getLastPathComponent();
 			if (node instanceof MutableTreeNode) {
 				InvisibleNode mutable = (InvisibleNode) node;
@@ -218,8 +223,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					NodeLeaf leaf = (NodeLeaf) o;
 					variant = leaf.getVariant();
 					List<String> ids = leaf.getVoorkennis();
-					if (ids == null)
-						ids = Collections.emptyList();
+					ids = closure(ids, leafs);
 					List<String> copy = new ArrayList<>(ids);
 					copy.removeAll(variant.getDeselections());
 					Set<String> org = new TreeSet<>(ids);
@@ -265,11 +269,41 @@ public class LeerdomeinEditPanel2 extends JPanel
 							List<String> list = panel.getObjectives();
 							org.removeAll(list);
 							variant.setDeselections(org);
+							leaf.setVariant(variant);
 							graph.setModel(tree.getModel(),null, null);
 						}
 					}
 				}
 			}
+		}
+
+		protected List<String> closure(List<String> ids, Map<String, NodeLeaf> leafs) {
+			if (ids == null)
+				return Collections.emptyList();
+			Function<String, Stream<String>> f = id -> {
+				NodeLeaf leaf = leafs.get(id);
+				if (leaf == null)
+					return Stream.empty();
+				return closure(leaf.getVoorkennis(), leafs).stream();
+				};
+			List<String> extra = ids.stream().flatMap(f ).collect(Collectors.toList());
+			extra.addAll(ids);
+			return extra;
+		}
+
+		private Map<String, NodeLeaf> getLeafs(TreeModel model, Object node) {
+			Map<String, NodeLeaf> result = new HashMap<>();
+			int cnt = model.getChildCount(node);
+			for(int i = 0; i < cnt; i++) {
+				Object child = model.getChild(node, i);
+				result.putAll(getLeafs(model, child));
+				Object object = ((DefaultMutableTreeNode) child).getUserObject();
+				if (object instanceof NodeLeaf) {
+					NodeLeaf l = (NodeLeaf) object;
+					result.put(l.getId(), l);
+				}
+			}
+			return result;
 		}
 		
 	}

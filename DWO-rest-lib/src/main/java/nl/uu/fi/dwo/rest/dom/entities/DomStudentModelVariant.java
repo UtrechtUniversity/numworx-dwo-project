@@ -22,6 +22,9 @@ public class DomStudentModelVariant implements Comparable<DomStudentModelVariant
 		if (v.layers != null) {
 			layers = new TreeMap<>(v.layers);
 		}
+		if (v.deselections != null) {
+			deselections.addAll(v.deselections);
+		}
 	}
 	
 	
@@ -40,7 +43,7 @@ public class DomStudentModelVariant implements Comparable<DomStudentModelVariant
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name);
+		return Objects.hash(deselections, layers, name);
 	}
 
 	@Override
@@ -52,7 +55,8 @@ public class DomStudentModelVariant implements Comparable<DomStudentModelVariant
 		if (getClass() != obj.getClass())
 			return false;
 		DomStudentModelVariant other = (DomStudentModelVariant) obj;
-		return Objects.equals(name, other.name);
+		return Objects.equals(deselections, other.deselections) && Objects.equals(layers, other.layers)
+				&& Objects.equals(name, other.name);
 	}
 
 	@Override
