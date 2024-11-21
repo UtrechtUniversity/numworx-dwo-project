@@ -224,8 +224,8 @@ public class EntreeSRedirect extends HttpServlet {
 		cookie.setSecure(req.isSecure());
 		cookie.setPath("/");
 		resp.addCookie(cookie);
-		redirectUri += "?state=" + state;
-		redirectUri += "&code="  + code;
+		redirectUri += "?state=" + u(state);
+		redirectUri += "&code="  + u(code);
 		log(redirectUri);
 		resp.sendRedirect(redirectUri);
 	}
