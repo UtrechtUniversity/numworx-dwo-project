@@ -203,14 +203,17 @@ public class DescriptionPresenter {
 						Map<String, Boolean> layers = opt.get().getLayers();
 						JSONValue v = JSONParser.parseStrict(json);
 						JSONObject instellingen = v.isObject().get("instellingen").isObject();
-						JSONArray names = instellingen.get("layerNames").isArray();
-						JSONArray values = instellingen.get("layerVisible").isArray();
-						for(int i = 0; i < names.size(); i++) {
-							String n = names.get(i).isString().stringValue();
-							Boolean visible = layers.getOrDefault(n, Boolean.FALSE);
-							values.set(i, JSONBoolean.getInstance(visible));
+						JSONBoolean hasLayers = instellingen.get("hasLayers").isBoolean();
+						if (hasLayers.booleanValue()) {
+							JSONArray names = instellingen.get("layerNames").isArray();
+							JSONArray values = instellingen.get("layerVisible").isArray();
+							for(int i = 0; i < names.size(); i++) {
+								String n = names.get(i).isString().stringValue();
+								Boolean visible = layers.getOrDefault(n, Boolean.FALSE);
+								values.set(i, JSONBoolean.getInstance(visible));
+							}
+							json = v.toString();
 						}
-						json = v.toString();
 					}
 				}
 				
