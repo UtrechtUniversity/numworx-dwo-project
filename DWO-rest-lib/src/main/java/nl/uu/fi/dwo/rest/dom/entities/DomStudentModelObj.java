@@ -40,7 +40,7 @@ public class DomStudentModelObj {
           } 
         } else {
           result.setChildren(null);
-          result.setScore(0.5);
+          result.setScore(info.getInit().doubleValue());
         }
         if(info != null) result.setId(info.getId());
         return result;
