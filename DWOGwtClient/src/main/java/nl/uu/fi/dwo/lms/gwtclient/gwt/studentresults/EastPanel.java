@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
@@ -42,10 +44,11 @@ public class EastPanel extends ResizeComposite {
 		service = s;
 		initWidget(uiBinder.createAndBindUi(this));
 	}
-
-	public void setPerc(DomStudentModelScore<?> s) {
+// XXX variant
+	public void setPerc(DomStudentModelScore<?> s, DomStudentModelMethodInfo methodinfo) {
+		Optional<String> variant = Optional.ofNullable(methodinfo).map(DomStudentModelMethodInfo::getVariant);
 		Widget sh = s.getChildren() == null
-				? Util.scoreItem("", s, Util.MAX_LEVEL)
+				? Util.scoreItem("", s, Util.MAX_LEVEL, variant)
 				: Util.summaryItem("", s, Util.MAX_LEVEL);
 		outer.setWidget(sh);
 		double greenPerc = Util.getGreen(s) * 200;

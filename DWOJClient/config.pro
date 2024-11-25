@@ -155,7 +155,7 @@
 -keep  class nl.uu.fi.dwo.rest.entities.** { *; } 
 -keep  class fi.dwo.dwojapplet.gui.domainmodel.methods.Row { *; }
 
-
+-keep  class fi.dwo.dwojapplet.BUILD { *; }
 
 -keepattributes Signature
 -keepattributes *Annotation*

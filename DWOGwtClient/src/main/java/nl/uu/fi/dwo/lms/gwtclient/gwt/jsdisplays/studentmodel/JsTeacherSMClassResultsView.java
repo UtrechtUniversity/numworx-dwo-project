@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.studentmodel;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -71,7 +72,7 @@ public class JsTeacherSMClassResultsView extends AbstractStudentModelView implem
 		object.put("greenPerc", new JSONNumber(Math.round(Util.getGreen(s)*200)));
 		object.put("redPerc", new JSONNumber(Math.round(Util.getRed(s)*200)));
 		if (leaf) {
-			Widget scoreItem = new ScoreIcon("", s, 0).imageOnly();
+			Widget scoreItem = new ScoreIcon("", s, 0, Optional.empty()).imageOnly();
 			scoreItem.removeFromParent();
 			scoreItem.getElement().getStyle().clearPosition();
 			object.put("widget", new JSONString(scoreItem.toString()));

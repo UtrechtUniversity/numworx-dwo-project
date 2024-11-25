@@ -1,14 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +12,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -33,10 +27,8 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.HandlerRegistrations;
@@ -154,7 +146,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			w.title.setText("");
 			w.filter.setText("");
 			w.description.clear();
-			w.setPerc(NULLSCORE);
+			w.setPerc(NULLSCORE, null);
 			w.east.getElement().getStyle().setVisibility(Style.Visibility.HIDDEN);
 			current = null;
 			currentInfo.clear();
@@ -380,6 +372,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		widget.get().east.clearVisibility();
 		StudentResultsTree tree = widget.get().tree;
 		DomStudentModelScore<?> score = tree.scoreMap.get(item);
+		DomStudentModelMethodInfo methodinfo = null;
 		if (WEETJES.equals(userObject)) {
 			userObject = item.getParentItem().getUserObject();
 		}
@@ -388,7 +381,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			String id = score.getId();
 			DomStudentModelContextInfo info = currentInfo.get(id);
 			String text;
-			DomStudentModelMethodInfo methodinfo = getMethodInfo(info, item).orElse(null);
+			methodinfo = getMethodInfo(info, item).orElse(null);
 			setDescription(info, methodinfo);
 	        text = StudentModelPresenter.getTitle(info,lang);
             widget.get().title.setText(text);
@@ -404,12 +397,13 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 			widget.get().title.setText(method.getMethod());
 			widget.get().description.clear();
 		}	
-		if (score != null) setPerc(score); else setPerc(NULLSCORE);
+		if (score != null) setPerc(score, methodinfo); else setPerc(NULLSCORE);
 	}
 	
-	
-	
-	
+	private void setPerc(DomStudentModelScore<?> score, DomStudentModelMethodInfo methodinfo) {
+		widget.get().setPerc(score, methodinfo); // FIXME variant
+	}
+
 	private Optional<DomStudentModelMethodInfo> getMethodInfo(DomStudentModelContextInfo info, TreeItem item) {
 		List<DomStudentModelVariant> variants = info.getVariants();
 		if (variants != null && !variants.isEmpty() && info.getMethodInfo() != null) {
@@ -545,7 +539,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	}
 
 	private void setPerc(DomStudentModelScore<?> score) {
-		widget.get().setPerc(score);
+		widget.get().setPerc(score, null);
 	}
 
   private JSONObject resultState;
