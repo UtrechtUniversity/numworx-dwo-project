@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 
 public class StudentModelUtil {
 
@@ -113,7 +116,8 @@ public class StudentModelUtil {
 		result.setObjectives(org.getObjectives().stream().map(this::calculate).collect(Collectors.toList()));		
 		return result;
 	}
-	private DomStudentModelObjectiveScore calculate(DomStudentModelObjectiveScore org) {
+	
+	DomStudentModelObjectiveScore calculate(DomStudentModelObjectiveScore org) {
 		DomStudentModelObjectiveScore result = new DomStudentModelObjectiveScore();
 		String id = org.getId();
 		result.setId(id);
@@ -134,7 +138,25 @@ public class StudentModelUtil {
 			int size = objectives.size();
 			long count;
 			if (size != 0) {
-				count = objectives.stream().filter(this::isCorrect).count();
+				Stream<String> filter = objectives.stream().filter(this::isCorrect);
+				List<String> filtered = filter.collect(Collectors.toList());
+				count = filtered.size();
+				DomStudentModelObj obj = items.get(id);
+				List<DomStudentModelVariant> varlist = obj.getInfo().getVariants();
+				if (varlist	!= null) {
+					for(DomStudentModelVariant var: varlist) {
+						if (var.getName() != null) {
+							Set<String> desel = var.getDeselections();
+							if (desel != null  && !desel.isEmpty()) {
+								Predicate<String> f = key -> !desel.contains(key);								
+								long s = objectives.stream().filter(f).count();
+								long c = filtered.stream().filter(f).count();
+								if (s == 0L) { s = 1L; c = 1L; }
+								result.getVariants().put(var.getName(), 0.5 + (gs-0.5) * c / s);
+							}
+						}
+					}
+				}
 				gs = 0.5 + (gs-0.5) * count / size;
 			}
 		}
