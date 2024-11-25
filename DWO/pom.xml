@@ -44,7 +44,7 @@
         <module>../EBServer</module>
 <!--        <module>../schoolyear-jclient-lib</module>-->
 <!--        <module>../schoolyear-war</module>-->
-<!--	    <module>../redis-config</module>-->
+	    <module>../redis-config</module>
     </modules>
     
     <name>${project.build.finalName}</name>
