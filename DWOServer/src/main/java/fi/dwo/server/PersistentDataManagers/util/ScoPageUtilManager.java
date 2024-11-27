@@ -72,6 +72,19 @@ public class ScoPageUtilManager {
 
 	private final static Function<PersistentScoPage, Long> key = p -> p.getId().getSequencenr();
 
+	public static Map<Long, PersistentScoPage> getPagesMap(PersistentStudentScoContext ssc) {
+		Map<Long, PersistentScoPage> result;
+		PersistentScoContext sco = new PersistentScoContext(ssc.getScoID());
+		List<PersistentScoPage> data  = ScoPageManager.find(sco);
+		result = data.stream().collect(Collectors.toMap( key,  Function.identity()));
+		if (ssc.getPersistentHasRolePK() != null) {
+			List<PersistentScoPage> pages = ScoPageManager.find(ssc);
+			result.putAll(pages.stream().collect(Collectors.toMap( key,  Function.identity())));	
+		}
+		return result;
+	}
+	
+	
 	public static void updateSuspendData(PersistentStudentScoContext ssc, JsonObject json) {
 		PersistentScoContext sco = new PersistentScoContext(ssc.getScoID());
 		List<PersistentScoPage> data  = ScoPageManager.find(sco);

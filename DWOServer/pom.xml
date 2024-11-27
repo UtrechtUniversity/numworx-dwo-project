@@ -523,16 +523,6 @@
                     </systemProperties>  -->
                 </configuration>
             </plugin>                    
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <preparationGoals>clean verify install</preparationGoals>
-                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWOServer/tags/</tagBase>
-                </configuration>            
-            </plugin>            
-        
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
         <pluginManagement>
