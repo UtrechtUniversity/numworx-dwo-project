@@ -16,16 +16,33 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
+import fi.dwo.server.mysql.DatabaseManager;
+import fi.dwo.server.persistence.DwoEmfFactory;
 
 public class SecuredCommonScoDataManagerTest {
 
 	private PersistentStudentScoData pssd;
 	private PersistentStudentScoContext pssc;
+    private static DatabaseManager instance = null;
+ 
+    @BeforeClass
+    public static void setUpClass() {
+        DwoEmfFactory.setEntityManagerFactory("DWO_TestDB");
+        instance = new DatabaseManager();
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        DwoEmfFactory.setDefaultEntityManagerFactory();
+        instance = null;
+    }
 
 	@Before
 	public void setUp() throws Exception {

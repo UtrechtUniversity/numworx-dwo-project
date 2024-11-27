@@ -74,6 +74,7 @@ public class ScoPageManagerPIT {
 		//page.setCourseID(sco.getCourseID());
 		page.setCheckDocent(Boolean.TRUE);
 		page.setMaxScore(100);
+		page.setOptlock(sco.getOptlock());
 		try {
 			ScoPageManager.create(page);
 		} catch (ConstraintViolationException e) {
@@ -97,6 +98,7 @@ public class ScoPageManagerPIT {
 		page.setCorrectie(3);
 		page.setMaxScore(100);
 		page.setCourseID(sco.getCourseID());
+		page.setOptlock(ssc.getOptlock());
 		ScoPageManager.create(page);
 		pk = new PersistentScoPagePK(sco.getScoID(), 0L, null);
 		page.setId(pk);

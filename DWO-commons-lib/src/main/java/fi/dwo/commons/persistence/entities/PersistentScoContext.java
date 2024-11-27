@@ -316,4 +316,18 @@ public class PersistentScoContext implements Serializable {
   public void setTrashID(long trashID) {
     this.trashID = trashID;
   }
+
+/**
+ * @return the optlock
+ */
+public Long getOptlock() {
+	return optlock;
+}
+
+/**
+ * @param optlock the optlock to set
+ */
+public void setOptlock(Long optlock) {
+	this.optlock = optlock;
+}
 }

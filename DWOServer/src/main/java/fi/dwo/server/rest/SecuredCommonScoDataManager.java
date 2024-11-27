@@ -839,7 +839,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 	try {
 		int pagenr = Integer.parseInt(page)-1;
 		Map<Long, PersistentScoPage> pagemap = ScoPageUtilManager.getPagesMap(pssc);
-		boolean sealed = COMPLETE.equals(pssc.getCompletionStatus());
+		boolean sealed = pssc !=null && COMPLETE.equals(pssc.getCompletionStatus());
 		PersistentScoPage scopage = pagemap.get(Long.valueOf(pagenr));
 		
 		String suspend_data = pssd.getSuspendData();
@@ -994,15 +994,8 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
     return "";   
   }
 
-private static boolean isGedaan(JsonArray bezocht, int pagenr) {
-	JsonValue v = bezocht.get(pagenr);
-	boolean ok;
-	if (v.getValueType() == ValueType.ARRAY) {
-		ok = v.asJsonArray().isEmpty();
-	} else {
-		ok = v.getValueType() == ValueType.TRUE;
-	}
-	return ok;
+private static boolean isGedaan(JsonArray bezocht, int pagenr) {	
+	return ScoPageUtilManager.isGedaan(bezocht, pagenr);
 }
 
 private static int sumOfCorrectie(JsonObject data) {

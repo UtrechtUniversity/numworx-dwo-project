@@ -3,6 +3,7 @@ package fi.dwo.server.PersistentDataManagers.util;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -73,6 +74,7 @@ public class ScoPageUtilManager {
 	private final static Function<PersistentScoPage, Long> key = p -> p.getId().getSequencenr();
 
 	public static Map<Long, PersistentScoPage> getPagesMap(PersistentStudentScoContext ssc) {
+		if (ssc==null) return Collections.emptyMap();
 		Map<Long, PersistentScoPage> result;
 		PersistentScoContext sco = new PersistentScoContext(ssc.getScoID());
 		List<PersistentScoPage> data  = ScoPageManager.find(sco);
@@ -96,6 +98,7 @@ public class ScoPageUtilManager {
 		if (scores != null) scores = scores.getJsonArray(0); // activiteit 0;
 		JsonArray bezocht = json.getJsonArray("bezocht");
 		if (bezocht != null) bezocht = bezocht.getJsonArray(0); // idem
+		JsonArray nakijken = json.getJsonArray("aantalNakijken");
 		
 		for (PersistentScoPage src: data) {
 			Long i = src.getId().getSequencenr();
@@ -117,6 +120,14 @@ public class ScoPageUtilManager {
 			}
 			Integer score = null;
 			int index = i.intValue();
+			if (nakijken != null) {
+				JsonArray scoresZelftoets = json.getJsonArray("scoresZelftoets");
+				int aantal = nakijken.getInt(0);
+				if (aantal > 0 && scoresZelftoets != null) {
+					scoresZelftoets = scoresZelftoets.getJsonArray(0);
+					score = scoresZelftoets.getJsonNumber(index).intValue();
+				}
+			} else {
 			if (scores != null && scores.size()> index) {
 				JsonValue num = scores.get(index);
 				if (num != null && num.getValueType() == ValueType.NUMBER) score = ((JsonNumber) num).intValue();		
@@ -127,13 +138,49 @@ public class ScoPageUtilManager {
 					JsonValue b = bezocht.get(index);
 					if (b == JsonValue.TRUE) score = 0;
 				}
-			}
+			}}
 
 			// bepaal score uit json
 			dst.setScore(score);
 			// bepaal others uit json
+
+			JsonArray visited = json.getJsonArray("visited");
+			if (visited != null)
+				visited = visited.getJsonArray(0);
+			if (visited == null)
+				visited = bezocht;
+			if (i >= visited.size())
+				dst.setVisited(false);
+			else
+				dst.setVisited(isGedaan(visited, index));
+
+			JsonArray goedfout = json.getJsonArray("orGoedFout");
+			if( goedfout != null) goedfout = goedfout.getJsonArray(0);
+			if (goedfout == null || index >= goedfout.size()) 
+				dst.setCorrect(null);
+			else {
+				switch(goedfout.get(index).getValueType()) {
+				case FALSE: dst.setCorrect(Boolean.FALSE); break;
+				case TRUE: dst.setCorrect(Boolean.TRUE); break;
+				case NULL: default:
+					dst.setCorrect(null);
+				}
+			}
+			
+			dst.setOptlock(src.getOptlock());
 			ScoPageManager.edit(dst);
 		}
+	}
+
+	public static boolean isGedaan(JsonArray bezocht, int pagenr) {
+		JsonValue v = bezocht.get(pagenr);
+		boolean ok;
+		if (v.getValueType() == ValueType.ARRAY) {
+			ok = v.asJsonArray().isEmpty();
+		} else {
+			ok = v.getValueType() == ValueType.TRUE;
+		}
+		return ok;
 	}
 
 	public static void updateSuspendData(PersistentStudentScoContext pssc, String value) {
@@ -216,6 +263,7 @@ public class ScoPageUtilManager {
 		List<PersistentScoPage> template = ScoPageManager.find(sco);
 		for (PersistentScoPage p: pages) {
 			p.setCorrectie(null);
+			p.setDocentCorrect(null);
 			p.setCheckDocent(template.get(p.getId().getSequencenr().intValue()).getCheckDocent());
 			ScoPageManager.edit(p);
 		}

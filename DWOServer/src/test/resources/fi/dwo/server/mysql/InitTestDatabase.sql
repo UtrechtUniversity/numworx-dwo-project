@@ -1071,5 +1071,8 @@ CREATE TABLE `tblscopage` (
   `maxScore` int(11),
   `correctie` int(11),
   `checkDocent` tinyint(4),
+  `visited` tinyint(4),
+  `correct` tinyint(4),
+  `docentCorrect` tinyint(4),
   PRIMARY KEY (`scoID`, `sequencenr`, `userID`, `schoolgroupID`)
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;	
