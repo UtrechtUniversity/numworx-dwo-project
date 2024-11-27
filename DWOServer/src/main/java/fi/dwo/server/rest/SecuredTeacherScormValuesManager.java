@@ -196,6 +196,9 @@ public class SecuredTeacherScormValuesManager {
 				xml.LMSSetValue(entry.getKey(), value);
 				if ("cmi.comments_from_lms.0.comment".equals(entry.getKey())) {
 					ScoPageUtilManager.updateDocentCorrectie(pssc, value);
+				} else
+				if ("cmi.comments_from_lms.2.comment".equals(entry.getKey())) {
+					ScoPageUtilManager.updateDocentCorrect(pssc, value);
 				}
 				break;
 			case SESSION_TIME:

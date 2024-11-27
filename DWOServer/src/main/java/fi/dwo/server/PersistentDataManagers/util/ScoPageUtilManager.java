@@ -99,6 +99,13 @@ public class ScoPageUtilManager {
 		JsonArray bezocht = json.getJsonArray("bezocht");
 		if (bezocht != null) bezocht = bezocht.getJsonArray(0); // idem
 		JsonArray nakijken = json.getJsonArray("aantalNakijken");
+		JsonArray visited = json.getJsonArray("visited");
+		if (visited != null)
+			visited = visited.getJsonArray(0);
+		if (visited == null)
+			visited = bezocht;
+		JsonArray goedfout = json.getJsonArray("orGoedFout");
+		if( goedfout != null) goedfout = goedfout.getJsonArray(0);
 		
 		for (PersistentScoPage src: data) {
 			Long i = src.getId().getSequencenr();
@@ -144,18 +151,11 @@ public class ScoPageUtilManager {
 			dst.setScore(score);
 			// bepaal others uit json
 
-			JsonArray visited = json.getJsonArray("visited");
-			if (visited != null)
-				visited = visited.getJsonArray(0);
-			if (visited == null)
-				visited = bezocht;
-			if (i >= visited.size())
+			if (index >= visited.size())
 				dst.setVisited(false);
 			else
 				dst.setVisited(isGedaan(visited, index));
 
-			JsonArray goedfout = json.getJsonArray("orGoedFout");
-			if( goedfout != null) goedfout = goedfout.getJsonArray(0);
 			if (goedfout == null || index >= goedfout.size()) 
 				dst.setCorrect(null);
 			else {
@@ -188,6 +188,41 @@ public class ScoPageUtilManager {
 		JsonObject object = parser.readObject();
 		updateSuspendData(pssc,object);		
 	}
+	
+	public static void updateDocentCorrect(PersistentStudentScoContext pssc, String value) {
+		if (value == null || value.isEmpty()) {
+			///emptyDocentCorrectie(pssc); /// ?
+			return; 
+		}
+		List<PersistentScoPage> pages = ScoPageManager.find(pssc);
+		Map<Long, PersistentScoPage> map = pages.stream()
+				.collect(Collectors.toMap( key,  Function.identity()));
+		int size = value.length();
+		for (int i = 0; i < size; i++) {
+			char state = value.charAt(i);
+			PersistentScoPage page = map.get(Long.valueOf(i));
+				if (page == null) {
+					page = new PersistentScoPage();
+					page.setId (new PersistentScoPagePK(pssc.getScoID(), Long.valueOf(i), pssc.getPersistentHasRolePK()));
+					PersistentScoPagePK id = new PersistentScoPagePK(pssc.getScoID(), Long.valueOf(i), null);
+					PersistentScoPage org = ScoPageManager.findEntity(id);
+					if (org == null) continue;  // should not happen!
+					page.setCheckDocent(org.getCheckDocent());
+					page.setCourseID(org.getCourseID());
+					page.setMaxScore(org.getMaxScore());
+					map.put(page.getId().getSequencenr(), page);
+				}
+			switch(state) {
+			case 'T': page.setDocentCorrect(Boolean.TRUE); break;
+			case 'F': page.setDocentCorrect(Boolean.FALSE); break;
+			default: page.setDocentCorrect(null);
+			}
+			page.setOptlock(pssc.getOptlock());			
+			ScoPageManager.edit(page);
+		}
+	}
+	
+	
 	
 	public static void updateDocentCorrectie(PersistentStudentScoContext pssc, String value) {
 		if  (value == null || !value.startsWith("{")) {
