@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.util.Optional;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safecss.shared.SafeStyles;
@@ -29,7 +31,7 @@ public class Util {
 
 	static private Template scoreTemplate = GWT.create(Template.class);
 
-	static SafeHtml percentageBar(DomStudentModelScore<?> s) {
+	static SafeHtml percentageBar(DomStudentModelScore<?> s, Optional<String> variant) {
 		double green, red;
 //schaal 0 .. 0.5
 		green = getGreen(s);
@@ -63,7 +65,7 @@ public class Util {
 
 	public static final int MAX_LEVEL = 3;
 
-	static SafeHtml treeItem(String title, DomStudentModelScore<?> s, int level) {
+	static SafeHtml treeItem(String title, DomStudentModelScore<?> s, int level, Optional<String> variant) {
 		double green, red;
 // schaal 0 .. 0.5
 		green = getGreen(s);
@@ -82,9 +84,9 @@ public class Util {
 		return summaryIcon;
 	}
 
-	public static Widget scoreItem(String title, DomStudentModelScore<?>s, int level) {
+	public static Widget scoreItem(String title, DomStudentModelScore<?>s, int level, Optional<String> variant) {
 		level = Math.max(MAX_LEVEL - level, 0);
-		return new ScoreIcon(title, s, level);
+		return new ScoreIcon(title, s, level, variant);
 	}
 
 }
