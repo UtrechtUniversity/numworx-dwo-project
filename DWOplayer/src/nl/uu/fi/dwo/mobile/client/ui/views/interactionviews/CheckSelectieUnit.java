@@ -133,10 +133,10 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
     private int foutStraf = 2;
     private boolean changed = false;
     
-	static int GOED = 1;
-	static int FOUT = 0;
-	static int HALF = 2;
-	static int GEEN = 3;
+//	static int GOED = 1; // BOOL SHIT
+//	static int FOUT = 0;
+//	static int HALF = 2;
+//	static int GEEN = 3;
 	
 	private SVGButton checkButton;
 	private String knopImageString = "";
@@ -249,6 +249,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		
     }
     
+	static int[] answerGoedHalfFout = { AntwoordVakChecker.GOED, AntwoordVakChecker.HALF, AntwoordVakChecker.FOUT };
     public void kijkNa(boolean show)
     {
         boolean juist = true;
@@ -259,9 +260,9 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         score = 0;
         
         int puntenFeedback = 0;
-        boolean half = false;
+        boolean match = false; // feedback matched
         String feedback = null;
-        int goedHalfFout = AntwoordVakChecker.GEEN;
+        int goedHalfFout = AntwoordVakChecker.GEEN; // correct/fout/half bij match
         
         if(checkFormule)
         {
@@ -275,19 +276,17 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
             			String[] formuleStrings = map.getStringArray("formuleStrings");
             			puntenFeedback = map.getInt("puntenFeedback");
             			feedback = map.getString("feedback");
-            			goedHalfFout = map.getInt("goedHalfFout");
-            			
+// van 0.1.2 naar GOED, HALF, FOUT
+            			goedHalfFout = answerGoedHalfFout[map.getInt("goedHalfFout")];          			
             			boolean modelFits = true;
             			
             			if(formuleStrings==null) {
-            				juist = goedHalfFout == 0;
-    	        			half = goedHalfFout == 1;
     	        			break;
             			}
             				
             			
             			VergelijkingMeerv[] v = new VergelijkingMeerv[formuleStrings.length];
-    	        		for(int h=0 ; h<formuleStrings.length ; h++)
+    	        		for(int h=0 ; h<formuleStrings.length && modelFits ; h++)
     			        {
     	        			boolean stapJuist = true;
     	        			v[h] = FormuleParser.parseVergelijking(formuleStrings[h]);
@@ -313,18 +312,15 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
     	        			
     						stapJuist = v[h].isWareBeweringNummeriek();
     	        			modelFits = modelFits && stapJuist;
-    	        			if(!modelFits) break;
     			        }
     	        		if(modelFits) {
-    	        			juist = goedHalfFout == 0;
-    	        			half = goedHalfFout == 1;
+    	        			match = true;
     	        			break;
     	        		}
     	        		else {
             				puntenFeedback = 0;
             				feedback = "";
             				juist = false;
-            				half = false;
             			}
     	        	 }
         		}
@@ -388,7 +384,8 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         			String[] formuleStrings = map.getStringArray("formuleStrings");
         			puntenFeedback = map.getInt("puntenFeedback");
         			feedback = map.getString("feedback");
-        			goedHalfFout = map.getInt("goedHalfFout");
+// van 0.1.2 naar GOED, HALF, FOUT
+        			goedHalfFout = answerGoedHalfFout[map.getInt("goedHalfFout")];          			
         			//logger.info("puntenFeedback = "+puntenFeedback);
         			
         			boolean modelFits = true;
@@ -406,7 +403,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         	            }
         	        }
         			if(modelFits) {
-        				half = true;
+        				match = true;
         				break;
         			}
         			else {
@@ -419,7 +416,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         }
         boolean changedTemp = changed;
         
-        if(juist && half)
+        if(juist && match)
         {   correct = true;
             fout = false;
             score = puntenFeedback;
@@ -434,7 +431,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
             if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
             	score = Math.max(0, scoreMax - errorCount * foutStraf);
         }
-        else if(half)
+        else if(match)
         {
         	correct = AntwoordVakChecker.GOED == goedHalfFout;
             fout = AntwoordVakChecker.FOUT == goedHalfFout;
@@ -456,7 +453,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         	nakijkAchtergrond.setVisible(true);
         	if(correct)
         		goedKrulImage.setVisible(true);
-        	else if(half)
+        	else if(match)
         		goedKrulHalfImage.setVisible(true);
         	else
         		foutKruisImage.setVisible(true);
