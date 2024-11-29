@@ -436,8 +436,8 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
         }
         else if(half)
         {
-        	correct = false;
-            fout = false;
+        	correct = AntwoordVakChecker.GOED == goedHalfFout;
+            fout = AntwoordVakChecker.FOUT == goedHalfFout;
             score = puntenFeedback;
             if (mode == OpdrNav.OEFENEN_STRAFPUNTEN)
             	score = Math.max(0, scoreMax - errorCount * foutStraf);
