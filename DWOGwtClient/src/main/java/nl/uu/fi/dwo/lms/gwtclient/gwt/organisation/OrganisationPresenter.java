@@ -18,6 +18,17 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.cellview.client.AbstractPager;
+import com.google.gwt.user.cellview.client.PageSizePager;
+import com.google.gwt.user.cellview.client.SimplePager;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.view.client.HasRows;
+import com.google.gwt.view.client.Range;
+import com.google.gwt.view.client.RangeChangeEvent;
+import com.google.gwt.view.client.RangeChangeEvent.Handler;
+import com.google.gwt.view.client.RowCountChangeEvent;
 import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.util.StringFormatter;
@@ -76,11 +87,116 @@ public class OrganisationPresenter {
   private Map<String, Promise<List<DomStudent>>> studentMap;
   private Map<String, Promise<List<DomTeacher>>> teacherMap;
   
+  SimplePager pager;
+  Stub stub;
+  
+  class Stub implements HasRows {
+	  
+	boolean rowCountExact = false;
+	int rowCount = 50;
+	Range visibleRange = new Range(0,20);
+	private RoleType role;
+	private Map<String, ?> personen; 
+
+	@Override
+	public void fireEvent(GwtEvent<?> event) {
+		eventBus.fireEventFromSource(event, this);
+	}
+
+	@Override
+	public HandlerRegistration addRangeChangeHandler(Handler handler) {
+		com.google.web.bindery.event.shared.HandlerRegistration r = eventBus.addHandlerToSource(RangeChangeEvent.getType(), this, handler);
+		return r::removeHandler;
+	}
+
+	@Override
+	public HandlerRegistration addRowCountChangeHandler(
+			com.google.gwt.view.client.RowCountChangeEvent.Handler handler) {
+		com.google.web.bindery.event.shared.HandlerRegistration r = eventBus.addHandlerToSource(RowCountChangeEvent.getType(), this, handler);
+		return r::removeHandler;
+	}
+
+	@Override
+	public int getRowCount() {
+		return rowCount;
+	}
+
+	@Override
+	public Range getVisibleRange() {
+		return visibleRange;
+	}
+
+	@Override
+	public boolean isRowCountExact() {
+		return rowCountExact;
+	}
+
+	@Override
+	public void setRowCount(int count) {
+		setRowCount(count, true);		
+	}
+
+	@Override
+	public void setRowCount(int count, boolean isExact) {
+		rowCount = count;
+		rowCountExact = isExact;
+		RowCountChangeEvent.fire(this, count, isExact);
+	}
+
+	@Override
+	public void setVisibleRange(int start, int length) {
+		setVisibleRange(new Range(start, length));
+	}
+
+	@Override
+	public void setVisibleRange(Range range) {
+		visibleRange = range;
+		view.showPersonen(
+				personen.entrySet().stream()
+				.skip(range.getStart())
+				.limit(range.getLength())
+				.collect(Collectors.toMap(Entry::getKey, Entry::getValue)), 
+				role);
+		RangeChangeEvent.fire(this, range);
+	}
+
+	public void setRole(RoleType role) {
+		this.role = role;		
+	}
+
+	public void limit(Map<String, ?> personen) {
+		this.personen = personen;
+		setRowCount(personen.size(), false);
+		pager.setPageSize(Math.min(20, rowCount));
+		setVisibleRange(0, pager.getPageSize()); // to front
+	}
+	  
+  }
+  
+  
   @Inject OrganisationPresenter(DwoGlobalVars vars, EventBus bus, PersonsServiceSchoolAdmin service) {
     this.dwoGlobalVars = vars;
     this.eventBus = bus;
     this.service = service;
     this.FAILURE = new LoggingFailure(LOG, bus);
+
+    if (vars.isTest()) {
+    
+	    RootPanel root = RootPanel.get("organisationpager");
+		root.clear();
+	    pager = new SimplePager();
+	    pager.setPageSize(20);
+	    root.add(pager);
+	    pager.setDisplay(stub = new Stub());
+	    
+	    stub.addRangeChangeHandler(ev -> { 
+	    	LOG.info("range update:" + ev.getNewRange() );    	
+	    } );
+	    stub.addRowCountChangeHandler(ev -> {
+	    	LOG.info("count is = " + ev.getNewRowCount());
+	    });
+    
+    }
   }
   
   public void init() {
@@ -120,7 +236,7 @@ public class OrganisationPresenter {
             String key = entry.getKey();
             entry.getValue().getValue().forEach(item -> students.get(item.getId().getIdString()).getMemberOf().add(key));
           }
-          view.showPersonen(students, RoleType.STUDENT);
+          showPersonen(students, RoleType.STUDENT);
           return null;
         }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
       
@@ -149,7 +265,7 @@ public class OrganisationPresenter {
 				u.getMemberOf().add(key);
 		});
         }
-        view.showPersonen(teachers, RoleType.TEACHER);
+        showPersonen(teachers, RoleType.TEACHER);
         return null;
       }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
    
@@ -171,7 +287,7 @@ public class OrganisationPresenter {
           String key = entry.getKey();
           entry.getValue().getValue().forEach(item -> students.get(item.getId().getIdString()).getMemberOf().add(key));
         }
-        view.showPersonen(students, RoleType.STUDENT);
+        showPersonen(students, RoleType.STUDENT);
         return null;
       }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
 
@@ -186,12 +302,23 @@ public class OrganisationPresenter {
       schooladmins = s.stream()
           .filter(admin -> !dwoGlobalVars.getCurrentUser().getId().equals(admin.getId()))
           .collect(Collectors.toMap( admin -> admin.getId().toString(), admin -> new TaggedDomUser<DomSchoolAdmin>(admin)));
-      view.showPersonen(schooladmins, RoleType.SCHOOLADMIN);
+      showPersonen(schooladmins, RoleType.SCHOOLADMIN);
       return null;
     }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
     
   }
 
+  void showPersonen(Map<String, ?> personen, RoleType role) {
+	  if(stub != null) {
+		  stub.setRole(role);
+		  stub.limit(personen);
+		  return;
+	  }
+	  view.showPersonen(personen, role);
+  }
+
+  
+  
   private Promise<?> getStudents(Collection <DomSchoolClass> list) {
     
     studentMap = list.stream().
