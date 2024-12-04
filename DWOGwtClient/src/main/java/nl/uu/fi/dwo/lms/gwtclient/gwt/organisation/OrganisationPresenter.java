@@ -3,13 +3,15 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.organisation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -20,7 +22,7 @@ import org.osgi.util.promise.Promises;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.cellview.client.AbstractPager;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.cellview.client.PageSizePager;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -50,6 +52,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
@@ -81,9 +84,9 @@ public class OrganisationPresenter {
   private final PersonsServiceSchoolAdmin service;
 
   private Map<String,TaggedDomSchoolClass> schoolClasses;
-  private Map<String,TaggedDomUser<DomStudent>> students;
-  private Map<String,TaggedDomUser<DomTeacher>> teachers;
-  private Map<String,TaggedDomUser<DomSchoolAdmin>> schooladmins;
+  private Map<String,TaggedDomUser<DomUser>> students;
+  private Map<String,TaggedDomUser<DomUser>> teachers;
+  private Map<String,TaggedDomUser<DomUser>> schooladmins;
 
   //private Map<String, Promise<List<DomStudent>>> studentMap;
   private Map<String, Promise<List<DomTeacher>>> teacherMap;
@@ -93,13 +96,16 @@ public class OrganisationPresenter {
   SimplePager pager;
   Stub stub;
   
+  static final Predicate<Entry<String, TaggedDomUser<DomUser>>> NULL =  t -> true;
+  
   class Stub implements HasRows {
 	  
 	boolean rowCountExact = false;
 	int rowCount = 50;
 	Range visibleRange = new Range(0,pagesize);
 	private RoleType role;
-	private Map<String, ?> personen; 
+	private Map<String, TaggedDomUser<DomUser>> personen = Collections.emptyMap(); 
+	private Predicate<Entry<String, TaggedDomUser<DomUser>>> filter = NULL;
 
 	@Override
 	public void fireEvent(GwtEvent<?> event) {
@@ -151,11 +157,15 @@ public class OrganisationPresenter {
 		setVisibleRange(new Range(start, length));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setVisibleRange(Range range) {
 		visibleRange = range;
+		Set<Entry<String,TaggedDomUser<DomUser>>> entrySet = personen.entrySet();
+		Stream<Entry<String, TaggedDomUser<DomUser>>> stream = entrySet.stream();
 		view.showPersonen(
-				personen.entrySet().stream()
+				stream
+				.filter(filter)
 				.skip(range.getStart())
 				.limit(range.getLength())
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue)), 
@@ -163,19 +173,32 @@ public class OrganisationPresenter {
 		RangeChangeEvent.fire(this, range);
 	}
 
+	protected void countPersons(boolean last) {
+		int count;
+		if (filter == NULL) count = personen.size();
+		else count = (int) personen.entrySet().stream().filter(filter).count();
+		if (count != rowCount || last != isRowCountExact()) setRowCount(count, last);
+	}
+
 	public void setRole(RoleType role) {
 		this.role = role;		
 	}
 
-	public void limit(Map<String, ?> personen, boolean first, boolean last) {
-		add(personen, last);
+	public void limit(Map<String, TaggedDomUser<DomUser>> students, boolean first, boolean last) {
+		add(students, last);
 		if(first) setVisibleRange(0, pager.getPageSize()); // to front
 	}
 	
-	public void add(Map<String, ?> personen, boolean last) {
-		this.personen = personen;
-		setRowCount(personen.size(), last);
-		pager.setPageSize(Math.min(pagesize, rowCount));
+	public void add(Map<String, TaggedDomUser<DomUser>> students, boolean last) {
+		this.personen = students;
+		countPersons(last);
+		//pager.setPageSize(Math.min(pagesize, rowCount));
+	}
+
+	public void setFilter(Predicate filter) {
+		if (filter == null) filter = NULL;
+		this.filter = filter;	
+		countPersons(isRowCountExact());
 	}
 	  
   }
@@ -273,9 +296,9 @@ public class OrganisationPresenter {
 protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
 	DomSchoolOrganisation org = p0.getValue();
 	List<DomStudent> s = org.getStudents();
-	Map<String, TaggedDomUser<DomStudent>> ss = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
+	Map<String, TaggedDomUser<DomUser>> ss = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
 			student -> {
-				return new TaggedDomUser<DomStudent>(student, new ArrayList<String>());
+				return new TaggedDomUser<DomUser>(student, new ArrayList<String>());
 			}));
 		org.getStudentsOfClasses().forEach(t -> {
 		String sid = t.getStudentId().getIdString();
@@ -303,14 +326,14 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
         List<DomTeacher> s = p2.getValue();
         teachers = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
                                       student -> {
-                                        return new TaggedDomUser<DomTeacher>(student, new ArrayList<String>());
+                                        return new TaggedDomUser<DomUser>(student, new ArrayList<String>());
                                         
                                    }));
         for(Entry<String, Promise<List<DomTeacher>>> entry : teacherMap.entrySet()) {
           String key = entry.getKey();
           // NPE if garbage: non existent user in ClassOf table
           entry.getValue().getValue().forEach(item -> {
-			TaggedDomUser<DomTeacher> u = teachers.get(item.getId().getIdString());
+			TaggedDomUser<DomUser> u = teachers.get(item.getId().getIdString());
 			if (u != null) 
 				u.getMemberOf().add(key);
 		});
@@ -341,20 +364,20 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
       List<DomSchoolAdmin> s = p.getValue();
       schooladmins = s.stream()
           .filter(admin -> !dwoGlobalVars.getCurrentUser().getId().equals(admin.getId()))
-          .collect(Collectors.toMap( admin -> admin.getId().toString(), admin -> new TaggedDomUser<DomSchoolAdmin>(admin)));
+          .collect(Collectors.toMap( admin -> admin.getId().toString(), admin -> new TaggedDomUser<DomUser>(admin)));
       showPersonen(schooladmins, RoleType.SCHOOLADMIN, true, true);
       return null;
     }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
     
   }
 
-  void showPersonen(Map<String, ?> personen, RoleType role, boolean first, boolean last) {
+  void showPersonen(@SuppressWarnings("rawtypes") Map<String, TaggedDomUser<DomUser>> students, RoleType role, boolean first, boolean last) {
 	  if(stub != null) {
 		  stub.setRole(role);
-		  stub.limit(personen, first, last);
+		  stub.limit(students, first, last);
 		  return;
 	  }
-	  view.showPersonen(personen, role);
+	  view.showPersonen(students, role);
   }
 
   private Promise<?> getTeachers(Collection<TaggedDomSchoolClass> list) {
@@ -451,19 +474,19 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
     eventBus.fireEvent(e);
     String id = obj.get(i);
     Promise<Boolean> next = null;
-    TaggedDomUser<DomStudent> s;
+    TaggedDomUser<DomUser> s;
     switch(role) {
       case STUDENT: s = students.get(id);
           if (s.getUser().getSingleSchool().booleanValue())
-            next = service.removeSingleSchoolStudentFromSchool(s.getUser());
+            next = service.removeSingleSchoolStudentFromSchool(new DomStudent(s.getUser()));
           else
-            next = service.removeStudentFromSchool(s.getUser());
+            next = service.removeStudentFromSchool(new DomStudent(s.getUser()));
       break;
-      case TEACHER: TaggedDomUser<DomTeacher> t = teachers.get(id);
-          next = service.removeTeacherFromSchool(t.getUser());
+      case TEACHER: TaggedDomUser<DomUser> t = teachers.get(id);
+          next = service.removeTeacherFromSchool(new DomTeacher(t.getUser()));
       break;
-      case SCHOOLADMIN: TaggedDomUser<DomSchoolAdmin> a = schooladmins.get(id);
-          next = service.removeSchoolAdminFromSchool(a.getUser());
+      case SCHOOLADMIN: TaggedDomUser<DomUser> a = schooladmins.get(id);
+          next = service.removeSchoolAdminFromSchool(new DomSchoolAdmin(a.getUser()));
       break;
       default: next = Promises.failed(new IllegalArgumentException());
     }
@@ -487,5 +510,58 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
   @Inject void setView (Display view) {
     this.view = view;
     view.setHelp(dwoGlobalVars.buildHelpUrl("#organisation"));
+  }
+
+  @JsMethod
+  void filterPersonsList(String username, String givenName, String insertion, String familyName, String schoolClass) {
+	  if (stub != null) {
+		  List <Predicate<Entry<String, TaggedDomUser<DomUser>>>> f = new ArrayList<>();
+		  if (username != null && !username.isEmpty())
+		  {		  
+			  f.add( t -> containsIgnoreCase(t.getValue().getUser().getUserName(), username));
+		  }
+		  if (givenName != null && !givenName.isEmpty())
+		  {
+			  f.add(t -> containsIgnoreCase(t.getValue().getUser().getGivenName(), givenName));
+		  }
+		  if (familyName != null && !familyName.isEmpty())
+		  {
+			  f.add(t -> containsIgnoreCase(t.getValue().getUser().getFamilyName(), familyName));
+		  }
+		  if (insertion != null && !insertion.isEmpty())
+		  {
+			  f.add(t -> containsIgnoreCase(t.getValue().getUser().getInsertion(), insertion));
+		  }
+
+		  if (schoolClass != null && !schoolClass.isEmpty()) {
+			  if ("NONE".equals(schoolClass)) {
+				  f.add(t -> t.getValue().getMemberOf().isEmpty() );
+			  } else {
+				  f.add(t -> t.getValue().getMemberOf().contains(schoolClass));
+			  }
+		  }
+		  
+		  stub.setFilter(and(f));
+		  stub.setVisibleRange(stub.getVisibleRange());
+	  }
+  }
+  
+  
+  
+  private Predicate<Entry<String, TaggedDomUser<DomUser>>> and(List<Predicate<Entry<String, TaggedDomUser<DomUser>>>> f) {
+	if (f.isEmpty()) return NULL;
+	if (f.size() == 1) return f.get(0);
+	return (t) -> {
+		for( Predicate<Entry<String, TaggedDomUser<DomUser>>> x : f) {
+			if (!x.test(t)) return false;
+		}
+		return true;
+		
+	};
+}
+
+static boolean containsIgnoreCase(String source, String regex) {
+	  RegExp r = RegExp.compile(regex, "i");
+	  return null !=  r.exec(source);	  
   }
 }
