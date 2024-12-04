@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -25,6 +26,7 @@ import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
+import nl.uu.fi.dwo.rest.entities.RestSchoolOrganisation;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
@@ -187,4 +189,7 @@ public class SecuredSchoolAdminSchoolManager {
     return F(service::removeTeacherFromSchool,PathId.getId(context), restTeacher(context, teacher));
   }
 
+  public Promise<DomSchoolOrganisation> getStudentsInSchool(DomContext context, DomSchoolOrganisation org) {
+	return F(service::getStudentsInSchool, PathId.getId(context), new RestSchoolOrganisation(context, org));
+  }
 }

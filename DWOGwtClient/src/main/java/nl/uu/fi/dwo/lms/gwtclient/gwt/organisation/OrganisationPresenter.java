@@ -47,6 +47,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
@@ -84,9 +85,11 @@ public class OrganisationPresenter {
   private Map<String,TaggedDomUser<DomTeacher>> teachers;
   private Map<String,TaggedDomUser<DomSchoolAdmin>> schooladmins;
 
-  private Map<String, Promise<List<DomStudent>>> studentMap;
+  //private Map<String, Promise<List<DomStudent>>> studentMap;
   private Map<String, Promise<List<DomTeacher>>> teacherMap;
   
+  int pagesize = 50;
+  long restsize = 100;
   SimplePager pager;
   Stub stub;
   
@@ -94,7 +97,7 @@ public class OrganisationPresenter {
 	  
 	boolean rowCountExact = false;
 	int rowCount = 50;
-	Range visibleRange = new Range(0,20);
+	Range visibleRange = new Range(0,pagesize);
 	private RoleType role;
 	private Map<String, ?> personen; 
 
@@ -164,11 +167,15 @@ public class OrganisationPresenter {
 		this.role = role;		
 	}
 
-	public void limit(Map<String, ?> personen) {
+	public void limit(Map<String, ?> personen, boolean first, boolean last) {
+		add(personen, last);
+		if(first) setVisibleRange(0, pager.getPageSize()); // to front
+	}
+	
+	public void add(Map<String, ?> personen, boolean last) {
 		this.personen = personen;
-		setRowCount(personen.size(), false);
-		pager.setPageSize(Math.min(20, rowCount));
-		setVisibleRange(0, pager.getPageSize()); // to front
+		setRowCount(personen.size(), last);
+		pager.setPageSize(Math.min(pagesize, rowCount));
 	}
 	  
   }
@@ -185,7 +192,7 @@ public class OrganisationPresenter {
 	    RootPanel root = RootPanel.get("organisationpager");
 		root.clear();
 	    pager = new SimplePager();
-	    pager.setPageSize(20);
+	    pager.setPageSize(pagesize);
 	    root.add(pager);
 	    pager.setDisplay(stub = new Stub());
 	    
@@ -210,38 +217,81 @@ public class OrganisationPresenter {
 	view.initEditModules(school.teachersCanWrite(), school.accessControl() && premium, visible && premium);
     view.initChooseClass(school.studentsCanRegisterForSchoolClasses());
     
-    Promise<List<DomSchoolClass>> pp = service.getTeachersSchoolClasses().then(
-      p -> {
-        List<DomSchoolClass> list = p.getValue();
-        LinkedHashMap<String,TaggedDomSchoolClass> map = new LinkedHashMap<>();
-        Collections.sort(list, (a,b) -> {
-          return String.CASE_INSENSITIVE_ORDER.compare(a.getSchoolClassName(), b.getSchoolClassName());
-        });
-        list.forEach(item -> map.put(item.getId().toString(), new TaggedDomSchoolClass(item)));
-        view.showSchoolClasses(map);
-        schoolClasses = map;
-        return p;
-      });
-      Promise<?> p1 = pp.flatMap(this::getStudents);
-      Promise<List<DomStudent>> p2 = service.getTeachersStudents();
-      Promises.all(p1,p2).then(
-        x -> {
-          List<DomStudent> s = p2.getValue();
-          students = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
-                                        student -> {
-                                          return new TaggedDomUser<DomStudent>(student, new ArrayList<String>());
-                                          
-                                     }));
-          for(Entry<String, Promise<List<DomStudent>>> entry : studentMap.entrySet()) {
-            String key = entry.getKey();
-            entry.getValue().getValue().forEach(item -> students.get(item.getId().getIdString()).getMemberOf().add(key));
-          }
-          showPersonen(students, RoleType.STUDENT);
-          return null;
-        }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
-      
-      
+//    Promise<List<DomSchoolClass>> pp = service.getTeachersSchoolClasses().then(
+//      p -> {
+//        List<DomSchoolClass> list = p.getValue();
+//        LinkedHashMap<String,TaggedDomSchoolClass> map = new LinkedHashMap<>();
+//        Collections.sort(list, (a,b) -> {
+//          return String.CASE_INSENSITIVE_ORDER.compare(a.getSchoolClassName(), b.getSchoolClassName());
+//        });
+//        list.forEach(item -> map.put(item.getId().toString(), new TaggedDomSchoolClass(item)));
+//        view.showSchoolClasses(map);
+//        schoolClasses = map;
+//        return p;
+//      });
+//      Promise<?> p1 = pp.flatMap(this::getStudents);
+//      Promise<List<DomStudent>> p2 = service.getTeachersStudents();
+//      Promises.all(p1,p2).then(
+//        x -> {
+//          List<DomStudent> s = p2.getValue();
+//          students = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
+//                                        student -> {
+//                                          return new TaggedDomUser<DomStudent>(student, new ArrayList<String>());
+//                                          
+//                                     }));
+//          for(Entry<String, Promise<List<DomStudent>>> entry : studentMap.entrySet()) {
+//            String key = entry.getKey();
+//            entry.getValue().getValue().forEach(item -> students.get(item.getId().getIdString()).getMemberOf().add(key));
+//          }
+//          showPersonen(students, RoleType.STUDENT);
+//          return null;
+//        }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
+//      
+    	DomSchoolOrganisation org = new DomSchoolOrganisation();
+    	org.setLimit(restsize);
+		Promise<DomSchoolOrganisation> p0 = service.getStudentsInSchool(org);
+    	Promise<List<DomSchoolClass>> pp = p0.map(DomSchoolOrganisation::getSchoolClasses);
+    	pp = pp.then( p -> {
+    	        List<DomSchoolClass> list = p.getValue();
+    	        LinkedHashMap<String,TaggedDomSchoolClass> map = new LinkedHashMap<>();
+    	        Collections.sort(list, (a,b) -> {
+    	          return String.CASE_INSENSITIVE_ORDER.compare(a.getSchoolClassName(), b.getSchoolClassName());
+    	        });
+    	        list.forEach(item -> map.put(item.getId().toString(), new TaggedDomSchoolClass(item)));
+    	        view.showSchoolClasses(map);
+    	        schoolClasses = map;
+    	        students = new LinkedHashMap<>();
+    	        return p;
+  		});
+    	pp.then( x -> {
+    		return extractStudents(p0);
+    	}).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
+    
+    
   }
+
+protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
+	DomSchoolOrganisation org = p0.getValue();
+	List<DomStudent> s = org.getStudents();
+	Map<String, TaggedDomUser<DomStudent>> ss = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
+			student -> {
+				return new TaggedDomUser<DomStudent>(student, new ArrayList<String>());
+			}));
+		org.getStudentsOfClasses().forEach(t -> {
+		String sid = t.getStudentId().getIdString();
+		List<String> array = ss.get(sid).getMemberOf();
+		array.add(t.getClassId().getIdString());
+	});
+	boolean first = students.isEmpty();
+	students.putAll(ss);
+	showPersonen(students, RoleType.STUDENT, first, ss.isEmpty());
+	if (!ss.isEmpty()) {
+		org.setStudents(null);
+		org.setStudentsOfClasses(null);
+		return service.getStudentsInSchool(org).then(this::extractStudents);
+	} 
+	return null;
+}
   
   private Promise<Void> getTeachers() {
     view.setLoadingTableMessage();
@@ -265,7 +315,7 @@ public class OrganisationPresenter {
 				u.getMemberOf().add(key);
 		});
         }
-        showPersonen(teachers, RoleType.TEACHER);
+        showPersonen(teachers, RoleType.TEACHER, true, true);
         return null;
       }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
    
@@ -273,23 +323,13 @@ public class OrganisationPresenter {
   
   private Promise<Void> getStudents() {
     view.setLoadingTableMessage();
-    Promise<?> p1 = getStudents(schoolClasses.values().stream().map(TaggedDomSchoolClass::getSchoolClass).collect(Collectors.toList()));
-    Promise<List<DomStudent>> p2 = service.getTeachersStudents();
-    return Promises.all(p1,p2).then(
-      x -> {
-        List<DomStudent> s = p2.getValue();
-        students = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
-                                      student -> {
-                                        return new TaggedDomUser<DomStudent>(student, new ArrayList<String>());
-                                        
-                                   }));
-        for(Entry<String, Promise<List<DomStudent>>> entry : studentMap.entrySet()) {
-          String key = entry.getKey();
-          entry.getValue().getValue().forEach(item -> students.get(item.getId().getIdString()).getMemberOf().add(key));
-        }
-        showPersonen(students, RoleType.STUDENT);
-        return null;
-      }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
+    DomSchoolOrganisation org = new DomSchoolOrganisation();
+    org.setLimit(restsize);
+    org.setSchoolClasses(schoolClasses.values().stream().map(TaggedDomSchoolClass::getSchoolClass).collect(Collectors.toList()));
+    students.clear();
+    Promise<DomSchoolOrganisation> p1 = service.getStudentsInSchool(org);
+    return p1.then(this::extractStudents)
+    	.then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
 
   }
   
@@ -302,30 +342,21 @@ public class OrganisationPresenter {
       schooladmins = s.stream()
           .filter(admin -> !dwoGlobalVars.getCurrentUser().getId().equals(admin.getId()))
           .collect(Collectors.toMap( admin -> admin.getId().toString(), admin -> new TaggedDomUser<DomSchoolAdmin>(admin)));
-      showPersonen(schooladmins, RoleType.SCHOOLADMIN);
+      showPersonen(schooladmins, RoleType.SCHOOLADMIN, true, true);
       return null;
     }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
     
   }
 
-  void showPersonen(Map<String, ?> personen, RoleType role) {
+  void showPersonen(Map<String, ?> personen, RoleType role, boolean first, boolean last) {
 	  if(stub != null) {
 		  stub.setRole(role);
-		  stub.limit(personen);
+		  stub.limit(personen, first, last);
 		  return;
 	  }
 	  view.showPersonen(personen, role);
   }
 
-  
-  
-  private Promise<?> getStudents(Collection <DomSchoolClass> list) {
-    
-    studentMap = list.stream().
-      collect(Collectors.toMap( (DomSchoolClass item) -> item.getId().toString(), item -> service.getStudentsInSchoolClass(item)));   
-    return Promises.all(studentMap.values());
-  }
-  
   private Promise<?> getTeachers(Collection<TaggedDomSchoolClass> list) {
     teacherMap = list.stream().map(TaggedDomSchoolClass::getSchoolClass).
         collect(Collectors.toMap( 

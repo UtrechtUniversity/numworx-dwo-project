@@ -11,10 +11,12 @@ import org.fusesource.restygwt.client.RestService;
 
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
+import nl.uu.fi.dwo.rest.entities.RestSchoolOrganisation;
 
 import java.util.List;
 //import javax.ws.rs.GET;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -94,4 +96,8 @@ public interface SecuredSchoolAdminSchoolRestCaller extends RestService {
     @Path("/sec:{id}/schooladmin/school/removeTeacher")
     public void removeTeacherFromSchool(@PathParam("id") String id, RestTeacher restTeacher, MethodCallback<Boolean> callback);
 
+    @PUT
+    @Path("/sec:{id}/schooladmin/school/getStudentsInSchool")
+    public void getStudentsInSchool(@PathParam("id") String id, RestSchoolOrganisation rest, MethodCallback<DomSchoolOrganisation> callback);
+    
 }

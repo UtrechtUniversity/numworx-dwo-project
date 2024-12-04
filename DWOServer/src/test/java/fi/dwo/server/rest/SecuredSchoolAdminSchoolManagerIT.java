@@ -5,8 +5,10 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -27,6 +29,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
+import nl.uu.fi.dwo.rest.entities.RestSchoolOrganisation;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
@@ -651,5 +654,31 @@ public class SecuredSchoolAdminSchoolManagerIT {
         // test for studentsco data
         List<PersistentStudentScoContext> scoc = StudentScoContextManager.findEntities(hr.getPersistentHasRolePK());
         assertEquals(0L, scoc.size());
+    }
+    
+    
+    @Test
+    public void testGetStudentsInOrganisation() throws Exception {
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+        SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
+        RestSchoolOrganisation rest = new RestSchoolOrganisation();
+        rest.setRestContext(new DomContext());
+        DomHasRole dhr = HasRoleUtilManager.getCurrentHasRole("user06", RoleType.SCHOOLADMIN).buildDomHasRole();
+		rest.getRestContext().setDomHasRole(dhr);
+        rest.setDomSchoolOrganisation(new DomSchoolOrganisation());
+        DomSchoolOrganisation result = instance.getStudentsInSchool(sc, rest);
+        assertEquals(3, result.getStudents().size());
+        assertEquals(6, result.getStudentsOfClasses().size());
+        
+        DomSchoolOrganisation org = rest.getDomSchoolOrganisation();
+        org.setSchoolClasses(result.getSchoolClasses());
+        org.setStudents(null);
+        org.setStudentsOfClasses(null);
+        org.setLimit(1L);
+        org.setSkip(1L);
+        result = instance.getStudentsInSchool(sc, rest);
+        assertEquals(1, result.getStudents().size());
+        assertEquals(2, result.getStudentsOfClasses().size());
+
     }
 }

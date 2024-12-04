@@ -44,7 +44,7 @@ public class DomUser extends DomId {
         givenName = "";
         familyName = "";
         insertion = "";
-        singleSchool = new Boolean(true);
+        singleSchool = Boolean.TRUE;
     }
 
     /**
