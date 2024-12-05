@@ -101,7 +101,7 @@ public class OrganisationPresenter {
   class Stub implements HasRows {
 	  
 	boolean rowCountExact = false;
-	int rowCount = 50;
+	int rowCount = 0;
 	Range visibleRange = new Range(0,pagesize);
 	private RoleType role;
 	private Map<String, TaggedDomUser<DomUser>> personen = Collections.emptyMap(); 
@@ -185,6 +185,7 @@ public class OrganisationPresenter {
 	}
 
 	public void limit(Map<String, TaggedDomUser<DomUser>> students, boolean first, boolean last) {
+		first |= rowCount < pager.getPageSize();
 		add(students, last);
 		if(first) setVisibleRange(0, pager.getPageSize()); // to front
 	}
