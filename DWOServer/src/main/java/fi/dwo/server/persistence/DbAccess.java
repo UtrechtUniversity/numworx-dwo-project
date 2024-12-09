@@ -2,9 +2,6 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\server\\persistence\\DbAccess.java
 package fi.dwo.server.persistence;
 
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -37,7 +34,7 @@ class DbAccess {
           (
           hashMap.get("DBVersion Major").matches("1") 
               && hashMap.get("DBVersion Minor").matches("5") 
-              && hashMap.get("DBVersion Revision").matches("5")
+              && hashMap.get("DBVersion Revision").matches("7")
           )
           
           ) {
