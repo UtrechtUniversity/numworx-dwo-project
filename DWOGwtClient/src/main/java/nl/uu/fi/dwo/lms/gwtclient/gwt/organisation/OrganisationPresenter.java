@@ -272,6 +272,7 @@ public class OrganisationPresenter {
 //      
     	DomSchoolOrganisation org = new DomSchoolOrganisation();
     	org.setLimit(restsize);
+    	org.setRole(RoleType.STUDENT);
 		Promise<DomSchoolOrganisation> p0 = service.getStudentsInSchool(org);
     	Promise<List<DomSchoolClass>> pp = p0.map(DomSchoolOrganisation::getSchoolClasses);
     	pp = pp.then( p -> {
@@ -295,13 +296,13 @@ public class OrganisationPresenter {
 
 protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
 	DomSchoolOrganisation org = p0.getValue();
-	List<DomStudent> s = org.getStudents();
+	List<DomUser> s = org.getUsers();
 	Map<String, TaggedDomUser<DomUser>> ss = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
 			student -> {
 				return new TaggedDomUser<DomUser>(student, new ArrayList<String>());
 			}));
-		org.getStudentsOfClasses().forEach(t -> {
-		String sid = t.getStudentId().getIdString();
+		org.getUsersOfClasses().forEach(t -> {
+		String sid = t.getUserId().getIdString();
 		List<String> array = ss.get(sid).getMemberOf();
 		array.add(t.getClassId().getIdString());
 	});
@@ -309,8 +310,8 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
 	students.putAll(ss);
 	showPersonen(students, RoleType.STUDENT, first, ss.isEmpty());
 	if (!ss.isEmpty()) {
-		org.setStudents(null);
-		org.setStudentsOfClasses(null);
+		org.setUsers(null);
+		org.setUsersOfClasses(null);
 		return service.getStudentsInSchool(org).then(this::extractStudents);
 	} 
 	return null;
@@ -347,6 +348,7 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
   private Promise<Void> getStudents() {
     view.setLoadingTableMessage();
     DomSchoolOrganisation org = new DomSchoolOrganisation();
+    org.setRole(RoleType.STUDENT);
     org.setLimit(restsize);
     org.setSchoolClasses(schoolClasses.values().stream().map(TaggedDomSchoolClass::getSchoolClass).collect(Collectors.toList()));
     students.clear();

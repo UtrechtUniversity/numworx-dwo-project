@@ -5,9 +5,9 @@ import java.util.List;
 public class DomSchoolOrganisation {
 	
 	private Long skip, limit;
-	
-	private List<DomStudent> students;
-    private List<DomStudentOfClass> studentsOfClasses;
+	private RoleType role;
+	private List<DomUser> users;
+    private List<DomMemberOfClass> usersOfClasses;
 	private List<DomSchoolClass> schoolClasses;
  
     public Long getSkip() {
@@ -22,22 +22,28 @@ public class DomSchoolOrganisation {
 	public void setLimit(Long limit) {
 		this.limit = limit;
 	}
-	public List<DomStudent> getStudents() {
-		return students;
+	public List<DomUser> getUsers() {
+		return users;
 	}
-	public void setStudents(List<DomStudent> students) {
-		this.students = students;
+	public void setUsers(List<DomUser> students) {
+		this.users = students;
 	}
-	public List<DomStudentOfClass> getStudentsOfClasses() {
-		return studentsOfClasses;
+	public List<DomMemberOfClass> getUsersOfClasses() {
+		return usersOfClasses;
 	}
-	public void setStudentsOfClasses(List<DomStudentOfClass> studentsOfClasses) {
-		this.studentsOfClasses = studentsOfClasses;
+	public void setUsersOfClasses(List<DomMemberOfClass> studentsOfClasses) {
+		this.usersOfClasses = studentsOfClasses;
 	}
 	public List<DomSchoolClass> getSchoolClasses() {
 		return schoolClasses;
 	}
 	public void setSchoolClasses(List<DomSchoolClass> schoolClasses) {
 		this.schoolClasses = schoolClasses;
+	}
+	public RoleType getRole() {
+		return role;
+	}
+	public void setRole(RoleType role) {
+		this.role = role;
 	}
 }

@@ -885,7 +885,8 @@ public class SecuredSchoolAdminSchoolManager {
      }
      Stream<PersistentUser> stream = userList.stream();
      String realm = state.getRealm();
-     org.setStudents(stream.map(s -> s.buildDomStudent(realm)).collect(Collectors.toList()));
+     org.setRole(RoleType.STUDENT);
+     org.setUsers(stream.map(s -> s.buildDomStudent(realm)).collect(Collectors.toList()));
      stream = userList.stream();
      Set<Long> ids = stream.map(PersistentUser::getId).collect(Collectors.toSet());
      List<PersistentSchoolClass> scl;
@@ -906,7 +907,7 @@ public class SecuredSchoolAdminSchoolManager {
 			}
 		}).collect(Collectors.toList());
      }
-	 if ( org.getStudentsOfClasses() == null) {
+	 if ( org.getUsersOfClasses() == null) {
 	          List<PersistentStudentOfClass> studentOfClassList = scl.stream()
 	        		  .flatMap(
 	        			item -> 
@@ -915,7 +916,7 @@ public class SecuredSchoolAdminSchoolManager {
 	          ).collect(Collectors.toList());
 	        			  
 	        			  
-	          org.setStudentsOfClasses(studentOfClassList.stream().map(PersistentStudentOfClass::buildDomStudentOfClass).collect(Collectors.toList()));
+	          org.setUsersOfClasses(studentOfClassList.stream().map(PersistentStudentOfClass::buildDomStudentOfClass).collect(Collectors.toList()));
 	 }
      
 	 org.setSkip(org.getSkip() + userList.size());

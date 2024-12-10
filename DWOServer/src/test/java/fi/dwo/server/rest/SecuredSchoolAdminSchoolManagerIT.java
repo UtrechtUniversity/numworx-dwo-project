@@ -667,18 +667,18 @@ public class SecuredSchoolAdminSchoolManagerIT {
 		rest.getRestContext().setDomHasRole(dhr);
         rest.setDomSchoolOrganisation(new DomSchoolOrganisation());
         DomSchoolOrganisation result = instance.getStudentsInSchool(sc, rest);
-        assertEquals(3, result.getStudents().size());
-        assertEquals(6, result.getStudentsOfClasses().size());
+        assertEquals(3, result.getUsers().size());
+        assertEquals(6, result.getUsersOfClasses().size());
         
         DomSchoolOrganisation org = rest.getDomSchoolOrganisation();
         org.setSchoolClasses(result.getSchoolClasses());
-        org.setStudents(null);
-        org.setStudentsOfClasses(null);
+        org.setUsers(null);
+        org.setUsersOfClasses(null);
         org.setLimit(1L);
         org.setSkip(1L);
         result = instance.getStudentsInSchool(sc, rest);
-        assertEquals(1, result.getStudents().size());
-        assertEquals(2, result.getStudentsOfClasses().size());
+        assertEquals(1, result.getUsers().size());
+        assertEquals(2, result.getUsersOfClasses().size());
 
     }
 }
