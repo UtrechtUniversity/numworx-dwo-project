@@ -1272,6 +1272,13 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			boolean[] layers = instellingen.getBooleanArray("layerVisible");
 			if (layerNr-1 < layers.length)
 			{	layerVisible = layers[layerNr-1];
+				if (!layerVisible && visible) {
+					hoogte_oud = hoogte;
+					breedte_oud = breedte;
+					hoogte = 0;
+					breedte = 0;
+					setCurrentSize(0, 0);
+				}
 			}
 		}
 		
@@ -3514,7 +3521,7 @@ private Object CamelCase(String name) {
 			}
 			totaleBreedte -= cellSpaceColumn;
 		}
-		if (!visible)
+		if (!visible || !layerVisible)
 		{
 			totaleHoogte = 0;
 			totaleBreedte = 0;
@@ -5721,7 +5728,7 @@ private Object CamelCase(String name) {
 				return;
 			}
 			// 2. dit is een response tekstvakpanel met 1 tekstvak
-			if (responsive && RESPONSIVE && visible) {
+			if (responsive && RESPONSIVE && visible && layerVisible) {
 				//zetVolledigeBreedte1(breedte); // boekhouding....
 				int w;	 			
 			    w = (int)Math.round(responsiveFactor*breedte + responsiveConstant);
@@ -5806,7 +5813,7 @@ private Object CamelCase(String name) {
   }
 
   private void zetVolledigeBreedte1(int breedte) {
-	int huidigebreedte = visible ? this.breedte : this.breedte_oud;
+	int huidigebreedte = visible && layerVisible ? this.breedte : this.breedte_oud;
 	if(Math.abs(huidigebreedte - breedte)<2)
 	{	LOG.info("zetVolledigebreedte weinig verschil");
 		return;
@@ -5834,7 +5841,7 @@ private Object CamelCase(String name) {
     	breedtes.set(i,newBreedtes[i]);
     }
     boolean veranderd = Math.abs(this.breedte - breedte)>1;
-    if (visible)
+    if (visible && layerVisible)
     	this.breedte = breedte;
     else
     	this.breedte_oud = breedte;
