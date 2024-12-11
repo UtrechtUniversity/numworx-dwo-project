@@ -8,13 +8,17 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -29,7 +33,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @NamedQueries({
     @NamedQuery(name = "PersistentStudentOfClass.findAll", query = "SELECT p FROM PersistentStudentOfClass p"),
     @NamedQuery(name = "PersistentStudentOfClass.findByUserID", query = "SELECT p FROM PersistentStudentOfClass p WHERE p.persistentStudentOfClassPK.userID = :userID"),
-    @NamedQuery(name = "PersistentStudentOfClass.findByClassID", query = "SELECT p FROM PersistentStudentOfClass p WHERE p.persistentStudentOfClassPK.classID = :classID"),
+    @NamedQuery(name = "PersistentStudentOfClass.findByClassID", query = "SELECT p FROM PersistentStudentOfClass p WHERE p.persistentStudentOfClassPK.classID = :classID and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
     @NamedQuery(name = "PersistentStudentOfClass.findByHasRolePK", query = "SELECT p FROM PersistentStudentOfClass p WHERE p.persistentStudentOfClassPK.userID = :userID and p.persistentStudentOfClassPK.schoolGroupID= :schoolGroupID"),
     @NamedQuery(name = "PersistentStudentOfClass.findByRegisterDate", query = "SELECT p FROM PersistentStudentOfClass p WHERE p.registerDate = :registerDate")})
 public class PersistentStudentOfClass implements Serializable {
@@ -42,6 +46,13 @@ public class PersistentStudentOfClass implements Serializable {
     @Column(name = "registerDate", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date registerDate;
+    @Column(name = "optlock")
+    @Version private Long optlock;
+    @Column(name = "lastChangeTimeStamp")
+    long lastChangeTimeStamp;
+    @NotNull
+    @Column(name="del",nullable = false)
+    private DelState delState = DelState.not;
 
     public PersistentStudentOfClass() {
     }
@@ -134,5 +145,28 @@ public class PersistentStudentOfClass implements Serializable {
         id.setIdString(String.format("MYSQL;%s;%020d;%020d;%020d",
                 PersistenceClassType.PersistentStudentOfClass.name(), aProfileId.getUserID(), aProfileId.getSchoolGroupID(),aProfileId.getClassID()));
         return id;
-    }    
+    } 
+    
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+        lastChangeTimeStamp = System.currentTimeMillis();
+    }
+
+	public Long getOptlock() {
+		return optlock;
+	}
+
+	public void setOptlock(Long optlock) {
+		this.optlock = optlock;
+	}
+
+	public DelState getDelState() {
+		return delState;
+	}
+
+	public void setDelState(DelState delState) {
+		this.delState = delState;
+	}
+
 }
