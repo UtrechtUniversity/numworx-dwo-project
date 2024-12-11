@@ -71,15 +71,17 @@ public class StudentOfClassManager {
      * Update
      *
      * @param studentOf
+     * @return 
      * @throws Exception
      */
-    public static void edit(PersistentStudentOfClass studentOf) throws PersistenceException, Exception {
+    public static PersistentStudentOfClass edit(PersistentStudentOfClass studentOf) throws PersistenceException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             studentOf = em.merge(studentOf);
             em.getTransaction().commit();
+            return studentOf;
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
