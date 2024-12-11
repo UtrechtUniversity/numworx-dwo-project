@@ -670,8 +670,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			Map<String, Object> hashmap = new HashMap<>();
 			hashmap.put("unitId", entry.getUnitId());
 			hashmap.put("location", currentOpdracht);
-			hashmap.put("success", check);
-			hashmap.put("score.raw", scores[currentActiviteit][currentOpdracht]);
+// Bij zelftoets, we maken onderscheit tussen NULL en FALSE
+			if (mode == ZELFTOETS)
+			{
+				hashmap.put("score.raw", getScoresZelftoets(currentActiviteit, currentOpdracht));
+				hashmap.put("success", isCorrectZelftoets[currentActiviteit][currentOpdracht]);
+		}
+			else
+			{
+				hashmap.put("score.raw", scores[currentActiviteit][currentOpdracht]);
+				hashmap.put("success", check);
+			}
 			hashmap.put("visited", visited[currentActiviteit][currentOpdracht]);
 			ObjectMap map = JSONUtilities.wrapMap(Collections.singletonMap("parameters", hashmap));
 			CBookEvent changed = new CBookEvent("setChanged", map);
