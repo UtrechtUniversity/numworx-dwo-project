@@ -6,7 +6,7 @@
   <groupId>nl.numworx.oauth2</groupId>
   <artifactId>OAuth2Client</artifactId>
   <packaging>war</packaging>
-  <version>1.0.14</version>
+  <version>1.0.15</version>
   <name>nl.numworx.oauth2client.OAuth2Client</name>
   <parent>
 	    <groupId>nl.uu.fi.dwo</groupId>
@@ -183,6 +183,9 @@
 		<groupId>external.atlassian.jgitflow</groupId>
 		<artifactId>jgitflow-maven-plugin</artifactId>
 		<version>1.0-m5.1</version>
+		<configuration>
+			<localOnly>true</localOnly>
+		</configuration>
 	  </plugin>
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>

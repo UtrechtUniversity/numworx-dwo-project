@@ -2,6 +2,7 @@ package nl.numworx.oauth2client.server;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Objects;
@@ -71,8 +72,8 @@ public class RedirectServlet extends HttpServlet {
 			cookie.setSecure(req.isSecure());
 			cookie.setPath("/");
 			resp.addCookie(cookie);
-			redirectUri += "?state=" + state;
-			redirectUri += "&code="  + code;
+			redirectUri += "?state=" + URLEncoder.encode(state);
+			redirectUri += "&code="  + URLEncoder.encode(code);
 			log(redirectUri);
 			HttpSession session = req.getSession(false);
 			if (session != null) {

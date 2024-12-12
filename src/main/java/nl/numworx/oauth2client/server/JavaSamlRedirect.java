@@ -2,6 +2,7 @@ package nl.numworx.oauth2client.server;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -53,8 +54,8 @@ public class JavaSamlRedirect extends HttpServlet {
 				int index = state.indexOf(';');
 				String redirectUri = state.substring(0, index);
 				state = state.substring(index+1);
-				redirectUri += "?state=" + state;
-				redirectUri += "&code="  + code;
+				redirectUri += "?state=" + URLEncoder.encode(state);
+				redirectUri += "&code="  + URLEncoder.encode(code);
 				log(redirectUri);
 				resp.sendRedirect(redirectUri);
 			} else {
