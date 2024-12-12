@@ -183,6 +183,9 @@
 		<groupId>external.atlassian.jgitflow</groupId>
 		<artifactId>jgitflow-maven-plugin</artifactId>
 		<version>1.0-m5.1</version>
+		<configuration>
+			<localOnly>true</localOnly>
+		</configuration>
 	  </plugin>
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
