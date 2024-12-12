@@ -174,6 +174,7 @@ public class PersistentSchoolClass implements Serializable {
         schoolClass.setSchoolClassName(class1);
         if (this.classID != null) {
             schoolClass.setId(buildPersistenceId());
+            schoolClass.setOptLock(Long.valueOf(this.optlock));
         }
         schoolClass.setIconizer(iconizer);
         schoolClass.setHasRegKey(this.registrationKey!=null);

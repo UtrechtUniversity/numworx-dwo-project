@@ -17,6 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 
 public class StudentModelUtilTest {
 
@@ -115,4 +116,24 @@ public class StudentModelUtilTest {
 		assertTrue("score" , b);
 	}
 
+	@Test
+	public void testDeselections() {
+		createObjs();
+		DomStudentModelStructureScore score = structure.generateStudentModelStructureScore();
+		List<DomStudentModelObjectiveScore> list = score.getCategories().get(0).getObjectives();
+		list.forEach(item -> {item.setScore(0.7); item.setChildren(null);});
+		util.setStudentModelStructure(structure);
+		util.setStudentModelScore(score);
+
+		DomStudentModelObjectiveScore org = list.get(0);
+		DomStudentModelObj item = util.items.get(org.getId());
+		DomStudentModelVariant v = new DomStudentModelVariant("test");
+		v.getDeselections().add(list.get(1).getId());
+		v.getDeselections().add(list.get(2).getId());
+		item.getInfo().setVariants(Collections.singletonList(v));
+		DomStudentModelObjectiveScore result = util.calculate(org);
+		assertEquals("score ", 0.5, result.getScore(), 0.01);
+		assertEquals("variant", 0.7, result.getVariants().get("test").doubleValue(), 0.01);
+		
+	}
 }

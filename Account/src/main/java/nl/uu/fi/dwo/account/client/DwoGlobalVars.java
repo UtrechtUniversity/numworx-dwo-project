@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.account.client;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,6 +10,7 @@ import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.dispatcher.DefaultFilterawareDispatcher;
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
@@ -466,11 +468,16 @@ public class DwoGlobalVars {
 		this.autoLogin = autoLogin;
 	}
 
-	private Map<String, Promise<Map<String,String>>> cache; // cache with global singleton scope
+	private ScoreCache cache; // cache with global singleton scope
 
-	public Map<String, Promise<Map<String, String>>> getScoreCache() {
-		if (cache == null) cache = new LinkedHashMap<>();
+	public ScoreCache getScoreCache() {
+		if (cache == null) cache = GWT.create(ScoreCache.class);
 		return cache;
+	}
+	
+	public Optional<ScoreCache> scoreCache() {
+		if (cache == null) return Optional.empty();
+		else return cache.optional();
 	}
 
 }

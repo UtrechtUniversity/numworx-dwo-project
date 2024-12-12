@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -34,6 +35,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext4Student;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelDataScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
@@ -55,7 +57,7 @@ public class StudentResultsTree extends Composite {
 	  		String title = StudentModelPresenter.getTitle(info,lang);
 	  		if (s.getChildren() != null)
 	  			return Util.summaryItem(title, s, level);
-	  		return Util.scoreItem(title, s, level);
+	  		return Util.scoreItem(title, s, level, Optional.empty());
 		}
 		
 		Widget root (DomStudentModelContextInfo info) {
@@ -68,7 +70,11 @@ public class StudentResultsTree extends Composite {
 		}
 
 		Widget score(String title, DomStudentModelScore<?> s, int level) {
-			return Util.scoreItem(title, s, level);
+			return Util.scoreItem(title, s, level, Optional.empty());
+		}
+
+		public Widget score(String title, DomStudentModelScore<?> s, int level, Optional<String> variant) {
+			return Util.scoreItem(title, s, level, variant);
 		}
 	}
 
@@ -273,7 +279,13 @@ public class StudentResultsTree extends Composite {
 			for( Map.Entry<String, Set<Integer>> entry: books.entrySet()) {
 				String book = entry.getKey();
 				for (Integer chapter: entry.getValue()) {
-					addToMethodTree(item, book, chapter, to.score(title, s, 3), method, s);
+					// met method, book, chapter vind methodinfo uit obj
+					List<DomStudentModelMethodInfo> mi = obj.getInfo().getMethodInfo();
+					Optional<DomStudentModelMethodInfo> opt = mi.stream()
+							.filter(m -> book.equals(m.getBook()) && chapter.equals(m.getChapter()) && method.key().equals(m.getMethod()))
+							.findAny();
+					Optional<String> variant = opt.map(DomStudentModelMethodInfo::getVariant);
+					addToMethodTree(item, book, chapter, to.score(title, s, 3, variant), method, s);
 				}
 			}
 		}

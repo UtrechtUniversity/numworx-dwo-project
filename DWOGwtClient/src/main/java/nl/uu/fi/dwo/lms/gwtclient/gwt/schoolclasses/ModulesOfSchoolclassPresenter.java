@@ -2,7 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.schoolclasses;
 
 import nl.uu.fi.dwo.rest.dom.DomCoursesOfSchoolclassTree;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 
@@ -20,7 +19,6 @@ import jsinterop.annotations.JsMethod;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientMessages;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomTree;
@@ -28,7 +26,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
@@ -38,7 +35,6 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 /**

@@ -50,6 +50,14 @@ public class PersistentScoPage {
   @Column(name = "correctie")
   Integer correctie;
 
+  @Column(name = "correct")
+  Boolean correct;
+  @Column(name = "docentCorrect")
+  Boolean docentCorrect;
+  @Column(name = "visited")
+  Boolean visited;
+  
+  
 /**
  * @return the id
  */
@@ -145,6 +153,42 @@ public Integer getCorrectie() {
  */
 public void setCorrectie(Integer correctie) {
 	this.correctie = correctie;
+}
+/**
+ * @return the correct
+ */
+public Boolean getCorrect() {
+	return correct;
+}
+/**
+ * @param correct the correct to set
+ */
+public void setCorrect(Boolean correct) {
+	this.correct = correct;
+}
+/**
+ * @return the docentCorrect
+ */
+public Boolean getDocentCorrect() {
+	return docentCorrect;
+}
+/**
+ * @param docentCorrect the docentCorrect to set
+ */
+public void setDocentCorrect(Boolean docentCorrect) {
+	this.docentCorrect = docentCorrect;
+}
+/**
+ * @return the visited
+ */
+public Boolean getVisited() {
+	return visited;
+}
+/**
+ * @param visited the visited to set
+ */
+public void setVisited(Boolean visited) {
+	this.visited = visited;
 }
   
 }

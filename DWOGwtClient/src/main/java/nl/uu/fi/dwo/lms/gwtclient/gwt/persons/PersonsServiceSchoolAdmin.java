@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
@@ -180,6 +181,10 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
 
   public Promise<Boolean> removeSchoolAdminFromSchool(DomSchoolAdmin user) {
     return manager2.removeSchoolAdminFromSchool(context, user);
-  } 
+  }
+
+public Promise<DomSchoolOrganisation> getStudentsInSchool(DomSchoolOrganisation domSchoolOrganisation) {
+	return manager2.getStudentsInSchool(context, domSchoolOrganisation);
+} 
   
 }

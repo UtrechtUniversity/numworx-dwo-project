@@ -82,6 +82,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 
 public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, MouseUpHandler, MouseDownHandler, MouseOutHandler, ContextMenuHandler {
 
@@ -838,9 +839,19 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 		Stream<Edge> edges() {
 			List<String> voorkennis = obj.getInfo().getVoorkennis();
 			if (voorkennis == null|| invalid()) return Stream.empty();
-			return voorkennis.stream()
+			Stream<String> stream = voorkennis.stream()
 					.map(StudentResultsGraph::strip)
-					.filter(key -> map.containsKey(key))
+					.filter(key -> map.containsKey(key));
+			if (info.getVariant() != null) {
+				for(DomStudentModelVariant v : obj.getInfo().getVariants()) {
+					if (info.getVariant().equals(v.getName())) {
+						final Collection<String> set = v.getDeselections();
+						if (!set.isEmpty())
+							stream = stream.filter(key -> !set.contains(key));
+					}
+				}
+			}
+			return stream
 					.flatMap( key -> 
 						map.get(key).stream().map(n -> new Edge(n, this)) );
 		}
@@ -863,7 +874,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 				}
 			
 			}
-			else if(succesFailScore < 75 && succesFailScore >= 55) 
+			else if(succesFailScore < 95 && succesFailScore >= 75) 
 				edgeColor = nodeColor = halfSuccesColor;
 			else 
 				edgeColor = nodeColor = succesColor;			

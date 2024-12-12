@@ -2,10 +2,6 @@ package fi.dwo.server.persistence;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -15,21 +11,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.apache.xmlrpc.XmlRpc;
 
 //import com.jamonapi.proxy.MonProxyFactory;
 
-import fi.beans.jdbc.DbConnectIF;
-import fi.beans.xmlrpc.Servlet;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
-import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.BUILD;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
-import fi.dwo.server.PersistentDataManagers.core.UserManager;
-import java.sql.PreparedStatement;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

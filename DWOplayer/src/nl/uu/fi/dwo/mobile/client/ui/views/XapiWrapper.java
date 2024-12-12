@@ -92,7 +92,11 @@ public class XapiWrapper implements ScheduledCommand, SMLogger.LogStrategy {
 	@Override
 	public Promise<String> saveStatement(Statement s) {
 		int c = count++;
-		LOG.info(c + ": saving " + s.context.contextActivities.parent.get(0).id + " " + s.result.response); 
+		try {
+			LOG.info(c + ": saving " + s.context.contextActivities.parent.get(0).id + " " + s.result.response);
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, "save statement " + s , e);
+		} 
 		Promise<String> promise = delegate.saveStatement(s);
 		promise.then(p -> call(p,c) , p-> fail(p, c));
 		return promise;

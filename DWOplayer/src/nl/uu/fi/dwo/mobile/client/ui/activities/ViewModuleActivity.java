@@ -90,6 +90,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject RPCHandler rpc;
 	@Inject HeaderView headerView;
 	@Inject PlaceHistoryMapper mapper;
+	@SuppressWarnings("rawtypes")
 	@Inject NeedLogin oops;
 	@Inject @Named("profile") int profile;
 	@Inject Lazy<LastExamActivity> lastExam;
@@ -272,6 +273,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		headerView.hide();
 		panel.setWidget(view); // terug naar af. problemen met gekke scrolls
 		{
+			vars.scoreCache().ifPresent(sc -> sc.init(sco.original()));
 			final String id = sco.getID().toString();
 			DWOplayer.insertCSS(id);
 			List<SelectModuleItem> trail = new ArrayList<SelectModuleItem>();
@@ -283,20 +285,21 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 				parent = parent.getParent();
 			}
 			setTrail(trail);
-			view.setTitle(sco.getName());
+			view.setSco(sco);
+			//view.setTitle(sco.getName());
 			Window.setTitle(sco.getName());
-			view.setScoType(sco.getScoType());
+			//view.setScoType(sco.getScoType());
 			view.setPresenter(this);
 			headerView.setPresenter(this);
 			defaultContext = view.getAnchorContext();
 			view.setAnchorContext(this);
-			view.setUnitId(id);
-			PersistenceId modelid = sco.getStudentModelId();
-
-			if(modelid != null) {
-				view.setModel(Promises.resolved(new DomStudentModelContextId(modelid)));
-			} else
-				view.setModel(null);
+			//view.setUnitId(id);
+//			PersistenceId modelid = sco.getStudentModelId();
+//
+//			if(modelid != null) {
+//				view.setModel(Promises.resolved(new DomStudentModelContextId(modelid)));
+//			} else
+//				view.setModel(null);
 			
 		AsyncCallback<Void> callback = new AsyncCallback<Void>() {
 

@@ -30,6 +30,9 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanelController;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MessageEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MessageHandler;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.MessageSource;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEventHandler;
@@ -52,7 +55,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
  * @author G.A.J. van der Plas
  */
 @Singleton
-public class ModulesPresenter implements SwitchViewEventHandler {
+public class ModulesPresenter implements SwitchViewEventHandler, MessageHandler {
 
     private static final Logger LOG = Logger.getLogger(ModulesPresenter.class.getName());
 
@@ -110,10 +113,10 @@ public class ModulesPresenter implements SwitchViewEventHandler {
         public void sendMessage(String message);
     }
 
-    @Inject ModulesPresenter(SimpleEventBus anEventBus, DwoGlobalVars aDwoGlobalVars,  ViewFactory viewFactory) {
+    @Inject ModulesPresenter(SimpleEventBus anEventBus, DwoGlobalVars aDwoGlobalVars,  ViewFactory viewFactory, MessageSource source) {
         eventBus = anEventBus;
         FAILURE = new LoggingFailure(LOG, anEventBus);
-        injectEventListener(this);
+        source.addMessageHandler(eventBus, this, null);
         this.dwoGlobalVars = aDwoGlobalVars;
         this.mainView = viewFactory.getMainView();
     }
@@ -229,23 +232,30 @@ public class ModulesPresenter implements SwitchViewEventHandler {
      return Promises.resolved(string);
     }
     
-    private native void injectEventListener(ModulesPresenter p) /*-{
-      function postMessageListener(e) {
-          //var curUrl = $wnd.location.protocol + "//" + $wnd.location.hostname;
-          //if (e.origin !== curUrl) return; // security check to verify that we receive event from trusted source
-          p.@nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter::onMessage(Ljava/lang/String;)(e.data); // call function with the name
-      }
-      // Listen to message from child window
-      if (window.addEventListener) {
-          // "Normal" browsers
-          $wnd.addEventListener("message", postMessageListener, false);
-      } else {
-          // fucking IE
-          $wnd.attachEvent("onmessage", postMessageListener, false);
-      }
-    }-*/;
+//    private native void injectEventListener(ModulesPresenter p) /*-{
+//      function postMessageListener(e) {
+//          //var curUrl = $wnd.location.protocol + "//" + $wnd.location.hostname;
+//          //if (e.origin !== curUrl) return; // security check to verify that we receive event from trusted source
+//          p.@nl.uu.fi.dwo.lms.gwtclient.gwt.modules.ModulesPresenter::onMessage(Ljava/lang/String;)(e.data); // call function with the name
+//      }
+//      // Listen to message from child window
+//      if (window.addEventListener) {
+//          // "Normal" browsers
+//          $wnd.addEventListener("message", postMessageListener, false);
+//      } else {
+//          // fucking IE
+//          $wnd.attachEvent("onmessage", postMessageListener, false);
+//      }
+//    }-*/;
 
-    
+    public void onMessage(MessageEvent ev) {
+    	if (init != null && ev.getSource().equals(init.getValue())) {
+    		LOG.info("this is a url match " + ev.getSource());
+    	} else {
+    		LOG.severe("Not a match " + ev.getSource());
+    	}
+    	onMessage(ev.getData());
+    }
     
     @JsMethod
     public void onMessage(String message) {

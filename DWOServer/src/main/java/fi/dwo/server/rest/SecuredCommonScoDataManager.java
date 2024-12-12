@@ -10,6 +10,7 @@ import java.sql.Time;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
@@ -45,6 +46,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
+import fi.dwo.commons.persistence.entities.PersistentScoPage;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
@@ -835,26 +837,47 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 	if (pssd == null) 
 		pssd = new PersistentStudentScoData(pssc.getStudentSco());
 	try {
+		int pagenr = Integer.parseInt(page)-1;
+		Map<Long, PersistentScoPage> pagemap = ScoPageUtilManager.getPagesMap(pssc);
+		boolean sealed = pssc !=null && COMPLETE.equals(pssc.getCompletionStatus());
+		PersistentScoPage scopage = pagemap.get(Long.valueOf(pagenr));
+		
 		String suspend_data = pssd.getSuspendData();
 		if (suspend_data == null || suspend_data.length() < 6) suspend_data = "{}";
 		JsonParser parser = Json.createParser(new StringReader(suspend_data));
 		parser.next();
 		JsonObject data = parser.getObject();
 		JsonObject onsState = data.getJsonObject("onsState");
-		int pagenr = Integer.parseInt(page)-1;
 // bij zelftoets pas een score/succes_status als er minstens 1 keer op de kijkna knop is gedrukt (aantalNakijken>0)		
 		if (key.endsWith(".score.raw")) {
 			if (pagenr<0) {
 				if (pssc.getCompletionStatus() == null||"not attempted".equals(pssc.getCompletionStatus())) // null of aangemaakt door docent alleen.
 					return ""; // ab-initio
-				if (onsState != null && !COMPLETE.equals(pssc.getCompletionStatus())) {
+				if (onsState != null && !sealed) {
 					JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
-					if (nakijken != null && 0 == nakijken.getInt(0) && !COMPLETE.equals(pssc.getCompletionStatus())) {
+					if (nakijken != null && 0 == nakijken.getInt(0) && !sealed) {
 						return "";
 					}
 				}
 				return String.valueOf(Math.round(pssc.getScore()));
 			}
+// de moderne manier
+			if (scopage != null) {
+				if (Boolean.TRUE.equals(scopage.getCheckDocent())) { return ""; }
+				if (!sealed) {
+					return Objects.toString(scopage.getScore(), "");
+				} else {
+					Integer score = scopage.getScore(); if (score == null) score = 0;
+					Integer correctie = scopage.getCorrectie(); 
+					if (correctie == null) {
+						return score.toString();
+					} else {
+						return Integer.toString(correctie.intValue() + score.intValue());
+					}
+				}
+			}
+			
+			
 			if (onsState == null) return "";
 			JsonArray orScores = onsState.getJsonArray("orScores");
 			Number n;
@@ -862,11 +885,11 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				orScores = orScores.getJsonArray(0);
 				n = orScores.getJsonNumber(pagenr).numberValue();
 			} catch(Exception oops) {
-				if (!(COMPLETE.equals(pssc.getCompletionStatus())))
+				if (!sealed)
 						return ""; // no value if not complete
 				n = 0; // there is a value if complete
 			}
-			if (COMPLETE.equals(pssc.getCompletionStatus()) && pssd.getCocd() != null) {
+			if (sealed && pssd.getCocd() != null) {
 				Scorm2Xml xml = new Scorm2Xml(pssd.getCocd());
 				String json = xml.LMSGetValue(REVIEW_DATA);
 				if (!json.isEmpty()) {
@@ -880,7 +903,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				n = Integer.valueOf(sum + n.intValue());
 			}} else {
 				JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
-				if (nakijken != null && 0 == nakijken.getInt(0) && !COMPLETE.equals(pssc.getCompletionStatus())) {
+				if (nakijken != null && 0 == nakijken.getInt(0) && !sealed) {
 					return "";
 				}
 				if (nakijken != null) {
@@ -897,12 +920,24 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 			if (pagenr < 0) {
 				return pssc.getScore() > 99f ? "passed" : "";
 			}
+			if (scopage != null) {
+				if(Boolean.TRUE.equals(scopage.getCheckDocent())) return "";
+			}
+			
 			if (onsState == null) return "";
 			JsonArray orGoedFout = onsState.getJsonArray("orGoedFout");
 			if (orGoedFout == null) return "";
 			orGoedFout = orGoedFout.getJsonArray(0);
-			boolean ok = orGoedFout.getBoolean(pagenr);
-			if (COMPLETE.equals(pssc.getCompletionStatus()) && pssd.getCocd() != null) {
+			//Boolean ok = orGoedFout.getBoolean(pagenr);
+			Boolean ok;
+			JsonValue v = orGoedFout.get(pagenr);
+			switch (v.getValueType()) {
+			case TRUE: ok = Boolean.TRUE; break;
+			case FALSE: ok = Boolean.FALSE; break;
+			case NULL: 
+				default: ok = sealed ? Boolean.FALSE : null;
+			}
+			if (sealed && pssd.getCocd() != null) {
 				Scorm2Xml xml = new Scorm2Xml(pssd.getCocd());
 				String correct = xml.LMSGetValue(REVIEW_CORRECT);
 				if (correct.length() > pagenr) {
@@ -913,7 +948,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				}
 			} else {
 				JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
-				if (nakijken != null && 0 == nakijken.getInt(0) && !COMPLETE.equals(pssc.getCompletionStatus())) {
+				if (nakijken != null && 0 == nakijken.getInt(0) && !sealed) {
 					return "";
 				}
 				if (nakijken != null) {
@@ -924,9 +959,11 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 					}
 				}
 			}
+			if (ok == null) return "";
 			return ok ? "passed" : "failed";    
 		}
 		if (key.endsWith(".entry")) {
+			if (sealed) return "resume";
 			//if (pagenr < 0) return "resume"; // er is suspend_data;
 			JsonArray bezocht;
 			if (onsState == null) return "ab-initio";
@@ -957,15 +994,8 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
     return "";   
   }
 
-private static boolean isGedaan(JsonArray bezocht, int pagenr) {
-	JsonValue v = bezocht.get(pagenr);
-	boolean ok;
-	if (v.getValueType() == ValueType.ARRAY) {
-		ok = v.asJsonArray().isEmpty();
-	} else {
-		ok = v.getValueType() == ValueType.TRUE;
-	}
-	return ok;
+private static boolean isGedaan(JsonArray bezocht, int pagenr) {	
+	return ScoPageUtilManager.isGedaan(bezocht, pagenr);
 }
 
 private static int sumOfCorrectie(JsonObject data) {

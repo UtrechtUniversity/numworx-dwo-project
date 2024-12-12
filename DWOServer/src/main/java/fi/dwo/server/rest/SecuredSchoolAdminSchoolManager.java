@@ -3,6 +3,7 @@ package fi.dwo.server.rest;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -16,6 +17,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
+import fi.dwo.commons.persistence.entities.PersistentStudentInClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -23,6 +25,7 @@ import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
+import nl.uu.fi.dwo.rest.entities.RestSchoolOrganisation;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
@@ -39,15 +42,21 @@ import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import fi.dwo.server.rest.util.Realm;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.persistence.PersistenceException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -854,5 +863,63 @@ public class SecuredSchoolAdminSchoolManager {
     	return Boolean.TRUE;
     	
     }
-
+    
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getStudentsInSchool")
+    @RolesAllowed({"SCHOOLADMIN"})
+    public DomSchoolOrganisation getStudentsInSchool(@Context SecurityContext sc, RestSchoolOrganisation rest) throws Dwo2Exception {
+     UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc)
+   	     .setRealm(rest.getRestContext().getRealm())
+         .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+ 	 DomSchoolOrganisation org = rest.getDomSchoolOrganisation();
+     PersistentSchool school = state.getSchool();
+     List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
+     if (org.getSkip() != null) {
+    	 userList = userList.subList(org.getSkip().intValue(), userList.size());
+     } else 
+    	 org.setSkip(0L);
+     
+     if (org.getLimit() != null && org.getLimit().intValue()< userList.size()) {
+    	 userList = userList.subList(0, org.getLimit().intValue());
+     }
+     Stream<PersistentUser> stream = userList.stream();
+     String realm = state.getRealm();
+     org.setRole(RoleType.STUDENT);
+     org.setUsers(stream.map(s -> s.buildDomStudent(realm)).collect(Collectors.toList()));
+     stream = userList.stream();
+     Set<Long> ids = stream.map(PersistentUser::getId).collect(Collectors.toSet());
+     List<PersistentSchoolClass> scl;
+     if (org.getSchoolClasses() == null) {
+     scl = SchoolClassManager.findEntities(school);
+	 org.setSchoolClasses( 
+    		 scl
+			     .stream()
+			     .map(PersistentSchoolClass::buildDomSchoolClass)
+			     .collect(Collectors.toList())
+	 );
+     } else {
+    	 scl = org.getSchoolClasses().stream().map(item -> {
+			try {
+				return new PersistentSchoolClass(MySQLPersistenceId.getNativeId(item));
+			} catch (Dwo2Exception e) {
+				throw new Dwo2RestException(e);
+			}
+		}).collect(Collectors.toList());
+     }
+	 if ( org.getUsersOfClasses() == null) {
+	          List<PersistentStudentOfClass> studentOfClassList = scl.stream()
+	        		  .flatMap(
+	        			item -> 
+	        			  StudentOfClassManager.findEntities(item).stream().filter(
+	        					  i -> ids.contains(i.getPersistentStudentOfClassPK().getUserID()))
+	          ).collect(Collectors.toList());
+	        			  
+	        			  
+	          org.setUsersOfClasses(studentOfClassList.stream().map(PersistentStudentOfClass::buildDomStudentOfClass).collect(Collectors.toList()));
+	 }
+     
+	 org.setSkip(org.getSkip() + userList.size());
+     return org;
+    }
 }

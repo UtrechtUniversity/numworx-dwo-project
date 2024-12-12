@@ -1,7 +1,6 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.beans.Transient;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,7 +39,13 @@ public class DomStudentModelObj {
           } 
         } else {
           result.setChildren(null);
-          result.setScore(0.5);
+          if (info == null) {
+        	  result.setScore(0.5);
+          } else {
+	          Double init = info.getInit(); 
+	          if (init == null) init = 0.5;
+	          result.setScore(init.doubleValue());
+          }
         }
         if(info != null) result.setId(info.getId());
         return result;

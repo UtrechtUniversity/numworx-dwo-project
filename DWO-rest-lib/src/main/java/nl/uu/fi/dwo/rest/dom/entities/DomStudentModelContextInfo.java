@@ -191,7 +191,7 @@ public class DomStudentModelContextInfo {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(description, id, init, learn, methods, slip, title, voorkennis, nodeSize);
+		return Objects.hash(description, id, init, learn, methods, slip, title, voorkennis, nodeSize, variants);
 	}
 
 	@Override
@@ -210,6 +210,7 @@ public class DomStudentModelContextInfo {
 				&& Objects.equals(init, other.init) && Objects.equals(learn, other.learn)
 				&& Objects.equals(methods, other.methods) && Objects.equals(slip, other.slip)
 				&& Objects.equals(methodInfo, other.methodInfo)
+				&& Objects.equals(variants, other.variants)
 				&& Objects.equals(nodeSize, other.nodeSize)
 				&& Objects.equals(x, other.x) && Objects.equals(y, other.y)
 				&& Objects.equals(title, other.title) && Objects.equals(voorkennis, other.voorkennis);

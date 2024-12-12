@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.36</version>
+		<version>2.5.37</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -46,7 +46,7 @@
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
     				<artifactId>DWOGwtClient</artifactId>
-					<version>2.5.36</version>
+					<version>2.5.37</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -245,7 +245,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>2.5.36</version>
+		<version>2.5.37</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -514,7 +514,7 @@
 						<webapp>
 							<groupId>nl.numworx.uploadwidget</groupId>
     							<artifactId>uploadwidget-local</artifactId>
-    							<version>2.5.36-SNAPSHOT</version>
+    							<version>2.5.36</version>
                           		<type>war</type>
 							<contextPath>/dwo/dav/upload</contextPath>
                             	<asWebapp>true</asWebapp> 
@@ -810,7 +810,7 @@
         <http.port>80</http.port>
         <upload.servlet />
         <upload.servlet.mapping />
-        <OAuth2ClientVersion>1.0.14</OAuth2ClientVersion>
+        <OAuth2ClientVersion>1.0.15</OAuth2ClientVersion>
 	</properties>
 	<profiles>
 		<profile>
@@ -945,7 +945,7 @@
 				<dependency>
     				<groupId>nl.uu.fi.dwo.rest</groupId>
 					<artifactId>redis-config</artifactId>
-					<version>2.5.34</version>
+					<version>2.5.37</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>

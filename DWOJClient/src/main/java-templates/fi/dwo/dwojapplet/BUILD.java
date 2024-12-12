@@ -1,7 +1,8 @@
 package fi.dwo.dwojapplet;
 
 public interface BUILD {
-	String buildNumber = "${buildNumber}";
-	String version = "${project.version}";
-    String timeStamp = "${osgi.qualifier}";
+// runtime, not compile time
+	String buildNumber = new String("${buildNumber}");
+	String version = new String("${project.version}");
+    String timeStamp = new String("${osgi.qualifier}");
 }

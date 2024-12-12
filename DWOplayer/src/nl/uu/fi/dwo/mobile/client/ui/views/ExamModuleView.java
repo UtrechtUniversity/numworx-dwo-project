@@ -122,7 +122,9 @@ public class ExamModuleView extends TreeModuleBase {
 		String description = item.getDescription();
 		if(description.startsWith(DescriptionView.GZIPPREFIX))
 		{
-			DescriptionViewImpl dv = new DescriptionViewImpl(header.getDisplay()::getOffsetWidth, rpc, item.getID(), builder.build());
+			ActivityComponent build = builder.build();
+			build.vars().ifPresent(vars -> vars.scoreCache().ifPresent(sc -> sc.init(item.original())));
+			DescriptionViewImpl dv = new DescriptionViewImpl(header.getDisplay()::getOffsetWidth, rpc, item.getID(), build);
 			addResizeHandler(dv);
 			w = dv.asWidget();
 		} else

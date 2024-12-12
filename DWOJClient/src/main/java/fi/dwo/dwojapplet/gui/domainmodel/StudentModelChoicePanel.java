@@ -9,6 +9,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventObject;
 import java.util.Hashtable;
@@ -58,11 +60,8 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
     private  JTree tree;
     private  NodeLeaf leaf;
     private boolean readonly;
-
-     public LeafNodeEditor(JTree tree) {
-         this.tree = tree;
-     }
-     public LeafNodeEditor(JTree tree, boolean b) {
+ 
+    public LeafNodeEditor(JTree tree, boolean b) {
        this.tree = tree;
        this.readonly = b;
    }
@@ -89,6 +88,9 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
                      DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
                      Object userObject = treeNode.getUserObject();
                      returnValue = ((treeNode.isLeaf()) && (userObject instanceof NodeLeaf));
+                     if (returnValue && !enabled.isEmpty()) {
+                    	 returnValue &= enabled.contains(((NodeLeaf) userObject).getInfo().getId());
+                     }
                  }
              }
          }
@@ -177,10 +179,12 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
             if (userObject instanceof Node) {
               Node node = (Node) userObject;
               String text = node.toString();
-              Double factor = ids.get(node.getInfo().getId());
-              if (factor == null) factor = 1.0;
-              if (node.isValue() && node instanceof NodeLeaf && factor.doubleValue() <= 0.999)
-                text +=  " " + factor;
+              String id = node.getInfo().getId();
+              if (!enabled.isEmpty() && !enabled.contains(id)) returnValue.setEnabled(false);
+//              Double factor = ids.get(id);
+//              if (factor == null) factor = 1.0;
+//              if (node.isValue() && node instanceof NodeLeaf && factor.doubleValue() <= 0.999)
+//                text +=  " " + factor;
               returnValue.setText(text);
               returnValue.setSelected(node.isValue());
             }
@@ -200,6 +204,13 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
 
   public StudentModelChoicePanel(NodeVector studentModel) {
     this(studentModel, false);
+  }
+  
+  private Collection<String> enabled = Collections.emptySet();
+  
+  public StudentModelChoicePanel(NodeVector studentModel, boolean readonly, Collection<String> enabled) {
+	  this(studentModel, readonly);
+	  this.enabled = enabled;
   }
   
   public StudentModelChoicePanel(NodeVector studentModel, boolean readonly) {
@@ -281,9 +292,10 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
   private JSlider slider;
   
   public List<String> getObjectives() {
-    return ids.entrySet().stream()
-          .map(e -> e.getKey() + (e.getValue() != null ? ("/" + e.getValue()): ""))
-          .collect(Collectors.toList());
+//    return ids.entrySet().stream()
+//          .map(e -> e.getKey() + (e.getValue() != null ? ("/" + e.getValue()): ""))
+//          .collect(Collectors.toList());
+	  return new ArrayList<String> (ids.keySet()); // no more /value
   }
   
   private void getObjectives(Object v, Map<String,Double> ids) {

@@ -21,9 +21,16 @@ public class WrappedSet extends AbstractSet<DomStudentModelVariant> implements S
 
 	@Override
 	public synchronized boolean add(DomStudentModelVariant e) {
-		if (wrap.contains(e)) return false;
+		if (wrapcontains(e)) return false;
 		wrap.add(e); Collections.sort(wrap);
 		return true;
+	}
+
+	private boolean wrapcontains(DomStudentModelVariant e) {
+		for(DomStudentModelVariant v : wrap) {
+			if (e.compareTo(v) == 0) return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -52,7 +59,18 @@ public class WrappedSet extends AbstractSet<DomStudentModelVariant> implements S
 
 	@Override
 	public synchronized boolean remove(Object o) {
-		return wrap.remove(o);
+		if (o instanceof DomStudentModelVariant) {
+			DomStudentModelVariant r = (DomStudentModelVariant) o;
+			Iterator<DomStudentModelVariant> i = iterator();
+			while (i.hasNext()) {
+				DomStudentModelVariant v = i.next();
+				if (v.compareTo(r) == 0) {
+					i.remove();
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -90,7 +108,7 @@ public class WrappedSet extends AbstractSet<DomStudentModelVariant> implements S
 	}
 
 	public synchronized void replace(DomStudentModelVariant variant) {
-		wrap.remove(variant);
+		remove(variant);
 		add(variant);
 		
 	}

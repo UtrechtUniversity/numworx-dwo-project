@@ -46,6 +46,7 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SetSelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
+import com.google.web.bindery.event.shared.HandlerRegistrations;
 import com.googlecode.mgwt.ui.client.MGWT;
 
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -573,7 +574,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	private void description_setWidget(IsWidget label) {
 		closereg();
 		if (label instanceof ResizeHandler) {
-			reg = addResizeHandler((ResizeHandler) label);
+			HandlerRegistration r1 = addResizeHandler((ResizeHandler) label);
+			reg = () -> { r1.removeHandler();  ((DescriptionViewImpl)label).close(); };
 		}
 		description.setWidget(label);
 	}
@@ -674,7 +676,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 				}
 				
 			};
-			w = new DescriptionViewImpl(width, rpc, item.getID(), this, builder.mementoModule(module).build());
+			ActivityComponent build = builder.mementoModule(module).build().item(item.original());
+			w = new DescriptionViewImpl(width, rpc, item.getID(), this, build);
 		} else
 		if(description.startsWith("<html>")) {
 			w = new HTML(description);
@@ -690,6 +693,7 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@Override
 	public void close() {
 		header.setTrail(null);
+		closereg();
 	}
 
 	GotoController presenter;

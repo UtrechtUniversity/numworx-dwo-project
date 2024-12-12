@@ -1,14 +1,18 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class DomStudentModelVariant implements Comparable<DomStudentModelVariant> {
 	private static final String DEFAULT_VARIANT = "";
 
 	private String name;
 	private Map<String,Boolean> layers = new TreeMap<>();
+	private Set<String> deselections = new TreeSet<>();
 	
 	public DomStudentModelVariant() { }
 	public DomStudentModelVariant(String name) { this.name = name; }
@@ -17,6 +21,9 @@ public class DomStudentModelVariant implements Comparable<DomStudentModelVariant
 		this(v.name);
 		if (v.layers != null) {
 			layers = new TreeMap<>(v.layers);
+		}
+		if (v.deselections != null) {
+			deselections.addAll(v.deselections);
 		}
 	}
 	
@@ -36,7 +43,7 @@ public class DomStudentModelVariant implements Comparable<DomStudentModelVariant
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name);
+		return Objects.hash(deselections, layers, name);
 	}
 
 	@Override
@@ -48,7 +55,8 @@ public class DomStudentModelVariant implements Comparable<DomStudentModelVariant
 		if (getClass() != obj.getClass())
 			return false;
 		DomStudentModelVariant other = (DomStudentModelVariant) obj;
-		return Objects.equals(name, other.name);
+		return Objects.equals(deselections, other.deselections) && Objects.equals(layers, other.layers)
+				&& Objects.equals(name, other.name);
 	}
 
 	@Override
@@ -66,6 +74,17 @@ public class DomStudentModelVariant implements Comparable<DomStudentModelVariant
 			this.layers = new TreeMap<>(layers);
 		else 
 			this.layers = new TreeMap<>();
+	}
+
+	public Set<String> getDeselections() {
+		return deselections;
+	}
+
+	public void setDeselections(Set<String> deselections) {
+		if (deselections == null) 
+			this.deselections = new HashSet<>();
+		else if (this.deselections != deselections)
+			this.deselections = new HashSet<>(deselections);
 	}
 	
 }

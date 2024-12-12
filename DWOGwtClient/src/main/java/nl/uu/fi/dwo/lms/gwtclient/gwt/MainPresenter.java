@@ -260,9 +260,10 @@ public class MainPresenter implements ValueChangeHandler<String> {
 	private PromisedDialogWithConfirmDeferred defer;
 	private Promise<?> ask;
 	private boolean idleOn;
-	public final static int IDLE = 900000;
+	public final static int IDLE = 900000*2; // 15 minuten moet worden 30 minuten, voor de test op 2 minuten
 
 	public void maybeLogout() {
+	  LOG.info("maybe logout");
 	  if (ask == null) {
 	    doIdle();
 	  }
@@ -271,6 +272,7 @@ public class MainPresenter implements ValueChangeHandler<String> {
 	
 	@JsMethod
 	public void onIdle() {
+		LOG.info("on idle");
 		if (ask != null && !ask.isDone()) {
 		    defer.fail(new Error());
 			ask = null; defer = null;
@@ -303,6 +305,7 @@ public class MainPresenter implements ValueChangeHandler<String> {
 	 * @see nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter.Display#setIdleTimeout(int)
 	 */
 	public void setIdleTimeout(int millis) {
+		LOG.info("set idle " + millis/1000.0);
 		display.setIdleTimeout(millis);
 	}
 
@@ -311,6 +314,7 @@ public class MainPresenter implements ValueChangeHandler<String> {
 	 * @see nl.uu.fi.dwo.lms.gwtclient.gwt.MainPresenter.Display#unsetIdleTimeout()
 	 */
 	public void unsetIdleTimeout() {
+		LOG.info("unset idle");
 		display.unsetIdleTimeout();
 	}
 

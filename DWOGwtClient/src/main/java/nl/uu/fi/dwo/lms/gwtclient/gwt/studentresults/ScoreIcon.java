@@ -3,6 +3,8 @@
  */
 package nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults;
 
+import java.util.Optional;
+
 import org.vectomatic.dom.svg.OMSVGGElement;
 import org.vectomatic.dom.svg.OMSVGRect;
 import org.vectomatic.dom.svg.OMSVGRectElement;
@@ -16,6 +18,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 
 /**
@@ -59,7 +62,7 @@ public class ScoreIcon extends ResizeComposite implements HasText {
 	
 	
 	
-	public ScoreIcon(String title, DomStudentModelScore<?> s, int level) {
+	public ScoreIcon(String title, DomStudentModelScore<?> s, int level, Optional<String> variant) {
 		this(s);
 		setText(title);
 		if (title.isEmpty())
@@ -75,7 +78,7 @@ public class ScoreIcon extends ResizeComposite implements HasText {
 		}
 		
 		getElement().getStyle().setMarginRight(level, Unit.EM);
-		paint(s);
+		paint(s, variant);
 	}
 
 	public ScoreIcon(String object) {
@@ -92,14 +95,19 @@ public class ScoreIcon extends ResizeComposite implements HasText {
 		title.setText(text);
 	}
 	
-	private void paint(DomStudentModelScore<?> s) {
+	private void paint(DomStudentModelScore<?> s, Optional<String> variant) {
 		if (s.getRedCount() > 0) {
 			float x = (float) (WIDTH * s.getRedScore());
 			r03.getX().getBaseVal().setValue(x);
 			r03.getWidth().getBaseVal().setValue(WIDTH/2f - x);
 			poly.getTransform().getBaseVal().getItem(0).setTranslate(x, 0);
 		} else if (s.getGreenCount() > 0) {
-			float x = (float) (WIDTH * s.getGreenScore());
+			double greenScore = s.getGreenScore();
+			if (variant.isPresent() && s instanceof DomStudentModelObjectiveScore) {
+				DomStudentModelObjectiveScore sv = (DomStudentModelObjectiveScore) s;
+				greenScore = variant.map(v -> sv.getVariants().get(v)).orElse(greenScore);
+			}
+			float x = (float) (WIDTH * greenScore);
 			r04.getWidth().getBaseVal().setValue(x - WIDTH/2);
 			poly.getTransform().getBaseVal().getItem(0).setTranslate(x,0);
 		}

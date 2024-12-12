@@ -755,6 +755,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	public Boolean isCorrect() {
 		if(scoreMax==0)
 			return Boolean.TRUE;
+		if (correctie != null) return correctie.isCorrect(Boolean.FALSE);
 		return Boolean.FALSE;
 	}
 

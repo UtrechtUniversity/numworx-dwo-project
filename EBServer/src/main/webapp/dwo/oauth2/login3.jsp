@@ -51,7 +51,7 @@ function later() {
        	var codeChallenge = doGetValue("dme.oauth.code_challenge");
        	var state = doGetValue("dme.oauth.state")||"";
        	var idphint = doGetValue("dme.oauth.idphint")||"";
-        var redirectUri = window.location.href.split('?')[0];
+        var redirectUri = window.top.location.href.split('?')[0];
         var args = new URLSearchParams({
                response_type: "code",
                client_id: clientId,

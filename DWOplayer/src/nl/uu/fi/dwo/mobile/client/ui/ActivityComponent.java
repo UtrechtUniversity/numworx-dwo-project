@@ -7,7 +7,9 @@ import javax.annotation.Nullable;
 import javax.inject.Named;
 
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.ResettableEventBus;
 
+import dagger.BindsInstance;
 import dagger.Lazy;
 import dagger.Subcomponent;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -22,12 +24,13 @@ import nl.uu.fi.dwo.mobile.client.sco.ScoreWidgetIF;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
+import nl.uu.fi.dwo.rest.dom.entities.DomId;
 
 @Subcomponent(modules= {MementoModule.class, SMLogger.LoggingModule.class} )
 @ActivityScope
 public abstract class ActivityComponent implements ActivityInterface {
 
-	public abstract EventBus getEventBus();
+	public abstract ResettableEventBus getEventBus();
 	public abstract DWOplayerParameters parameters();
 	public abstract TrafficAgent agent();
 	public abstract Optional<DwoGlobalVars> vars();
@@ -46,7 +49,7 @@ public abstract class ActivityComponent implements ActivityInterface {
 	@Override
 	public Lazy<ScoreWidgetIF> scoreWidgetIF() {
 		return () -> {
-			//if (isTest() && vars().isPresent()) { return scoremanager(); }
+			if (isTest() && vars().isPresent()) { return scoremanager(); }
 			return api(); 
 		};
 	}
@@ -98,5 +101,14 @@ public abstract class ActivityComponent implements ActivityInterface {
 	@Override
 	public String getStubView() {
 		return parameters().getStubView();
+	}
+	
+	public void close() { 
+		getEventBus().removeHandlers();
+	}
+
+	public ActivityComponent item(DomId original) {
+		vars().ifPresent(v -> v.scoreCache().ifPresent(c -> c.init(original)));
+		return this;
 	}
 }

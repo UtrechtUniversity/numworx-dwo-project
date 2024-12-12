@@ -12,6 +12,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 
 import com.google.gwt.uibinder.client.UiBinder;
@@ -112,8 +113,8 @@ public class StudentResultsWidget extends Composite {
 		return viewBtn.getValue().booleanValue();
 	}
 
-	public void setPerc(DomStudentModelScore s) {
-		east.setPerc(s);
+	public void setPerc(DomStudentModelScore s, DomStudentModelMethodInfo methodinfo) {
+		east.setPerc(s, methodinfo);
 		
 	}
 }
