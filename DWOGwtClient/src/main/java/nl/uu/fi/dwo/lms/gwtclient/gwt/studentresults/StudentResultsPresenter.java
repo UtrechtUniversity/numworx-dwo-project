@@ -28,7 +28,9 @@ import com.google.gwt.json.client.JSONBoolean;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.google.web.bindery.event.shared.HandlerRegistrations;
@@ -219,6 +221,31 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 		});
 	}
 
+	private Promise<DomStudentModelDataScore> updateTree(DomStudentModelContext4Student item) {
+		Promise<DomStudentModelDataScore> promisedScore = service.getScore(item);
+		return promisedScore.then( s -> {
+			StudentResultsTree tree = widget.get().tree;
+			TreeItem ti = tree.getCurrentRoot();
+	        DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
+			applyFilter(score);
+			String title = StudentModelPresenter.getTitle(item.getModelStructure().getInfo(),lang);
+			Widget treewidget = Util.summaryItem(title, score ,0);
+			ti.setWidget(treewidget); // update widget with new score
+			// recurse....
+			tree.updateToTree(ti, item, s, item.getFilter());
+			return s;
+		});
+		
+		
+	}
+	
+	private Promise<DomStudentModelDataScore> updateMethodTree(DomStudentModelContext4Student item) {
+		Promise<DomStudentModelDataScore> promisedScore = service.getScore(item);
+		return promisedScore.then( s ->  {
+			return widget.get().tree.insertMethodTree(item, s); // FIXME eigenlijk updateMethodTree....
+		});
+	}
+	
 	
 	private void insertMethodTree(DomStudentModelContext4Student item, DomMethod method) {
 		StudentResultsTree tree = widget.get().tree;
@@ -544,7 +571,23 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 
   private JSONObject resultState;
     
-  
+  @Override 
+  public void update() {
+	  if (current == null) return;
+	  service.updateScore(current); // moet een echte update zijn. hoeft niet "clear"
+	  Promise<DomStudentModelDataScore> update;
+	  if (widget.get().isMethod()) {
+		 update = updateMethodTree(current);
+	  } else {
+		 update = updateTree(current);
+	  }
+	  update.then ( s -> { 
+		  	Tree r = widget.get().tree.tree;
+			TreeItem tt = r.getSelectedItem();
+		    r.setSelectedItem(tt); // reselect selection
+		  	return s;
+		  });	  
+  }
 
 	public void init(JavaScriptObject resultState) {
 		init();
@@ -571,7 +614,9 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 				if (widget.get().isMethod())
 					insertMethodTree(current, method);
 				else
+				{
 					insertTree(current);
+				}
 				return p;
 			}, FAILURE);
 		

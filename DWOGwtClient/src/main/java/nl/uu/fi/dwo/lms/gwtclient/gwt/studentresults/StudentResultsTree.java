@@ -47,7 +47,7 @@ public class StudentResultsTree extends Composite {
 	private final String lang = LocaleInfo.getCurrentLocale().getLocaleName();
 	private static final Logger LOG = Logger.getLogger(StudentResultsTree.class.getName());
 
-	private Tree tree;
+	Tree tree;
 	private final LoggingFailure FAILURE;
 	public DomMethod method;
 	public Map<String, DomStudentModelContextInfo> currentInfo = new HashMap<String, DomStudentModelContextInfo>();
@@ -156,6 +156,20 @@ public class StudentResultsTree extends Composite {
 		}
 		return cnt;
 	}
+	public void updateToTree(TreeItem item, int[] elems, int cat, int obj,
+			final DomStudentModelObj oo, DomStudentModelObjectiveScore score, Map<String, Map<String, Set<Integer>>> filter) {
+		int count = item.getChildCount();
+		for (int i = 0; i < count; i++) {
+			TreeItem tt = item.getChild(i);
+			int[] oelems = (int[]) tt.getUserObject();
+			int oobj = oelems[elems.length];
+			DomStudentModelObj ooo = oo.getObjectives().get(oobj);
+			DomStudentModelObjectiveScore s = score.getChildren().get(oobj);
+			Widget html = to.html(ooo.getInfo(), s, 3);
+			tt.setWidget(html);
+			updateToTree(tt, oelems, cat, obj, ooo, s, filter);
+		}
+	}
 
 	
 	public Promise<DomStudentModelDataScore> addToTree(TreeItem item, int[] elems, int cat, int obj,
@@ -188,6 +202,23 @@ public class StudentResultsTree extends Composite {
 		return p;
 	}
 
+	public void updateToTree(TreeItem item, int cat, DomStudentModelCategory o,
+			DomStudentModelCategoryScore score, Map<String, Map<String, Set<Integer>>> filter) {
+		int count = item.getChildCount();
+		for (int i = 0; i < count; i++) { 
+			TreeItem tt = item.getChild(i);
+			int[] elems = (int[]) tt.getUserObject();
+			int obj = elems[1];
+		    DomStudentModelObjectiveScore s = score.getObjectives().get(obj);
+		    DomStudentModelObj oo = o.getObjectives().get(obj);
+			Widget html = to.html(oo.getInfo(), s, 2);
+			tt.setWidget(html);
+			updateToTree(tt, elems, cat, obj, oo, s, filter);
+		}
+		
+	}
+	
+	
 	public Promise<DomStudentModelDataScore> addToTree(TreeItem item, Object userObject, DomStudentModelCategory o,
 			Promise<DomStudentModelDataScore> p, Map<String, Map<String, Set<Integer>>> filter) {
 		DomStudentModelCategoryScore score = p.getValue().getDomStudentModelStructureScore().getCategories().get(((Integer) userObject).intValue());
@@ -217,7 +248,25 @@ public class StudentResultsTree extends Composite {
 		}
 		return p;
 	}
-
+	public void updateToTree(TreeItem item, DomStudentModelContext4Student model, Promise<DomStudentModelDataScore> promisedScore, Map<String, Map<String, Set<Integer>>> filter2) {
+		promisedScore.then( p -> {
+			DomStudentModelStructure structure = model.getModelStructure();
+			int count = item.getChildCount();
+			List<DomStudentModelCategoryScore> cats = p.getValue().getDomStudentModelStructureScore().getCategories();
+			List<DomStudentModelCategory> categories = structure.getCategories();
+			for (int i = 0; i < count; i++) {
+				TreeItem tt = item.getChild(i);
+				int cat = (Integer) tt.getUserObject();
+	            DomStudentModelCategoryScore score = cats.get(cat);
+	            DomStudentModelCategory o = categories.get(cat);				
+				Widget w = to.html(o.getInfo(), score, 1);
+				tt.setWidget(w);
+				updateToTree(tt, cat, o, score, filter2);
+			}
+			return p;
+		});
+	}
+	
 	public void addToTree(TreeItem item, DomStudentModelContext4Student model, Promise<DomStudentModelDataScore> promisedScore, Map<String, Map<String, Set<Integer>>> filter2) {
 		promisedScore
 		.then(p -> {
@@ -241,6 +290,9 @@ public class StudentResultsTree extends Composite {
 
 	}
 
+	public TreeItem getCurrentRoot() {
+		return tree.getItem(0);
+	}
 	
 	public TreeItem getRoot(DomStudentModelContext4Student item) {
 		tree.removeItems();
@@ -448,7 +500,26 @@ public class StudentResultsTree extends Composite {
 	    list.addAll(ordered);  
 	  }
 
-  public void insertMethodTree(DomStudentModelContext4Student item,	Promise<DomStudentModelDataScore> promisedScore) {
+  Promise<DomStudentModelDataScore> updateMethodTree(DomStudentModelContext4Student item,	Promise<DomStudentModelDataScore> promisedScore)
+  {
+	  //Map<String, Set<Integer>> bookfilter = filter.getOrDefault(method.key(), Collections.emptyMap());
+	  
+	  return promisedScore.then(s -> {
+		  String title = method.getMethod();
+		  DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
+		  Widget html = to.summary(title, score, 0);
+		  TreeItem ti = getCurrentRoot();
+		  ti.setWidget(html);
+          addToMethodTree2(ti, item, score, method); // hier moet er worden ingebroken
+          trimMethodTree(ti);
+	  
+		  
+		  return s;
+	  });
+  }
+  
+  
+  public Promise<DomStudentModelDataScore> insertMethodTree(DomStudentModelContext4Student item,	Promise<DomStudentModelDataScore> promisedScore) {
 		removeItems();
 		String title = method.getMethod();
 		Map<String, Set<Integer>> bookfilter = filter.getOrDefault(method.key(), Collections.emptyMap());
@@ -474,7 +545,7 @@ public class StudentResultsTree extends Composite {
 			}
 		}
 		ti.setUserObject(item);
-		promisedScore.then(s -> {
+		return promisedScore.then(s -> {
 	          DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
 	          ti.setWidget(to.summary(title, score ,0));
 	          //ti.setSelected(true);

@@ -81,6 +81,10 @@
 				        	<groupId>nl.uu.fi.dwo.lms</groupId>
 				        	<artifactId>DwoGwtClientHtmlUi</artifactId>							
 						</exclusion>
+						<exclusion>
+						    <groupId>nl.uu.fi.dwo.rest</groupId>
+    						<artifactId>DWO-rest-lib</artifactId>
+						</exclusion>
 					</exclusions>
 				</dependency>
 
@@ -945,7 +949,7 @@
 				<dependency>
     				<groupId>nl.uu.fi.dwo.rest</groupId>
 					<artifactId>redis-config</artifactId>
-					<version>2.5.38-SNAPSHOT</version>
+					<version>2.5.37</version>
 					<scope>test</scope>
 				</dependency>
 				<dependency>
