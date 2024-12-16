@@ -174,6 +174,8 @@ public abstract class StudentModelScoreUtil {
 	      }
 	      if (last != null) {
 	        last.result = s.result;
+	      } else {
+	    	  qq.add(s);
 	      }
 	    }
 	  }
