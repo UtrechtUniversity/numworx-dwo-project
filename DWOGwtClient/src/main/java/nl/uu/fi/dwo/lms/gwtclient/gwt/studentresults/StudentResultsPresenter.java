@@ -242,7 +242,7 @@ public class StudentResultsPresenter extends AbstractResultsPresenter implements
 	private Promise<DomStudentModelDataScore> updateMethodTree(DomStudentModelContext4Student item) {
 		Promise<DomStudentModelDataScore> promisedScore = service.getScore(item);
 		return promisedScore.then( s ->  {
-			return widget.get().tree.insertMethodTree(item, s); // FIXME eigenlijk updateMethodTree....
+			return widget.get().tree.updateMethodTree(item, s); // FIXME eigenlijk updateMethodTree....
 		});
 	}
 	

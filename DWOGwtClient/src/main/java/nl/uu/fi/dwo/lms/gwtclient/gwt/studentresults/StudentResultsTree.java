@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.ui.Composite;
@@ -405,18 +406,8 @@ public class StudentResultsTree extends Composite {
 		return item.addItem(scoreItem);
 	}
 	void addToMethodTree2(TreeItem item, DomStudentModelContext4Student model, DomStudentModelStructureScore score, DomMethod method) {
-		Map<String, Holder> holderMap = new LinkedHashMap<>();
-		DomStudentModelStructure structure = model.getModelStructure();
-		List<DomStudentModelCategory> cats = structure.getCategories();
-		List<DomStudentModelCategoryScore> catscores = score.getCategories();
-		Iterator<DomStudentModelCategory> icats = cats.iterator();
-		Iterator<DomStudentModelCategoryScore> icatscores = catscores.iterator();
 		scoreMap.clear();
-		while( icats.hasNext()) {
-			List<DomStudentModelObj> objs = icats.next().getObjectives();
-			List<DomStudentModelObjectiveScore> objscores = icatscores.hasNext() ? icatscores.next().getObjectives() : Collections.emptyList();
-			addToMethodTree2(objs, objscores, holderMap);
-		}
+		Map<String, Holder> holderMap = setupHolderMap(model, score);
 
 		closure(holderMap);
 		List<Holder> holderList = new LinkedList<>(holderMap.values());
@@ -443,6 +434,22 @@ public class StudentResultsTree extends Composite {
 	 			key.setWidget(to.summary(t, value, i));
 			}
 		);	 
+	}
+
+	protected Map<String, Holder> setupHolderMap(DomStudentModelContext4Student model,
+			DomStudentModelStructureScore score) {
+		Map<String, Holder> holderMap = new LinkedHashMap<>();
+		DomStudentModelStructure structure = model.getModelStructure();
+		List<DomStudentModelCategory> cats = structure.getCategories();
+		List<DomStudentModelCategoryScore> catscores = score.getCategories();
+		Iterator<DomStudentModelCategory> icats = cats.iterator();
+		Iterator<DomStudentModelCategoryScore> icatscores = catscores.iterator();
+		while( icats.hasNext()) {
+			List<DomStudentModelObj> objs = icats.next().getObjectives();
+			List<DomStudentModelObjectiveScore> objscores = icatscores.hasNext() ? icatscores.next().getObjectives() : Collections.emptyList();
+			addToMethodTree2(objs, objscores, holderMap);
+		}
+		return holderMap;
 	} 
 
 	protected Map<String,Map<String, Set<Integer>>> filter;
@@ -498,8 +505,8 @@ public class StudentResultsTree extends Composite {
 	      ordered.add(candidate); list.remove(node);
 	    }
 	    list.addAll(ordered);  
-	  }
-
+	  }  
+  
   Promise<DomStudentModelDataScore> updateMethodTree(DomStudentModelContext4Student item,	Promise<DomStudentModelDataScore> promisedScore)
   {
 	  //Map<String, Set<Integer>> bookfilter = filter.getOrDefault(method.key(), Collections.emptyMap());
@@ -510,7 +517,11 @@ public class StudentResultsTree extends Composite {
 		  Widget html = to.summary(title, score, 0);
 		  TreeItem ti = getCurrentRoot();
 		  ti.setWidget(html);
-          addToMethodTree2(ti, item, score, method); // hier moet er worden ingebroken
+          //addToMethodTree2(ti, item, score, method); // hier moet er worden ingebroken
+          Map<String, Holder> holdermap = setupHolderMap(item, score);
+          updateMethodTree(ti, holdermap);
+          
+          
           trimMethodTree(ti);
 	  
 		  
@@ -519,7 +530,35 @@ public class StudentResultsTree extends Composite {
   }
   
   
-  public Promise<DomStudentModelDataScore> insertMethodTree(DomStudentModelContext4Student item,	Promise<DomStudentModelDataScore> promisedScore) {
+  private void updateMethodTree(TreeItem ti, Map<String, Holder> holdermap) {
+	int bookcount = ti.getChildCount();
+	for(int b=0 ; b < bookcount; b++) {
+		TreeItem book = ti.getChild(b);
+		int chapcount = book.getChildCount();
+		for( int c = 0; c < chapcount; c++) {
+			TreeItem chap = book.getChild(c);
+			int count = chap.getChildCount() - 1;
+			for( int i = 0; i < count; i++) {
+				TreeItem item = chap.getChild(i);
+				Object o = item.getUserObject();
+				// id is ????
+				GWT.log(o.toString());
+			}
+			TreeItem weetjes = chap.getChild(count);
+			count = weetjes.getChildCount();
+			for( int i = 0; i < count; i++) {
+				TreeItem item = weetjes.getChild(i);
+				Object o = item.getUserObject();
+				GWT.log(o.toString());
+			}
+		}
+		
+		
+	}
+	
+}
+
+public Promise<DomStudentModelDataScore> insertMethodTree(DomStudentModelContext4Student item,	Promise<DomStudentModelDataScore> promisedScore) {
 		removeItems();
 		String title = method.getMethod();
 		Map<String, Set<Integer>> bookfilter = filter.getOrDefault(method.key(), Collections.emptyMap());
