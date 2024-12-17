@@ -108,7 +108,7 @@ public abstract class ActivityComponent implements ActivityInterface {
 	}
 
 	public ActivityComponent item(DomId original) {
-		vars().ifPresent(v -> v.scoreCache().ifPresent(c -> c.init(original)));
+		vars().ifPresent(v -> v.scoreCache(original));
 		return this;
 	}
 }

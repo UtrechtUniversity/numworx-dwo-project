@@ -21,6 +21,7 @@ import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomId;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -469,9 +470,13 @@ public class DwoGlobalVars {
 	}
 
 	private ScoreCache cache; // cache with global singleton scope
+	private Object initcache;  // initializer
 
 	public ScoreCache getScoreCache() {
-		if (cache == null) cache = GWT.create(ScoreCache.class);
+		if (cache == null) {
+			cache = GWT.create(ScoreCache.class);
+			cache.init(initcache);
+		}
 		return cache;
 	}
 	
@@ -479,5 +484,8 @@ public class DwoGlobalVars {
 		if (cache == null) return Optional.empty();
 		else return cache.optional();
 	}
-
+	public void scoreCache(Object initcache) {
+		this.initcache = initcache;
+		if (cache != null) cache.init(initcache);
+	}
 }
