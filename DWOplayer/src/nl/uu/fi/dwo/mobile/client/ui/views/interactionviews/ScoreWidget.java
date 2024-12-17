@@ -185,7 +185,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	
 	public ScoreWidget(ActivityInterface a, HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden, AnchorContext context)
 	{
-.		this.activity = a;
+		this.activity = a;
 		this.context = context;
 		this.api = a.scoreWidgetIF().get();
 
