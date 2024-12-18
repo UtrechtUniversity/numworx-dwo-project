@@ -273,7 +273,8 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 		headerView.hide();
 		panel.setWidget(view); // terug naar af. problemen met gekke scrolls
 		{
-			vars.scoreCache().ifPresent(sc -> sc.init(sco.original()));
+			//vars.scoreCache().ifPresent(sc -> sc.init(sco.original()));
+			//vars.scoreCache(sco.original());
 			final String id = sco.getID().toString();
 			DWOplayer.insertCSS(id);
 			List<SelectModuleItem> trail = new ArrayList<SelectModuleItem>();
