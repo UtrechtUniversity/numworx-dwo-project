@@ -105,9 +105,9 @@ public class ReviewActivity implements ActivityInterface, CBookEventListener {
 		if (states == null|| states.isEmpty()) return;
 		
 		HashMap<String,Object> o = new HashMap<>();
-		if (correctie > 0) {
+		if (correctie != 0) {
 			checkDocent = false;
-			o.put(CorrectieView.REVIEW_SCORE_CORRECTIE, correctie);
+			o.put(CorrectieView.REVIEW_SCORE_CORRECTIE, Math.max(0, correctie));
 		}
 		o.put(INTERACTIE_PANEL_STATES, states);
 		o.put(CHECK_DOCENT, checkDocent);
