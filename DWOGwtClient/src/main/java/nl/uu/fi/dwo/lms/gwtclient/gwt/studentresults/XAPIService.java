@@ -87,12 +87,13 @@ public class XAPIService extends StudentResultsService implements StudentResults
       query.activityID = "pid:" + id.getId();
       Activity a = new Activity(); a.id = query.activityID;
       query.ascending = Boolean.TRUE;
+      query.limit = 100;
       final StatementsQuery query2 = new StatementsQuery();
       query2.agent = query.agent;
       query2.verbID = CORRECTED;
       query2.activityID = query.activityID;
       query2.ascending = Boolean.TRUE;
-
+      query2.limit = 100;
       
       // statements ophalen vanaf tijdstip n
       return 

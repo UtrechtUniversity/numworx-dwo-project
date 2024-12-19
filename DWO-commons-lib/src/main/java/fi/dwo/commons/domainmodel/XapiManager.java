@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -43,7 +44,8 @@ public class XapiManager {
   
   public interface XapiService {
     List<String> createStatements(List<Statement> statements) throws IOException;
-    StatementsResult queryStatements(StatementsQuery query) throws IOException;
+    StatementsResult queryStatements(URL url) throws IOException;
+	StatementsResult queryStatements(StatementsQuery query) throws IOException;
     StateDocument getState(String stateId, Activity activity, Agent agent, String registration) throws IOException;
     String saveState(StateDocument state) throws IOException;
     String updateState(StateDocument state) throws IOException;
@@ -112,16 +114,21 @@ public class XapiManager {
       
       sb.setLength(sb.length()-1);
       URL url = new URL(endpoint, sb.toString());
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestProperty("Accept", "application/json");
-      conn.setRequestProperty("Accept-Encoding", "application/json");
-      conn.setRequestProperty("Authorization", authentication);
-      conn.setRequestProperty("Accept-Charset", "UTF-8");
-      conn.setRequestProperty("X-Experience-API-Version", "1.0.1");
-      StatementsResult result = genson.deserialize(conn.getInputStream(), StatementsResult.class);
-      conn.disconnect();
-      return result;
+      return queryStatements(url);
     }
+
+    @Override
+	public StatementsResult queryStatements(URL url) throws IOException {
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		  conn.setRequestProperty("Accept", "application/json");
+		  conn.setRequestProperty("Accept-Encoding", "application/json");
+		  conn.setRequestProperty("Authorization", authentication);
+		  conn.setRequestProperty("Accept-Charset", "UTF-8");
+		  conn.setRequestProperty("X-Experience-API-Version", "1.0.1");
+		  StatementsResult result = genson.deserialize(conn.getInputStream(), StatementsResult.class);
+		  conn.disconnect();
+		  return result;
+	}
 
     private String encode(Agent agent) {
       return genson.serialize(agent);
@@ -248,12 +255,26 @@ public class XapiManager {
 
   public Promise<StatementsResult> queryStatements(StatementsQuery q) {
     try {
-      return async.call(service.queryStatements(q));
+      Promise<StatementsResult> p = async.call(service.queryStatements(q));      
+	return p.then(this::doMore);
     } catch (IOException e) {
       return Promises.failed(e);
     }
   }
 
+  private Promise<StatementsResult> doMore(Promise<StatementsResult> p) throws IOException, InvocationTargetException, InterruptedException {
+	  StatementsResult value = p.getValue();
+	  String more = value.more;
+	  if (more == null || more.isEmpty()) return p;
+	  // moeilijk geval
+	  URL url = new URL(endpoint, more);
+	  return async.call(service.queryStatements(url))
+			  .map(v -> { value.statements.addAll(v.statements); v.statements = value.statements; return v; })
+			  .then(this::doMore).recover(f -> value);
+  }
+
+  
+  
   public Promise<StateDocument> getState(String stateId, Activity activity, Agent agent, String registration) {
     try {
       return async.call(service.getState(stateId, activity, agent, registration));

@@ -1989,11 +1989,25 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 			dwologger.updateLog(buildLogParameters());
 		}
 		if (reviewActivity != null) {
-			reviewActivity.getState(h, getScore0());
+			int score0 = getScore0();
+			if (score0 == 0 && isFout()) score0 = -1; // marker 
+			reviewActivity.getState(h, score0);
 		}
 		return h;
 	}
+
 	
+	private boolean isFout() {
+		for (int i = 0; i < interactionViewObjects.size(); i++)
+		{
+			Object currentObject = interactionViewObjects.get(i);
+			Boolean check = ((InteractionView) currentObject).isCorrect();
+			if (Boolean.FALSE.equals(check))
+				return true;
+		}
+		return false;
+	}
+
 	public void getResponses( List<String> responses) {
 		for(Object view: interactionViewObjects) {
 			if(view instanceof FacetAware) {

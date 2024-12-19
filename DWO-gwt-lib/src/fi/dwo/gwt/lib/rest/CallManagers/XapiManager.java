@@ -199,15 +199,43 @@ public class XapiManager {
     else {
       r = r.addQueryParam("agent", encode(getAgent()));
     }
-    if (q.relatedActivities != null) r.addQueryParam("related_activities", q.relatedActivities.toString());
-    if (q.activityID != null) r.addQueryParam("activity", q.activityID);
-    if (q.until != null) r.addQueryParam("until", q.until);
-    if (q.limit != null) r.addQueryParam("limit", q.limit.toString());
+    if (q.relatedActivities != null) r =  r.addQueryParam("related_activities", q.relatedActivities.toString());
+    if (q.activityID != null) r = r.addQueryParam("activity", q.activityID);
+    if (q.until != null) r = r.addQueryParam("until", q.until);
+    if (q.limit != null) r = r.addQueryParam("limit", q.limit.toString());
     //etc
 
     Method method = r.get();
     method.setDispatcher(proxy.getDispatcher());
-    method.send(new JsonCallback() {
+    method.send(asCallback(callback));
+    
+    return callback.getPromise().then(this::doMore);
+  }
+  
+  private Promise<StatementsResult> doMore(Promise<StatementsResult> p) {
+	  Deferred<StatementsResult> callback = new Deferred<>();
+	  StatementsResult value = p.getValue();
+	  String more = value.more;
+	  if (more == null || more.isEmpty()) return p;
+	  // moeilijk geval
+	  RestServiceProxy proxy = (RestServiceProxy) service;
+	  Resource r = proxy.getResource();
+	  String path = r.getPath();
+	  int end = path.indexOf("/", 10);
+	  if (end >= 0) path = path.substring(0,end);
+	  r = new Resource(path, r.getHeaders());
+	  r = r.resolve(more);
+	  Method method = r.get();
+	  method.setDispatcher(proxy.getDispatcher());
+	  method.send(asCallback(callback));
+	  return callback.getPromise()
+			  .map(v -> { value.statements.addAll(v.statements); v.statements = value.statements; return v; })
+			  .then(this::doMore).recover(f -> value);
+  }
+  
+
+protected JsonCallback asCallback(Deferred<StatementsResult> callback) {
+	return new JsonCallback() {
       
       @Override
       public void onSuccess(Method method, JSONValue response) {
@@ -219,10 +247,8 @@ public class XapiManager {
       public void onFailure(Method method, Throwable exception) {
         callback.fail(exception);    
       }
-    });
-    
-    return callback.getPromise();
-  }
+    };
+}
 
   public void setAuth(String auth) {
     headers.put("Authorization", auth);
