@@ -666,11 +666,15 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		// anders gaat oefenen met geen correctie eerdere pagina's mis na
 		// kijkNa()
 		// niet versturen als verzegeld.
+		fireSetChanged();
+	}
+
+	private void fireSetChanged() {
 		if (!isVerzegeld()) {		
 			Map<String, Object> hashmap = new HashMap<>();
 			hashmap.put("unitId", entry.getUnitId());
 			hashmap.put("location", currentOpdracht);
-// Bij zelftoets, we maken onderscheit tussen NULL en FALSE
+// Bij zelftoets, we maken onderscheid tussen NULL en FALSE
 			if (mode == ZELFTOETS)
 			{
 				hashmap.put("score.raw", getScoresZelftoets(currentActiviteit, currentOpdracht));
@@ -679,7 +683,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			else
 			{
 				hashmap.put("score.raw", scores[currentActiviteit][currentOpdracht]);
-				hashmap.put("success", check);
+				hashmap.put("success", isCorrect[currentActiviteit][currentOpdracht]);
 			}
 			hashmap.put("visited", visited[currentActiviteit][currentOpdracht]);
 			ObjectMap map = JSONUtilities.wrapMap(Collections.singletonMap("parameters", hashmap));
@@ -1780,6 +1784,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void close()
 	{
+		fireSetChanged();
 		memento.close();
 		//memento = null;
 	}
@@ -1815,6 +1820,9 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 
 		BUS.removeHandlers();
+		// laatste kans
+		fireSetChanged();
+		
 		entry.clearContentPanel();
 		currentOpdracht = opdracht;
 		memento.setCurrentOpdracht(opdracht);

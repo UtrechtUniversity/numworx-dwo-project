@@ -114,17 +114,21 @@ public class ScoreManager implements ScoreWidgetIF, CBookEventListener {
 		Map<String,Promise<Map<String,String>>> all = new LinkedHashMap<>();
 		Promise<Map<String, String>>result;
 		Iterator<String> iter = set.iterator();
+		Optional<String> id = Optional.empty();
 		while (iter.hasNext()) {
 			String name = iter.next();
 			result = cache.get(name);
 			if(result != null) {
 				all.put(name, result);
 				iter.remove();
+				if (name.endsWith(".id")) id = Optional.of(name);
 			}
 		}
 		if (!set.isEmpty()) {
-			result = delegate.getValuesPromise(set);
-			for(String name: set) cache.put(name, result);
+			Collection<String> keys = id.isPresent() ? new HashSet<String>(set) : set;
+			id.ifPresent(keys::add);
+			result = delegate.getValuesPromise(keys); // MUST contain .id 
+			for(String name: set) cache.put(name, result); // could contain .id
 			all.put(null, result);
 		}
 		Deferred<Map<String,String>> defer = new Deferred<Map<String,String>>();

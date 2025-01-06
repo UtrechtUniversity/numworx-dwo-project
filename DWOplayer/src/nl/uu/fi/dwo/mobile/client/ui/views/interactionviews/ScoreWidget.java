@@ -681,7 +681,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				if (score) {
 					Promise<String> p;
 					p = Promises.resolved(String.valueOf(param.get("score.raw")));
-					p.then(this::doScore);
+					doScore(p);
 				}
 				if (goedFout && bezocht) {
 				} else 
