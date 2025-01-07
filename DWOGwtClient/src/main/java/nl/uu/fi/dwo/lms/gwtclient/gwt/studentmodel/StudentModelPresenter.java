@@ -285,6 +285,7 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 		}
 		DomStudentModelContextInfo info = new DomStudentModelContextInfo();
 		info.setId(id);
+		//String pid = (String) event.getSelectedItem().getParentItem().getUserObject(); 
 		currentModel.then( p -> 
 			description.get(p.getValue(), info))
 		.then(p -> {view.setDescription(event.getSelectedItem().getText(), p.getValue()); return p;}, FAILURE);

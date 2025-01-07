@@ -67,9 +67,9 @@ public class EastPanel extends ResizeComposite {
 
 	private final DescriptionPresenter service;
 
-	public void setDescription(DomStudentModelContextId model, DomStudentModelContextInfo info) {
-		setDescription(model, info, null);
-	}
+//	public void setDescription(DomStudentModelContextId model, DomStudentModelContextInfo info) {
+//		setDescription(model, info, null);
+//	}
 
 	public void setDescription(DomStudentModelContextId model, DomStudentModelContextInfo info, DomStudentModelMethodInfo method) {
 		String text = getTitle(info);
