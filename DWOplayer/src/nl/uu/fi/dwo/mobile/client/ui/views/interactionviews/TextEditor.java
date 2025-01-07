@@ -610,7 +610,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 			hbox.setPixelSize(width-boxsize-paddingH, height-boxsize-paddingH);
 			if (widget != hbox) widget.setPixelSize(breedte, -1);
 // flow update, overgenomen uit init()
-			int contentWidth = width-boxsize-padding;
+			int contentWidth = width-boxsize-(pasAanH ? paddingH : padding);
 			int menuWidth = 0;
 			if (pasAanH && nowrap && menubar != null) menuWidth = this.menuWidth; // 2 knoppen
 			flow.getElement().getStyle().setProperty("minWidth", contentWidth-menuWidth, Unit.PX);

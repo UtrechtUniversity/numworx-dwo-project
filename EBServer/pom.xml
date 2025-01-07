@@ -751,7 +751,7 @@
 			<plugin> <!-- NIET ZOMAAR WEGGOOIEN! -->
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.6.0</version>
+				<version>3.5.0</version>
 				<executions>
 					<execution>
 						<id>local-index</id>
@@ -777,6 +777,7 @@
 					<arguments>
 						<argument>${project.build.directory}/${project.build.finalName}/dwo</argument>
 					</arguments>
+					<blockSystemExit>true</blockSystemExit>
 				</configuration>
 			</plugin>
 			<plugin>
