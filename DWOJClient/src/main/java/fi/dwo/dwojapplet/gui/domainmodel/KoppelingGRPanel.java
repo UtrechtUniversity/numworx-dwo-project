@@ -20,9 +20,11 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
 import fi.dwo.commons.system.TextMapper;
 
+@SuppressWarnings("serial")
 public class KoppelingGRPanel extends JPanel implements Constants, ItemListener {
 
-    private JPanel topPanel;
+    private static final int CB_WIDTH = 80;
+	private JPanel topPanel;
 	private JPanel mainPanel;
 	private JPanel bottomPanel;
 	
@@ -87,7 +89,7 @@ public class KoppelingGRPanel extends JPanel implements Constants, ItemListener 
 		mainPanel = new JPanel(null);
 		mainPanel.setBackground(colorGray3);
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		mainPanel.setPreferredSize(new Dimension(150+50*maxAantalHoofdstukken, 60+30*aantalJaarlagen+60));
+		mainPanel.setPreferredSize(new Dimension(150+CB_WIDTH*maxAantalHoofdstukken, 60+30*aantalJaarlagen+60));
 
 		bottomPanel = new JPanel();
 		bottomPanel.setBackground(colorGray2);
@@ -115,7 +117,7 @@ public class KoppelingGRPanel extends JPanel implements Constants, ItemListener 
 				JCheckBox c = 
 				cb[i][j] = new JCheckBox("");
 				c.addItemListener(this);				
-				c.setBounds(120+50*j,60+30*i,50,20);
+				c.setBounds(120+CB_WIDTH*j,60+30*i,CB_WIDTH,20);
 				mainPanel.add(c);
 			}
 		}
@@ -123,7 +125,7 @@ public class KoppelingGRPanel extends JPanel implements Constants, ItemListener 
 		hf = new JComponent[maxAantalHoofdstukken];
 		for(int i=0 ; i<maxAantalHoofdstukken ; i++) {
 			hf[i] = new JLabel("hfst "+(i+1));
-			hf[i].setBounds(120+50*i,30,50,20);
+			hf[i].setBounds(120+CB_WIDTH*i,30,CB_WIDTH,20);
 			hf[i].setForeground(colorBlue1);
 			mainPanel.add(hf[i]);
 		}
