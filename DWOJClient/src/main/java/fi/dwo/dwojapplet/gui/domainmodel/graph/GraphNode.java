@@ -678,6 +678,14 @@ public class GraphNode {
 			info.setY(ey);
 		}
 	}
+	
+	public String getVariant(String code) {
+		DomStudentModelMethodInfo info = methodeInfos.get(code);
+		if (info != null) {
+			return info.getVariant();
+		}
+		return null;
+	}
 
 	public void move(int dx, int dy) {
 		for (String code : selected) {
