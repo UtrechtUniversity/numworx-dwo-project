@@ -534,28 +534,50 @@ public class StudentResultsTree extends Composite {
 	int bookcount = ti.getChildCount();
 	for(int b=0 ; b < bookcount; b++) {
 		TreeItem book = ti.getChild(b);
+		String bookstr = method.books.get(b); // klopt dit?
 		int chapcount = book.getChildCount();
 		for( int c = 0; c < chapcount; c++) {
 			TreeItem chap = book.getChild(c);
+			Object cu = chap.getUserObject(); // wat is dit? [b, c] misschien?
+			GWT.log(cu.toString());
+			Integer chapter = Integer.valueOf(c+1); // denken we
+			
 			int count = chap.getChildCount() - 1;
-			for( int i = 0; i < count; i++) {
+			for( int i = 0; i <= count; i++) {
 				TreeItem item = chap.getChild(i);
-				Object o = item.getUserObject();
-				// id is ????
-				GWT.log(o.toString());
+				updateMethodTreeItem(holdermap, bookstr, chapter, item);
 			}
 			TreeItem weetjes = chap.getChild(count);
 			count = weetjes.getChildCount();
 			for( int i = 0; i < count; i++) {
 				TreeItem item = weetjes.getChild(i);
-				Object o = item.getUserObject();
-				GWT.log(o.toString());
+				updateMethodTreeItem(holdermap, bookstr, chapter, item);
 			}
 		}
 		
 		
 	}
 	
+}
+
+protected void updateMethodTreeItem(Map<String, Holder> holdermap, String bookstr, Integer chapter, TreeItem item) {
+	Object o = item.getUserObject();
+	if (o instanceof DomStudentModelObjectiveScore) {
+		String id = ((DomStudentModelObjectiveScore) o).getId();
+		Holder h = holdermap.get(id);
+		if (h != null) {
+			item.setUserObject(h.s);
+			DomStudentModelObj obj = h.obj;
+			String title = StudentModelPresenter.getTitle(obj.getInfo(),lang);
+			List<DomStudentModelMethodInfo> mi = obj.getInfo().getMethodInfo();
+			Optional<DomStudentModelMethodInfo> opt = mi.stream()
+					.filter(m -> bookstr.equals(m.getBook()) && chapter.equals(m.getChapter()) && method.key().equals(m.getMethod()))
+					.findAny();
+			Optional<String> variant = opt.map(DomStudentModelMethodInfo::getVariant);
+			// DEBUG h.s.setScore(1.0 - h.s.getScore());
+			item.setWidget(to.score(title, h.s, 3, variant));
+		}
+	}
 }
 
 public Promise<DomStudentModelDataScore> insertMethodTree(DomStudentModelContext4Student item,	Promise<DomStudentModelDataScore> promisedScore) {

@@ -1175,14 +1175,18 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		int ex = (int) ((e.getX()-origin.x)/factor);
 		int ey = (int) ((e.getY()-origin.y)/factor);
 		GraphNode node = null;
+		String nodeVariant = "";
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			if(graphNodes.get(i).contains(ex, ey) || graphNodes.get(i).contains(e.getX(), e.getY())) {
 				node = graphNodes.get(i);
+				String code = node.search(ex, ey);
+				String v = node.getVariant(code);
+				if (v != null) nodeVariant = "/" + v;
 				break;
 			}
 		}
 		if(node!=null) {
-			produceAction(node.getID());
+			produceAction(node.getID() + nodeVariant);
 			return;
 		}
 		

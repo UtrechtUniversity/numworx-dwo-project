@@ -2,8 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import javax.inject.Inject;
 
-import org.osgi.util.promise.Promise;
-
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
