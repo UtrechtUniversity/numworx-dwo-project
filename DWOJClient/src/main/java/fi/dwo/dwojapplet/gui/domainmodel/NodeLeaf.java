@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -253,6 +254,12 @@ public void setVariant(DomStudentModelVariant variant) {
 	if (variant != null) {
 		getVariants().replace(variant);
 	}
+}
+
+public void setVariant(String string) {
+	if (info.getVariants() == null) return;
+	Optional<DomStudentModelVariant> opt = info.getVariants().stream().filter(v -> Objects.equals(v.getName(), string)).findAny();
+	setVariant(opt.orElse(info.getVariants().get(0)));
 }
   
   
