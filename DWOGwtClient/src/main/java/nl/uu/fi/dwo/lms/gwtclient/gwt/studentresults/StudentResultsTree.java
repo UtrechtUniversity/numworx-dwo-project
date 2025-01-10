@@ -426,14 +426,16 @@ public class StudentResultsTree extends Composite {
 		holderList.forEach(h -> {
 			addToMethodTree(item, h.obj, h.s, method);
 		});
-		
-		
+		updateScoreMap();	 
+	}
+
+	protected void updateScoreMap() {
 		scoreMap.forEach( (key, value) -> 
 			{	String t = ((HasText) key.getWidget()).getText();
 				int i = key.getParentItem() == null ? 0 : 1;
 	 			key.setWidget(to.summary(t, value, i));
 			}
-		);	 
+		);
 	}
 
 	protected Map<String, Holder> setupHolderMap(DomStudentModelContext4Student model,
@@ -512,6 +514,7 @@ public class StudentResultsTree extends Composite {
 	  //Map<String, Set<Integer>> bookfilter = filter.getOrDefault(method.key(), Collections.emptyMap());
 	  
 	  return promisedScore.then(s -> {
+		  scoreMap.clear();
 		  String title = method.getMethod();
 		  DomStudentModelStructureScore score = s.getValue().getDomStudentModelStructureScore();
 		  Widget html = to.summary(title, score, 0);
@@ -520,7 +523,7 @@ public class StudentResultsTree extends Composite {
           //addToMethodTree2(ti, item, score, method); // hier moet er worden ingebroken
           Map<String, Holder> holdermap = setupHolderMap(item, score);
           updateMethodTree(ti, holdermap);
-          
+          updateScoreMap();
           
           trimMethodTree(ti);
 	  
@@ -576,6 +579,8 @@ protected void updateMethodTreeItem(Map<String, Holder> holdermap, String bookst
 			Optional<String> variant = opt.map(DomStudentModelMethodInfo::getVariant);
 			// DEBUG h.s.setScore(1.0 - h.s.getScore());
 			item.setWidget(to.score(title, h.s, 3, variant));
+			insertMethodMap(item.getParentItem(), h.s);
+			
 		}
 	}
 }
