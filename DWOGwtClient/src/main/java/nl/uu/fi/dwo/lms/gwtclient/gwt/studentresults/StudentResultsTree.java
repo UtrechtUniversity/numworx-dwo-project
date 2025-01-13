@@ -338,13 +338,13 @@ public class StudentResultsTree extends Composite {
 							.filter(m -> book.equals(m.getBook()) && chapter.equals(m.getChapter()) && method.key().equals(m.getMethod()))
 							.findAny();
 					Optional<String> variant = opt.map(DomStudentModelMethodInfo::getVariant);
-					addToMethodTree(item, book, chapter, to.score(title, s, 3, variant), method, s);
+					addToMethodTree(item, book, chapter, to.score(title, s, 3, variant), method, s, variant);
 				}
 			}
 		}
 	}
 
-	private void addToMethodTree(TreeItem item, String book, Integer chapter, Widget scoreItem, DomMethod method, DomStudentModelScore<?> score) {
+	private void addToMethodTree(TreeItem item, String book, Integer chapter, Widget scoreItem, DomMethod method, DomStudentModelScore<?> score, Optional<String> variant) {
 		int kidscount = item.getChildCount();
 		for (int i = 0; i < kidscount; i++) {
 			TreeItem bookitem = item.getChild(i);
@@ -358,7 +358,7 @@ public class StudentResultsTree extends Composite {
 					if (chapnr+1 == chapter.intValue()) {
 						TreeItem obj = insertMethodTree(chapitem, scoreItem);
 						obj.setUserObject(score);
-						insertMethodMap(obj.getParentItem(), score);
+						insertMethodMap(obj.getParentItem(), score, variant);
 						break;
 					}
 				}
@@ -367,7 +367,7 @@ public class StudentResultsTree extends Composite {
 		}	
 	}
 
-	private void insertMethodMap(TreeItem chapitem, DomStudentModelScore<?> score) {
+	private void insertMethodMap(TreeItem chapitem, DomStudentModelScore<?> score, Optional<String> variant) {
 		DomStudentModelScore<?> summary = scoreMap.computeIfAbsent(chapitem, k -> {
 			DomStudentModelScore<?> r = new DomStudentModelScore();
 			r.setScore(0, 0, 0, 0, 0);
@@ -375,8 +375,9 @@ public class StudentResultsTree extends Composite {
 		});
 		long gc = score.getGreenCount();
 		if (gc != 0L) {
+			double gs = metVariant(score, score.getGreenScore(), variant);
 			summary.setGreenCount(summary.getGreenCount() + gc);
-			summary.setGreenScore(summary.getGreenScore() + score.getGreenScore());
+			summary.setGreenScore(summary.getGreenScore() + gs);
 		}
 		long rc = score.getRedCount();
 		if (rc != 0L) {
@@ -385,7 +386,7 @@ public class StudentResultsTree extends Composite {
 		}
 		summary.setTotalCount(summary.getTotalCount() + score.getTotalCount());
 		TreeItem parent = chapitem.getParentItem();
-		if (parent != null) insertMethodMap(parent, score);
+		if (parent != null) insertMethodMap(parent, score, variant);
 	}
 
 	/* 
@@ -393,6 +394,14 @@ public class StudentResultsTree extends Composite {
 	 * moet topologisch gesorteerd zijn. Hier verder geen sortering meer mogelijk.
 	 */
 	
+	private double metVariant(DomStudentModelScore<?> s, double greenScore, Optional<String> variant) {
+		if (variant.isPresent() && s instanceof DomStudentModelObjectiveScore) {
+			DomStudentModelObjectiveScore sv = (DomStudentModelObjectiveScore) s;
+			greenScore = variant.map(v -> sv.getVariants().get(v)).orElse(greenScore);
+		}
+		return greenScore;
+	}
+
 	TreeItem insertMethodTree(TreeItem item, Widget scoreItem) {
 		if (scoreItem instanceof HasText) {
 			int count = item.getChildCount()-1;
@@ -579,7 +588,7 @@ protected void updateMethodTreeItem(Map<String, Holder> holdermap, String bookst
 			Optional<String> variant = opt.map(DomStudentModelMethodInfo::getVariant);
 			// DEBUG h.s.setScore(1.0 - h.s.getScore());
 			item.setWidget(to.score(title, h.s, 3, variant));
-			insertMethodMap(item.getParentItem(), h.s);
+			insertMethodMap(item.getParentItem(), h.s, variant);
 			
 		}
 	}
