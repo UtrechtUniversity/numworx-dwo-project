@@ -1,18 +1,12 @@
 package nl.uu.fi.dwo.mobile.client;
 
-import com.google.gwt.core.client.GWT;
 import com.googlecode.mgwt.ui.client.widget.header.HeaderAppearance;
-//import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
 import com.googlecode.mgwt.ui.client.widget.header.HeaderPanel;
 
-import nl.uu.fi.dwo.ideas.client.IdeasIF;
-import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavPanel;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
-import nl.uu.fi.dwo.mobile.utils.Logging;
-import nl.uu.fi.dwo.mobile.utils.NoLogging;
 
 public class DWOplayerTinCan extends WiskOpdrDefaults {
 
@@ -52,12 +46,7 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
 		return new ScoreNavPanel(a, headercss());
 	}
 
-//	private HeaderCss headercss() {
-//		NoordhoffPlayerClientBundle bundle = GWT.create(NoordhoffPlayerClientBundle.class);
-//		return  bundle.headercss();
-//	}
 	private HeaderAppearance headercss() {
-//		NoordhoffPlayerClientBundle bundle = GWT.create(NoordhoffPlayerClientBundle.class);
 		return HeaderPanel.DEFAULT_APPEARANCE;
 	}
 	

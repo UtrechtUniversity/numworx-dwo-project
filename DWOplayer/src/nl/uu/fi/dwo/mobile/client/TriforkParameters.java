@@ -7,7 +7,6 @@ public class TriforkParameters extends DWOplayerDefaults {
 
 	@Override
 	public StatusBarIF getStatusBar(ActivityComponent a) {
-		//return new nl.uu.fi.dwo.mobile.client.ui.dwokb.CitrusKeyboard();
 		return new nl.uu.fi.dwo.mobile.client.ui.dwokb.TriforkFormuleKeyboard(a);
 	}
 
