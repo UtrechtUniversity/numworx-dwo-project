@@ -606,14 +606,6 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>Trifork</id>
-			<properties>
-				<gwtModule>${project.groupId}.Trifork</gwtModule>
-				<finalName>Trifork</finalName>
-				<gwt.style>PRETTY</gwt.style>
-			</properties>
-		</profile>
-		<profile>
 			<id>uploadwidget</id>
 			<dependencies>
 				<dependency>
