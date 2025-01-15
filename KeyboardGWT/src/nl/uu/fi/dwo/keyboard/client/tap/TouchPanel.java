@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.TouchEndEvent;
 import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchEvent;
 import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchMoveHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -310,7 +311,9 @@ class TouchEndToMouseUpHandler implements MouseUpHandler {
 }
 
 
-
+/**
+ * Always touch. Convert mouse to touch. Convert touch to tap/longtap
+ */
 public class TouchPanel extends FocusPanel {
 
 	public HandlerRegistration addLongTapHandler(LongTapHandler handler) {
@@ -322,18 +325,22 @@ public class TouchPanel extends FocusPanel {
 	}
 	
 	public HandlerRegistration addTouchHandler(TouchHandler handler) {
-		TouchMoveToMouseMoveHandler mover = new TouchMoveToMouseMoveHandler(handler);
-		com.google.web.bindery.event.shared.HandlerRegistration x = 
-				HandlerRegistrations.compose(
+		com.google.web.bindery.event.shared.HandlerRegistration x;
+		if (TouchEvent.isSupported()) {
+			x = HandlerRegistrations.compose(
 						addTouchStartHandler(handler),
-						addMouseDownHandler(new TouchStartToMouseDownHandler(handler)),
 						addTouchMoveHandler(handler),
-						addMouseMoveHandler(mover),addMouseUpHandler(mover), addMouseDownHandler(mover),
 						addTouchEndHandler(handler),
-						addMouseUpHandler(new TouchEndToMouseUpHandler(handler)),
 						addTouchCancelHandler(handler));
-		return x::removeHandler;
-		
+			
+		} else {
+			TouchMoveToMouseMoveHandler mover = new TouchMoveToMouseMoveHandler(handler);
+			x = HandlerRegistrations.compose(
+						addMouseDownHandler(new TouchStartToMouseDownHandler(handler)),
+						addMouseMoveHandler(mover),addMouseUpHandler(mover), addMouseDownHandler(mover),
+						addMouseUpHandler(new TouchEndToMouseUpHandler(handler)));
+		}
+		return x::removeHandler;		
 	}
 
 
