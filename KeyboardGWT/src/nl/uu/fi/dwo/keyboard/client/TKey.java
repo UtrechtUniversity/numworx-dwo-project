@@ -94,6 +94,10 @@ public class TKey extends Composite implements HasHTML, HasClickHandlers, HasLon
 	
 	@Override
 	public HandlerRegistration addClickHandler(final ClickHandler handler) {
+		if (true)
+			return panel.addClickHandler(handler);
+		
+		
 		return panel.addTapHandler(new TapHandler() {
 			
 			@Override

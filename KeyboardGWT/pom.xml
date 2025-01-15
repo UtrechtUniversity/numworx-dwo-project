@@ -48,11 +48,6 @@
 			</exclusions>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.googlecode.mgwt/mgwt -->
-		<dependency>
-		    <groupId>com.googlecode.mgwt</groupId>
-		    <artifactId>mgwt</artifactId>
-		    <version>2.0.0</version>
-		</dependency>
 
 	</dependencies>
 	<build>
