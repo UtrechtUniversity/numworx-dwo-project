@@ -21,10 +21,10 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.dom.client.recognizer.longtap.LongTapEvent;
 
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
+import nl.uu.fi.dwo.keyboard.client.tap.LongTapEvent;
 
 /**
  * @author peterboon
