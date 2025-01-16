@@ -21,19 +21,10 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.Image;
-//import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-//import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-//import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-//import com.googlecode.mgwt.dom.client.recognizer.longtap.HasLongTapHandlers;
-//import com.googlecode.mgwt.dom.client.recognizer.longtap.LongTapEvent;
-//import com.googlecode.mgwt.dom.client.recognizer.longtap.LongTapHandler;
-//import com.googlecode.mgwt.dom.client.recognizer.longtap.LongTapRecognizer;
-//import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import nl.uu.fi.dwo.keyboard.client.tap.HasLongTapHandlers;
 import nl.uu.fi.dwo.keyboard.client.tap.LongTapEvent;
 import nl.uu.fi.dwo.keyboard.client.tap.LongTapHandler;
-import nl.uu.fi.dwo.keyboard.client.tap.LongTapRecognizer;
 import nl.uu.fi.dwo.keyboard.client.tap.TapEvent;
 import nl.uu.fi.dwo.keyboard.client.tap.TapHandler;
 import nl.uu.fi.dwo.keyboard.client.tap.TouchHandler;
@@ -94,7 +85,7 @@ public class TKey extends Composite implements HasHTML, HasClickHandlers, HasLon
 	
 	@Override
 	public HandlerRegistration addClickHandler(final ClickHandler handler) {
-		if (true)
+		if (false)
 			return panel.addClickHandler(handler);
 		
 		
@@ -133,17 +124,7 @@ public class TKey extends Composite implements HasHTML, HasClickHandlers, HasLon
 	
 	@UiConstructor
 	public TKey() {
-		panel = new TouchPanel() {
-
-			@Override
-			public HandlerRegistration addLongTapHandler(LongTapHandler handler) {
-				return addHandler(handler, LongTapEvent.getType());
-			}
-			{
-				LongTapRecognizer longTapRecognizer = new LongTapRecognizer(this, 1, 500);
-				addTouchHandler(longTapRecognizer);
-			}
-		};
+		panel = new TouchPanel();
 		initWidget(panel);
 		click = new FKey.MyClickEvent(this);
 		setStyleName("kbd-Key");

@@ -315,6 +315,11 @@ class TouchEndToMouseUpHandler implements MouseUpHandler {
  * Always touch. Convert mouse to touch. Convert touch to tap/longtap
  */
 public class TouchPanel extends FocusPanel {
+	
+	public TouchPanel() {
+		addTouchHandler(new LongTapRecognizer(this, 1, 500));
+		addTouchHandler(new TapRecognizer(this));
+	}
 
 	public HandlerRegistration addLongTapHandler(LongTapHandler handler) {
 		return addHandler(handler, LongTapEvent.getType());
