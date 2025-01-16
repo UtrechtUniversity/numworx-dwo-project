@@ -7,11 +7,9 @@ import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.keyboard.client.tap.TapEvent;
 import nl.uu.fi.dwo.keyboard.client.tap.TapHandler;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.NoordhoffPlayerClientBundle;
 import nl.uu.fi.dwo.mobile.client.ui.views.MyPopup;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -122,7 +120,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 
 //	private final HeaderAppearance headercss;
 
-	public ScoreNavPanel(ActivityComponent activity, Object /*HeaderAppearance /*HeaderCss*/ headercss) {
+	public ScoreNavPanel(ActivityComponent activity, Void /*HeaderAppearance /*HeaderCss*/ headercss) {
 //		this.headercss = headercss;
 		top = new VerticalPanel();
 		initialize();
@@ -135,7 +133,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	}
 	
 	
-	static private final NoordhoffPlayerClientBundle DWO_BUNDLE = GWT.create(NoordhoffPlayerClientBundle.class);
+//	static private final NoordhoffPlayerClientBundle DWO_BUNDLE = GWT.create(NoordhoffPlayerClientBundle.class);
 
 	private void initialize() {
 		Label text;
