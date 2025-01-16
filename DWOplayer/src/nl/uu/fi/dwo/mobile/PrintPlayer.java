@@ -28,9 +28,9 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.MGWTSettings;
-import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
+//import com.googlecode.mgwt.ui.client.MGWT;
+//import com.googlecode.mgwt.ui.client.MGWTSettings;
+//import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;

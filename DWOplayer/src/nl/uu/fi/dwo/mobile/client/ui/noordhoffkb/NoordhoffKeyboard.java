@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.keyboard.client.CombinedState;
 import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
@@ -25,20 +26,11 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 
 	KeyboardFactory factory;
 	AbstractKeyboard kb;
+	private final ActivityComponent activity;
 	
-	public NoordhoffKeyboard() {
+	public NoordhoffKeyboard(ActivityComponent a) {
+		activity = a;
 		setStylePrimaryName("noordhoff");
-//		OsDetection detection = MGWT.getOsDetection();
-//		if(detection.isDesktop()
-//				//&& false
-//				) {
-//			factory = GWT.create(DesktopKeyboardFactory.class);
-//		} else {
-//			factory = GWT.create(TabletKeyboardFactory.class);
-//		}
-//		kb = factory.getKeyboard();
-//		setWidget(kb);
-//		kb.blur(); // we start hidden!
 		factory = new CombinedKeyboardFactory();
 
 // css style!		

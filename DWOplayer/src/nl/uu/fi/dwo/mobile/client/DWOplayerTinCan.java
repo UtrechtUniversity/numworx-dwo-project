@@ -1,9 +1,9 @@
 package nl.uu.fi.dwo.mobile.client;
 
 import com.google.gwt.core.client.GWT;
-import com.googlecode.mgwt.ui.client.widget.header.HeaderAppearance;
+//import com.googlecode.mgwt.ui.client.widget.header.HeaderAppearance;
 //import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
-import com.googlecode.mgwt.ui.client.widget.header.HeaderPanel;
+//import com.googlecode.mgwt.ui.client.widget.header.HeaderPanel;
 
 import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.mobile.DWOplayer;
@@ -45,21 +45,21 @@ public class DWOplayerTinCan extends WiskOpdrDefaults {
 
 	@Override
 	public StatusBarIF getStatusBar(ActivityComponent a) {
-		return new nl.uu.fi.dwo.mobile.client.ui.noordhoffkb.NoordhoffKeyboard();
+		return new nl.uu.fi.dwo.mobile.client.ui.noordhoffkb.NoordhoffKeyboard(a);
 	}
 	@Override
 	public ScoreNavIF getScoreNav(ActivityComponent a) {
-		return new ScoreNavPanel(a, headercss());
+		return new ScoreNavPanel(a, null);
 	}
 
 //	private HeaderCss headercss() {
 //		NoordhoffPlayerClientBundle bundle = GWT.create(NoordhoffPlayerClientBundle.class);
 //		return  bundle.headercss();
 //	}
-	private HeaderAppearance headercss() {
-//		NoordhoffPlayerClientBundle bundle = GWT.create(NoordhoffPlayerClientBundle.class);
-		return HeaderPanel.DEFAULT_APPEARANCE;
-	}
+//	private HeaderAppearance headercss() {
+////		NoordhoffPlayerClientBundle bundle = GWT.create(NoordhoffPlayerClientBundle.class);
+//		return HeaderPanel.DEFAULT_APPEARANCE;
+//	}
 	
 	
 	@Override

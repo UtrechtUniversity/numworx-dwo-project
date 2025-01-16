@@ -6,7 +6,8 @@ import java.util.HashMap;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.DWOkeyboardBundle;
-import nl.uu.fi.dwo.mobile.DWOplayer;
+import nl.uu.fi.dwo.keyboard.client.tap.TouchHandler;
+import nl.uu.fi.dwo.keyboard.client.tap.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 
 import com.google.gwt.core.shared.GWT;
@@ -17,8 +18,6 @@ import com.google.gwt.event.dom.client.TouchMoveEvent;
 import com.google.gwt.event.dom.client.TouchStartEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
-import com.googlecode.mgwt.dom.client.event.touch.TouchHandler;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import static nl.uu.fi.dwo.mobile.utils.ImageUtils.newImage;
 

@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
+import nl.uu.fi.dwo.keyboard.client.tap.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
@@ -28,7 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.mgwt.ui.client.MGWT;
 import com.googlecode.mgwt.ui.client.OsDetection;
 //import com.googlecode.mgwt.ui.client.widget.RoundPanel;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
+//import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
 
 import fi.writemathgwt.client.WritePanel;
 import fi.writemathgwt.client.WritePanelHolder;
