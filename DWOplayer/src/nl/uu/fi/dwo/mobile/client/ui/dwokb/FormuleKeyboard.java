@@ -588,10 +588,10 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		
 	}
 
-	@Override
-	public boolean isDesktopKeyboard() {
-		OsDetection detection = MGWT.getOsDetection();
-		return detection.isDesktop();
-	}
+//	@Override
+//	public boolean isDesktopKeyboard() {
+//		OsDetection detection = MGWT.getOsDetection();
+//		return detection.isDesktop();
+//	}
 
 }

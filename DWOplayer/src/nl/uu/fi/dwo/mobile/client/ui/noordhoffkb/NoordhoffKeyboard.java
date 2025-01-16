@@ -15,9 +15,7 @@ import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.keyboard.client.CombinedKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.CombinedState;
-import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
-import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
@@ -120,11 +118,11 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 		
 	}
 
-	@Override
-	public boolean isDesktopKeyboard() {
-		OsDetection detection = MGWT.getOsDetection();
-		return detection.isDesktop();
-	}
+//	@Override
+//	public boolean isDesktopKeyboard() {
+//		OsDetection detection = MGWT.getOsDetection();
+//		return detection.isDesktop();
+//	}
 
 	@Override
 	public void setCombinedState(CombinedState state) {
