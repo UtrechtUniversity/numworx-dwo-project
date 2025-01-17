@@ -27,15 +27,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-//import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-//import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-//import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
-//import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
-//import com.googlecode.mgwt.ui.client.widget.Button;
-//import com.googlecode.mgwt.ui.client.widget.HeaderButton;
-//import com.googlecode.mgwt.ui.client.widget.button.Button;
-//import com.googlecode.mgwt.ui.client.widget.header.HeaderAppearance;
-//import com.googlecode.mgwt.ui.client.widget.header.HeaderButton;
 
 import fi.wiskopdr.text.Text;
 

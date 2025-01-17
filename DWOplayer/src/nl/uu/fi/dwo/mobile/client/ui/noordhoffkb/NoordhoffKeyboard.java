@@ -1,14 +1,10 @@
 package nl.uu.fi.dwo.mobile.client.ui.noordhoffkb;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.OsDetection;
-
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
@@ -24,10 +20,7 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 
 	KeyboardFactory factory;
 	AbstractKeyboard kb;
-	private final ActivityComponent activity;
-	
 	public NoordhoffKeyboard(ActivityComponent a) {
-		activity = a;
 		setStylePrimaryName("noordhoff");
 		factory = new CombinedKeyboardFactory();
 
@@ -117,12 +110,6 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 		// TODO Auto-generated method stub
 		
 	}
-
-//	@Override
-//	public boolean isDesktopKeyboard() {
-//		OsDetection detection = MGWT.getOsDetection();
-//		return detection.isDesktop();
-//	}
 
 	@Override
 	public void setCombinedState(CombinedState state) {

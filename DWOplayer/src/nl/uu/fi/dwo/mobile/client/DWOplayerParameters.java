@@ -58,5 +58,6 @@ public interface DWOplayerParameters {
 	default boolean inKiosk() {
 		  return SecureMode.NORMAL != getSecureMode();
 		}
-	
+// MGWT 
+	boolean isDesktop();
 }

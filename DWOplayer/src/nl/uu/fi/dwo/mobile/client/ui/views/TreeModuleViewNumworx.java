@@ -46,10 +46,8 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SetSelectionModel;
 import com.google.gwt.view.client.SingleSelectionModel;
-import com.google.web.bindery.event.shared.HandlerRegistrations;
-import com.googlecode.mgwt.ui.client.MGWT;
-
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
+import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.MementoModule;
 import nl.uu.fi.dwo.mobile.client.sco.SCORM_DWO5;
@@ -353,7 +351,8 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 	@Inject PlaceHistoryMapper mapper;
 
 	@Inject
-	public TreeModuleViewNumworx(HeaderView headerView, NavigationViewNumworx navigationView, RPCHandler rpc, DwoGlobalVars vars, ActivityComponent.Builder builder) {
+	public TreeModuleViewNumworx(HeaderView headerView, NavigationViewNumworx navigationView, RPCHandler rpc, 
+			DwoGlobalVars vars, DWOplayerParameters parameters, ActivityComponent.Builder builder) {
 	    HorizontalCellListResources cellResources;
 	    this.rpc = rpc;
 	    this.builder = builder;
@@ -371,12 +370,12 @@ public class TreeModuleViewNumworx extends TreeModuleBase implements AnchorConte
 
 		root.forceLayout();
 // Strategy stuff desktop/tablet
-		selectStrategy(vars);
+		selectStrategy(vars, parameters);
 	}
 
 
-	private void selectStrategy(DwoGlobalVars vars) {
-		boolean desktop = MGWT.getOsDetection().isDesktop() /*&& false*/;
+	private void selectStrategy(DwoGlobalVars vars, DWOplayerParameters parameters) {
+		boolean desktop = parameters.isDesktop() /*&& false*/;
 		if (!vars.isIconizer()) desktop = false; // platte versie bij klas zonder tree
 		navigation = desktop ? new TreeNavStrategy() : new ListNavStrategy();
 	}
