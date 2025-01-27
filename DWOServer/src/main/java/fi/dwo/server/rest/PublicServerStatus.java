@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.util.Form;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
 import fi.dwo.server.BUILD;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
@@ -233,23 +234,12 @@ public class PublicServerStatus {
         return sb.toString();
     }
 
-    enum Form { phone, tablet, desktop }
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getUserAgent")
     public Response getUserAgent(@HeaderParam("user-agent") String userAgent) {
-    	if (userAgent == null) userAgent = "unknown";
-    	else userAgent = userAgent.toLowerCase(); // single lower case
     	Map<String,Object> result = new TreeMap<>();
-    	Form form = Form.desktop;
-    	if(userAgent.contains("iphone")|| userAgent.contains("ipod")) form = Form.phone;
-    	else if (userAgent.contains("ipad")) form = Form.tablet;
-    	else if (userAgent.contains("android")) {
-    		if (userAgent.contains("mobile"))
-    			form = Form.phone;
-    		else 
-    			form = Form.tablet;
-    	}    	
+     	Form form = Form.getFormFactor(userAgent);    	
     	result.put("useragent", userAgent);
     	result.put("formfactor", form.name());
 		ResponseBuilder build = Response.ok(result, MediaType.APPLICATION_JSON);
@@ -258,5 +248,6 @@ public class PublicServerStatus {
 		build.cacheControl(cc);
 		return build.build();
     }
+
     
 }
