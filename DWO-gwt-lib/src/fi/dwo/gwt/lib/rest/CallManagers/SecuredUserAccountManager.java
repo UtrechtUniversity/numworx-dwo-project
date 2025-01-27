@@ -331,6 +331,7 @@ public class SecuredUserAccountManager {
         RestLoginContext restcontext = new RestLoginContext();
         restcontext.setDomLoginContext(loginContext);
         restcontext.setRestContext(context);
+        GwtRestVars.instance().setRefreshToken(null);
         F(service::logout,PathId.getId(context), restcontext, callback);
     }
 

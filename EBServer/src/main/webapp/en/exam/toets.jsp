@@ -53,6 +53,7 @@
     <meta name="gwt:property" content="locale=en" >
     <script>
     	DWO_PROFILE_ID = 92
+    	formfactor = "<%=formfactor%>"
     	SECURE_MODE="SEB" // possibly others
     	function logout() {
     		window.location = "https://<%=server%>/en/exam/logout.html"

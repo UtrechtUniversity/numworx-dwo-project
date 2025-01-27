@@ -22,7 +22,7 @@
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
        <module>../DWO-rest-lib</module>
-<!--       <module>../DWO-gwt-lib</module>-->
+       <module>../DWO-gwt-lib</module>
   	   <module>../Account</module>
 <!-- 	 	<module>../DWOformule</module> -->
 <!-- 	 	<module>../DWOmAccess</module> -->
