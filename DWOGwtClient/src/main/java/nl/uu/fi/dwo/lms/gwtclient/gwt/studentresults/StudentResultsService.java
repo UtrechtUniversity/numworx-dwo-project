@@ -46,7 +46,7 @@ public class StudentResultsService extends StudentModelScoreUtil implements Stud
 	DomContext context;
 	DomSchoolClass sc;
 	Promise<DomDwoProfileFull> profile;
-	@Inject Lazy<AdviseMeService> adviseMe;
+//	@Inject Lazy<AdviseMeService> adviseMe;
 	
 
 	@Inject
@@ -95,9 +95,9 @@ public class StudentResultsService extends StudentModelScoreUtil implements Stud
 				break;
 			}
 		}
-		if (advise) 
-			return adviseMe.get().getModels()
-					.map( l -> { l = new ArrayList<>(l); l.addAll(list); return l; });
+//		if (advise) 
+//			return adviseMe.get().getModels()
+//					.map( l -> { l = new ArrayList<>(l); l.addAll(list); return l; });
 		return p;
 	}
 	
