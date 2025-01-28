@@ -102,7 +102,7 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	 */
 
 	native private static String formfactor() /*-{
-		return $win.formfactor || "desktop";
+		return $wnd.formfactor || "desktop";
 	}-*/;
 	
 	@Override
