@@ -29,9 +29,9 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.web.bindery.event.shared.EventBus;
-import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.MGWTSettings;
-import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
+//import com.googlecode.mgwt.ui.client.MGWT;
+//import com.googlecode.mgwt.ui.client.MGWTSettings;
+//import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 
 import fi.dwo.gwt.lib.rest.DwoConstants;
 import fi.wiskopdr.text.Text_nl;
@@ -99,19 +99,19 @@ public abstract class DWOplayer
 	public void setupDWOPlayer()
 	{
 		//MGWT Settings//
-		ViewPort viewport = new MGWTSettings.ViewPort();
-		//viewport.setTargetDensity(150); deprecated
-		viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
-		if(RESPONSIVE)
-			viewport.setWidthToDeviceWidth();
-		else
-			viewport.setWidth(1024);
-		MGWTSettings settings = new MGWTSettings();
-		settings.setViewPort(viewport);
-		//settings.setAddGlosToIcon(true); deprecated
-		settings.setFullscreen(true);
-		settings.setPreventScrolling(true);
-		MGWT.applySettings(settings);
+//		ViewPort viewport = new MGWTSettings.ViewPort();
+//		//viewport.setTargetDensity(150); deprecated
+//		viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
+//		if(RESPONSIVE)
+//			viewport.setWidthToDeviceWidth();
+//		else
+//			viewport.setWidth(1024);
+//		MGWTSettings settings = new MGWTSettings();
+//		settings.setViewPort(viewport);
+//		//settings.setAddGlosToIcon(true); deprecated
+//		settings.setFullscreen(true);
+//		settings.setPreventScrolling(true);
+//		MGWT.applySettings(settings);
 
 		createClientFactory();
 	}

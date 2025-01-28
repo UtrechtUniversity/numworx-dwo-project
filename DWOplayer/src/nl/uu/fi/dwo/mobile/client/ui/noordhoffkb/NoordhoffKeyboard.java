@@ -1,23 +1,18 @@
 package nl.uu.fi.dwo.mobile.client.ui.noordhoffkb;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.OsDetection;
-
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard.HasHeight;
 import nl.uu.fi.dwo.keyboard.client.CombinedKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.CombinedState;
-import nl.uu.fi.dwo.keyboard.client.DesktopKeyboardFactory;
 import nl.uu.fi.dwo.keyboard.client.KeyboardFactory;
-import nl.uu.fi.dwo.keyboard.client.TabletKeyboardFactory;
+import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 
@@ -25,20 +20,8 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 
 	KeyboardFactory factory;
 	AbstractKeyboard kb;
-	
-	public NoordhoffKeyboard() {
+	public NoordhoffKeyboard(ActivityComponent a) {
 		setStylePrimaryName("noordhoff");
-//		OsDetection detection = MGWT.getOsDetection();
-//		if(detection.isDesktop()
-//				//&& false
-//				) {
-//			factory = GWT.create(DesktopKeyboardFactory.class);
-//		} else {
-//			factory = GWT.create(TabletKeyboardFactory.class);
-//		}
-//		kb = factory.getKeyboard();
-//		setWidget(kb);
-//		kb.blur(); // we start hidden!
 		factory = new CombinedKeyboardFactory();
 
 // css style!		
@@ -126,12 +109,6 @@ public class NoordhoffKeyboard extends SimplePanel implements StatusBarIF, Formu
 	{
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public boolean isDesktopKeyboard() {
-		OsDetection detection = MGWT.getOsDetection();
-		return detection.isDesktop();
 	}
 
 	@Override

@@ -69,9 +69,9 @@ public class XAPIService extends StudentResultsService implements StudentResults
 	  Promise<DomStudentModelDataScore> result;
 	  result = map.get(id.getId());
 	  if (result == null || result.isDone() && result.getFailure() != null) {
-		  if (id.getId().getIdString().startsWith("ADVISEME"))
-			  result = adviseMe.get().getScore(id);
-		  else
+//		  if (id.getId().getIdString().startsWith("ADVISEME"))
+//			  result = adviseMe.get().getScore(id);
+//		  else
 			  result = getScore_impl(id);
 		  map.put(id.getId(), result);
 	  }

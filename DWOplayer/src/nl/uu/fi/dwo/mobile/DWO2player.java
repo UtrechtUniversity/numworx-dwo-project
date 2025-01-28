@@ -169,7 +169,6 @@ public class DWO2player extends DWOplayer implements EntryPoint {
     new MsgClickedDialogView(mcdp, style);
     
     MessageEvent.initialize(bus);
-    //Actions.isMainNavVisible.execute();
     
     if (!Actions.isAvailable() && !PARAMETERS.inExam()) {
       Window.addCloseHandler(ev -> 

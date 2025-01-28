@@ -1,15 +1,11 @@
 package fi.dwo.dwojapplet.gui.print;
 
-import java.awt.FlowLayout;
 import java.awt.print.Printable;
-import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 

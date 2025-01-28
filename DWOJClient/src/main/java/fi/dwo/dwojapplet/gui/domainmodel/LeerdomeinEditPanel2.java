@@ -169,6 +169,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					if (model.getSize() == 0) model.addElement(new DomStudentModelVariant());
 					model.addElement(n);
 					leaf.setVariant(model.getElementAt(0));
+					variantBox.setVisible(true);
 				};
 			}
 
@@ -1028,6 +1029,11 @@ public class LeerdomeinEditPanel2 extends JPanel
 		variantBox = new JComboBox<>(varianten);
 		variantBox.setBackground(Constants.COLOR13);
 		variantBox.setForeground(Color.white);
+		Dimension size = variantBox.getPreferredSize();
+		size.width += 40;
+		variantBox.setMinimumSize(size);
+		variantBox.setPreferredSize(size);
+
 		rightNorth.add(variantBox);
 		rightBox.add(rightNorth, BorderLayout.NORTH);
 		rightBox.add(container, BorderLayout.CENTER);
@@ -1534,7 +1540,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			variantBox.setModel(m);
 			DomStudentModelVariant variant = ((NodeLeaf) u).getVariant();
 			variantBox.setSelectedItem(variant);
-			variantBox.setVisible(true);
+			variantBox.setVisible(m.getSize()>1);
 			javax.swing.Action action = deselectionsActionRW;
 			if (variant == null || variant.getName() == null) action = voorkennisActionRW;
 			voorkennis.setAction(action);

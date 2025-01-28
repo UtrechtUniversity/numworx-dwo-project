@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.views.ScoreNavFacade;
 import com.google.gwt.user.client.Window;
+//import com.googlecode.mgwt.ui.client.MGWT;
 
 public class DWOplayerDefaults implements DWOplayerParameters {
 
@@ -93,5 +94,19 @@ public class DWOplayerDefaults implements DWOplayerParameters {
 	
 	public String getDwoEnv() {
 		return "unknown";
+	}
+
+	/**
+	 * One of "desktop", "phone", "tablet".
+	 * @return formfactor
+	 */
+
+	native private static String formfactor() /*-{
+		return $win.formfactor || "desktop";
+	}-*/;
+	
+	@Override
+	public boolean isDesktop() {
+		return "desktop".equals(formfactor());
 	}
 }

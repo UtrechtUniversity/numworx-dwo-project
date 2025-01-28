@@ -250,7 +250,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		boxMetRand = launchdata.getBoolean("boxMetRand", true);
 		pasAanH = launchdata.getBoolean("pasAanH", false);
 		boolean numbered = launchdata.getBoolean("numbered", false);
-		boolean nowrap   = launchdata.getBoolean("nowrap", false);
+		nowrap = launchdata.getBoolean("nowrap", false);
 
 		if(teltMee = launchdata.containsKey("scoreMax")) 
 			scoreMax = launchdata.getInt("scoreMax");
@@ -609,6 +609,12 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 				content.setPixelSize(width-boxsize-padding, height-menuheight-boxsize-padding);
 			hbox.setPixelSize(width-boxsize-paddingH, height-boxsize-paddingH);
 			if (widget != hbox) widget.setPixelSize(breedte, -1);
+// flow update, overgenomen uit init()
+			int contentWidth = width-boxsize-(pasAanH ? paddingH : padding);
+			int menuWidth = 0;
+			if (pasAanH && nowrap && menubar != null) menuWidth = this.menuWidth; // 2 knoppen
+			flow.getElement().getStyle().setProperty("minWidth", contentWidth-menuWidth, Unit.PX);
+		
 		}
 	}
 
@@ -2312,6 +2318,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	
 	static int TAB_WIDTH = 32;
 	private Widget w = new SimplePanel();
+	private boolean nowrap;
 	class Tab extends InlineHTML implements HasText
 	{
 		private Tab() {

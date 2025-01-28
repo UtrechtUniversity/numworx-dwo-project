@@ -59,9 +59,6 @@ public class ModulesPresenter implements SwitchViewEventHandler, MessageHandler 
 
     private static final Logger LOG = Logger.getLogger(ModulesPresenter.class.getName());
 
-    private static final String SHOWMAINNAV = "showMainNav";
-    private static final String HIDEMAINNAV = "hideMainNav";
-    private static final String ISMAINNAVVISIBLE = "isMainNavVisible";
     private static final String TRAIL = SelectedView.TRAIL.name();
     private static final String RETOUR = SelectedView.RETOUR.name();
     private static final String VISIBLE = "shown";
@@ -83,13 +80,13 @@ public class ModulesPresenter implements SwitchViewEventHandler, MessageHandler 
 
     private MainPresenter.Display mainView;
 
-    private static final boolean tablet;
-    static {
-//     OsDetection osDetection = MGWT.getOsDetection();
-// a tablet is a ipad, iphone, android, not a desktop
-      tablet = true; // !osDetection.isDesktop();   // FIXME voor Teunis, als uitgeklapt goed werkt, weer aanzetten: tablet = ! osDetection.isDesktop(); 
-      LOG.fine("OsDetection " + tablet);
-    }
+    private static final boolean tablet = true;
+//    static {
+////     OsDetection osDetection = MG-WT.getOsDetection();
+//// a tablet is a ipad, iphone, android, not a desktop
+//      tablet = true; // !osDetection.isDesktop();   // FIXME voor Teunis, als uitgeklapt goed werkt, weer aanzetten: tablet = ! osDetection.isDesktop(); 
+//      LOG.fine("OsDetection " + tablet);
+//    }
 
     /**
      * @return the view
@@ -140,10 +137,8 @@ public class ModulesPresenter implements SwitchViewEventHandler, MessageHandler 
           mainView.unsetIdleTimeout();
           if(tablet()) {
             view.setMainNavVisible(false);
-            view.sendMessage(HIDEMAINNAV);
           } else {
             view.setMainNavVisible(true);
-            view.sendMessage(SHOWMAINNAV);
           }
           return inited.getPromise();
         });
@@ -260,17 +255,6 @@ public class ModulesPresenter implements SwitchViewEventHandler, MessageHandler 
     @JsMethod
     public void onMessage(String message) {
         LOG.fine("onMessage " + message);
-        if (SHOWMAINNAV.equals(message)) {
-          view.setMainNavVisible(true);
- //         view.sendMessage(SHOWMAINNAV);
-        } else
-        if (HIDEMAINNAV.equals(message)) {
-          view.setMainNavVisible(false);
- //         view.sendMessage(HIDEMAINNAV);
-        } else
-        if (ISMAINNAVVISIBLE.equals(message)) {
-          view.sendMessage( !tablet() ? SHOWMAINNAV : HIDEMAINNAV);
-        } else 
         if (select(SelectedView.RESULTS, message) 
         		|| select(SelectedView.KNOWLEDGE, message)
         		|| select(SelectedView.CHATBOX, message)
@@ -387,7 +371,6 @@ public class ModulesPresenter implements SwitchViewEventHandler, MessageHandler 
 // switch to other view.     
       LOG.info("switch " + select);
       view.setMainNavVisible(true);
-//     view.sendMessage(SHOWMAINNAV);
     }
 
     private String toString(Map<String, String> search) {

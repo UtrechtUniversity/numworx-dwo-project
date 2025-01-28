@@ -18,8 +18,8 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredStudentStudentModelManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.ui.IdleDetect;
-import nl.uu.fi.dwo.ideas.client.IdeasClient;
-import nl.uu.fi.dwo.ideas.client.IdeasIF;
+//import nl.uu.fi.dwo.ideas.client.IdeasClient;
+//import nl.uu.fi.dwo.ideas.client.IdeasIF;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactory;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ViewFactoryJs;
@@ -80,9 +80,9 @@ abstract class BootModule {
 		return new SecuredStudentStudentModelManager();
 	}
 
-	@Provides @Singleton static IdeasIF ideas() {
-		return new IdeasClient("/ideas/IdeasServlet");
-	}
+//	@Provides @Singleton static IdeasIF ideas() {
+//		return new IdeasClient("/ideas/IdeasServlet");
+//	}
 	
 	@Provides @Reusable static DomContext context(DwoGlobalVars vars) {
 	    DomContext context = new DomContext();

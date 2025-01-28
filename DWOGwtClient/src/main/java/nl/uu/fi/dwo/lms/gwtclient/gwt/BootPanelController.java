@@ -168,6 +168,8 @@ public class BootPanelController {
     	viewFactory.getMainView().showStudentResults();
     	if (presenterFactory instanceof PresenterFactoryGwt)
     		((PresenterFactoryGwt) presenterFactory).getSMResultsPresenter().showDescription();
+    	else if (presenterFactory instanceof StudentPresenterFactory)
+    		presenterFactory.getResultsPresenter().update();
     };
 
     public final Runnable RETOUR_TEACHER_KNOWLEDGE = () -> {

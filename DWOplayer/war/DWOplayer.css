@@ -315,6 +315,10 @@ div.listItem-dwo-separator {
 /* 	color: red; */
 }
 
+/* essential MGWT stuff */
 
-
-
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-text-size-adjust: none;	
+}

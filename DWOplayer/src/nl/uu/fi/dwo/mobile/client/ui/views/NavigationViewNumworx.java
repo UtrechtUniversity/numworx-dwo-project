@@ -485,12 +485,6 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
       
     }
 	
-//    @UiHandler("bibliotheek") void onModules(ClickEvent e) {
-//    	if(Actions.isAvailable())
-//    		Actions.showMainNav.execute();
-//    	showIcon(false);
-//    }
-
     /**
      * show beheer iconen. 
      * Actions.isAvailable() is true

@@ -47,7 +47,8 @@
     <meta name="gwt:property" content="locale=nl" >
     <script>
     	DWO_PROFILE_ID = 100
-    	SECURE_MODE="SEB" // possibly others
+    	formfactor = "<%=formfactor%>"
+   		SECURE_MODE="SEB" // possibly others
         dwo_env = "<%=dwo_env%>"
     	function logout() {
     		<%

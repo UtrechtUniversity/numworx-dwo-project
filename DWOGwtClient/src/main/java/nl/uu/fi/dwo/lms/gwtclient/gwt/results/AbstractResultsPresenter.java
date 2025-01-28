@@ -21,4 +21,7 @@ public abstract class AbstractResultsPresenter {
 		
 	}
 
+	public void update() {
+	}
+
 }

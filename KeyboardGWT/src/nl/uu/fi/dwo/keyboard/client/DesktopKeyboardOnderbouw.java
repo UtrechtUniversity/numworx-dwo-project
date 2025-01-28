@@ -3,9 +3,6 @@ package nl.uu.fi.dwo.keyboard.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.Widget;
-
 import nl.uu.fi.dwo.keyboard.client.i18n.Key;
 
 public class DesktopKeyboardOnderbouw extends DesktopKeyboard {

@@ -277,7 +277,7 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 	public void onSelection(SelectionEvent<TreeItem> event) {
 		String id = (String) event.getSelectedItem().getUserObject();
 		LOG.info("on selection " + id);
-		if (id.startsWith(String.valueOf(DomMethod.key(currentModel.getValue().getModelStructure().getActiveMethod())))) {
+		if (id != null && id.startsWith(String.valueOf(DomMethod.key(currentModel.getValue().getModelStructure().getActiveMethod())))) {
 			Widget w = event.getSelectedItem().getWidget();
 			if (w instanceof HasText) id = ((HasText) w).getText();
 			view.setDescription(id, null);
@@ -285,9 +285,25 @@ public class StudentModelPresenter extends AbstractStudentModelPresenter impleme
 		}
 		DomStudentModelContextInfo info = new DomStudentModelContextInfo();
 		info.setId(id);
-		currentModel.then( p -> 
-			description.get(p.getValue(), info))
-		.then(p -> {view.setDescription(event.getSelectedItem().getText(), p.getValue()); return p;}, FAILURE);
+		TreeItem parentItem = event.getSelectedItem().getParentItem();
+		Promise<Widget> pp = currentModel.then( p -> 
+		{
+			String pid = getParentKey(parentItem, p.getValue().getModelStructure().getActiveMethod()); 
+			return description.get(p.getValue(), info, pid);
+		});
+		pp.then(p -> {view.setDescription(event.getSelectedItem().getText(), p.getValue()); return p;}, FAILURE);
+	}
+
+	private String getParentKey(TreeItem parentItem, PersistenceId m) {
+		if (parentItem == null || m == null) return null;
+		String pid = (String) parentItem.getUserObject();
+		// if parentitem is Weeetjes: parentItem = parentItem.parent();
+		String key = DomMethod.key(m);
+		if (pid != null && key != null && pid.startsWith(key)) {
+			if (pid.endsWith("-W")) return pid.substring(0, pid.length()-2);
+			return pid;		
+		}
+		return null;
 	}
 
 	public void init(DomStudentModelContext4Student context, JavaScriptObject resultState) {

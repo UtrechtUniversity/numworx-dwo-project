@@ -3,7 +3,11 @@
  */
 package nl.uu.fi.dwo.rest.dom.entities;
 
+import java.beans.Transient;
+
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -19,6 +23,8 @@ public class DomStudentOfClass extends DomMemberOfClass {
     /**
      * @return the studentId
      */
+    @XmlTransient
+    @Transient
     public PersistenceId getStudentId() {
         return userId;
     }

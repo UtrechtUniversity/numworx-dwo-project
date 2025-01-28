@@ -3,6 +3,7 @@
 <%@ page import="java.util.regex.*" %>
 <%@ page import="nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile" %>
 <%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache" %>
+<%@ page import="nl.uu.fi.dwo.rest.util.Form" %>
 <!doctype html>
 <!-- The DOCTYPE declaration above will set the     -->
 <!-- browser's rendering engine into                -->
@@ -11,6 +12,8 @@
 <%
 // 	String responsive = request.getParameter("responsive");
 // 	String header = request.getParameter("header");
+	String useragent = request.getHeader("user-agent");
+	String formfactor = Form.getFormFactor(useragent).name();
 
 	String profile = request.getParameter("profile");
 	String name = "";
@@ -48,6 +51,7 @@
     <script>
     	DWO_PROFILE_ID = <%=profile%>
     	dwo_env = "<%=dwo_env%>"
+    	formfactor = "<%=formfactor%>"
     	
     	function logout() {
     		if (window != window.parent)

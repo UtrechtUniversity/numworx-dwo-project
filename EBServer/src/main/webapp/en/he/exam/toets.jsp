@@ -59,6 +59,7 @@
     <meta name="gwt:property" content="locale=en" >
     <script>
     	DWO_PROFILE_ID = 100
+    	formfactor = "<%=formfactor%>"
     	SECURE_MODE="SEB" // possibly others
         dwo_env = "<%=dwo_env%>"
         defaultPlace = "<%= defaultPlace %>"

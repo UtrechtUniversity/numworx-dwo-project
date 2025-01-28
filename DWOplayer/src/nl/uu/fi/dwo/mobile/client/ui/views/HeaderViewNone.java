@@ -89,7 +89,6 @@ public class HeaderViewNone extends HTML implements HeaderView, MessageEventHand
   
   @Override
   public void hide() {
-      //Actions.hideMainNav.execute();
       LayoutPanel p = RootLayoutPanel.get(); // parent of header
       showNavigation = false;
       navigation.hide();

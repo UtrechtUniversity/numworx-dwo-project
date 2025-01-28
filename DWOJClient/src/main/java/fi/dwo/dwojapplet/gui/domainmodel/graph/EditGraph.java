@@ -306,7 +306,12 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 				activeNode = graphNodes.get(i);
 				activeNode.selectInside(new Rectangle(e.getX()-(int)(8*factor), e.getY()-(int)(8*factor), (int)(16*factor), (int)(16*factor)), origin, factor);
 				activeCode = activeNode.search(ex,ey);
-				setToolTipText(activeCode);
+                String variant = activeNode.getVariant(activeCode);
+                String tooltip = activeCode;
+                if (activeCode != null && variant != null) {
+            	   tooltip += "/" + variant;
+                }
+				setToolTipText(tooltip);
 				break;
 			}
 		}
@@ -513,6 +518,10 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
                GraphNode activeNode = graphNodes.get(i);
                //activeNode.setSelected(true);
                String activeCode = activeNode.search(ex,ey);
+               String variant = activeNode.getVariant(activeCode);
+               if (activeCode != null && variant != null) {
+            	   activeCode += "/" + variant;
+               }
                setToolTipText(activeCode); set = true;
                break;
            }

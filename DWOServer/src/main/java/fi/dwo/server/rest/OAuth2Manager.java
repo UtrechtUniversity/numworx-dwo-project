@@ -331,7 +331,9 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
 		String accessToken = params.getFirst("access_token");
 		String code = params.getFirst(REFRESH_TOKEN);
 		// doe je ding.
-		JwtParser parser = Jwts.parser().setSigningKeyResolver(AUTH);
+		JwtParser parser;
+// ignore expiration time. 
+		parser = Jwts.parserBuilder().setSigningKeyResolver(AUTH).setAllowedClockSkewSeconds(36000L).build();
 		Jws<Claims> token = parser.parseClaimsJws(code);
 		Jws<Claims> access = parser.parseClaimsJws(accessToken);
 		String kid = token.getHeader().getKeyId();

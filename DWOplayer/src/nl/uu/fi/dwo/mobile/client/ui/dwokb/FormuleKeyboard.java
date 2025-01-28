@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.keyboard.client.AbstractKeyboard;
+import nl.uu.fi.dwo.keyboard.client.tap.TouchPanel;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ScoreNavIF;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
@@ -25,11 +26,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.mgwt.ui.client.MGWT;
-import com.googlecode.mgwt.ui.client.OsDetection;
-//import com.googlecode.mgwt.ui.client.widget.RoundPanel;
-import com.googlecode.mgwt.ui.client.widget.touch.TouchPanel;
-
 import fi.writemathgwt.client.WritePanel;
 import fi.writemathgwt.client.WritePanelHolder;
 
@@ -370,25 +366,6 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 		return fp;
 	}
 
-	public static com.googlecode.mgwt.ui.client.widget.panel.Panel getSelectionMenu(FormuleHolder editor, int x, int y)
-	{
-		//TouchPanel fp = new TouchPanel();
-		// 2.0.0 manier voor een roundpanel
-		com.googlecode.mgwt.ui.client.widget.panel.Panel fp2 = new com.googlecode.mgwt.ui.client.widget.panel.Panel();
-		fp2.setRound(true);
-		//fp = fp2.container; // geen idee of dat werkt..
-
-		//fp.add(FormuleKeyBoardButtons.getCopyButton());
-		//fp.add(FormuleKeyBoardButtons.getPasteButton());
-
-		Style s = fp2.getElement().getStyle();
-
-		s.setPosition(Position.ABSOLUTE);
-		s.setTop(y, Unit.PX);
-		s.setLeft(x, Unit.PX);
-		return fp2;
-	}
-
 	public String getClipboard()
 	{
 		return clipboard;
@@ -585,12 +562,6 @@ public class FormuleKeyboard implements WritePanelHolder, FormuleKeyboardIF, For
 	public void setEnterType(EnterType type) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public boolean isDesktopKeyboard() {
-		OsDetection detection = MGWT.getOsDetection();
-		return detection.isDesktop();
 	}
 
 }
