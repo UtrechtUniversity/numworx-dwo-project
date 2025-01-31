@@ -481,8 +481,10 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		
 		} else {
 			final String pfx00 = pfx0 + ".";
+			Collection<String> ids  = paginaSet.stream().map(n-> pfx00 + n + ".id").collect(Collectors.toSet());
 			if (score) {
 				Collection<String> scores = paginaSet.stream().map(n -> pfx00  + n + SCORE_RAW).collect(Collectors.toSet());
+				keys.addAll(ids);
 				keys.addAll(scores);
 				Promise<String> result = defer.getPromise().map(m -> addScores(m, scores));
 				result.then(this::doScore);
@@ -494,6 +496,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				Collection<String> scores = paginaSet.stream().map(n -> pfx00  + n + item).collect(Collectors.toSet());
 				scores.addAll( paginaSet.stream().map(n-> pfx00 + n + ENTRY).collect(Collectors.toSet()));
 				scores.addAll( paginaSet.stream().limit(1).map(n -> pfx00 + n + COMPLETION_STATUS).collect(Collectors.toList()));
+				keys.addAll(ids);
 				keys.addAll(scores);
 				defer.getPromise().then(new GoedFoutBezochtMultiple(pfx00, paginaSet));
 				
@@ -508,12 +511,14 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 					scores = paginaSet.stream().map(n -> pfx00  + n + SCORE_RAW).collect(Collectors.toSet());
 					result = defer.getPromise().map(m -> addScores(m, scores));
 				}
+				keys.addAll(ids);
 				keys.addAll(scores);
 				result.then(this::doGoedFout);			
 			} else
 			if (bezocht) {
 				Collection<String> scores = paginaSet.stream().map(n -> pfx00  + n + ENTRY).collect(Collectors.toSet());
 				keys.addAll(scores);
+				keys.addAll(ids);
 				Promise<String> result = defer.getPromise().map(m -> addBezocht(m, scores));
 				result.then(this::doBezocht);
 			
