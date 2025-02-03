@@ -3,11 +3,8 @@ package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.osgi.util.promise.Promise;
 
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationHandle;
@@ -61,20 +58,15 @@ import com.vaadin.pointerevents.client.PointerMoveHandler;
 import com.vaadin.pointerevents.client.PointerUpEvent;
 import com.vaadin.pointerevents.client.PointerUpHandler;
 
-import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import fi.wiskopdr.FormuleParser;
-import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.text.Text;
 import fi.wiskopdr.expressies.DecRound;
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditor;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleEditorTouchHandler;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
-import nl.uu.fi.dwo.ideas.client.AbstractRule;
-import nl.uu.fi.dwo.ideas.client.RuleIF;
 import nl.uu.fi.dwo.interaction.client.FacetAware;
 import nl.uu.fi.dwo.interaction.client.FormuleClipboardIF;
 import nl.uu.fi.dwo.interaction.client.FormuleEditorIF;
@@ -82,7 +74,6 @@ import nl.uu.fi.dwo.interaction.client.FormuleFont;
 import nl.uu.fi.dwo.interaction.client.FormuleKeyboardIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
-import nl.uu.fi.dwo.interaction.client.LessonMode;
 import nl.uu.fi.dwo.interaction.client.OpdrNavIF;
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
@@ -173,11 +164,11 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	private CorrectieFacade correctie;
 	private boolean teltMee;
     private int scoreMax;
-	private String loggingID;
+	//private String loggingID;
 	private AnimationHandle handle;
 	private final ActivityInterface activity;
 	private TekstRegel regel;
-	private com.google.gwt.user.client.Element formuleElement;
+	//private com.google.gwt.user.client.Element formuleElement;
 	private String original = "";
 	
 	static class Scroller extends ScrollPanel {
@@ -341,7 +332,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		}
 		
 		LogBuilder logBuilder = activity.logBuilder().setClassName("fi.wiskopdr.tekstobjects.TekstEditor").setLaunchData(launchdata);
-		loggingID = logBuilder.getLogID();
+		//loggingID = logBuilder.getLogID();
 		logging = logBuilder.build();
 		//shown = true;
 	}
@@ -506,7 +497,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 		boolean rekentool = true;
 		boolean formuleKnop = true;
-		boolean formuleToolPopup = true;
+		//boolean formuleToolPopup = true;
 		boolean graftool = false;
 		formuleKnop = launchdata.getBoolean("formuleKnop", formuleKnop);
 		//if(launchdata.containsKey("grafTool")) graftool = launchdata.getBoolean("grafTool");
@@ -623,70 +614,70 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		this.asHoogte = ashoogte;
 	}
 
-	private void adviseMe() {
-		Optional<DwoGlobalVars> vars = activity.vars();
-		if (vars.isPresent() && vars.get().withUser() && logging != null && comRoot.getLessonMode() == LessonMode.normal ) {
-			String id = loggingID;
-			if(id == null || !id.startsWith("adviseMe:")) 
-				return;
-			String[] split = id.split(":");
-			String math = toMathML();
-			String userid = vars.get().getUserID().toString();
-			String classid;
-			try {
-				classid = vars.get().getCurrentSchoolClass().getId().getIdString();
-			} catch (Exception e) {
-				classid = "";
-			}
-			String exerciseid = split[1];
-			String id2 = split[2];
-			Map<String,String> context = new HashMap<>();
-			context.put("userid", userid);
-			context.put("groupid", classid);
-			context.put("language", StubView.getLocale());
-			RuleIF rule = new AbstractRule() {
-
-				@Override
-				public String getExpr() {
-					return math;
-				}
-
-				@Override
-				public String getId() {
-					return id2;
-				}
-
-				@Override
-				public Map getContext() {
-					return context;
-				}
-				
-			};
-			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
-			WiskOpdr.ideas.adviseMe(new RuleIF[] { rule }, exerciseid, defer );
-			activity.agent().addBarrier(defer.getPromise());
-			Logger LOG = Logger.getLogger("TextEditor");
-			defer.getPromise().onResolve(() -> { 
-				Promise<RuleIF> p = defer.getPromise();
-				Throwable t = p.getFailure();
-				if ( t != null) {
-					LOG.log(Level.SEVERE, "adviseMe", t);
-				} else {
-					RuleIF r = p.getValue();
-					if ( r.isException()) {
-						LOG.severe(r.getExpr());
-					} else {
-						LOG.info(r.getExpr());
-					}
-				}
-			} );
-		}
-	}
+//	private void adviseMe() {
+//		Optional<DwoGlobalVars> vars = activity.vars();
+//		if (vars.isPresent() && vars.get().withUser() && logging != null && comRoot.getLessonMode() == LessonMode.normal ) {
+//			String id = loggingID;
+//			if(id == null || !id.startsWith("adviseMe:")) 
+//				return;
+//			String[] split = id.split(":");
+//			String math = toMathML();
+//			String userid = vars.get().getUserID().toString();
+//			String classid;
+//			try {
+//				classid = vars.get().getCurrentSchoolClass().getId().getIdString();
+//			} catch (Exception e) {
+//				classid = "";
+//			}
+//			String exerciseid = split[1];
+//			String id2 = split[2];
+//			Map<String,String> context = new HashMap<>();
+//			context.put("userid", userid);
+//			context.put("groupid", classid);
+//			context.put("language", StubView.getLocale());
+//			RuleIF rule = new AbstractRule() {
+//
+//				@Override
+//				public String getExpr() {
+//					return math;
+//				}
+//
+//				@Override
+//				public String getId() {
+//					return id2;
+//				}
+//
+//				@Override
+//				public Map getContext() {
+//					return context;
+//				}
+//				
+//			};
+//			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
+//			WiskOpdr.ideas.adviseMe(new RuleIF[] { rule }, exerciseid, defer );
+//			activity.agent().addBarrier(defer.getPromise());
+//			Logger LOG = Logger.getLogger("TextEditor");
+//			defer.getPromise().onResolve(() -> { 
+//				Promise<RuleIF> p = defer.getPromise();
+//				Throwable t = p.getFailure();
+//				if ( t != null) {
+//					LOG.log(Level.SEVERE, "adviseMe", t);
+//				} else {
+//					RuleIF r = p.getValue();
+//					if ( r.isException()) {
+//						LOG.severe(r.getExpr());
+//					} else {
+//						LOG.info(r.getExpr());
+//					}
+//				}
+//			} );
+//		}
+//	}
 	
 	
 	@Override
 	public HashMap<String, Object> getState() {
-		adviseMe();
+		//adviseMe();
 		StringBuilder allText = getAllText();
 		setAttempt(allText);
 		if (editable && getScoreMax() <= 0 && allText.length() > 0 && !allText.toString().equals(firstAttempt)) comRoot.setVisited();
@@ -772,7 +763,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		//log ID opvragen
 		//bevat logID "adviseme": 
 		//opsturen naar IDEAS.
-		adviseMe();
+		//adviseMe();
 	}
 
 	@Override
@@ -1437,28 +1428,28 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 	}
 	
-	private String toMathML() {
-		StringBuilder sb = new StringBuilder();
-		int count = flow.getWidgetCount()-1;
-		for(int i=MIN; i < count; i++) {
-			Widget child = flow.getWidget(i);
-			if (child instanceof FormulaVak) {
-				sb.append("<math xmlns=\"http://www.w3.org/1998/Math/MathML\">").append(((FormulaVak) child).editor.getMainRegel().toMathML()).append("</math>");
-			} else
-			if (child instanceof CalculatorVak) {
-				CalculatorVak vak = (CalculatorVak) child;
-				sb.append("<math xmlns=\"http://www.w3.org/1998/Math/MathML\" class=\"calculator\" >");
-				sb.append("<mrow>").append(vak.editor.getMainRegel().toMathML()).append("</mrow>");
-				sb.append("<mo>").append(vak.btn.getText()).append("</mo>");
-				sb.append("<mn>").append(vak.waarde).append("</mn>");
-				sb.append("</math>");				
-			} else
-			if(child instanceof HasText) {
-				sb.append(xmlEncode(((HasText) child).getText()));
-			}
-		}
-		return sb.toString();
-	}
+//	private String toMathML() {
+//		StringBuilder sb = new StringBuilder();
+//		int count = flow.getWidgetCount()-1;
+//		for(int i=MIN; i < count; i++) {
+//			Widget child = flow.getWidget(i);
+//			if (child instanceof FormulaVak) {
+//				sb.append("<math xmlns=\"http://www.w3.org/1998/Math/MathML\">").append(((FormulaVak) child).editor.getMainRegel().toMathML()).append("</math>");
+//			} else
+//			if (child instanceof CalculatorVak) {
+//				CalculatorVak vak = (CalculatorVak) child;
+//				sb.append("<math xmlns=\"http://www.w3.org/1998/Math/MathML\" class=\"calculator\" >");
+//				sb.append("<mrow>").append(vak.editor.getMainRegel().toMathML()).append("</mrow>");
+//				sb.append("<mo>").append(vak.btn.getText()).append("</mo>");
+//				sb.append("<mn>").append(vak.waarde).append("</mn>");
+//				sb.append("</math>");				
+//			} else
+//			if(child instanceof HasText) {
+//				sb.append(xmlEncode(((HasText) child).getText()));
+//			}
+//		}
+//		return sb.toString();
+//	}
 
 	@Override
 	public String toString() {

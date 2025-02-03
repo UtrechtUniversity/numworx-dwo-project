@@ -76,8 +76,9 @@ public abstract class ActivityComponent implements ActivityInterface {
 	
 	@Override
 	public boolean isNoordhoff() {
-		String dependentName = parameters().keyboardStyle();
-		return "noordhoff".equals(dependentName);
+//		String dependentName = parameters().keyboardStyle();
+//		return "noordhoff".equals(dependentName);
+		return false;
 	}
 	public boolean isTest() {
 		String dwoEnv = parameters().getDwoEnv();
