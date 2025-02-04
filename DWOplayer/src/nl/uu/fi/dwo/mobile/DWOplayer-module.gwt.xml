@@ -17,7 +17,7 @@
   <!-- Specify the app entry point class.                         -->
 	<inherits name="com.google.gwt.logging.Logging"/>
 
-  <inherits name="com.googlecode.mgwt.MGWTMin"/>
+<!--   <inherits name="com.googlecode.mgwt.MGWTMin"/> -->
   <inherits name="com.fredhat.gwt.xmlrpc.XMLRPC" />
   <inherits name="nl.uu.fi.dwo.interaction.Interaction" />
   <inherits name="nl.uu.fi.dwo.formule.Formule" />

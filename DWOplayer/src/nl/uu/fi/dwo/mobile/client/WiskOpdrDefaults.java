@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.StatusBarIF;
 import nl.uu.fi.dwo.mobile.client.ui.dwokb.NoStatusKeyboard;
+import nl.uu.fi.dwo.rest.util.Form;
 
 @Singleton
 public class WiskOpdrDefaults extends DWOplayerDefaults {
@@ -49,6 +50,11 @@ public class WiskOpdrDefaults extends DWOplayerDefaults {
 		String env = Window.Location.getParameter("env");
 		if (env != null) return env;
 		return super.getDwoEnv();
+	}
+
+	@Override
+	public boolean isDesktop() {		
+		return Form.desktop == Form.getFormFactor(Window.Navigator.getUserAgent());
 	}
     
 }

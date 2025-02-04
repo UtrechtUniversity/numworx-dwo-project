@@ -93,9 +93,6 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.googlecode.mgwt.ui.client.MGWT;
-
-
 
 /**
  * 
@@ -195,12 +192,18 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	}
 	
 	public ViewModuleViewImpl(ActivityComponent a, RPCHandler rpc, Scorm2004IF api) {
-		super(rpc,a);
+		this(a,rpc);
 		this.api = api;
 	}
 
 	public ViewModuleViewImpl(ActivityComponent a, RPCHandler rpc) {
 		super(rpc,a);
+		if (lastState == Combined.NONE) {
+			if (a.parameters().isDesktop() && !TouchStartEvent.isSupported()) // INITIAL form of DESKTOP/MOBILE
+			lastState = Combined.TABLET;
+		else
+			lastState = Combined.TABLET_ACTIVE_SOFT;
+		}
 	}
 
 	public void initialize(Scorm2004IF api) {
@@ -2111,7 +2114,8 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 		sb.setScrollPanel(this, -size);
 	}
 	
-	protected int extraHeight = (MGWT.getOsDetection().isAndroid() ? 52:41); // header height in android 50+2 			
+	protected int extraHeight = 41; // Eigen header altijd even hoog
+			//(MG WT.getOsDetection().isAndroid() ? 52:41); // header height in android 50+2 			
 			
 	private String unitId = "scoViewNr";
 	
@@ -2619,15 +2623,6 @@ public HandlerRegistration addChangeHandler(ChangeHandler handler) {
 
 Combined state = Combined.TABLET;
 static Combined lastState = Combined.NONE;
-
-static {
-	if (MGWT.getOsDetection().isDesktop() && !TouchStartEvent.isSupported()) // INITIAL form of DESKTOP/MOBILE
-		lastState = Combined.TABLET;
-	else
-		lastState = Combined.TABLET_ACTIVE_SOFT;
-}
-
-
 
 ChangeHandler handler;
 @Override

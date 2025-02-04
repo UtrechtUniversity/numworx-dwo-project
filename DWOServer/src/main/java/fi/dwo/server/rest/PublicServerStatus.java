@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
+import nl.uu.fi.dwo.rest.util.Form;
 import fi.dwo.commons.persistence.entities.PersistentDwoSystemParameters;
 import fi.dwo.server.BUILD;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
@@ -10,19 +11,25 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -227,4 +234,20 @@ public class PublicServerStatus {
         return sb.toString();
     }
 
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getUserAgent")
+    public Response getUserAgent(@HeaderParam("user-agent") String userAgent) {
+    	Map<String,Object> result = new TreeMap<>();
+     	Form form = Form.getFormFactor(userAgent);    	
+    	result.put("useragent", userAgent);
+    	result.put("formfactor", form.name());
+		ResponseBuilder build = Response.ok(result, MediaType.APPLICATION_JSON);
+		CacheControl cc = new CacheControl();
+		cc.setMaxAge(6000);
+		build.cacheControl(cc);
+		return build.build();
+    }
+
+    
 }

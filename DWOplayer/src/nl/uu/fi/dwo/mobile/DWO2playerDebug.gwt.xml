@@ -4,7 +4,6 @@
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='com.google.gwt.i18n.I18N' />
-<!--   <inherits name='com.googlecode.mgwt.storage.Storage' /> -->
   <define-property name="gwt.logging.popupHandler"
 		values="ENABLED, DISABLED" />
   <set-property name="gwt.logging.popupHandler" value="DISABLED" />
@@ -117,5 +116,5 @@
 <set-property name="user.agent" value="safari" />
 <!-- <set-property name="mgwt.os" value="desktop" /> -->
 <!-- <set-property name="mobile.user.agent" value="not_mobile" /> -->
-<set-property name="mgwt.mainresource.inject" value="no" />
+<!-- <set-property name="mgwt.mainresource.inject" value="no" /> -->
 </module>

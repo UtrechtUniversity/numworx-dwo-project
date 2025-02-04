@@ -4,14 +4,17 @@ import java.util.logging.Logger;
 
 import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
 import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
+import nl.uu.fi.dwo.keyboard.client.tap.TapEvent;
+import nl.uu.fi.dwo.keyboard.client.tap.TapHandler;
 import nl.uu.fi.dwo.mobile.DWOplayer;
-import nl.uu.fi.dwo.mobile.client.NoordhoffPlayerClientBundle;
 import nl.uu.fi.dwo.mobile.client.ui.views.MyPopup;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.Style.FontWeight;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -24,26 +27,23 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
-import com.googlecode.mgwt.dom.client.event.tap.TapEvent;
-import com.googlecode.mgwt.dom.client.event.tap.TapHandler;
-//import com.googlecode.mgwt.ui.client.theme.base.ButtonCss;
-//import com.googlecode.mgwt.ui.client.theme.base.HeaderCss;
-//import com.googlecode.mgwt.ui.client.widget.Button;
-//import com.googlecode.mgwt.ui.client.widget.HeaderButton;
-import com.googlecode.mgwt.ui.client.widget.button.Button;
-import com.googlecode.mgwt.ui.client.widget.header.HeaderAppearance;
-import com.googlecode.mgwt.ui.client.widget.header.HeaderButton;
 
 import fi.wiskopdr.text.Text;
 
 public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventListener {
 	
-	class CheckHandler implements TapHandler {
+	class CheckHandler implements TapHandler, ClickHandler {
 
 		@Override
 		public void onTap(TapEvent event) {
 			if(checker != null)
 				checker.checkOpdracht(ScoreNavPanel.this);
+		}
+
+		@Override
+		public void onClick(ClickEvent event) {
+			onTap(null);
+			
 		}
 	}
 
@@ -54,7 +54,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	ScoreNavIF.Checker checker;
 	
 	
-	class TouchHandler implements TapHandler {
+	class TouchHandler implements TapHandler, ClickHandler {
 
 		int opdracht;
 
@@ -69,10 +69,15 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 			}
 			if(popup != null) popup.hide();
 		}
+		@Override
+		public void onClick(ClickEvent event) {
+			onTap(null);
+			
+		}
 		
 	}
 
-	class ReloadHandler implements TapHandler {
+	class ReloadHandler implements TapHandler, ClickHandler {
 
 		int opdracht;
 
@@ -87,6 +92,11 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 			}
 			if(popup != null) popup.hide();
 		}
+		@Override
+		public void onClick(ClickEvent event) {
+			onTap(null);
+			
+		}
 		
 	}
 
@@ -99,10 +109,10 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	int rows = 10;
 
 
-	private final HeaderAppearance headercss;
+//	private final HeaderAppearance headercss;
 
-	public ScoreNavPanel(ActivityComponent activity, HeaderAppearance /*HeaderCss*/ headercss) {
-		this.headercss = headercss;
+	public ScoreNavPanel(ActivityComponent activity, Void /*HeaderAppearance /*HeaderCss*/ headercss) {
+//		this.headercss = headercss;
 		top = new VerticalPanel();
 		initialize();
 		dock = new DockLayoutPanel(Unit.PX);
@@ -114,7 +124,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	}
 	
 	
-	static private final NoordhoffPlayerClientBundle DWO_BUNDLE = GWT.create(NoordhoffPlayerClientBundle.class);
+//	static private final NoordhoffPlayerClientBundle DWO_BUNDLE = GWT.create(NoordhoffPlayerClientBundle.class);
 
 	private void initialize() {
 		Label text;
@@ -131,11 +141,11 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 		grid.setCellPadding(10);
 		grid.setCellSpacing(10);
 		reloadTotal = new Button(/*DWO_BUNDLE.imgbutton()*/);
-		reloadTotal.addTapHandler(new ReloadHandler(-1));
+		reloadTotal.addClickHandler(new ReloadHandler(-1));
 		reloadTotal.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString() + "')");
 		grid.setWidget(0, 3, reloadTotal);
 		checkBtn = new Button( /*DWO_BUNDLE.txtbutton(),*/Text.constants.nakijkKnopLabel());
-		checkBtn.addTapHandler(new CheckHandler());
+		checkBtn.addClickHandler(new CheckHandler());
 		grid.setWidget(1, 3, checkBtn);
 		checkBtn.setVisible(false);
 		top.add(grid);
@@ -228,13 +238,13 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 			
 			vragen.setWidget(i, 3, p);
 			//p.setStylePrimaryName("vraagButton");
-			p.addTapHandler(new TouchHandler(i));
+			p.addClickHandler(new TouchHandler(i));
 			
 			Button reload = new Button(/*css*/);
 			reload.getElement().getStyle().setBackgroundImage("url('" + DWOplayer.DWO_BUNDLE.reload().getSafeUri().asString() + "')");
 			if(itemOpnieuw) 
 				vragen.setWidget(i, 4, reload);
-			reload.addTapHandler(new ReloadHandler(i));
+			reload.addClickHandler(new ReloadHandler(i));
 		};
 		setTotaalScore(totaal);
 		
@@ -318,7 +328,7 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 		this.nextprev = nextprev;
 	}
 
-	HeaderButton next, prev;
+	Button next, prev;
 	private boolean nextEnabled = true;
 	private boolean prevEnabled = true;
 
@@ -328,11 +338,11 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	@Override
 	public Widget getNextButton() {
 		if(next == null) {
-			next = new HeaderButton(headercss); next.setText("Volgende >");
-			next.addTapHandler(new TapHandler() {
+			next = new Button(); next.setText("Volgende >");
+			next.addClickHandler(new ClickHandler() {
 				
 				@Override
-				public void onTap(TapEvent event) {
+				public void onClick(ClickEvent event) {
 					if(nextEnabled)
 						nextprev.gotoNext(ScoreNavPanel.this);
 				}
@@ -344,11 +354,11 @@ public class ScoreNavPanel extends Composite implements ScoreNavIF, CBookEventLi
 	@Override
 	public Widget getPrevButton() {
 		if(prev == null) {
-			prev = new HeaderButton(headercss); prev.setText("< Vorige");
-			prev.addTapHandler(new TapHandler() {
+			prev = new Button(); prev.setText("< Vorige");
+			prev.addClickHandler(new ClickHandler() {
 				
 				@Override
-				public void onTap(TapEvent event) {
+				public void onClick(ClickEvent event) {
 					if(prevEnabled)
 						nextprev.gotoPrev(ScoreNavPanel.this);
 				}
