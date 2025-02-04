@@ -185,7 +185,8 @@ class ResultSetWrapper implements ResultSet {
      * @return
      * @throws java.sql.SQLException
      */
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public BigDecimal getBigDecimal(int columnIndex, int scale)
             throws SQLException {
         return rs.getBigDecimal(columnIndex, scale);
@@ -207,7 +208,8 @@ class ResultSetWrapper implements ResultSet {
      * @return
      * @throws java.sql.SQLException
      */
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public BigDecimal getBigDecimal(String columnName, int scale)
             throws SQLException {
         return rs.getBigDecimal(columnName, scale);
