@@ -17,7 +17,6 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import javax.swing.ListModel;
 import javax.swing.text.NumberFormatter;
 
 import org.cbook.cbookif.CBookWidgetEditIF;
@@ -58,7 +57,7 @@ public class Editor extends JPanel implements CBookWidgetEditIF, Constants, Reso
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int result = chooser.showOpenDialog(Editor.this);
-			if (result == chooser.APPROVE_OPTION) {
+			if (result == JFileChooser.APPROVE_OPTION) {
 				File f = chooser.getSelectedFile();
 				preset.clearSelection();
 				InputFile input = new InputFile(f);
