@@ -17,6 +17,8 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -227,5 +229,15 @@ public void setupDWOPlayer() {
 				rpc.getDwoProfile().then(getProfileCallback);
 			
 		}
+
+	@Override
+	protected void start(PlaceHistoryHandler h) {
+		if (true) {
+			String token = History.getToken();
+			GWT.log("START " + token); // doe iets met schoolyear hier.
+			History.newItem(token, false);
+		}
+		super.start(h);
+	}
 
 }
