@@ -5,20 +5,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Vector;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.osgi.util.promise.Promise;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.BorderStyle;
 import com.google.gwt.dom.client.Style.TextAlign;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.dom.client.TouchStartEvent;
@@ -34,24 +27,17 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.FormuleParser;
-import fi.wiskopdr.RestartException;
-import fi.wiskopdr.WiskOpdr;
-import fi.wiskopdr.expressies.Algebra;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
 import fi.wiskopdr.expressies.VergelijkingMeerv;
 import fi.wiskopdr.text.Text;
 import fi.wiskopdr.text.TextConstants;
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
-import nl.uu.fi.dwo.ideas.client.RuleIF;
 import nl.uu.fi.dwo.interaction.client.InteractionStub;
 import nl.uu.fi.dwo.interaction.client.JSONUtilities;
 import nl.uu.fi.dwo.interaction.client.LessonMode;
@@ -64,7 +50,6 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieReview;
-import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
@@ -237,7 +222,7 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		kijkNa_intern();
 		attemptsCount++;
 		setAttempt();
-		adviseMe();
+		//adviseMe();
 	}
 
 	// voorheen kijkna, wordt alleen intern aangeroepen.
@@ -973,58 +958,58 @@ public class CheckSelectieUnit implements InteractionStub, InteractionViewWithMi
 		
 	}
 
-	private void adviseMe() {
-		Optional<DwoGlobalVars> instance = activity.vars();
-		if (instance.isPresent() &&
-			instance.get().withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
-			String id = logID;
-			if(! id.startsWith("adviseMe:")) 
-				return;
-			String[] split = id.split(":");
-			String userid = instance.get().getUserID().toString();
-			String classid;
-			try {
-				classid = instance.get().getCurrentSchoolClass().getId().getIdString();
-			} catch (Exception e) {
-				classid = "";
-			}
-			String exerciseid = split[1];
-			String id2 = split[2];
-			Map<String,String> context = new HashMap<>();
-			context.put("userid", userid);
-			context.put("groupid", classid);
-			context.put("language", StubView.getLocale());
-			RuleIF[] math = toMathML(id2, context);
-			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
-			WiskOpdr.ideas.adviseMe(math, exerciseid, defer );
-			activity.agent().addBarrier(defer.getPromise());
-			Logger LOG = Logger.getLogger("TextEditor");
-			defer.getPromise().onResolve(() -> { 
-				Promise<RuleIF> p = defer.getPromise();
-				Throwable t = p.getFailure();
-				if ( t != null) {
-					LOG.log(Level.SEVERE, "adviseMe", t);
-				} else {
-					RuleIF r = p.getValue();
-					if ( r.isException()) {
-						LOG.severe(r.getExpr());
-					} else {
-						LOG.info(r.getExpr());
-					}
-				}
-			} );
-		}
-	}
+//	private void adviseMe() {
+//		Optional<DwoGlobalVars> instance = activity.vars();
+//		if (instance.isPresent() &&
+//			instance.get().withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
+//			String id = logID;
+//			if(! id.startsWith("adviseMe:")) 
+//				return;
+//			String[] split = id.split(":");
+//			String userid = instance.get().getUserID().toString();
+//			String classid;
+//			try {
+//				classid = instance.get().getCurrentSchoolClass().getId().getIdString();
+//			} catch (Exception e) {
+//				classid = "";
+//			}
+//			String exerciseid = split[1];
+//			String id2 = split[2];
+//			Map<String,String> context = new HashMap<>();
+//			context.put("userid", userid);
+//			context.put("groupid", classid);
+//			context.put("language", StubView.getLocale());
+//			RuleIF[] math = toMathML(id2, context);
+//			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
+//			WiskOpdr.ideas.adviseMe(math, exerciseid, defer );
+//			activity.agent().addBarrier(defer.getPromise());
+//			Logger LOG = Logger.getLogger("TextEditor");
+//			defer.getPromise().onResolve(() -> { 
+//				Promise<RuleIF> p = defer.getPromise();
+//				Throwable t = p.getFailure();
+//				if ( t != null) {
+//					LOG.log(Level.SEVERE, "adviseMe", t);
+//				} else {
+//					RuleIF r = p.getValue();
+//					if ( r.isException()) {
+//						LOG.severe(r.getExpr());
+//					} else {
+//						LOG.info(r.getExpr());
+//					}
+//				}
+//			} );
+//		}
+//	}
 	
-	private RuleIF[] toMathML(String base, Map<String, String> context) {
-		RuleIF[] result = new RuleIF[ipList.length];
-		for(int i = 0; i < ipList.length; i++) {
-			TekstVakPanel t = ipList[i];
-			RuleIF r = t.getSelectRule(base, context);
-			result[i] = r;
-		}
-		return result;
-	}
+//	private RuleIF[] toMathML(String base, Map<String, String> context) {
+//		RuleIF[] result = new RuleIF[ipList.length];
+//		for(int i = 0; i < ipList.length; i++) {
+//			TekstVakPanel t = ipList[i];
+//			RuleIF r = t.getSelectRule(base, context);
+//			result[i] = r;
+//		}
+//		return result;
+//	}
 
 	private void initialize(HashMap<String, Object> h, String[] randomVarNamen, HashMap randomVarWaarden)
 	{
