@@ -226,7 +226,7 @@ public void setupDWOPlayer() {
 
 	private boolean kiosk;
 	@Inject void setKiosk(DWOplayerParameters p) {
-		kiosk = p.inKiosk()||true;
+		//kiosk = p.inKiosk();
 	}
 	
 	@Override
