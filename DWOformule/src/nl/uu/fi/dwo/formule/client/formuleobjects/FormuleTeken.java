@@ -88,6 +88,9 @@ public class FormuleTeken extends FormuleElement
 		case ' ':
 			teken = "\u00A0";
 			break;
+		case '\'':
+			teken = "\u2032"; // unicode prime
+			break;
 		default:
 		
 		//else if (tk == ':')
@@ -126,7 +129,9 @@ public class FormuleTeken extends FormuleElement
 				}
 				else
 				{
-					if(teken.equals("j"))
+					if("f".equals(teken))
+						this.setSize((int) width + 3, fontheight);
+					else if(teken.equals("j"))
 						this.setSize((int) width + 4, fontheight);
 					else
 						this.setSize((int) width + 2, fontheight);
