@@ -152,7 +152,37 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	}
 
-	class RemoveVariantAction extends AbstractAction implements PropertyChangeListener {
+	class RenameVariantAction extends AbstractAction {
+		RenameVariantAction() {
+			super("Hernoem variant...");
+			//setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			NodeLeaf leaf = (NodeLeaf) ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject();
+			DomStudentModelVariant selected = (DomStudentModelVariant) variantBox.getSelectedItem();
+			if (selected != null && selected.getName()!= null) {
+				String ok = JOptionPane.showInputDialog(LeerdomeinEditPanel2.this, "Hernoemen", selected.getName());
+				if (ok != null) {
+					List<DomStudentModelMethodInfo> methods = leaf.getMethodeInfos();
+					WrappedSet variants = leaf.getVariants();
+					for(DomStudentModelVariant m : variants) {
+						if (ok.equals(m.getName())) return; // backout 
+					}				
+					LOG.info("rename " + selected.getName() + " to " + ok);
+					for(DomStudentModelMethodInfo m : methods) {
+						if (selected.getName().equals(m.getVariant())) m.setVariant(ok);
+					}
+					selected.setName(ok);
+					variantBox.repaint();
+				}
+			}
+		}
+	}
+	
+	
+	class RemoveVariantAction extends AbstractAction {
 		RemoveVariantAction() {
 			super("Verwijder variant...");
 			setEnabled(false);
@@ -177,14 +207,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					}
 			}}
 		}
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			if ("visible".equals(evt.getPropertyName())) {
-				setEnabled(evt.getNewValue().equals(Boolean.TRUE));
-			}
-			
-		}
-	}
+ 	}
 	
 	
 	
@@ -986,8 +1009,11 @@ public class LeerdomeinEditPanel2 extends JPanel
           Instellingen.add(new JMenuItem(action));
 		CreateVariantAction cva = new CreateVariantAction();
 		Instellingen.add(new JMenuItem(cva));
+		RenameVariantAction rva = new RenameVariantAction();
+		Instellingen.add(new JMenuItem(rva));
 		RemoveVariantAction dva = new RemoveVariantAction();
 		Instellingen.add(new JMenuItem(dva));
+		
 		bar.add(Box.createHorizontalGlue());
 
 		add(split, BorderLayout.CENTER);
@@ -1082,19 +1108,24 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 			@Override
 			public void componentShown(ComponentEvent e) {
-				dva.setEnabled(variantBox.getSelectedIndex() > 0);
+				boolean on = variantBox.getSelectedIndex() > 0;
+				dva.setEnabled(on);
+				rva.setEnabled(on);
 			}
 
 			@Override
 			public void componentHidden(ComponentEvent e) {
 				dva.setEnabled(false);
+				rva.setEnabled(false);
 			}			
 		});
 		variantBox.addItemListener(new ItemListener() {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				dva.setEnabled(variantBox.getSelectedIndex() > 0);
+				boolean on = variantBox.getSelectedIndex() > 0;
+				dva.setEnabled(on);
+				rva.setEnabled(on);
 			}
 		});
 
