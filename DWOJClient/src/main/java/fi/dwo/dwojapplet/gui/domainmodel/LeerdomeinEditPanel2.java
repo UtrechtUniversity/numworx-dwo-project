@@ -11,10 +11,14 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -112,6 +116,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
@@ -147,6 +152,43 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	}
 
+	class RemoveVariantAction extends AbstractAction implements PropertyChangeListener {
+		RemoveVariantAction() {
+			super("Verwijder variant...");
+			setEnabled(false);
+		}
+		public void actionPerformed(ActionEvent e) {
+			NodeLeaf leaf = (NodeLeaf) ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject();
+			DomStudentModelVariant selected = (DomStudentModelVariant) variantBox.getSelectedItem();
+			if (selected != null && selected.getName()!= null) {
+				int ok = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, selected.getName() + " verwijderen?", "Verwijderen variant", JOptionPane.OK_CANCEL_OPTION);
+				if (ok == JOptionPane.OK_OPTION) {
+					leaf.getVariants().remove(selected);
+					leaf.setDefaultVariant();
+					variantBox.removeItem(selected);
+					variantBox.setSelectedIndex(0);
+					if (leaf.getVariants().size() == 1) {
+						variantBox.setVisible(false);
+						setEnabled(false);
+					}
+					List<DomStudentModelMethodInfo> methods = leaf.getMethodeInfos();
+					for(DomStudentModelMethodInfo m : methods) {
+						if (selected.getName().equals(m.getVariant())) m.setVariant(null);
+					}
+			}}
+		}
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			if ("visible".equals(evt.getPropertyName())) {
+				setEnabled(evt.getNewValue().equals(Boolean.TRUE));
+			}
+			
+		}
+	}
+	
+	
+	
+	
 	@SuppressWarnings("serial")
 	class CreateVariantAction extends AbstractAction {
 		CreateVariantAction() {
@@ -944,6 +986,8 @@ public class LeerdomeinEditPanel2 extends JPanel
           Instellingen.add(new JMenuItem(action));
 		CreateVariantAction cva = new CreateVariantAction();
 		Instellingen.add(new JMenuItem(cva));
+		RemoveVariantAction dva = new RemoveVariantAction();
+		Instellingen.add(new JMenuItem(dva));
 		bar.add(Box.createHorizontalGlue());
 
 		add(split, BorderLayout.CENTER);
@@ -1033,6 +1077,26 @@ public class LeerdomeinEditPanel2 extends JPanel
 		size.width += 40;
 		variantBox.setMinimumSize(size);
 		variantBox.setPreferredSize(size);
+
+		variantBox.addComponentListener(new ComponentAdapter() {
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				dva.setEnabled(variantBox.getSelectedIndex() > 0);
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				dva.setEnabled(false);
+			}			
+		});
+		variantBox.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				dva.setEnabled(variantBox.getSelectedIndex() > 0);
+			}
+		});
 
 		rightNorth.add(variantBox);
 		rightBox.add(rightNorth, BorderLayout.NORTH);
