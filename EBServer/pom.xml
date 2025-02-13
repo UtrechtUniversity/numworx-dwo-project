@@ -838,6 +838,14 @@
   		<param-name>corsDomainsRegex</param-name>
   		<param-value>.*</param-value>
   	</init-param>
+  	<init-param>
+  		<param-name>maxSize</param-name>
+  		<param-value>20971520</param-value>
+  	</init-param>
+  	<init-param>
+  		<param-name>maxFileSize</param-name>
+  		<param-value>20971520</param-value>
+  	</init-param>
   </servlet>
   <servlet>
   	<servlet-name>testblob</servlet-name>
