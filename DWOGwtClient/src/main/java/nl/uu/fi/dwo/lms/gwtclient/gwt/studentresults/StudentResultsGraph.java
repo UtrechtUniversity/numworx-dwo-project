@@ -83,6 +83,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
+import nl.uu.fi.dwo.rest.util.StudentModelUtil;
 
 public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler, MouseUpHandler, MouseDownHandler, MouseOutHandler, ContextMenuHandler {
 
@@ -175,7 +176,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			inVoorkennis = true;
 			Set<String> voorkennisIds = 
 			nodeStream().filter(Node::isVisible).flatMap(t -> t.obj.getInfo().getVoorkennis().stream())
-			.map(StudentResultsGraph::strip)
+			.map(StudentModelUtil::strip)
 			.collect(Collectors.toSet());
 // en nu, varianten
 			voorkennisIds.removeAll(nodeStream().filter(Node::isVisible).map(n -> n.obj.getInfo().getId()).collect(Collectors.toSet()));
@@ -706,7 +707,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 	}
 
 	static String strip(String id) {
-		return id.split("/",2)[0];
+		return StudentModelUtil.strip(id);
 	}
 	
 	public class Node extends AbstractNode implements ClickHandler {
@@ -841,12 +842,12 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 			List<String> voorkennis = obj.getInfo().getVoorkennis();
 			if (voorkennis == null|| invalid()) return Stream.empty();
 			Stream<String> stream = voorkennis.stream()
-					.map(StudentResultsGraph::strip)
+					.map(StudentModelUtil::strip)
 					.filter(key -> map.containsKey(key));
 			if (info.getVariant() != null) {
 				for(DomStudentModelVariant v : obj.getInfo().getVariants()) {
 					if (info.getVariant().equals(v.getName())) {
-						final Collection<String> set = v.getDeselections();
+						final Collection<String> set = StudentModelUtil.strip(v.getDeselections());
 						if (!set.isEmpty())
 							stream = stream.filter(key -> !set.contains(key));
 					}
@@ -1110,7 +1111,7 @@ public class StudentResultsGraph extends LayoutPanel implements MouseMoveHandler
 						} while(!to.isEmpty());
 // een variant heeft deselections.
 						if (opt.isPresent()) {
-							Set<String> delete = opt.get().getDeselections();
+							Set<String> delete = StudentModelUtil.strip(opt.get().getDeselections());
 							for( Set<Node> row : voorkennistree) {
 								Iterator<Node> iter = row.iterator();
 								while (iter.hasNext()) {

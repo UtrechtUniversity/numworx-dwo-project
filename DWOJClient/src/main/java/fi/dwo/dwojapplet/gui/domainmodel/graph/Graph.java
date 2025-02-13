@@ -53,6 +53,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.StudentModelUtil;
 
 public class Graph extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
 
@@ -676,7 +677,7 @@ private String voorkennisPopupVariant;
 	 * @return stripped set
 	 */
 	public static Set<String> strip(Collection<String> set) {
-		return set.stream().map(t -> t.split("/",2)[0]).collect(Collectors.toSet());
+		return StudentModelUtil.strip(set);
 	}
 	
 	private void plaatsVoorkennisTree(GraphNode graphNode, String variant) {
@@ -692,7 +693,7 @@ private String voorkennisPopupVariant;
 				.filter(v -> Objects.equals(variant, v.getName()))
 				.findAny()
 				.map(DomStudentModelVariant::getDeselections)
-				.map(Graph::strip); // FIXME sommige leerdoelen ids hebben een /... suffix
+				.map(StudentModelUtil::strip); // FIXME sommige leerdoelen ids hebben een /... suffix
 		
 		ArrayList<ArrayList<GraphNode>> voorkennisNodes = getVoorkennisNodes(graphNode, deselections);
 		cleanVoorkennisNodes(voorkennisNodes);

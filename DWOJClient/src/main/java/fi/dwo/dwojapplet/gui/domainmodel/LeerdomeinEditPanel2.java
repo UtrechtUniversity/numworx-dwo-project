@@ -126,6 +126,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.StudentModelUtil;
 
 public class LeerdomeinEditPanel2 extends JPanel
 		implements TreeSelectionListener, ExportPanel, WindowListener, ItemListener {
@@ -294,7 +295,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					ids = closure(ids, leafs);
 					ids = Graph.strip(ids);
 					List<String> copy = new ArrayList<>(ids);
-					copy.removeAll(Graph.strip(variant.getDeselections()));
+					copy.removeAll(StudentModelUtil.strip(variant.getDeselections()));
 					Set<String> org = new TreeSet<>(ids);
 					copy.add(leaf.getId());
 					NodeVector v = (NodeVector) root.getUserObject();
@@ -353,7 +354,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 				NodeLeaf leaf = leafs.get(id); // assume strip
 				if (leaf == null)
 					return Stream.empty();
-				return closure(Graph.strip(leaf.getVoorkennis()), leafs).stream(); // voorkennis is niet gestript
+				return closure(StudentModelUtil.strip(leaf.getVoorkennis()), leafs).stream(); // voorkennis is niet gestript
 				};
 			List<String> extra = ids.stream().flatMap(f ).collect(Collectors.toList());
 			extra.addAll(ids);
