@@ -27,6 +27,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -104,6 +105,7 @@ import fi.dwo.dwojapplet.gui.action.GuiAction;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2.VariantListener;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
+import fi.dwo.dwojapplet.gui.domainmodel.graph.Graph;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.KoppelPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
@@ -280,7 +282,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			
 			InvisibleNode root;
 			root = (InvisibleNode) model.getRoot();
-			Map<String, NodeLeaf> leafs = getLeafs(model, root);
+			Map<String, NodeLeaf> leafs = getLeafs((InvisibleTreeModel) model, root);
 			Object node = path.getLastPathComponent();
 			if (node instanceof MutableTreeNode) {
 				InvisibleNode mutable = (InvisibleNode) node;
@@ -288,10 +290,11 @@ public class LeerdomeinEditPanel2 extends JPanel
 				if (o instanceof NodeLeaf) {
 					NodeLeaf leaf = (NodeLeaf) o;
 					variant = leaf.getVariant();
-					List<String> ids = leaf.getVoorkennis();
+					Collection<String> ids = leaf.getVoorkennis();
 					ids = closure(ids, leafs);
+					ids = Graph.strip(ids);
 					List<String> copy = new ArrayList<>(ids);
-					copy.removeAll(variant.getDeselections());
+					copy.removeAll(Graph.strip(variant.getDeselections()));
 					Set<String> org = new TreeSet<>(ids);
 					copy.add(leaf.getId());
 					NodeVector v = (NodeVector) root.getUserObject();
@@ -332,7 +335,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 						if (r == JOptionPane.OK_OPTION) {
 							panel.makeChoices();
-							List<String> list = panel.getObjectives();
+							Collection<String> list = /*Graph.strip*/(panel.getObjectives());
 							org.removeAll(list);
 							variant.setDeselections(org);
 							leaf.setVariant(variant);
@@ -343,33 +346,41 @@ public class LeerdomeinEditPanel2 extends JPanel
 			}
 		}
 
-		protected List<String> closure(List<String> ids, Map<String, NodeLeaf> leafs) {
+		protected List<String> closure(Collection<String> ids, Map<String, NodeLeaf> leafs) {
 			if (ids == null)
 				return Collections.emptyList();
 			Function<String, Stream<String>> f = id -> {
-				NodeLeaf leaf = leafs.get(id);
+				NodeLeaf leaf = leafs.get(id); // assume strip
 				if (leaf == null)
 					return Stream.empty();
-				return closure(leaf.getVoorkennis(), leafs).stream();
+				return closure(Graph.strip(leaf.getVoorkennis()), leafs).stream(); // voorkennis is niet gestript
 				};
 			List<String> extra = ids.stream().flatMap(f ).collect(Collectors.toList());
 			extra.addAll(ids);
 			return extra;
 		}
 
-		private Map<String, NodeLeaf> getLeafs(TreeModel model, Object node) {
-			Map<String, NodeLeaf> result = new HashMap<>();
-			int cnt = model.getChildCount(node);
-			for(int i = 0; i < cnt; i++) {
-				Object child = model.getChild(node, i);
-				result.putAll(getLeafs(model, child));
-				Object object = ((DefaultMutableTreeNode) child).getUserObject();
-				if (object instanceof NodeLeaf) {
-					NodeLeaf l = (NodeLeaf) object;
-					result.put(l.getId(), l);
+		
+		// FIXME DEZE IS NIET GOED, gebruikt "invisible nodes" niet en we willen alles
+		private Map<String, NodeLeaf> getLeafs(InvisibleTreeModel model, Object node) {
+			boolean old = model.isActivatedFilter();
+			try {
+				model.activateFilter(false); // heeft effect op getchildcount, etc.
+				Map<String, NodeLeaf> result = new HashMap<>();
+				int cnt = model.getChildCount(node);
+				for(int i = 0; i < cnt; i++) {
+					Object child = model.getChild(node, i);
+					result.putAll(getLeafs(model, child));
+					Object object = ((DefaultMutableTreeNode) child).getUserObject();
+					if (object instanceof NodeLeaf) {
+						NodeLeaf l = (NodeLeaf) object;
+						result.put(l.getId(), l);
+					}
 				}
+				return result;
+			} finally {
+				model.activateFilter(old);
 			}
-			return result;
 		}
 		
 	}

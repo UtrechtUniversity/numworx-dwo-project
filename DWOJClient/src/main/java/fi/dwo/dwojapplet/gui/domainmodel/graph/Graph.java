@@ -669,6 +669,16 @@ private String voorkennisPopupVariant;
 		return false;
 	}
 	
+	/**
+	 * Utility to stip a collection of ids from /... suffices.
+	 * Returns a copy
+	 * @param set the collection
+	 * @return stripped set
+	 */
+	public static Set<String> strip(Collection<String> set) {
+		return set.stream().map(t -> t.split("/",2)[0]).collect(Collectors.toSet());
+	}
+	
 	private void plaatsVoorkennisTree(GraphNode graphNode, String variant) {
 		factor = 0.75;
 		for(GraphNode gn : graphNodes) {
@@ -681,7 +691,8 @@ private String voorkennisPopupVariant;
 		Optional<Set<String>> deselections = variants.stream()
 				.filter(v -> Objects.equals(variant, v.getName()))
 				.findAny()
-				.map(DomStudentModelVariant::getDeselections);
+				.map(DomStudentModelVariant::getDeselections)
+				.map(Graph::strip); // FIXME sommige leerdoelen ids hebben een /... suffix
 		
 		ArrayList<ArrayList<GraphNode>> voorkennisNodes = getVoorkennisNodes(graphNode, deselections);
 		cleanVoorkennisNodes(voorkennisNodes);
