@@ -1861,6 +1861,24 @@ public class LeerdomeinEditPanel2 extends JPanel
 	// }
 
 	private void closeWindow(ConfirmDialog window) {
+		if (!Objects.equals(activeMethod,structure.getActiveMethod()) && !editable) {
+			try {
+				structure.setActiveMethod(activeMethod);
+				prop.updateActiveMethod(structure);
+				if(resultModel != null) 
+				{   resultModel.setActiveMethod(activeMethod);
+					window.ok(null);
+				}
+				else
+				{
+					window.cancel(null);
+				}
+				return;
+			} catch (Dwo2Exception e) {
+			}
+		}
+		
+		
 		if (editable || !Objects.equals(activeMethod,structure.getActiveMethod()) ) {
 			int option = confirm();
 			switch (option) {

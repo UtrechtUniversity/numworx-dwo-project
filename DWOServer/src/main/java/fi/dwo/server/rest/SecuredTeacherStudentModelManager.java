@@ -471,17 +471,17 @@ public class SecuredTeacherStudentModelManager {
 		Long optLock = dom.getOptLock();
     	PersistentStudentModelContext context = StudentModelContextManager.findEntity(smID);
     	PersistentSchool school = hrstate.getSchool();
-    	if (context.getSchoolID().equals(school.getSchoolID())) {
-    		if (context.getOptlock().equals(optLock)) {
-    			context.getModelStructure().setActiveMethod(dom.getActiveMethod());
-    			context = StudentModelContextManager.edit(context);
-    			dom.setOptLock(context.getOptlock());
-    			return dom;
-    		}
-    		dom.setActiveMethod(context.getModelStructure().getActiveMethod());
-    		dom.setOptLock(context.getOptlock());
-    		return dom;
-    	}
+//    	if (context.getSchoolID().equals(school.getSchoolID())) {
+//    		if (context.getOptlock().equals(optLock)) {
+//    			context.getModelStructure().setActiveMethod(dom.getActiveMethod());
+//    			context = StudentModelContextManager.edit(context);
+//    			dom.setOptLock(context.getOptlock());
+//    			return dom;
+//    		}
+//    		dom.setActiveMethod(context.getModelStructure().getActiveMethod());
+//    		dom.setOptLock(context.getOptlock());
+//    		return dom;
+//    	}
     	
     	PersistentSchoolMethodPK pk = new PersistentSchoolMethodPK(school.getSchoolID(), context.getModelID());
     	PersistentSchoolMethod   sm = SchoolMethodManager.findEntity(pk);

@@ -30,7 +30,7 @@ class ChapterSettings extends JPanel implements ActionListener
 	
 	private String[] bookString;
 	
-	private static final int maxObjectives  = 20;
+	private static final int maxObjectives  = 30;
 	private static final int maxCategories = 10; // Sietske heeft er 7 in haar nieuwe domainmodel
 	int aantalRijen = 4;
 	int aantalKolommen = 1;

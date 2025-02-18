@@ -83,7 +83,7 @@ public class StudentModelService implements DescriptionService {
 							sm.getModelStructure().setCategories(q.getValue().getModelStructure().getCategories());
 							sm.getModelStructure().setInfo(q.getValue().getModelStructure().getInfo());
 							sm.setOptLock(q.getValue().getOptLock());
-							if (q.getValue().getPublishState() == PublishState.overt) {
+							if (true || q.getValue().getPublishState() == PublishState.overt) {
 								return manager.getActiveMethod(context, p.getValue()).flatMap(x -> {
 									sm.setOptLock(x.getOptLock());
 									sm.getModelStructure().setActiveMethod(x.getActiveMethod());
@@ -207,11 +207,15 @@ public class StudentModelService implements DescriptionService {
 		domMethod.setActiveMethod(model.getModelStructure().getActiveMethod());
 		domMethod.setId(model.getId());
 		domMethod.setOptLock(model.getOptLock());
-		return manager.updateActiveMethod(context, domMethod).then(p -> { 
+		return fakeupdateActiveMethod(domMethod).then(p -> { 
 			model.setOptLock(p.getValue().getOptLock());
 			model.getModelStructure().setActiveMethod(p.getValue().getActiveMethod());
 			return Promises.resolved(model);
 		});
+	}
+
+	protected Promise<DomSchoolMethod> fakeupdateActiveMethod(DomSchoolMethod domMethod) {
+		return Promises.resolved(domMethod);
 	}
 	
 }

@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 
 /**
@@ -86,6 +87,7 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
   
     private static final Logger LOG = Logger.getLogger(TeacherStudentModelPanelProperties.class.getName());
     private final SecureStudentModelManager manager;
+	private PersistenceId remoteMethod;
 
     TeacherStudentModelPanelProperties(SecureStudentModelManager manager){
         this.manager = manager;
@@ -117,29 +119,47 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
     private DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {
       current = manager.updateModel(modelContext);
       structure = StoredRestManager.getInstance().getGenson().serialize(current.getModelStructure());
+      remoteMethod = current.getModelStructure().getActiveMethod();
       standard = current.getPublishState() == PublishState.overt;
      return current;
     }
     
-    public DomStudentModelStructure updateModel(DomStudentModelStructure model) throws Dwo2Exception {
-      if (standard) {
+    public DomStudentModelStructure updateActiveMethod(DomStudentModelStructure model) throws Dwo2Exception {
         DomSchoolMethod dsm = manager.getActiveMethod(current);
         dsm.setActiveMethod(model.getActiveMethod());
         SecureTeacherStudentModelManager.updateActiveMethod(dsm);
-        current.setModelStructure(model);
-        return model;
-      }
+        if (standard) {
+        	current.setModelStructure(model);
+       	}
+       	return model;   	
+    }
+    
+    
+    public DomStudentModelStructure updateModel(DomStudentModelStructure model) throws Dwo2Exception {
+      //if (standard)
+      //{
+        DomSchoolMethod dsm = manager.getActiveMethod(current);
+        dsm.setActiveMethod(model.getActiveMethod());
+        SecureTeacherStudentModelManager.updateActiveMethod(dsm);
+        if (standard) {
+        	current.setModelStructure(model);
+        	return model;
+      	}
+      //}
 
       if (structure != null) {      
         JavaPatch patch = new JavaPatch();
         Genson genson = StoredRestManager.getInstance().getGenson();
         String old = structure;
+        //model.setActiveMethod(remoteMethod); // toch doorduwen.
         String now = genson.serialize(model);
         String diff = patch.createPatch(old, now);
         LOG.info("diff = " + diff);
         current.setModelStructure(model);
+        //model.setActiveMethod(dsm.getActiveMethod());
         structure = now;
-        model = patchModel(diff, patch.digest).getModelStructure();
+        //if(!"[]".equals(diff)) 
+        	model = patchModel(diff, patch.digest).getModelStructure();
         standard = current.getPublishState() == PublishState.overt;
         return model;
       } else if (current == null) {
@@ -150,7 +170,9 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
         return current.getModelStructure();
       }
       current.setModelStructure(model);
-      return updateModel(current).getModelStructure();
+      model = updateModel(current).getModelStructure();
+      //model.setActiveMethod(dsm.getActiveMethod());
+      return model;
     }
         
     
@@ -178,7 +200,8 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
        current = manager.get(modelContext);
        structure = StoredRestManager.getInstance().getGenson().serialize(current.getModelStructure());
        standard = current.getPublishState() == PublishState.overt;
-       if (standard)
+       remoteMethod = current.getModelStructure().getActiveMethod();
+       //if (standard)
        {
          DomSchoolMethod dsm = manager.getActiveMethod(modelContext);
          current.getModelStructure().setActiveMethod(dsm.getActiveMethod());
