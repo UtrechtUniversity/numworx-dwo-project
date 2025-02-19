@@ -340,6 +340,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	private JSONArray mergeReviewData(JSONArray opdrContStates, String reviewData) {
 		try {
+			if (!reviewData.startsWith("{")) return opdrContStates; // early out. komt voor dat reviewData = [null,true]
 			JSONValue value = JSONParser.parseStrict(reviewData);
 			JSONArray review = value.isObject().get(OPDR_CONT_STATES).isArray();
 			int l = Math.min(opdrContStates.size(), review.size());

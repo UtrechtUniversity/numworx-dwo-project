@@ -222,6 +222,7 @@ public class Scorm2Xml extends ScormAdapter {
         key = key.substring(4);
         String lastsubkey = COCD;
         Element r = root;
+        Node numeric = null;
         int i;
         while ((i = key.indexOf('.')) >= 0) {
             String subkey = key.substring(0, i);
@@ -232,6 +233,7 @@ public class Scorm2Xml extends ScormAdapter {
                     j = Integer.parseInt(subkey);
                     subkey = singular(lastsubkey);
                     node = r.getChildNodes().item(j);
+                    numeric = node;
                     if (node != null) {
                         r = (Element) node;
                         key = key.substring(i + 1);
@@ -245,6 +247,7 @@ public class Scorm2Xml extends ScormAdapter {
                 while(r.getChildNodes().getLength()<=j) {
                   newchild = doc.createElementNS(NAMESPACE, subkey);
                   r.appendChild(newchild);
+                  numeric = newchild;
                 }
                 r = newchild;
             } else {
@@ -259,15 +262,14 @@ public class Scorm2Xml extends ScormAdapter {
             node.appendChild(doc.createTextNode(value));
             r.appendChild(node);
         }
+        node.getFirstChild().setNodeValue(value);
         if ("".equals(value)) {
             r.removeChild(node);
-            while (r != root && r.getFirstChild() == null) {
+            while (r != root && r.getFirstChild() == null && r != numeric) {
                 node = r;
                 r = (Element) r.getParentNode();
                 r.removeChild(node);
             }
-        } else {
-            node.getFirstChild().setNodeValue(value);
         }
         return "";
     }
