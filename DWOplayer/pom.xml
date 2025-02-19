@@ -324,7 +324,7 @@
 		<runTarget>${project.artifactId}.html</runTarget>
 		<warClassifier>dwo</warClassifier>
 		<gwt.copyWebapp>true</gwt.copyWebapp>
-		<gwtVersion>2.9.0</gwtVersion>
+		<gwtVersion>2.10.0</gwtVersion>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.javadoc.skip>true</maven.javadoc.skip>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -403,13 +403,6 @@
 			<properties>
 				<gwtModule>${project.groupId}.NoordhoffPlayer</gwtModule>
 				<finalName>NoordhoffPlayer</finalName>
-			</properties>
-		</profile>
-		<profile>
-			<id>CDPLogicaPlayer</id>
-			<properties>
-				<gwtModule>${project.groupId}.CDPLogicaPlayer</gwtModule>
-				<finalName>CDPLogicaPlayer</finalName>
 			</properties>
 		</profile>
 		<profile>
