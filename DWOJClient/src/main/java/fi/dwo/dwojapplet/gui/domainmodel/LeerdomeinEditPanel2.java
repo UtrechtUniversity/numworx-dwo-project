@@ -1863,14 +1863,19 @@ public class LeerdomeinEditPanel2 extends JPanel
 	private void closeWindow(ConfirmDialog window) {
 		if (!Objects.equals(activeMethod,structure.getActiveMethod()) && !editable) {
 			try {
-				structure.setActiveMethod(activeMethod);
-				prop.updateActiveMethod(structure);
-				if(resultModel != null) 
-				{   resultModel.setActiveMethod(activeMethod);
-					window.ok(null);
-				}
-				else
-				{
+				int option = confirm();
+				switch (option) {
+				case JOptionPane.CANCEL_OPTION:
+					return;
+				case JOptionPane.YES_OPTION:
+					structure.setActiveMethod(activeMethod);
+					prop.updateActiveMethod(structure);
+					if(resultModel != null) 
+					{   resultModel.setActiveMethod(activeMethod);
+						window.ok(null);
+						return;
+					}
+				case JOptionPane.NO_OPTION:
 					window.cancel(null);
 				}
 				return;
