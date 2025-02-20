@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -114,19 +116,19 @@ public class ScoreManager implements ScoreWidgetIF, CBookEventListener {
 		Map<String,Promise<Map<String,String>>> all = new LinkedHashMap<>();
 		Promise<Map<String, String>>result;
 		Iterator<String> iter = set.iterator();
-		Optional<String> id = Optional.empty();
+		Set<String> id = new TreeSet<>();
 		while (iter.hasNext()) {
 			String name = iter.next();
 			result = cache.get(name);
 			if(result != null) {
 				all.put(name, result);
 				iter.remove();
-				if (name.endsWith(".id")) id = Optional.of(name);
+				if (name.endsWith(".id")) id.add(name); // kunnen er meer dan 1 zijn
 			}
 		}
 		if (!set.isEmpty()) {
-			Collection<String> keys = id.isPresent() ? new HashSet<String>(set) : set;
-			id.ifPresent(keys::add);
+			Collection<String> keys = id;
+			keys.addAll(set);
 			result = delegate.getValuesPromise(keys); // MUST contain .id 
 			for(String name: set) cache.put(name, result); // could contain .id
 			all.put(null, result);

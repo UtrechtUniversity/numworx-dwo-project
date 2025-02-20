@@ -117,6 +117,15 @@ public class StudentModelUtil {
 		return result;
 	}
 	
+	public static String strip(String id) {
+		return id.split("/",2)[0];
+	}
+
+	public static Set<String> strip(Collection<String> set) {
+		return set.stream().map(StudentModelUtil::strip).collect(Collectors.toSet()); 
+	}
+	
+	
 	DomStudentModelObjectiveScore calculate(DomStudentModelObjectiveScore org) {
 		DomStudentModelObjectiveScore result = new DomStudentModelObjectiveScore();
 		String id = org.getId();
@@ -146,7 +155,7 @@ public class StudentModelUtil {
 				if (varlist	!= null) {
 					for(DomStudentModelVariant var: varlist) {
 						if (var.getName() != null) {
-							Set<String> desel = var.getDeselections();
+							Set<String> desel = strip(var.getDeselections());
 							if (desel != null  && !desel.isEmpty()) {
 								Predicate<String> f = key -> !desel.contains(key);								
 								long s = objectives.stream().filter(f).count();

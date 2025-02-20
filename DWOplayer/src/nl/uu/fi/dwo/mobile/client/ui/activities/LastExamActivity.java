@@ -1,24 +1,25 @@
 package nl.uu.fi.dwo.mobile.client.ui.activities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
-import javax.security.auth.login.LoginContext;
-
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryHandler.Historian;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
+import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
@@ -34,20 +35,16 @@ import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
-import nl.uu.fi.dwo.mobile.client.ui.places.Hash;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.mobile.client.ui.places.ViewCoursePlace;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
-import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
-import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -55,24 +52,39 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @Reusable
-public class LastExamActivity implements Activity {
+public class LastExamActivity implements Activity, ValueChangeHandler<String>, PlaceChangeEvent.Handler {
 
 	final private static String BASE_KEY = LastExamActivity.class.getName()+ "$";
 	enum State {
-		TOKEN, HASROLE, SCHOOLCLASS, CLASSCOURSE, PASSWORD, SCO;
+		TOKEN, HASROLE, SCHOOLCLASS, CLASSCOURSE, PASSWORD, SCO, PLACE;
 		String key() { return BASE_KEY + name(); }
 	}
 
 	final Storage storage;
 	final DwoGlobalVars vars;
 	final PlaceController controller;
+	final PlaceHistoryMapper mapper;
 	final DWOplayerParameters PARAMETERS;
 	final Place defaultPlace;
 	final OAuthManager oauth = new OAuthManager();
 	final SecuredUserAccountManager accountManager = new SecuredUserAccountManager();
 	final RPCHandler rpc;
+	private boolean kiosk;
 	@Inject HeaderView headerView;
 	@Inject Lazy<CoursesOfClasToSelectItems> coursesToItems;
+	
+	
+	@Inject void setHistorian(Historian h) {	
+		if (kiosk)
+			h.addValueChangeHandler(this);
+		else
+			setItem(State.PLACE, null);
+	}
+
+	@Inject void setEventBus(com.google.web.bindery.event.shared.EventBus bus) {
+		if (kiosk)
+			bus.addHandler(PlaceChangeEvent.TYPE, this);
+	}
 	
 	private Provider<Activity> delegate;
 	private boolean started;
@@ -85,7 +97,8 @@ public class LastExamActivity implements Activity {
 			PlaceController controller, 
 			DWOplayerParameters PARAMETERS,
 			@Named("defaultPlace") Place defaultPlace,
-			RPCHandler rpc
+			RPCHandler rpc, 
+			PlaceHistoryMapper mapper
 			) {
 		this.storage = Storage.getSessionStorageIfSupported();
 		this.vars = vars;
@@ -94,6 +107,8 @@ public class LastExamActivity implements Activity {
 		this.defaultPlace = defaultPlace;
 		this.place = defaultPlace;
 		this.rpc = rpc;
+		this.mapper = mapper;
+		//this.kiosk = PARAMETERS.inKiosk() || true;
 	}
 
 	private void toDefault() {
@@ -323,6 +338,26 @@ public class LastExamActivity implements Activity {
 
 	public String getPassword() {
 		return getItem(State.PASSWORD);
+	}
+
+	@Override
+	public void onValueChange(ValueChangeEvent<String> event) {
+		setItem(State.PLACE, event.getValue());
+		
+	}
+
+	public String getPlace() {
+		if (kiosk) 
+			return getItem(State.PLACE);
+		return null;
+	}
+
+	@Override
+	public void onPlaceChange(PlaceChangeEvent event) {
+		Place p = event.getNewPlace();
+		String map = defaultPlace.equals(p) ? null : mapper.getToken(p);
+		setItem(State.PLACE, map);
+		
 	}
 
 }

@@ -28,9 +28,12 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
@@ -48,7 +51,9 @@ import fi.dwo.dwojapplet.gui.domainmodel.NodeLeaf;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.StudentModelUtil;
 
 public class Graph extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
 
@@ -117,6 +122,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	
 	private Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
   private MenuItem diVoorkennis;
+private String voorkennisPopupVariant;
 
 	public Map<String,Map<String,Set<Integer>>> getFilter() { 
 	  return filter;
@@ -603,12 +609,22 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		
 	}
 	
-	private ArrayList<ArrayList<GraphNode>> getVoorkennisNodes(GraphNode graphNode) {
+	private ArrayList<ArrayList<GraphNode>> getVoorkennisNodes(GraphNode graphNode, Optional<Set<String>> deselections) {
 		ArrayList<GraphNode> startList= new ArrayList<GraphNode>();
 		startList.add(graphNode);
 		ArrayList<ArrayList<GraphNode>> resultList = new ArrayList<ArrayList<GraphNode>>();
 		resultList.add(startList);
-		return(getVoorkennisNodes(startList, resultList));
+		ArrayList<ArrayList<GraphNode>> voorkennisNodes = getVoorkennisNodes(startList, resultList);
+		if(deselections.isPresent()) {
+			for( ArrayList<GraphNode> row :  voorkennisNodes) {
+				Iterator<GraphNode> iter = row.iterator();
+				while (iter.hasNext()) {
+					GraphNode n = iter.next();
+					if (deselections.get().contains(n.getID())) iter.remove();
+				}
+			}
+		}
+		return voorkennisNodes;
 	}
 	
 	private ArrayList<ArrayList<GraphNode>> getVoorkennisNodes(ArrayList<GraphNode> graphNodes, ArrayList<ArrayList<GraphNode>> voorkennisNodes) {
@@ -654,12 +670,32 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		return false;
 	}
 	
-	private void plaatsVoorkennisTree(GraphNode graphNode) {
+	/**
+	 * Utility to stip a collection of ids from /... suffices.
+	 * Returns a copy
+	 * @param set the collection
+	 * @return stripped set
+	 */
+	public static Set<String> strip(Collection<String> set) {
+		return StudentModelUtil.strip(set);
+	}
+	
+	private void plaatsVoorkennisTree(GraphNode graphNode, String variant) {
 		factor = 0.75;
 		for(GraphNode gn : graphNodes) {
 			gn.setVisible(false);
 		}
-		ArrayList<ArrayList<GraphNode>> voorkennisNodes = getVoorkennisNodes(graphNode);
+		String id = graphNode.getID();
+		// find variant structures of id.
+		NodeLeaf leaf = mapById.get(id);
+		List<DomStudentModelVariant> variants = leaf.getInfo().getVariants();
+		Optional<Set<String>> deselections = variants.stream()
+				.filter(v -> Objects.equals(variant, v.getName()))
+				.findAny()
+				.map(DomStudentModelVariant::getDeselections)
+				.map(StudentModelUtil::strip); // FIXME sommige leerdoelen ids hebben een /... suffix
+		
+		ArrayList<ArrayList<GraphNode>> voorkennisNodes = getVoorkennisNodes(graphNode, deselections);
 		cleanVoorkennisNodes(voorkennisNodes);
 		for(int i=0 ; i<voorkennisNodes.size() ; i++) {
 			ArrayList<GraphNode> gnList = voorkennisNodes.get(i);
@@ -1156,6 +1192,11 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		if(e.getModifiers()== InputEvent.BUTTON3_MASK || e.isControlDown()) {
 			voorkennisPopupNode = findNode(e.getX(),e.getY());
 			if(voorkennisPopupNode!=null) {
+				int ex = (int) ((e.getX()-origin.x)/factor);
+				int ey = (int) ((e.getY()-origin.y)/factor);
+
+				String code = voorkennisPopupNode.search(ex, ey);
+				voorkennisPopupVariant = voorkennisPopupNode.getVariant(code);
 				voorkennisPopupMenu.show(this, e.getX(), e.getY());
 				return;
 			}
@@ -1256,7 +1297,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 
 	}
 
-
+	Map<String, NodeLeaf> mapById;
+	
 	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter, PersistenceId activeMethod) {
 	    Map<String, GraphNode> graphMap = new LinkedHashMap<>();
 	    this.activeMethod = activeMethod;
@@ -1269,6 +1311,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		setGraphNodes(new ArrayList<>(graphMap.values()));
 		searchEdges(leaves, graphMap, edges);
 		setGraphEdges(edges);
+		mapById = leaves.stream().collect(Collectors.toMap(NodeLeaf::getId, Function.identity()));
 		modelJustSet = true;
 		setVoorkennisArea(false);
 		if(voorkennisTree)
@@ -1512,7 +1555,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		if(e.getSource()==miVoorkennis) {
 			if(voorkennisArea)
 				verbergVoorkennis(true);
-			plaatsVoorkennisTree(voorkennisPopupNode);
+			plaatsVoorkennisTree(voorkennisPopupNode, voorkennisPopupVariant);
 		}
 		
 	}

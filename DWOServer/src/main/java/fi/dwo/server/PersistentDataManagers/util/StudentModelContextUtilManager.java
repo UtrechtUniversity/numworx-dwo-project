@@ -134,6 +134,8 @@ public class StudentModelContextUtilManager {
 		copy.setTimestamp(structure.getTimestamp());
 		copy.setOwner(structure.getOwner());
 		copy.setCategories(new ArrayList<>());
+		copy.setMethods(structure.getMethods());
+		
 		for (DomStudentModelCategory cat : structure.getCategories()) {
 			DomStudentModelCategory copycat = new DomStudentModelCategory();
 			copycat.setInfo(cat.getInfo());

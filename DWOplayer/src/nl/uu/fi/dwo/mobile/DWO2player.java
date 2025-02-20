@@ -11,15 +11,16 @@ import javax.inject.Inject;
 
 import org.osgi.util.function.Function;
 import org.osgi.util.promise.Promise;
-import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 
+import dagger.Lazy;
 import fi.dwo.gwt.lib.rest.css.DwoStyle;
 import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgClickedDialogView;
@@ -27,11 +28,8 @@ import fi.dwo.gwt.lib.rest.ui.MsgDialogPresenter;
 import fi.dwo.gwt.lib.rest.ui.MsgDialogView;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import nl.uu.fi.dwo.account.client.AccountBundle;
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
-import nl.uu.fi.dwo.mobile.client.DWO2playerDefaults;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
-import nl.uu.fi.dwo.mobile.client.SecureMode;
 import nl.uu.fi.dwo.mobile.client.dagger.DWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerDWO2PlayerComponent;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
@@ -43,14 +41,12 @@ import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.TabletActivityMapper;
 import nl.uu.fi.dwo.mobile.client.ui.VisibilityDetect;
-import nl.uu.fi.dwo.mobile.client.ui.places.ClassesPlace;
-import nl.uu.fi.dwo.mobile.client.ui.places.TreeModulePlace;
+import nl.uu.fi.dwo.mobile.client.ui.activities.LastExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderView;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationMenu;
 import nl.uu.fi.dwo.mobile.client.ui.views.NavigationView;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
-import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -228,4 +224,24 @@ public void setupDWOPlayer() {
 			
 		}
 
+	private boolean kiosk;
+	@Inject void setKiosk(DWOplayerParameters p) {
+		//kiosk = p.inKiosk();
+	}
+	
+	@Override
+	protected void start(PlaceHistoryHandler h) {
+		if (kiosk) {
+			String token = History.getToken();
+			String alt = lastexam.get().getPlace();
+			if (!token.isEmpty() &&
+				alt != null && 
+				!alt.isEmpty()) 
+					token = alt;
+			GWT.log("START " + token); // doe iets met schoolyear hier.
+			History.newItem(token, false);
+		}
+		super.start(h);
+	}
+	@Inject Lazy<LastExamActivity> lastexam;
 }

@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -20,7 +18,6 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
-import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleHolder;
 import nl.uu.fi.dwo.formule.client.formuleholder.FormuleViewer;
 import nl.uu.fi.dwo.formule.client.formuleobjects.FormuleRegel;
@@ -111,10 +108,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import fi.wiskopdr.AntwoordVakChecker;
 import fi.wiskopdr.AntwoordVergelijkingVakChecker;
-import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import fi.wiskopdr.AntwoordFormuleVakChecker;
 import fi.wiskopdr.FormuleParser;
-import fi.wiskopdr.WiskOpdr;
 import fi.wiskopdr.expressies.Aftrekking;
 import fi.wiskopdr.expressies.BasisExpressie;
 import fi.wiskopdr.expressies.Expressie;
@@ -4171,7 +4166,7 @@ private Object CamelCase(String name) {
 		{
 			selected = !selected;
 			setSelected(selected);
-			adviseMe();
+			//adviseMe();
 			if(selected)
 				fireEvent(SELECT_EVENT);
 			else
@@ -5982,46 +5977,46 @@ private Object CamelCase(String name) {
 		return r;
 	}
 
-	private void adviseMe() {
-		Optional<DwoGlobalVars> vars = activity.vars();
-		if (vars.isPresent() && vars.get().withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
-			String id = logID;
-			if(! id.startsWith("adviseMe:")) 
-				return;
-			String[] split = id.split(":");
-			String userid = vars.get().getUserID().toString();
-			String classid;
-			try {
-				classid = vars.get().getCurrentSchoolClass().getId().getIdString();
-			} catch (Exception e) {
-				classid = "";
-			}
-			String exerciseid = split[1];
-			String id2 = split[2];
-			Map<String,String> context = new HashMap<>();
-			context.put("userid", userid);
-			context.put("groupid", classid);
-			context.put("language", StubView.getLocale());
-			RuleIF[] math = new RuleIF[] { getSelectRule(id2, context) };
-			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
-			WiskOpdr.ideas.adviseMe(math, exerciseid, defer );
-			activity.agent().addBarrier(defer.getPromise());
-			defer.getPromise().onResolve(() -> { 
-				Promise<RuleIF> p = defer.getPromise();
-				Throwable t = p.getFailure();
-				if ( t != null) {
-					LOG.log(Level.SEVERE, "adviseMe", t);
-				} else {
-					RuleIF r = p.getValue();
-					if ( r.isException()) {
-						LOG.severe(r.getExpr());
-					} else {
-						LOG.info(r.getExpr());
-					}
-				}
-			} );
-		}
-	}
+//	private void adviseMe() {
+//		Optional<DwoGlobalVars> vars = activity.vars();
+//		if (vars.isPresent() && vars.get().withUser() && logOption && comRoot.getLessonMode() == LessonMode.normal) {
+//			String id = logID;
+//			if(! id.startsWith("adviseMe:")) 
+//				return;
+//			String[] split = id.split(":");
+//			String userid = vars.get().getUserID().toString();
+//			String classid;
+//			try {
+//				classid = vars.get().getCurrentSchoolClass().getId().getIdString();
+//			} catch (Exception e) {
+//				classid = "";
+//			}
+//			String exerciseid = split[1];
+//			String id2 = split[2];
+//			Map<String,String> context = new HashMap<>();
+//			context.put("userid", userid);
+//			context.put("groupid", classid);
+//			context.put("language", StubView.getLocale());
+//			RuleIF[] math = new RuleIF[] { getSelectRule(id2, context) };
+//			PromiseCallback<RuleIF> defer = new PromiseCallback<>();
+//			WiskOpdr.ideas.adviseMe(math, exerciseid, defer );
+//			activity.agent().addBarrier(defer.getPromise());
+//			defer.getPromise().onResolve(() -> { 
+//				Promise<RuleIF> p = defer.getPromise();
+//				Throwable t = p.getFailure();
+//				if ( t != null) {
+//					LOG.log(Level.SEVERE, "adviseMe", t);
+//				} else {
+//					RuleIF r = p.getValue();
+//					if ( r.isException()) {
+//						LOG.severe(r.getExpr());
+//					} else {
+//						LOG.info(r.getExpr());
+//					}
+//				}
+//			} );
+//		}
+//	}
 
 	public TekstVak geefTekstVak(int row, int col)
 	{

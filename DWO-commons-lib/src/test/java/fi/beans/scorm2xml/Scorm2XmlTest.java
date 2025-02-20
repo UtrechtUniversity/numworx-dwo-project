@@ -9,6 +9,25 @@ import org.junit.Test;
 
 public class Scorm2XmlTest {
 
+	  @Test
+	  public void testSetValue3() {
+	    Scorm2Xml xml = new Scorm2Xml();
+	    xml.LMSSetValue("cmi.values.1.item.name", "HERE");
+	    assertEquals("count", "2", xml.LMSGetValue("cmi.values._count"));
+	    xml.LMSSetValue("cmi.values.0.item.name", "THERE");
+	    assertEquals("there", "THERE", xml.LMSGetValue("cmi.values.0.item.name"));
+	    assertEquals("hier", "HERE", xml.LMSGetValue("cmi.values.1.item.name"));
+	    assertEquals("count", "2", xml.LMSGetValue("cmi.values._count"));
+
+	    xml.LMSSetValue("cmi.values.0.item.name", "");
+	    assertEquals("empty", "", xml.LMSGetValue("cmi.values.0.item.name"));
+	    assertEquals("hier", "HERE", xml.LMSGetValue("cmi.values.1.item.name"));
+	    assertEquals("count", "2", xml.LMSGetValue("cmi.values._count"));
+	    System.out.println(xml);
+	  }
+
+	
+	
   @Test
   public void testSetValue2() {
     Scorm2Xml xml = new Scorm2Xml();

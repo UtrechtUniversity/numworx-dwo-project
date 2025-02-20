@@ -194,7 +194,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		
 		String reviewData = null;
 		String reviewCorrectie = "";
-		if (eindtoetsVerzegeld || cmi_mode == LessonMode.review)
+		if (eindtoetsVerzegeld /*|| cmi_mode == LessonMode.review*/)
 		{
 			reviewData = getValue(REVIEW_DATA);
 			reviewCorrectie = getValue(REVIEW_CORRECT);
@@ -222,19 +222,19 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 			logState = (JSONObject) suspendData.get(LOG_STATE);
 			register = (JSONString) suspendData.get(REGISTRATION);
 			shareMap = (JSONObject) onsState.get(SHARE_MAP);
-			if (reviewData != null && reviewData.length() > 2) {
+			if (reviewData != null && reviewData.length() > 2 ) {
 				opdrContStates = mergeReviewData(opdrContStates, reviewData);
 				if (opdrGoedFout != null && opdrGoedFout.size()>0 && !reviewCorrectie.isEmpty())
 					opdrGoedFout.set(0, mergeReviewCorrect(opdrGoedFout.get(0).isArray(), reviewCorrectie));
 			}
-			// oldschool toetsLocked
-			JSONValue oldReviewData =  suspendData.get("reviewData");
-			if(!eindtoetsVerzegeld && oldReviewData != null) {
-				JSONValue oldToetsLocked = oldReviewData.isObject().get("toetsLocked");
-				if(oldToetsLocked != null) {
-					if(oldToetsLocked.isBoolean().booleanValue()) eindtoetsVerzegeld = true;
-				}
-			}
+//			// oldschool toetsLocked
+//			JSONValue oldReviewData =  suspendData.get("reviewData");
+//			if(!eindtoetsVerzegeld && oldReviewData != null) {
+//				JSONValue oldToetsLocked = oldReviewData.isObject().get("toetsLocked");
+//				if(oldToetsLocked != null) {
+//					if(oldToetsLocked.isBoolean().booleanValue()) eindtoetsVerzegeld = true;
+//				}
+//			}
 		}
 		catch (Exception e)
 		{
@@ -340,6 +340,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 	
 	private JSONArray mergeReviewData(JSONArray opdrContStates, String reviewData) {
 		try {
+			if (!reviewData.startsWith("{")) return opdrContStates; // early out. komt voor dat reviewData = [null,true]
 			JSONValue value = JSONParser.parseStrict(reviewData);
 			JSONArray review = value.isObject().get(OPDR_CONT_STATES).isArray();
 			int l = Math.min(opdrContStates.size(), review.size());

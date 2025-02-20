@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt;
 
 import javax.inject.Inject;
 
+import com.google.gwt.user.client.History;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
@@ -68,6 +69,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
         ModulesPresenter modules = presenterFactory.getModulesPresenter();
 		modules.show();
         if (value == SelectedView.WELCOME) {
+        	History.replaceItem(SelectedView.MODULES.name(), false);
         	modules.gotoHome();
         } else if (value == SelectedView.MODULES) {
         	modules.gotoLast();
@@ -107,7 +109,7 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     	  mainView.selectView(SelectedView.WELCOME);
     	  break;
       case TRAIL:
-    	  //mainView.selectView(SelectedView.MODULES);
+    	  mainView.selectView(SelectedView.MODULES); // stond uit als TRAIL na HOME komt.
     	  presenterFactory.getMainPresenter().setTrails(switchViewEvent.getResultState());
         break;
       case MAYBELOGOUT:

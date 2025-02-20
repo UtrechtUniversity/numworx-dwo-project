@@ -11,10 +11,14 @@ import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -23,6 +27,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -100,6 +105,7 @@ import fi.dwo.dwojapplet.gui.action.GuiAction;
 import fi.dwo.dwojapplet.gui.domainmodel.ExportAction.ExportPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.LeerdomeinEditPanel2.VariantListener;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.EditableGraph;
+import fi.dwo.dwojapplet.gui.domainmodel.graph.Graph;
 import fi.dwo.dwojapplet.gui.domainmodel.graph.TreeTransferHandler;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.KoppelPanel;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
@@ -112,6 +118,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
+import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObj;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
@@ -119,6 +126,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.StudentModelUtil;
 
 public class LeerdomeinEditPanel2 extends JPanel
 		implements TreeSelectionListener, ExportPanel, WindowListener, ItemListener {
@@ -147,6 +155,66 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 	}
 
+	class RenameVariantAction extends AbstractAction {
+		RenameVariantAction() {
+			super("Hernoem variant...");
+			//setEnabled(false);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			NodeLeaf leaf = (NodeLeaf) ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject();
+			DomStudentModelVariant selected = (DomStudentModelVariant) variantBox.getSelectedItem();
+			if (selected != null && selected.getName()!= null) {
+				String ok = JOptionPane.showInputDialog(LeerdomeinEditPanel2.this, "Hernoemen", selected.getName());
+				if (ok != null) {
+					List<DomStudentModelMethodInfo> methods = leaf.getMethodeInfos();
+					WrappedSet variants = leaf.getVariants();
+					for(DomStudentModelVariant m : variants) {
+						if (ok.equals(m.getName())) return; // backout 
+					}				
+					LOG.info("rename " + selected.getName() + " to " + ok);
+					for(DomStudentModelMethodInfo m : methods) {
+						if (selected.getName().equals(m.getVariant())) m.setVariant(ok);
+					}
+					selected.setName(ok);
+					variantBox.repaint();
+				}
+			}
+		}
+	}
+	
+	
+	class RemoveVariantAction extends AbstractAction {
+		RemoveVariantAction() {
+			super("Verwijder variant...");
+			setEnabled(false);
+		}
+		public void actionPerformed(ActionEvent e) {
+			NodeLeaf leaf = (NodeLeaf) ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject();
+			DomStudentModelVariant selected = (DomStudentModelVariant) variantBox.getSelectedItem();
+			if (selected != null && selected.getName()!= null) {
+				int ok = JOptionPane.showConfirmDialog(LeerdomeinEditPanel2.this, selected.getName() + " verwijderen?", "Verwijderen variant", JOptionPane.OK_CANCEL_OPTION);
+				if (ok == JOptionPane.OK_OPTION) {
+					leaf.getVariants().remove(selected);
+					leaf.setDefaultVariant();
+					variantBox.removeItem(selected);
+					variantBox.setSelectedIndex(0);
+					if (leaf.getVariants().size() == 1) {
+						variantBox.setVisible(false);
+						setEnabled(false);
+					}
+					List<DomStudentModelMethodInfo> methods = leaf.getMethodeInfos();
+					for(DomStudentModelMethodInfo m : methods) {
+						if (selected.getName().equals(m.getVariant())) m.setVariant(null);
+					}
+			}}
+		}
+ 	}
+	
+	
+	
+	
 	@SuppressWarnings("serial")
 	class CreateVariantAction extends AbstractAction {
 		CreateVariantAction() {
@@ -215,7 +283,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			
 			InvisibleNode root;
 			root = (InvisibleNode) model.getRoot();
-			Map<String, NodeLeaf> leafs = getLeafs(model, root);
+			Map<String, NodeLeaf> leafs = getLeafs((InvisibleTreeModel) model, root);
 			Object node = path.getLastPathComponent();
 			if (node instanceof MutableTreeNode) {
 				InvisibleNode mutable = (InvisibleNode) node;
@@ -223,10 +291,11 @@ public class LeerdomeinEditPanel2 extends JPanel
 				if (o instanceof NodeLeaf) {
 					NodeLeaf leaf = (NodeLeaf) o;
 					variant = leaf.getVariant();
-					List<String> ids = leaf.getVoorkennis();
+					Collection<String> ids = leaf.getVoorkennis();
 					ids = closure(ids, leafs);
+					ids = Graph.strip(ids);
 					List<String> copy = new ArrayList<>(ids);
-					copy.removeAll(variant.getDeselections());
+					copy.removeAll(StudentModelUtil.strip(variant.getDeselections()));
 					Set<String> org = new TreeSet<>(ids);
 					copy.add(leaf.getId());
 					NodeVector v = (NodeVector) root.getUserObject();
@@ -267,7 +336,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 
 						if (r == JOptionPane.OK_OPTION) {
 							panel.makeChoices();
-							List<String> list = panel.getObjectives();
+							Collection<String> list = /*Graph.strip*/(panel.getObjectives());
 							org.removeAll(list);
 							variant.setDeselections(org);
 							leaf.setVariant(variant);
@@ -278,33 +347,41 @@ public class LeerdomeinEditPanel2 extends JPanel
 			}
 		}
 
-		protected List<String> closure(List<String> ids, Map<String, NodeLeaf> leafs) {
+		protected List<String> closure(Collection<String> ids, Map<String, NodeLeaf> leafs) {
 			if (ids == null)
 				return Collections.emptyList();
 			Function<String, Stream<String>> f = id -> {
-				NodeLeaf leaf = leafs.get(id);
+				NodeLeaf leaf = leafs.get(id); // assume strip
 				if (leaf == null)
 					return Stream.empty();
-				return closure(leaf.getVoorkennis(), leafs).stream();
+				return closure(StudentModelUtil.strip(leaf.getVoorkennis()), leafs).stream(); // voorkennis is niet gestript
 				};
 			List<String> extra = ids.stream().flatMap(f ).collect(Collectors.toList());
 			extra.addAll(ids);
 			return extra;
 		}
 
-		private Map<String, NodeLeaf> getLeafs(TreeModel model, Object node) {
-			Map<String, NodeLeaf> result = new HashMap<>();
-			int cnt = model.getChildCount(node);
-			for(int i = 0; i < cnt; i++) {
-				Object child = model.getChild(node, i);
-				result.putAll(getLeafs(model, child));
-				Object object = ((DefaultMutableTreeNode) child).getUserObject();
-				if (object instanceof NodeLeaf) {
-					NodeLeaf l = (NodeLeaf) object;
-					result.put(l.getId(), l);
+		
+		// FIXME DEZE IS NIET GOED, gebruikt "invisible nodes" niet en we willen alles
+		private Map<String, NodeLeaf> getLeafs(InvisibleTreeModel model, Object node) {
+			boolean old = model.isActivatedFilter();
+			try {
+				model.activateFilter(false); // heeft effect op getchildcount, etc.
+				Map<String, NodeLeaf> result = new HashMap<>();
+				int cnt = model.getChildCount(node);
+				for(int i = 0; i < cnt; i++) {
+					Object child = model.getChild(node, i);
+					result.putAll(getLeafs(model, child));
+					Object object = ((DefaultMutableTreeNode) child).getUserObject();
+					if (object instanceof NodeLeaf) {
+						NodeLeaf l = (NodeLeaf) object;
+						result.put(l.getId(), l);
+					}
 				}
+				return result;
+			} finally {
+				model.activateFilter(old);
 			}
-			return result;
 		}
 		
 	}
@@ -944,6 +1021,11 @@ public class LeerdomeinEditPanel2 extends JPanel
           Instellingen.add(new JMenuItem(action));
 		CreateVariantAction cva = new CreateVariantAction();
 		Instellingen.add(new JMenuItem(cva));
+		RenameVariantAction rva = new RenameVariantAction();
+		Instellingen.add(new JMenuItem(rva));
+		RemoveVariantAction dva = new RemoveVariantAction();
+		Instellingen.add(new JMenuItem(dva));
+		
 		bar.add(Box.createHorizontalGlue());
 
 		add(split, BorderLayout.CENTER);
@@ -1033,6 +1115,31 @@ public class LeerdomeinEditPanel2 extends JPanel
 		size.width += 40;
 		variantBox.setMinimumSize(size);
 		variantBox.setPreferredSize(size);
+
+		variantBox.addComponentListener(new ComponentAdapter() {
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				boolean on = variantBox.getSelectedIndex() > 0;
+				dva.setEnabled(on);
+				rva.setEnabled(on);
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				dva.setEnabled(false);
+				rva.setEnabled(false);
+			}			
+		});
+		variantBox.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				boolean on = variantBox.getSelectedIndex() > 0;
+				dva.setEnabled(on);
+				rva.setEnabled(on);
+			}
+		});
 
 		rightNorth.add(variantBox);
 		rightBox.add(rightNorth, BorderLayout.NORTH);
@@ -1754,6 +1861,29 @@ public class LeerdomeinEditPanel2 extends JPanel
 	// }
 
 	private void closeWindow(ConfirmDialog window) {
+		if (!Objects.equals(activeMethod,structure.getActiveMethod()) && !editable) {
+			try {
+				int option = confirm();
+				switch (option) {
+				case JOptionPane.CANCEL_OPTION:
+					return;
+				case JOptionPane.YES_OPTION:
+					structure.setActiveMethod(activeMethod);
+					prop.updateActiveMethod(structure);
+					if(resultModel != null) 
+					{   resultModel.setActiveMethod(activeMethod);
+						window.ok(null);
+						return;
+					}
+				case JOptionPane.NO_OPTION:
+					window.cancel(null);
+				}
+				return;
+			} catch (Dwo2Exception e) {
+			}
+		}
+		
+		
 		if (editable || !Objects.equals(activeMethod,structure.getActiveMethod()) ) {
 			int option = confirm();
 			switch (option) {
