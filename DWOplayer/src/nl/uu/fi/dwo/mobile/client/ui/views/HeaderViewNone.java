@@ -215,8 +215,8 @@ boolean showNavigation = true;
 @Override
 public void onResize() {
 	int width = Window.getClientWidth();
-	GWT.log("headernone on resize  " + width);
-	if (menu.isPresent() && showNavigation) {
+	LOG.severe("headernone on resize  " + width);
+	if (menu.isPresent() && showNavigation && width > 0) {
 		NavigationMenu m = menu.get();
 		RootLayoutPanel r = RootLayoutPanel.get();
 		if (width < MIN_WIDTH) {
