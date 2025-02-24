@@ -333,6 +333,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 		LogBuilder logBuilder = activity.logBuilder().setClassName("fi.wiskopdr.tekstobjects.TekstEditor").setLaunchData(launchdata);
 		//loggingID = logBuilder.getLogID();
+		logBuilder.setTeltMee(teltMee); // niet de default.
 		logging = logBuilder.build();
 		//shown = true;
 	}
