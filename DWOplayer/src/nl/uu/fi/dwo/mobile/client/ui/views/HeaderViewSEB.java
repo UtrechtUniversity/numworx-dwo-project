@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -31,6 +32,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 
+@Singleton
 public class HeaderViewSEB extends Composite implements HeaderView, ValueChangeHandler<String> {
 
 	private InlineLabel label, last;
@@ -41,7 +43,7 @@ public class HeaderViewSEB extends Composite implements HeaderView, ValueChangeH
 	
 	final static int HEIGHT = 40;
 	
-//	@Inject 
+	@Inject 
 	HeaderViewSEB(PlaceController controller, EventBus bus, PlaceHistoryMapper mapper, Lazy<LastExamActivity> exam) {
 		this.exam = exam;
 		FlowPanel flow = new FlowPanel();
