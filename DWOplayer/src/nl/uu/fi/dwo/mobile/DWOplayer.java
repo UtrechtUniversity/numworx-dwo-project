@@ -151,7 +151,7 @@ public abstract class DWOplayer
 				start();
 			}
 		};
-		t.schedule(1);
+		t.schedule(1000);
 	}
 	
 	public static TemplateCss templateCss() {

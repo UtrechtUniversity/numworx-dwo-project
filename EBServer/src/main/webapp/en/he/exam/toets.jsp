@@ -85,7 +85,7 @@
     <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
-  	<a href='https://<%=server %>/en/he/exam/logout.html' >Logout</a>
+<%--   	<a href='https://<%=server %>/en/he/exam/logout.html' >Logout</a> --%>
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     

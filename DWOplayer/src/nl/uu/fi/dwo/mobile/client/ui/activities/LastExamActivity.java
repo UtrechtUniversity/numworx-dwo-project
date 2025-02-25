@@ -31,6 +31,7 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.CoursesOfClasToSelectItems;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
+import nl.uu.fi.dwo.mobile.client.ui.PageTracker;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.SCO_TO_MODULEITEM;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
@@ -74,9 +75,9 @@ public class LastExamActivity implements Activity, ValueChangeHandler<String>, P
 	@Inject Lazy<CoursesOfClasToSelectItems> coursesToItems;
 	
 	
-	@Inject void setHistorian(Historian h) {	
+	@Inject void setHistorian(PageTracker h) {	
 		if (kiosk)
-			h.addValueChangeHandler(this);
+			h.onTrack(this);
 		else
 			setItem(State.PLACE, null);
 	}
@@ -108,7 +109,7 @@ public class LastExamActivity implements Activity, ValueChangeHandler<String>, P
 		this.place = defaultPlace;
 		this.rpc = rpc;
 		this.mapper = mapper;
-		//this.kiosk = PARAMETERS.inKiosk() || true;
+		this.kiosk = PARAMETERS.inKiosk();
 	}
 
 	private void toDefault() {

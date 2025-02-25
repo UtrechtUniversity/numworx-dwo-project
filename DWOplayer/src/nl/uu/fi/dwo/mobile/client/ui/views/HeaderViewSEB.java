@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
+import nl.uu.fi.dwo.mobile.client.ui.PageTracker;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LastExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -40,12 +41,18 @@ public class HeaderViewSEB extends Composite implements HeaderView, ValueChangeH
 	private EventBus bus;
 	private PlaceController controller;
 	private Lazy<LastExamActivity> exam;
+	private PlaceHistoryMapper mapper;
 	
 	final static int HEIGHT = 40;
+	
+	@Inject void setPageTracker(PageTracker tracker) {
+		tracker.onTrack(this);
+	}
 	
 	@Inject 
 	HeaderViewSEB(PlaceController controller, EventBus bus, PlaceHistoryMapper mapper, Lazy<LastExamActivity> exam) {
 		this.exam = exam;
+		this.mapper = mapper;
 		FlowPanel flow = new FlowPanel();
 		logout = new Button("logoff");
 		label = new InlineLabel(location());
@@ -59,11 +66,16 @@ public class HeaderViewSEB extends Composite implements HeaderView, ValueChangeH
 		presenter = controller::goTo; // never null!
 		
 		logout.addClickHandler(ev -> { presenter.goTo(new LoginPlace());});
-		bus.addHandler(PlaceChangeEvent.TYPE, ev -> setText("P ",mapper.getToken(ev.getNewPlace())));
+		bus.addHandler(PlaceChangeEvent.TYPE, this::onPlaceChange );
 	}
 
+	private void onPlaceChange(PlaceChangeEvent ev) {
+		setText("P ",mapper.getToken(ev.getNewPlace()));
+	}
+	
+	
 	private void setLast() {
-		last.setText(" " + exam.get().restorable() + " ");		
+		last.setText(" " + exam.get().getPlace() + " ");		
 	}
 
 	protected String location() {

@@ -10,14 +10,17 @@ import javax.inject.Singleton;
 import org.osgi.util.promise.Promise;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.place.shared.PlaceHistoryHandler.DefaultHistorian;
 import com.google.gwt.place.shared.PlaceHistoryHandler.Historian;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window.Location;
+import com.google.web.bindery.event.shared.EventBus;
 
 import dagger.Lazy;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
@@ -42,11 +45,49 @@ public class PageTracker implements ValueChangeHandler<String>, Historian {
 	private Promise<LogStrategy> log;
 	@Inject Provider<Optional<XapiWrapper>> xw;
 	private UrlBuilder home;
+	
+	private class Tracker implements HasValueChangeHandlers<String>, ValueChangeHandler<String> {
+		private final EventBus bus; 
 
-	@Inject PageTracker(DwoGlobalVars vars, Historian historian) {
+		private Tracker(EventBus bus) {
+			this.bus = bus;
+		}
+
+		@Override
+		public void fireEvent(GwtEvent<?> event) {
+			bus.fireEventFromSource(event, this);			
+		}
+
+		@Override
+		public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+			return bus.addHandlerToSource(ValueChangeEvent.getType(), this, handler)::removeHandler;
+		}
+
+		@Override
+		public void onValueChange(ValueChangeEvent<String> event) {
+			//bus.fireEventFromSource(event, this); 
+			String value = event.getValue(); // use copy.
+			ValueChangeEvent.fire(this,  value);
+		}
+		
+	}
+	private Tracker tracker;
+	
+	public HandlerRegistration onTrack(ValueChangeHandler<String> handler) {
+		return tracker.addValueChangeHandler(handler);
+	}
+
+	private void fireTrack(String track) {
+		ValueChangeEvent.fire(tracker, track);
+	}
+	
+
+	@Inject PageTracker(DwoGlobalVars vars, Historian historian, EventBus bus) {
 		this.historian = historian;
 		this.vars = vars;
+		this.tracker = new Tracker(bus);
 		home = Location.createUrlBuilder().setHash(null).removeParameter("a");
+		addValueChangeHandler(tracker);
 		//logon();
 	}
 
@@ -82,7 +123,7 @@ public class PageTracker implements ValueChangeHandler<String>, Historian {
 		LOG.warning(" started logging for " + role + " " + rights + " " + token);
 		// het idee is student + t in rights, de t van track
 		if (rights.contains("t")) {
-			if (reg == null) reg = historian.addValueChangeHandler(this);
+			if (reg == null) reg = tracker.addValueChangeHandler(this);
 			log = rpc.get().getLRS().map(x -> x::saveStatement);
 	        if (xw != null) {
 				Optional<XapiWrapper> oxw = xw.get();
@@ -114,7 +155,7 @@ public class PageTracker implements ValueChangeHandler<String>, Historian {
 	@Override
 	public void newItem(String token, boolean issueEvent) {
 		historian.newItem(token, issueEvent);
-		if (!issueEvent && reg != null) { track(token); }
+		if (!issueEvent) { fireTrack(token); } // zelfs met !issueEvent toch tracking
 		
 	}
 
