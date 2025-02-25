@@ -505,6 +505,7 @@ public class SecuredTeacherStudentModelManager {
 		TeacherState_HR_R_S_SG_U state = hrstate.buildSchoolAdminTeacher().setTeacher();
     	DomStudentModelContextId dom = rest.getDomStudentModelContext();
 		Long smID = MySQLPersistenceId.getNativeId(dom);
+		if(smID == null) return null;
     	PersistentStudentModelContext context = StudentModelContextManager.findEntity(smID);
     	if (context == null) return null;
     	Long schoolID = context.getSchoolID();
