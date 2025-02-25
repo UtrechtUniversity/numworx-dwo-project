@@ -138,14 +138,15 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
     public DomStudentModelStructure updateModel(DomStudentModelStructure model) throws Dwo2Exception {
       //if (standard)
       //{
-        DomSchoolMethod dsm = manager.getActiveMethod(current);
-        dsm.setActiveMethod(model.getActiveMethod());
-        SecureTeacherStudentModelManager.updateActiveMethod(dsm);
-        if (standard) {
-        	current.setModelStructure(model);
-        	return model;
-      	}
-      //}
+        DomSchoolMethod dsm = current == null ? null : manager.getActiveMethod(current);
+        if (dsm != null) {
+	        dsm.setActiveMethod(model.getActiveMethod());
+	        SecureTeacherStudentModelManager.updateActiveMethod(dsm);
+	        if (standard) {
+	        	current.setModelStructure(model);
+	        	return model;
+	      	}
+        }
 
       if (structure != null) {      
         JavaPatch patch = new JavaPatch();
