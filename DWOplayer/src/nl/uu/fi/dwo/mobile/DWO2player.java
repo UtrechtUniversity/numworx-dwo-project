@@ -229,6 +229,11 @@ public void setupDWOPlayer() {
 		kiosk = p.inKiosk();
 	}
 	
+	
+	private boolean legal(String alt) {
+		return !alt.startsWith("Exam");
+	}
+	
 	@Override
 	protected void start(PlaceHistoryHandler h) {
 		if (kiosk) {
@@ -236,7 +241,7 @@ public void setupDWOPlayer() {
 			String alt = lastexam.get().getPlace();
 			Window.alert("START [" + token + "] [" + alt + "]"); // doe iets met schoolyear hier.
 			if (alt != null && 
-				!alt.isEmpty()) 
+				!alt.isEmpty() && legal(alt)) 
 					token = alt;
 			GWT.log("START " + token); // doe iets met schoolyear hier.
 			History.newItem(token, false);
