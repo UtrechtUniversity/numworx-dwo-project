@@ -808,4 +808,18 @@ public class GraphNode {
 			return stroke.createStrokedShape(result);
 		}
 	}
+
+	public void mergeMethodeInfos(Collection<DomStudentModelMethodInfo> infos) {
+		if (infos != null) {
+			for ( DomStudentModelMethodInfo i : infos) {
+				DomStudentModelMethodInfo o = methodeInfos.get(i.key());
+				if (o != null) {
+					o.setVariant(i.getVariant()); // XXX merge all fields, except key and x,y, voor nu alleen variant
+				} else {
+					methodeInfos.put(i.key(), i); // do not forget
+				}
+			}
+		}
+		
+	}
 }

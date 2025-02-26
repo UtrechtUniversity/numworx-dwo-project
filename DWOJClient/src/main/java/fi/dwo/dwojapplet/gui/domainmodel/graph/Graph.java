@@ -1473,6 +1473,9 @@ private String voorkennisPopupVariant;
 					leaf.setX(null);
 					leaf.setY(null);
 				}
+				if (gn != null) {
+					gn.mergeMethodeInfos(leaf.getMethodeInfos());
+				}
                 leaf.setMethodeInfos(gn != null ? gn.getMethodeInfos():null);
 				List<String> voorkennis = leaf.getVoorkennis();
 				if (voorkennis == null)
