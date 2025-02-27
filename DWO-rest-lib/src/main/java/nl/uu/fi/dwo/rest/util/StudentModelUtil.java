@@ -21,7 +21,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 
 public class StudentModelUtil {
-
+	public static String MASTERY = "⌈MASTERY⌉"; // reserved variant: score without ceiling
 
 	Map<String, DomStudentModelObj> items;
 	Map<String, Collection<String>> foreknowledge;
@@ -166,7 +166,10 @@ public class StudentModelUtil {
 						}
 					}
 				}
+				result.getVariants().put(MASTERY, gs);
 				gs = 0.5 + (gs-0.5) * count / size;
+			} else {
+				result.getVariants().put(MASTERY, gs);				
 			}
 		}
 		result.setScore(gs, gc, rs, rc, t);
