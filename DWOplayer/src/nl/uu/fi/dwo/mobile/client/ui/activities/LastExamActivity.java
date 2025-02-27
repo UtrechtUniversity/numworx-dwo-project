@@ -20,7 +20,12 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler.Historian;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.PlaceChangeEvent;
+import com.google.gwt.place.shared.PlaceChangeRequestEvent;
 import com.google.gwt.storage.client.Storage;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ClosingEvent;
+import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import dagger.Lazy;
@@ -53,7 +58,7 @@ import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 @Reusable
-public class LastExamActivity implements Activity, ValueChangeHandler<String>, PlaceChangeEvent.Handler {
+public class LastExamActivity implements Activity, ValueChangeHandler<String>, PlaceChangeEvent.Handler, PlaceChangeRequestEvent.Handler, ClosingHandler {
 
 	final private static String BASE_KEY = LastExamActivity.class.getName()+ "$";
 	enum State {
@@ -79,12 +84,20 @@ public class LastExamActivity implements Activity, ValueChangeHandler<String>, P
 		if (kiosk)
 			h.onTrack(this);
 		else
-			setItem(State.PLACE, null);
+			clearPlace();
+	}
+
+	public void clearPlace() {
+		setItem(State.PLACE, null);
 	}
 
 	@Inject void setEventBus(com.google.web.bindery.event.shared.EventBus bus) {
 		if (kiosk)
+		{
 			bus.addHandler(PlaceChangeEvent.TYPE, this);
+			bus.addHandler(PlaceChangeRequestEvent.TYPE, this);
+			Window.addWindowClosingHandler(this);
+		}
 	}
 	
 	private Provider<Activity> delegate;
@@ -361,4 +374,21 @@ public class LastExamActivity implements Activity, ValueChangeHandler<String>, P
 		
 	}
 
+	public void onPlaceChangeRequest(PlaceChangeRequestEvent event) {
+		Place p = controller.getWhere();
+		String map = defaultPlace.equals(p) ? null : mapper.getToken(p);
+		setItem(State.PLACE, map);
+	}
+
+	public void onWindowClosing(ClosingEvent ev) {
+		Place p = controller.getWhere();
+		String map = defaultPlace.equals(p) ? null : mapper.getToken(p);
+		setItem(State.PLACE, map);
+		Window.alert("Closing " + map);
+	}
+	
+	public void replacePlace(Place p) {
+		String map = defaultPlace.equals(p) ? null: mapper.getToken(p);
+		History.replaceItem(map, false);
+	}
 }

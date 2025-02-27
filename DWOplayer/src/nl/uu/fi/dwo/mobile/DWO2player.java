@@ -239,6 +239,7 @@ public void setupDWOPlayer() {
 		if (kiosk) {
 			String token = History.getToken();
 			String alt = lastexam.get().getPlace();
+//
 			Window.alert("START [" + token + "] [" + alt + "]"); // doe iets met schoolyear hier.
 			if (alt != null && 
 				!alt.isEmpty() && legal(alt)) 

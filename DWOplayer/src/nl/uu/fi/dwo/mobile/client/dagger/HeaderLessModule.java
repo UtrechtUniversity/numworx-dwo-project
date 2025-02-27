@@ -53,8 +53,7 @@ public abstract class HeaderLessModule {
 		  ) {
 	  
 	  
-//
-	  if(true) return seb.get();  
+//	  if(true) return seb.get();  
 	  
 	  
     if (headerless()) 
