@@ -30,6 +30,7 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -53,7 +54,6 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
 import nl.uu.fi.dwo.mobile.client.sco.DWOLogger;
-import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.SVGButton;
 import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
@@ -125,7 +125,14 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	private String antwoordString;
 	private String[] keuzeMogelijkheden;
 	private ObjectMap[] answerModels;
-	private boolean hasFeedback, checkExternal;
+	private boolean hasFeedback, checkExternal, randomizePositions;
+	
+	private int[] ri;
+	
+	// van index naar random
+	private int ri(int i) {
+		return ri[i];
+	}
 
 	private int goedHalfFout;
 	private int puntenFeedback;
@@ -201,7 +208,11 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		if (map != null)
 		{
 			if(map.containsKey("keuzeMogelijkheden") )
+			{
 				keuzeMogelijkheden = map.getStringArray("keuzeMogelijkheden");
+				ri = new int[keuzeMogelijkheden.length];
+				for(int i=0; i< ri.length; i++) ri[i] = i;
+			}
 			if(map.containsKey("antwoordString"))
 				antwoordString = map.getString("antwoordString");
 			if(map.containsKey("scoreMax")) 
@@ -230,6 +241,13 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				teltMee = map.getBoolean("teltMee");
 			if(map.containsKey("checkExternal"))
 				checkExternal = map.getBoolean("checkExternal");
+			randomizePositions = map.getBoolean("randomizePositions", randomizePositions);
+			if (randomizePositions) {
+				for (int i = ri.length-1; i > 0; i--) {
+					int t = Random.nextInt(i+1);
+					int x = ri[i]; ri[i] = ri[t]; ri[t] = x;
+				}
+			}
 			if(map.containsKey("logOption")) 
 		    	logOption = map.getBoolean("logOption");
 			if(map.containsKey("logID") && logOption) 
@@ -495,14 +513,15 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			
 			keuzeOptiePanels[i + 1] = new FlowPanel();
 			
+			int r = ri(i);
 			try
 			{
-				keuzeMogelijkheden[i] = FormuleParser.randomizeTekstVakString(keuzeMogelijkheden[i], randomVarNamen, randomVarWaarden);
+				keuzeMogelijkheden[r] = FormuleParser.randomizeTekstVakString(keuzeMogelijkheden[r], randomVarNamen, randomVarWaarden);
 			}
 			catch (Exception e)
 			{	
 			}
-			ArrayList<Object> keuzeOptie = tb.convertTekst(keuzeMogelijkheden[i].trim(), null, false);
+			ArrayList<Object> keuzeOptie = tb.convertTekst(keuzeMogelijkheden[r].trim(), null, false);
 					
 			keuzeOptieVakken[i + 1].setObjects(keuzeOptie);
 			keuzeOptieVakken[i + 1].resize();
@@ -593,10 +612,6 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			}
 		});
 		
-		
-		
-		
-		
 	}
 	
 	public void voegFeedbackSluitKnopToe()
@@ -650,7 +665,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		
 		TekstBuffer tb = new TekstBuffer(activity);
 		if(index > 0)
-			huidigeKeuze = tb.convertTekst(keuzeMogelijkheden[index - 1], null, false);
+			huidigeKeuze = tb.convertTekst(keuzeMogelijkheden[ri(index - 1)], null, false);
 		
 		huidigeKeuzeVak.setObjects(huidigeKeuze);
 		huidigeKeuzeVak.getElement().getStyle().setBackgroundColor(CssColor.make(255, 255, 255).toString());
@@ -715,32 +730,12 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		nagekeken = this.nagekeken;
 		isVeranderdNaNakijken = this.isVeranderdNaNakijken;
 		if(selectedIndex > 0)
-			antwoord = keuzeMogelijkheden[selectedIndex - 1];
+			antwoord = keuzeMogelijkheden[ri(selectedIndex - 1)];
 		else
 			antwoord = Text.constants.keuzeVakKiesLabel();
 		attempts = this.attempts;
 		attemptsCount = this.attemptsCount;
 		errorCount = this.errorCount;
-
-		//if (!("MW".equals(WiskOpdr.deployVariant) || "GR".equals(WiskOpdr.deployVariant)))
-//		if (logOption)
-//		{
-//			HashMap<String, Object> logMap = new HashMap<String, Object>();
-//
-//			String logString = antwoord;
-//			if (selectedIndex == 0)
-//				logString = "";
-//
-//			logMap.put("logAnswer", logString);
-//			logMap.put("logScore", new Integer(score));
-//			logMap.put("logMaxScore", new Integer(scoreMax));
-//			logMap.put("logErrorCount", new Integer(errorCount));
-//			logMap.put("logAttemptsCount", new Integer(attemptsCount));
-//			logMap.put("logAttempts", attempts);
-//
-//			//WiskOpdr.setLog(logID, logMap);
-//
-//		}
 
 		if(logging instanceof DWOLogger) {
 			Map<String, Object> map = buildLogParameters();
@@ -777,43 +772,6 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 // TODO feedback
 			logging.log(log);
 		}
-//		String goedFout = "";
-//		
-//		if (goedKrulImage.isVisible())
-//			goedFout = "goed";
-//		//if (goedKrulHalfImage.isVisible())
-//		//	goedFout = "half";
-//		if (foutKruisImage.isVisible())
-//			goedFout = "fout";
-//		String formule = "";
-//		//String string = huidigeKeuzeVak.getOpdrachtObjects().toString();
-//		String string = "";
-//		if(selectedIndex > 0)
-//			string = keuzeMogelijkheden[selectedIndex - 1];
-//		
-//		
-//		//String string = (String) antwoordKV.getItemText(antwoordKV.getSelectedIndex());
-//
-//		/*
-//		String fbTekst = "";
-//		if (feedbackTekst.isVisible() && feedbackTekst.getParent() != null)
-//			fbTekst = feedbackTekst.getText();
-//			*/
-//
-//		String s = string;
-//		s = s + "   ;   ";
-//		s = s + "Regelnummer = ";
-//		s = s + "   ;   ";
-//		s = s + goedFout;
-//		s = s + "   ;   ";
-//		s = s + "score = " + score;
-//		s = s + "   ;   ";
-//		s = s + new Date().toString();
-//		s = s + "   ;   ";
-//		//s = s + fbTekst;
-//
-//		attempts.addElement(s);
-//		//System.out.println(s);
 	}
 
 	private Map<String, Object> buildLogParameters() {
@@ -824,7 +782,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 			log.put("success", Boolean.FALSE);
 		String formule = "";
 		if(selectedIndex > 0) {
-			formule = keuzeMogelijkheden[selectedIndex - 1];
+			formule = keuzeMogelijkheden[ri(selectedIndex - 1)];
 		}
 		log.put("response", formule.trim());
 		log.put("score", Collections.singletonMap("raw", score));
@@ -891,7 +849,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 
 		selectedIndex = 0;
 		for(int i = 0; i < keuzeMogelijkheden.length; i++)
-			if(keuzeMogelijkheden[i].equals(antwoord))
+			if(keuzeMogelijkheden[ri(i)].equals(antwoord))
 			{	selectedIndex = i + 1;
 				break;
 			}
@@ -902,7 +860,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		
 		TekstBuffer tb = new TekstBuffer(activity, randomVarNamen, randomVarWaarden, null);
 		if(selectedIndex > 0)
-			huidigeKeuze = tb.convertTekst(keuzeMogelijkheden[selectedIndex - 1], null, false);
+			huidigeKeuze = tb.convertTekst(keuzeMogelijkheden[ri(selectedIndex - 1)], null, false);
 		
 		huidigeKeuzeVak.setObjects(huidigeKeuze);
 		//antwoordKV.setSelectedIndex(index);
@@ -1125,7 +1083,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 				setAnswerModel(h);
 				gelijkwaardig = false;
 				if(selectedIndex > 0)
-					gelijkwaardig = antwoordString.trim().equals(keuzeMogelijkheden[selectedIndex - 1].trim());
+					gelijkwaardig = antwoordString.trim().equals(keuzeMogelijkheden[ri(selectedIndex - 1)].trim());
 
 				if (gelijkwaardig || h == aantalAnswerModels - 1)
 				{
@@ -1154,7 +1112,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 		{
 			gelijkwaardig = false;
 			if(selectedIndex > 0)
-				gelijkwaardig = antwoordString.trim().equals(keuzeMogelijkheden[selectedIndex - 1].trim());
+				gelijkwaardig = antwoordString.trim().equals(keuzeMogelijkheden[ri(selectedIndex - 1)].trim());
 			//System.out.println("+" + antwoordString);
 			//System.out.println("+" + ((String) huidigeKeuzeVak.getOpdrachtObjects().get(0)));
 		}
@@ -1330,7 +1288,7 @@ public class AntwoordKeuzeVak implements InteractionStub, FacetAware, CBookEvent
 	public String getSelectedItem()
 	{
 		if(selectedIndex > 0)
-			return keuzeMogelijkheden[selectedIndex - 1];
+			return keuzeMogelijkheden[ri(selectedIndex - 1)];
 		else
 			return "";
 	}
