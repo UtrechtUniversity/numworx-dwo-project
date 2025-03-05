@@ -171,6 +171,8 @@ public class StudentModelUtil {
 			} else {
 				result.getVariants().put(MASTERY, gs);				
 			}
+		} else if (rc > 0) {
+			result.getVariants().put(MASTERY, rs);	
 		}
 		result.setScore(gs, gc, rs, rc, t);
 		return result;		
