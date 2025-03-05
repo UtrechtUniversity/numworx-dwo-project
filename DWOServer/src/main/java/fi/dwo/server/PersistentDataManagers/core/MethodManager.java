@@ -236,11 +236,20 @@ public class MethodManager {
 			}
 			List<PersistentMethod> resultList = query.getResultList();
 			resultList = new ArrayList<>(resultList);
-			resultList.addAll(set);
+//			resultList.addAll(set);
+			for(PersistentMethod m: set) {
+				if (!containsID(resultList, m))
+					resultList.add(m); // Alleen toevoegen als niet in het resultaat zit.
+			}
 			return resultList;
 		} finally {
 			em.close();
 		}
+	}
+
+	private static boolean containsID(List<PersistentMethod> resultList, PersistentMethod m) {
+		String key = m.getMethodID();		
+		return resultList.stream().map(PersistentMethod::getMethodID).anyMatch(key::equals);
 	}
 
 	public static void addProfile(PersistentMethod m, PersistentDwoProfile profile) {
