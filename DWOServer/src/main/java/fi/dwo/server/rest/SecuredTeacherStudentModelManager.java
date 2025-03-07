@@ -221,11 +221,16 @@ public class SecuredTeacherStudentModelManager {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/patch")
     public DomStudentModelContext patchStudentModel(@Context SecurityContext sc, RestStudentModelContextPatch patch) throws Dwo2Exception {
+    	if (patch.getDomDwoProfile() == null) {
+    		patch.setDomDwoProfile(new DomDwoProfile());
+    		patch.getDomDwoProfile().setId(PersistentDwoProfile.buildPersistenceId(77L));
+    	}
         TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                 .setHasRole(patch.getRestContext().getDomHasRole())
                 .buildSchoolAdminTeacher()
                 .setTeacher();
-        return build.patchStudentModel(patch.getDomPatch());
+        TeacherState_HR_P_R_S_SG_U build2 = build.addProfile(patch.getDomDwoProfile());
+        return build2.patchStudentModel(patch.getDomPatch());
     }
 
     @PUT

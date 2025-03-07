@@ -829,7 +829,13 @@ public DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domP
 		try {
 			PersistentStudentModelContext edit = StudentModelContextUtilManager.edit(result);
 			if (edit.getSchoolID() == 0L)
-				StudentModelContextManager.addProfile(edit, getDwoProfile());
+			{
+				PersistentDwoProfile dwoProfile = getDwoProfile();
+				if (dwoProfile != null) 
+					StudentModelContextManager.addProfile(edit, dwoProfile);
+				else
+					LOG.warning("dwoProfile is null, addProfile skipped");
+			}
 			DomStudentModelContext context = edit.buildDomStudentModelContext();			
 			context.setModelStructure(null);
 			return context;

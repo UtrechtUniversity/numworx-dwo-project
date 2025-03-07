@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -45,8 +46,13 @@ public class SecureSchoolAdminStudentModelManager implements SecureStudentModelM
 		return null;
 	}
 
-	@Override
+	@Override @Deprecated
 	public DomStudentModelContext patchModel(DomStudentModelContextPatch submit) throws Dwo2Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public DomStudentModelContext patchModel(DomStudentModelContextPatch submit, DomDwoProfileId profile) throws Dwo2Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -183,7 +183,7 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
       domPatch.setPatch(patch);
       domPatch.setDigest(digest);
       try {
-        DomStudentModelContext result = manager.patchModel(domPatch);
+        DomStudentModelContext result = manager.patchModel(domPatch, DWO.getDwoProfile());
         context.setLastChangeTimeStamp(result.getLastChangeTimeStamp());
         context.setOptLock(result.getOptLock());
         return context;

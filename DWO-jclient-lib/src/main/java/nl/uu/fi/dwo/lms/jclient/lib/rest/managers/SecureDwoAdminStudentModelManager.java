@@ -56,12 +56,27 @@ public class SecureDwoAdminStudentModelManager implements SecureStudentModelMana
 		    return result;
 		  }
 
-	@Override
+	@Override @Deprecated
 	public DomStudentModelContext patchModel(DomStudentModelContextPatch submit)
 		      throws Dwo2Exception {
 		    RestStudentModelContextPatch rest = new RestStudentModelContextPatch();
 		    rest.setRestContext(getContext());
 		    rest.setDomPatch(submit);
+
+		    DomStudentModelContext result = StoredRestManager.getInstance()
+		        .put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/studentmodel/patch", DomStudentModelContext.class, rest);
+		    LOG.log(Level.FINE, "Patch studentmodel of dwoadmin with username {0} to his school.",
+		        new Object[] {restManager.getAuthenticator().getUsername()});
+		    return result;
+		  }
+
+	@Override
+	public DomStudentModelContext patchModel(DomStudentModelContextPatch submit, DomDwoProfileId profile)
+		      throws Dwo2Exception {
+		    RestStudentModelContextPatch rest = new RestStudentModelContextPatch();
+		    rest.setRestContext(getContext());
+		    rest.setDomPatch(submit);
+		    rest.setDomDwoProfile(profile);
 
 		    DomStudentModelContext result = StoredRestManager.getInstance()
 		        .put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/studentmodel/patch", DomStudentModelContext.class, rest);
