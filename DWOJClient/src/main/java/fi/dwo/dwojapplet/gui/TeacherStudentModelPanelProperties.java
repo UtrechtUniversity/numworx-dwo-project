@@ -117,7 +117,7 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
     
     
     private DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {
-      current = manager.updateModel(modelContext);
+      current = manager.updateModel(modelContext, DWO.getDwoProfile());
       structure = StoredRestManager.getInstance().getGenson().serialize(current.getModelStructure());
       remoteMethod = current.getModelStructure().getActiveMethod();
       standard = current.getPublishState() == PublishState.overt;

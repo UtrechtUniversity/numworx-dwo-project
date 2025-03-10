@@ -462,7 +462,11 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
             
             PersistentStudentModelContext edit = StudentModelContextUtilManager.edit(pModel);
             if (edit.getSchoolID() == 0L) {
-            	StudentModelContextManager.addProfile(edit, getDwoProfile());
+            	PersistentDwoProfile profile = getDwoProfile();
+            	if (profile != null)
+            		StudentModelContextManager.addProfile(edit, profile);
+            	else
+            		LOG.warning("dwoProfile is null in updateStudentModel");
             }
 			return edit.buildDomStudentModelContext(); // FIXME netjes maken!
         } catch (RollbackException|OptimisticLockException rb) {

@@ -205,11 +205,15 @@ public class SecuredTeacherStudentModelManager {
     @Produces({"application/json"})
     @Path("/update")
     public DomStudentModelContext updateStudentModel(@Context SecurityContext sc, RestStudentModelContext model) {
-        try {
-            TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
+    	if (model.getDomDwoProfile() == null) {
+    		model.setDomDwoProfile(new DomDwoProfile());
+    		model.getDomDwoProfile().setId(PersistentDwoProfile.buildPersistenceId(77L));
+    	}
+       try {
+            TeacherState_HR_P_R_S_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                     .setHasRole(model.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
-                    .setTeacher();
+                    .setTeacher().addProfile(model.getDomDwoProfile());
             return build.updateStudentModel(model.getDomStudentModelContext());
             
         } catch (Dwo2Exception e) {

@@ -15,6 +15,7 @@ public interface SecureStudentModelManager {
 	List<DomStudentModelContext> getReducedList(DomDwoProfile profile) throws Dwo2Exception;
 
 	DomStudentModelContext updateModel(DomStudentModelContext submit) throws Dwo2Exception;
+	DomStudentModelContext updateModel(DomStudentModelContext submit, DomDwoProfileId profile) throws Dwo2Exception;
 
 	DomStudentModelContext patchModel(DomStudentModelContextPatch submit) throws Dwo2Exception;
 	DomStudentModelContext patchModel(DomStudentModelContextPatch submit, DomDwoProfileId profile) throws Dwo2Exception;

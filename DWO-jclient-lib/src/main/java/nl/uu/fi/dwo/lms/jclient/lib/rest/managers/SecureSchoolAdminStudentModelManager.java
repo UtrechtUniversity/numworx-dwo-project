@@ -83,4 +83,11 @@ public class SecureSchoolAdminStudentModelManager implements SecureStudentModelM
 	  return result;
 	}
 
+	@Override
+	public DomStudentModelContext updateModel(DomStudentModelContext submit, DomDwoProfileId profile)
+			throws Dwo2Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
