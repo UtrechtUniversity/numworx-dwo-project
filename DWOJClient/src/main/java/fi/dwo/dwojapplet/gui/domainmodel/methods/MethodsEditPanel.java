@@ -3,6 +3,7 @@ package fi.dwo.dwojapplet.gui.domainmodel.methods;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,8 +17,11 @@ import javax.swing.border.Border;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JTextField;
 import fi.dwo.commons.system.TextMapper;
+import fi.dwo.dwojapplet.domain.DwoHelper;
+import fi.dwo.dwojapplet.domain.User;
 import fi.dwo.dwojapplet.gui.ConfirmDialog;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 
@@ -26,6 +30,7 @@ public class MethodsEditPanel extends JPanel {
   private static final Font font = Constants.FONT12;
 
   private JTextField txtField;
+  private JCheckBox standard;
   private JButton ok, cancel;
   private ChapterSettings settings;
 
@@ -68,6 +73,7 @@ public class MethodsEditPanel extends JPanel {
     Border b = txtField.getBorder();
     txtField.setBorder(BorderFactory.createCompoundBorder(left, b));
     txtField.setMaximumSize(txtField.getPreferredSize());
+    standard = new JCheckBox("standard");
 
     Box south = Box.createHorizontalBox();
     south.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
@@ -81,10 +87,14 @@ public class MethodsEditPanel extends JPanel {
     add(south, BorderLayout.SOUTH);
     
     Box vbox = Box.createVerticalBox();
+    Box hbox = Box.createHorizontalBox();
+    hbox.add(txtField);
+    hbox.add(Box.createHorizontalGlue());
+    hbox.add(standard);
     vbox.add(box);
     vbox.add(Box.createVerticalStrut(20)); 
     vbox.add(title);
-    vbox.add(txtField);
+    vbox.add(hbox);
     add(vbox, BorderLayout.NORTH);
     
     add(settings, BorderLayout.CENTER);
@@ -93,7 +103,7 @@ public class MethodsEditPanel extends JPanel {
   int showDialog(JComponent parent) {
     ConfirmDialog dialog = new ConfirmDialog(parent, "");
     dialog.setContentPane(this);
-    ok.addActionListener(method.standard? dialog::cancel : dialog::ok);
+    ok.addActionListener(method.standard && !DwoHelper.isAdminLoggedIn()? dialog::cancel : dialog::ok);
     cancel.addActionListener(dialog::cancel);
     dialog.pack();
     dialog.center();
@@ -101,12 +111,24 @@ public class MethodsEditPanel extends JPanel {
     return dialog.getOption();
   }
   
+  private void itemSelect(ItemEvent ev) {
+	  // pas bij ok kan je de methode standard maken.
+  }
+  
   private DomMethod method;
   public void setMethod(DomMethod rowSet) {
     method = rowSet;
-    
+    boolean readonly = rowSet.standard && !DwoHelper.isAdminLoggedIn();
+    standard.setSelected(rowSet.standard);
+    if (rowSet.standard) {
+    	standard.setEnabled(false);
+    } else {
+    	User u = DwoHelper.getCurrentFacadeUser();
+    	boolean enabled = u.hasRight(User.PROFILE_ADMIN_RIGHT);
+    	standard.setEnabled(enabled); // WAT MOET HIER STAAN?
+    }
     txtField.setText(rowSet.method);
-    txtField.setEnabled(!rowSet.standard);
+    txtField.setEnabled(!readonly);
     settings.setBooks(rowSet.books.toArray(new String[rowSet.books.size()]));
     String[][] chapters = new String[rowSet.chapters.size()][];
     for (int i = 0; i < chapters.length; i++) {
@@ -115,7 +137,7 @@ public class MethodsEditPanel extends JPanel {
     }
     settings.setChapters(chapters);
     settings.makeGUI();
-    settings.setReadonly(rowSet.standard);    
+	settings.setReadonly(readonly);    
   }
 
   public DomMethod getMethod() {
@@ -133,4 +155,7 @@ public class MethodsEditPanel extends JPanel {
     return rowSet;
   }
   
+  public boolean makeStandard() { 
+	  return standard.isSelected();
+  }
 }

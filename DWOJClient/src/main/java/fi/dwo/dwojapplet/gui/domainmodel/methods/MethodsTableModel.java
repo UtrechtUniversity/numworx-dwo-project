@@ -32,6 +32,7 @@ import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsTableModel.NewAction;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherMethodManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
@@ -93,7 +94,7 @@ public class MethodsTableModel extends AbstractTableModel {
 
   @Override
   public int getColumnCount() {
-    return 4;
+    return DwoHelper.isAdminLoggedIn() ? 2 : 4;
   }
 
   @Override
@@ -191,7 +192,16 @@ public class MethodsTableModel extends AbstractTableModel {
           if (panel.showDialog((JComponent) e.getSource())== JOptionPane.OK_OPTION) {
             DomMethod m = panel.getMethod();
             try {
-              SecureTeacherMethodManager.updateModel(m, DWO.getDwoProfile());
+              if (DwoHelper.isAdminLoggedIn())	{
+            	  m = SecureDwoAdminMethodManager.updateModel(m, DWO.getDwoProfile());
+              } else
+              {
+            	  if (panel.makeStandard()) {
+            		  m.standard = true;
+            	  }
+            	  m = SecureTeacherMethodManager.updateModel(m, DWO.getDwoProfile());
+              }
+              model.set(row+1, m);
             } catch (Dwo2Exception e1) {
               LOG.log(Level.SEVERE, "update failed", e1);
             }

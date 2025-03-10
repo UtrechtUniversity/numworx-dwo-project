@@ -139,9 +139,9 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
       //if (standard)
       //{
         DomSchoolMethod dsm = current == null ? null : manager.getActiveMethod(current);
-        if (dsm != null) {
+        if (dsm != null) { // null als dwoadmin
 	        dsm.setActiveMethod(model.getActiveMethod());
-	        SecureTeacherStudentModelManager.updateActiveMethod(dsm);
+	        SecureTeacherStudentModelManager.updateActiveMethod(dsm); // FIXME Teacher only!
 	        if (standard) {
 	        	current.setModelStructure(model);
 	        	return model;
@@ -205,7 +205,7 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
        //if (standard)
        {
          DomSchoolMethod dsm = manager.getActiveMethod(modelContext);
-         current.getModelStructure().setActiveMethod(dsm.getActiveMethod());
+         if (dsm != null) current.getModelStructure().setActiveMethod(dsm.getActiveMethod());
        }
        return current;
     }

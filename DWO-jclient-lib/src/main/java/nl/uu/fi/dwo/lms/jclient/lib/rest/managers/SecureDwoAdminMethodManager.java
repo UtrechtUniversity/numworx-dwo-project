@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.entities.RestContext;
@@ -57,5 +58,17 @@ public class SecureDwoAdminMethodManager {
 		            Boolean.class, rest);
 			return result;
 		}
+
+		  public static DomMethod updateModel(DomMethod submit, DomDwoProfileId profile)
+			      throws Dwo2Exception {
+			  	RestMethod rest = new RestMethod();
+			    rest.setRestContext(getContext());
+			    rest.setDomDwoProfile(profile);
+			    rest.setDomMethod(submit);
+
+			    DomMethod result = StoredRestManager.getInstance()
+			        .put("rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/method/update", DomMethod.class, rest);
+			    return result;
+			  }
 
 }

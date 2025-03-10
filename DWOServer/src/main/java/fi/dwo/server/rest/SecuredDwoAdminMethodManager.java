@@ -16,6 +16,7 @@ import fi.dwo.commons.persistence.entities.PersistentMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_P_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.MethodManager;
@@ -51,6 +52,26 @@ public class SecuredDwoAdminMethodManager {
     	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
     	DwoAdminState_HR_P_R_S_SG_U state = hasRole.buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
     	return state.removeProfile(rest.getDomMethod());
+    }
+
+    @PUT
+    @Produces({"application/json"})
+    @Path("/update")
+    public DomMethod update(@Context SecurityContext sc, RestMethod rest) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U hasRole = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
+        DwoAdminState_HR_P_R_S_SG_U state = hasRole.buildDwoAdmin().addDwoProfile(rest.getDomDwoProfile());
+        PersistentSchool school = hasRole.getSchool();
+        PersistentDwoProfile profile = state.getDwoProfile();
+ // cannot change profileid, should be 0, add profile instead       
+    	PersistentMethod p = MethodManager.toValue(rest.getDomMethod(), school, profile);
+    	PersistentMethod old = MethodManager.findEntity(p.getMethodID());
+    	p.setDwoProfileID(old.getDwoProfileID());
+    	p = MethodManager.edit(p);
+    	if (old.getDwoProfileID().longValue() != profile.getDwoProfileID().longValue() && MethodManager.NUL.equals(p.getSchoolID()) ) {
+    		MethodManager.addProfile(p, profile);
+    		p.setDwoProfileID(profile.getDwoProfileID()); // fake 
+    	}
+    	return MethodManager.toDom(p);
     }
 
 }
