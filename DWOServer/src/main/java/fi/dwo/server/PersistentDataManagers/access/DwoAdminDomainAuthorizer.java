@@ -97,6 +97,7 @@ public class DwoAdminDomainAuthorizer {
 	boolean removeProfile(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
 	boolean addProfile(DomMethod domMethod) throws Dwo2Exception;
 	boolean removeProfile(DomMethod domMethod) throws Dwo2Exception;
+	PersistentDwoProfile getDwoProfile();
   }
   
   

@@ -5,7 +5,6 @@ import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoA
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_C_S;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_P_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
-import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.MethodManager;
@@ -355,6 +354,11 @@ public boolean removeProfile(DomMethod domMethod) throws Dwo2Exception {
 	PersistentMethod context = MethodManager.findEntity(id);
 	MethodManager.removeProfile(context, profile);
 	return true;
+}
+
+@Override
+public PersistentDwoProfile getDwoProfile() {
+	return instance.getContext().getAdminCtx().profile;
 }
 
 }

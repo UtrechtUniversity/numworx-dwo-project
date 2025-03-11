@@ -117,7 +117,7 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
     
     
     private DomStudentModelContext updateModel(DomStudentModelContext modelContext) throws Dwo2Exception {
-      current = manager.updateModel(modelContext);
+      current = manager.updateModel(modelContext, DWO.getDwoProfile());
       structure = StoredRestManager.getInstance().getGenson().serialize(current.getModelStructure());
       remoteMethod = current.getModelStructure().getActiveMethod();
       standard = current.getPublishState() == PublishState.overt;
@@ -139,9 +139,9 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
       //if (standard)
       //{
         DomSchoolMethod dsm = current == null ? null : manager.getActiveMethod(current);
-        if (dsm != null) {
+        if (dsm != null) { // null als dwoadmin
 	        dsm.setActiveMethod(model.getActiveMethod());
-	        SecureTeacherStudentModelManager.updateActiveMethod(dsm);
+	        SecureTeacherStudentModelManager.updateActiveMethod(dsm); // FIXME Teacher only!
 	        if (standard) {
 	        	current.setModelStructure(model);
 	        	return model;
@@ -183,7 +183,7 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
       domPatch.setPatch(patch);
       domPatch.setDigest(digest);
       try {
-        DomStudentModelContext result = manager.patchModel(domPatch);
+        DomStudentModelContext result = manager.patchModel(domPatch, DWO.getDwoProfile());
         context.setLastChangeTimeStamp(result.getLastChangeTimeStamp());
         context.setOptLock(result.getOptLock());
         return context;
@@ -205,7 +205,7 @@ public class TeacherStudentModelPanelProperties implements Comparator<DomStudent
        //if (standard)
        {
          DomSchoolMethod dsm = manager.getActiveMethod(modelContext);
-         current.getModelStructure().setActiveMethod(dsm.getActiveMethod());
+         if (dsm != null) current.getModelStructure().setActiveMethod(dsm.getActiveMethod());
        }
        return current;
     }

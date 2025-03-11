@@ -335,6 +335,7 @@ public class TeacherDomainAuthorizer {
 		DomStudentModelScorePerTeacher getScores(DomStudentModelScorePerTeacher domStudentModelScorePerTeacher, UriInfo info) throws Dwo2Exception;
 
         DomLRS getLRS(UriInfo info);
+        @Deprecated
 		DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domPatch) throws Dwo2Exception;
 		List<DomStudentModelContext> getMergedStudentModels() throws Dwo2Exception;
 //		List<DomStudentModelContext> getReducedStudentModels() throws Dwo2Exception;
@@ -351,6 +352,8 @@ public class TeacherDomainAuthorizer {
 		List<DomMethod> getMethods() throws Dwo2Exception;
 		DomMethod addMethod(DomMethod domMethod);
 		PersistentDwoProfile getDwoProfile();
+		DomStudentModelContext patchStudentModel(DomStudentModelContextPatch domPatch) throws Dwo2Exception;
+		DomStudentModelContext updateStudentModel(DomStudentModelContext domStudentModelContext) throws Dwo2Exception;
 
     }
 
