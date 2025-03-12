@@ -116,10 +116,7 @@ public class OAuth2Client implements EntryPoint {
 			if (Objects.equals(state, org)) {
 				storage.setItem("code", code);
 			}
-			UrlBuilder builder = Window.Location.createUrlBuilder();
-			builder.removeParameter("code");
-			builder.removeParameter("state");
-			Window.Location.assign(builder.buildString());
+			Window.Location.assign(storage.getItem("redirect_url"));
 			return;
 		}
 // no code parameter,
@@ -153,10 +150,22 @@ public class OAuth2Client implements EntryPoint {
 			storage.setItem("endpoint", getEndpoint0());
 			
 			Map<String, List<String>> map = Window.Location.getParameterMap();
-			for(String key: map.keySet()) builder.removeParameter(key); // keyset is a copy
+			for(String key: map.keySet()) {
+				if ( // keep these parameters.
+						"with".equals(key) || "hash".equals(key)
+					)
+					continue;
+				
+				builder.removeParameter(key); // keyset is a copy
+			}
 			builder.setHash(null);
 			String returnUrl = builder.buildString();
-	        storage.setItem("redirect_uri", returnUrl);
+	        storage.setItem("redirect_url", returnUrl);
+			for(String key: map.keySet()) {
+				builder.removeParameter(key); // keyset is a copy
+			}
+			String returnUrl2 = builder.buildString(); // no parameters in redirect uri
+	        storage.setItem("redirect_uri", returnUrl2);
 	
 			Consumer<JavaScriptObject> consumer = new Consumer<JavaScriptObject>() {
 
@@ -167,7 +176,7 @@ public class OAuth2Client implements EntryPoint {
 					UrlBuilder token = Window.Location.createUrlBuilder();
 					token.setPath(getToken());
 					token.setParameter("response_type", "code");
-					token.setParameter("redirect_uri", returnUrl);
+					token.setParameter("redirect_uri", returnUrl2);
 					token.setParameter("code_challenge", challenge);
 					token.setParameter("code_challence_method", "S256");
 					token.setParameter("state", state);
