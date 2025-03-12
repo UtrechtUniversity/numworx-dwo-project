@@ -36,7 +36,7 @@
        	<module>../DWOServer</module> 
      	<module>../DWOplayer</module>
 <!--	    <module>../edexml</module>-->
-        <module>../KeyboardGWT</module> 
+<!--        <module>../KeyboardGWT</module> -->
      	<module>../UploadWidget</module>
 <!--      	<module>../WriteMathGWT</module> -->
 <!--		<module>../osiris-import</module>-->

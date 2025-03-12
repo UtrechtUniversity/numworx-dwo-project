@@ -181,6 +181,9 @@ static final String AUTHORIZATION_CODE = "authorization_code";
                 if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
                     return buildTokenResponse(u, l);
              }
+                // return "invalid_grant"
+        		ErrorResponse error = new ErrorResponse("invalid_grant");
+                return Response.status(Status.BAD_REQUEST).entity(error).build();
             }
           }
             break;
