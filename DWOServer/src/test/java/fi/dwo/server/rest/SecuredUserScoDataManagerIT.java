@@ -210,7 +210,7 @@ public class SecuredUserScoDataManagerIT {
         DomScoContext sco = scoContext.buildDomScoContext();
         DomMapEntry<String,String> entry = new DomMapEntry<>();
         entry.setKey(key);
-        entry.setValue("{\"a\": 12345}");
+        entry.setValue("{\"a\": 12345, \"onsState\": {} }");
         values.setValues(Collections.singletonList(entry));
         values.setScoContext(sco);      
         Response response = manager.setValues(sc, rest,null);
