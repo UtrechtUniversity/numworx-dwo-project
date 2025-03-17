@@ -285,6 +285,9 @@ public class SecuredTeacherStudentModelManagerIT {
       model.setRestContext(context);
       DomStudentModelContext dom = StudentModelContextManager.findEntity(1L).buildDomStudentModelContext();
       model.setDomStudentModelContext(dom);
+	  model.setDomDwoProfile(new DomDwoProfile());
+	  model.getDomDwoProfile().setId(PersistentDwoProfile.buildPersistenceId(1L));
+
       dom.getModelStructure().getInfo().getTitle().put("jp", "?????");
       DomStudentModelContext result = instance.updateStudentModel(sc, model);
       jsonAssert(model,result);

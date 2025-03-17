@@ -125,7 +125,7 @@ public class SecuredDwoAdminSchoolDataManagerIT {
         DomSchoolFull dSchoolResult = expResult.buildDomSchoolFull();
         restSchool.setDomSchool(dSchoolResult);
         DomSchoolDataFull data = instance.get(sc, restSchool);
-        assertEquals("{}", data.getSchoolData()); 
+        assertEquals("{ }", data.getSchoolData()); // formatted 
     }
 
 
