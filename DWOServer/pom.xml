@@ -217,7 +217,12 @@
 	   			<artifactId>schoolyear-jclient-lib</artifactId>
 	   			<version>2.5.32</version>
 	   		</dependency>
-    </dependencies>
+			<dependency>
+			  <groupId>dev.samstevens.totp</groupId>
+			  <artifactId>totp</artifactId>
+			  <version>1.7.1</version>
+			</dependency>
+    	</dependencies>
     
 <!--    <distributionManagement>
         <repository>
