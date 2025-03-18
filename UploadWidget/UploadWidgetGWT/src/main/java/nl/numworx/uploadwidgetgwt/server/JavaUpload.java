@@ -177,10 +177,11 @@ public class JavaUpload extends HttpServlet implements Constants {
 		context.setRealm(null);
 		context.setDomHasRole(new DomHasRole());
 		rest.getAuthenticator().setContext(context);
-		if (bearer != null && bearer.startsWith("Bearer"))
+// type is ignore case,
+		if (bearer != null && bearer.toLowerCase().startsWith("bearer"))
 		{
 			rest.setBearerAuthString(bearer.substring(6));
-		} else if (bearer != null && bearer.startsWith("Basic")) {
+		} else if (bearer != null && bearer.toLowerCase().startsWith("basic")) {
 			bearer = new String(Base64.getDecoder().decode(bearer.substring(6)));
 			String[] split = bearer.split(":", 2);
 			rest.setBasicAuthString(split[0], split[1], null);
