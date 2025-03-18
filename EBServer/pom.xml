@@ -517,7 +517,7 @@
   							<ALLOW_ORIGIN>http://localhost:${http.port}</ALLOW_ORIGIN>
  							<UU_INDEX />
  							<ENV_NOSEB>true</ENV_NOSEB>
- 							<ENV_IPRANGE>127.0.0.1</ENV_IPRANGE>
+ 							<ENV_IPRANGE>127.0.0.1,::1</ENV_IPRANGE>
                     		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>
                     		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>               
                         </systemProperties>
@@ -820,13 +820,13 @@
 		<RegisterVersion>2.5.2</RegisterVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
-		<aws.environmentName>testeb6server</aws.environmentName>
+		<aws.environmentName>testip6server</aws.environmentName>
         <tomcat7.version>7.0.76</tomcat7.version>
         <context.xml>context.xml</context.xml>
         <http.port>80</http.port>
         <upload.servlet />
         <upload.servlet.mapping />
-        <OAuth2ClientVersion>1.0.15</OAuth2ClientVersion>
+        <OAuth2ClientVersion>1.0.16-SNAPSHOT</OAuth2ClientVersion>
 	</properties>
 	<profiles>
 		<profile>

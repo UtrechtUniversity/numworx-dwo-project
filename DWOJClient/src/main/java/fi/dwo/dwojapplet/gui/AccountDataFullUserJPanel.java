@@ -55,6 +55,9 @@ public class AccountDataFullUserJPanel extends JPanel implements
     private JButton resetButton;
 
     protected JButton deleteButton;
+    
+    protected JButton mfaButton;
+    
 //    protected User user;
     private AccountDataProperties prop = new AccountDataProperties();
 
@@ -313,10 +316,19 @@ public class AccountDataFullUserJPanel extends JPanel implements
                 + p.getSize().height + 10);
         deleteButton.setVisible(!prop.getUser().getSingleSchool());
         this.add(deleteButton);
+        
+        mfaButton = new JButton("two-factor");
+        mfaButton.setSize(mfaButton.getPreferredSize());
+        mfaButton.setLocation(getWidth()/2 - mfaButton.getWidth()/2, 
+        			p.getY() + p.getHeight() + 40);
+        this.add(mfaButton);
+        
+        
         changeButton.addActionListener(this);
         resetButton.addActionListener(this);
         // delete mag if user is geen single school student
         deleteButton.addActionListener(this);
+        mfaButton.addActionListener(this);
     }
 
     /**

@@ -48,10 +48,10 @@ public class PersistentUrnResource {
 	@Column(name = "extUUID")
 	private String extUUID;
 
-	@Column(name = "mime-type")
+	@Column(name = "mimetype")
 	private String mimeType;
 
-	@Column(name = "checksum")
+	@Column(name = "chksum")
 	private String checksum;
 
 	@Column(name = "refCount")

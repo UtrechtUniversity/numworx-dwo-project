@@ -18,11 +18,11 @@
 %>
 <%
 CookieWrap wrap = new CookieWrap(response);
-if ("shibboleth".equals(request.getAuthType())) {
-  String schoolid = System.getProperty("ENV_ORGID", "385");
-  String organization = getDbAccess().getOrganization(schoolid);
-  if ( getDbAccess().setUUSAMLCookie(request, wrap, schoolid, organization))
-    return;
+// if ("shibboleth".equals(request.getAuthType())) {
+//   String schoolid = System.getProperty("ENV_ORGID", "385");
+//   String organization = getDbAccess().getOrganization(schoolid);
+//   if ( getDbAccess().setUUSAMLCookie(request, wrap, schoolid, organization))
+//     return;
   
-}
+// }
 %>   
