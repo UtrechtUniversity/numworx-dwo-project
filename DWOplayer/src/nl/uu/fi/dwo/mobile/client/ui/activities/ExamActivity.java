@@ -25,7 +25,6 @@ public class ExamActivity extends AbstractActivity {
   @Inject ClientFactory clientFactory;
   @Inject PlaceController placeController;
   @Inject RPCHandler rpc;
-  //@Inject LastExamActivity lastExam;
   
   boolean legal(String base) {
     RegExp r = RegExp.compile("^/[a-z]+(/[a-z]+)*/$");
@@ -51,7 +50,6 @@ public class ExamActivity extends AbstractActivity {
 
 		@Override
 		public void run() {
-			//lastExam.clearPlace();
 		    gotoExam(exampromise.getValue());			
 		} };
 	t.schedule(100);

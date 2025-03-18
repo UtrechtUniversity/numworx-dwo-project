@@ -70,7 +70,6 @@ public class TabletActivityMapper implements ActivityMapper
 	@Inject MembersInjector<TreeModuleActivity> trInjector;
 	@Inject MembersInjector<ReloginActivity> rlInjector;
 	@Inject DwoGlobalVars vars;
-
 	
 	@Override
 	public Activity getActivity(Place place)
@@ -78,7 +77,7 @@ public class TabletActivityMapper implements ActivityMapper
 		if (ViewCourseActivity.bookmark != null) {
 			place = ViewCourseActivity.bookmark;
 			ViewCourseActivity.bookmark = null;
-			Window.alert("BOOKMARK" + place);
+			//Window.alert("BOOKMARK" + place);
 			lastExam.get().replacePlace(place);
 		}
 // simple case 

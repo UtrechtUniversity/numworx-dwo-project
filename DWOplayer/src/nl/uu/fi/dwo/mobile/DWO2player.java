@@ -228,8 +228,7 @@ public void setupDWOPlayer() {
 	@Inject void setKiosk(DWOplayerParameters p) {
 		kiosk = p.inKiosk();
 	}
-	
-	
+
 	private boolean legal(String alt) {
 		return !alt.startsWith("Exam");
 	}
@@ -239,8 +238,7 @@ public void setupDWOPlayer() {
 		if (kiosk) {
 			String token = History.getToken();
 			String alt = lastexam.get().getPlace();
-//
-			Window.alert("START [" + token + "] [" + alt + "]"); // doe iets met schoolyear hier.
+//			Window.alert("START [" + token + "] [" + alt + "]"); // doe iets met schoolyear hier.
 			if (alt != null && 
 				!alt.isEmpty() && legal(alt)) 
 					token = alt;
