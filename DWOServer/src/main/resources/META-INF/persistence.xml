@@ -37,6 +37,7 @@
     <class>fi.dwo.commons.persistence.entities.PersistentMethod</class>
     <class>fi.dwo.commons.persistence.entities.PersistentSchoolMethod</class>
     <class>fi.dwo.commons.persistence.entities.PersistentScoPage</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentMFA</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
