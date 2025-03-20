@@ -17,7 +17,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.place.shared.PlaceHistoryHandler.Historian;
 import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.place.shared.PlaceChangeRequestEvent;
@@ -384,7 +383,6 @@ public class LastExamActivity implements Activity, ValueChangeHandler<String>, P
 		Place p = controller.getWhere();
 		String map = defaultPlace.equals(p) ? null : mapper.getToken(p);
 		setItem(State.PLACE, map);
-		Window.alert("Closing " + map);
 	}
 	
 	public void replacePlace(Place p) {

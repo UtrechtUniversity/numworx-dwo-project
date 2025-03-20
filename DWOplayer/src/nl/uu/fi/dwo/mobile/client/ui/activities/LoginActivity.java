@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.osgi.util.function.Function;
 import org.osgi.util.function.Predicate;
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
@@ -16,6 +17,7 @@ import org.osgi.util.promise.Success;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.Actions;
 import nl.uu.fi.dwo.mobile.client.ui.ClientFactory;
 import nl.uu.fi.dwo.mobile.client.ui.PageTracker;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
@@ -141,6 +143,26 @@ public class LoginActivity extends AbstractActivity
 		}		
 	};
 
+    public static native void topReload() /*-{
+	    $wnd.top.location.reload(false);
+	}-*/;
+
+     static class SAMLFailure<T> implements Function<Promise<?>,Promise<? extends T>> {
+
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@Override
+		public Promise<T> apply(Promise<?> t) {
+			if (Actions.isAvailable()) {
+				// send reload message
+				return (Promise<T>) t;			
+			}
+			topReload();
+			return new Deferred().getPromise(); // never resolved.
+		}
+    	
+    }
+	
+	
 	private Promise<DomDwoProfileFull> dwoProfile;
 
 	private final Success<DomUserFullwLoginContext, DomSchoolsRolesAndClassesV2> LOGIN_STAP1;
@@ -271,7 +293,7 @@ public class LoginActivity extends AbstractActivity
 					if (authToken != null && !authToken.isEmpty())
 					{	
 						vars.setAutoLogin(true);
-						promise = rpc.getUserFromAuthToken(authToken);
+						promise = rpc.getUserFromAuthToken(authToken).recoverWith(new SAMLFailure<DomUserFullwLoginContext>());
 					}
 					else {
 						tracker.logoff();
