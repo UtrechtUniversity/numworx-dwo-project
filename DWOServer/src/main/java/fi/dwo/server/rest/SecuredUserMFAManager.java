@@ -39,20 +39,22 @@ import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.MFAManager;
 import fi.dwo.server.rest.util.Origin;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.mfa.MFA;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 @PermitAll
 @Path("/secure/user/mfa")
 public class SecuredUserMFAManager {
-	public static final String MFA_RIGHT = "2";
 	
-	static public class MFA {
-		public String issuer;
-		public String secret = "BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV";
-		public List<String>recovery = Arrays.asList("tf8i-exmo-3lcb-slkm", "boyv-yq75-z99k-r308", "w045-mq6w-mg1i-q12o");
-		public String qr;
-	}
+//	static public class MFA {
+//		public String issuer;
+//		public String secret = "BP26TDZUZ5SVPZJRIHCAUVREO5EWMHHV";
+//		public List<String>recovery = Arrays.asList("tf8i-exmo-3lcb-slkm", "boyv-yq75-z99k-r308", "w045-mq6w-mg1i-q12o");
+//		public String qr;
+//	}
+
+	private static final CharSequence MFA_RIGHT = MFA.MFA_RIGHT;
 
 	@PUT
 	@Produces({"application/json"})
@@ -63,15 +65,15 @@ public class SecuredUserMFAManager {
 		PersistentUser u = hrstate.getUser();
 		PersistentHasRole hr = hrstate.getHasRole();
 		String right = hr.getRights();
-		if (right.contains(MFA_RIGHT)) return null; // No option
+		//if (right.contains(MFA_RIGHT)) return null; // No option, even niet voor testen!!!
 		if (hrstate.getRoleType() == RoleType.STUDENT) return null; // Error
 		PersistentMFA pmfa = MFAManager.findEntity(u.getId());
 	    MFA mfa = new MFA();
+	    RecoveryCodeGenerator recoveryCodes = new RecoveryCodeGenerator();
 		if (pmfa == null) {
 		    pmfa = new PersistentMFA();
 		    SecretGenerator secretGenerator = new DefaultSecretGenerator();
 		    mfa.secret = secretGenerator.generate();
-		    RecoveryCodeGenerator recoveryCodes = new RecoveryCodeGenerator();
 		    mfa.recovery = Arrays.asList(recoveryCodes.generateCodes(5));
 		    pmfa.setSecret(mfa.secret);
 		    pmfa.setRecovery(mfa.recovery);
@@ -80,8 +82,14 @@ public class SecuredUserMFAManager {
 		} else {
 			mfa.secret = pmfa.getSecret();
 			mfa.recovery = pmfa.getRecovery();			
+			if (mfa.recovery.size() != 5) {
+				mfa.recovery.addAll(Arrays.asList(recoveryCodes.generateCodes(5-mfa.recovery.size())));
+				pmfa.setRecovery(mfa.recovery);
+				pmfa = MFAManager.edit(pmfa);
+			}
 		}
-		hr.setRights(right + MFA_RIGHT);
+		if (!right.contains(MFA_RIGHT)) // No option, even niet voor testen!!!
+			hr.setRights(MFA_RIGHT + right); // alle profielen!
 		HasRoleManager.editRights(hr);
 		mfa.issuer = u.getUsername();
 	    Response r = qrcode(req, mfa);
@@ -92,11 +100,17 @@ public class SecuredUserMFAManager {
 	@GET
     @Produces({"application/json"})
     @Path("/verify") 
-    public boolean verify(@Context SecurityContext sc, @QueryParam("mfa") String code) {
+    public boolean verify(@Context SecurityContext sc, @QueryParam("mfa") String code) throws Dwo2Exception {
     	if (code == null) return false;
-    	MFA data = new MFA(); // fake....
-    	if (data.recovery.contains(code)) {
-    		data.recovery.remove(code);
+		UserState_U state = AnonDomainAuthorizer.build().submitUser(sc);	
+		PersistentUser u = state.getUser();
+		PersistentMFA data = MFAManager.findEntity(u.getId());
+		if (data == null) return false;
+		List<String> recovery = data.getRecovery();
+    	if (recovery.contains(code)) {
+    		recovery.remove(code);
+    		data.setRecovery(recovery);
+    		MFAManager.edit(data);
     		return true;
     	}
     	TimeProvider timeProvider = new SystemTimeProvider();
@@ -105,7 +119,7 @@ public class SecuredUserMFAManager {
 
     	// secret = the shared secret for the user
     	// code = the code submitted by the user
-    	boolean successful = verifier.isValidCode(data.secret, code);  	
+    	boolean successful = verifier.isValidCode(data.getSecret(), code);  	
     	return successful;
     }
     
@@ -134,4 +148,19 @@ public class SecuredUserMFAManager {
     			.build();
 	}
 
+	@PUT
+	@Produces({"application/json"})
+	@Path("disable") 
+	public Boolean disable(@Context SecurityContext sc, RestContext rest, @Context HttpServletRequest req) throws QrGenerationException, Dwo2Exception {
+		UserState_U state = AnonDomainAuthorizer.build().submitUser(sc);	
+		UserState_HR_R_S_SG_U hrstate = state.setHasRole(rest.getRestContext().getDomHasRole());
+		PersistentUser u = hrstate.getUser();
+		PersistentHasRole hr = hrstate.getHasRole();
+		String right = hr.getRights();
+		if (!right.contains(MFA_RIGHT)) return Boolean.FALSE;
+		right = right.replace(MFA_RIGHT, ""); // geen cijfers!
+		hr.setRights(right);
+		HasRoleManager.editRights(hr);
+		return Boolean.TRUE;
+	}
 }

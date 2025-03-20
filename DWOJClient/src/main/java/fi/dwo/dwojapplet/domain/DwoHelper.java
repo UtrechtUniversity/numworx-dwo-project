@@ -16,8 +16,10 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.mfa.MFA;
 import fi.dwo.commons.system.TextMapper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserMFAManager;
 import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.MainPanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
@@ -196,7 +198,7 @@ public final class DwoHelper {
                 context.setDomHasRole(role);
                 StoredRestManager.getInstance().getAuthenticator().setContext(context);
                
-                DomSchoolsRolesAndClassesV2 srcs = SecureUserAccountLoginsManager.getSchoolLogins();//update DwoHelper
+                DomSchoolsRolesAndClassesV2 srcs = SecureUserAccountLoginsManager.getSchoolLogins();//update DwoHelper                
                 DwoHelper.setSchoolLogins(srcs);
 //                nullSchool = SecureUserAccountManager.getNullSchool();
 // XXX Gert, review: hier okay?                
@@ -559,6 +561,7 @@ public final class DwoHelper {
      */
     public static void setCurrentUser(DomUserFull aCurrentUser, DomLoginContext aCurrentLoginContext) throws Dwo2Exception {
         userInit(aCurrentUser,aCurrentLoginContext);
+        aCurrentUser = DwoHelper.currentUser;
         if (aCurrentUser != null) {
             GuiCreator.instance().clearCurrentUserData( MySQLPersistenceId.getNativeId(aCurrentUser).intValue());
 			currentFacadeUser = buildFacadeUser(aCurrentUser, getSchoolLogins(), aCurrentLoginContext);
