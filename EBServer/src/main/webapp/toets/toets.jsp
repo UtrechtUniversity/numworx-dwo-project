@@ -63,7 +63,7 @@
         dwo_env = "<%=dwo_env%>"
         defaultPlace = "<%= defaultPlace %>"
     	function logout() {
-    		window.location = "https://<%=server%>/toets/logout.html"
+    		window.location = "/toets/logout.html"
     	}
     </script>
     <title>Safe Exam Browser</title>
