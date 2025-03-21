@@ -21,11 +21,12 @@ public class JXBChecker {
     this.applet = applet;
   }
 
-  public void check() {
+  public boolean check() {
     
     if (true) {
       try {
         Class.forName(CLASS);
+        return false;
         
 //        String version = com.teamdev.jxbrowser.VersionInfo.version();
 //        if ("7.2".equals(version)) throw new IllegalArgumentException();
@@ -34,6 +35,7 @@ public class JXBChecker {
         JOptionPane.showMessageDialog(applet, message);
       }
     }
+    return true; // failure
   }
 
 }

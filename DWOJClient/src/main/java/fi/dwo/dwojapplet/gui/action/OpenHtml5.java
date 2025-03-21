@@ -13,17 +13,19 @@ public class OpenHtml5 extends GuiAction {
     Sco sco;
 
     public OpenHtml5() {
-        super("Open as HTML");
+        this("Open as HTML");
+        
     }
 
     public OpenHtml5(String text) {
         super(text);
+        setEnabled(!DwoHelper.noJXB);
     }
 
     public OpenHtml5(Sco sco) {
         this();
         this.sco = sco;
-        setEnabled(sco.hasFeature(Sco.JSON_OUT) && DwoHelper.hasProfileRight(DwoHelper.PREVIEW));
+        setEnabled(sco.hasFeature(Sco.JSON_OUT) && DwoHelper.hasProfileRight(DwoHelper.PREVIEW) && !DwoHelper.noJXB);
     }
 
     public OpenHtml5(CourseMap map) {

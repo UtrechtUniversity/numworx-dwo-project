@@ -103,6 +103,7 @@ public final class DwoHelper {
     private static boolean test=false;
     
     private static DomSchool nullSchool;
+    public  static boolean noJXB;
 
     /**
      * Properties set on DwoHelper.init()

@@ -27,13 +27,13 @@ public class PreviewHtml5 extends GuiAction {
         this();
         this.panel = panel;
         this.sco = sco;
-        setEnabled(sco.hasFeature(Sco.JSON_OUT) && DwoHelper.hasProfileRight(DwoHelper.PREVIEW));
+        setEnabled(sco.hasFeature(Sco.JSON_OUT) && DwoHelper.hasProfileRight(DwoHelper.PREVIEW) );
     }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final CenterPanel center = instance().getMainPanel().getCenter();
-		final WrapSco wrap = new WrapSco(sco);
+		final Sco wrap = DwoHelper.noJXB ? sco : new WrapSco(sco);
     	Hashtable tmp = panel.getLaunchdata();
     	String location = (String) tmp.remove(Sco.LESSON_LOCATION);
     	if(location != null)
