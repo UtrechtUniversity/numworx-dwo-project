@@ -56,7 +56,9 @@ public class StudentViewHandler implements SwitchViewEventHandler {
     case STUDENTRESULTS:
     case KNOWLEDGE:
     	if (dwoGlobalVars.isPremium()) {
-    		controller.RETOUR_STUDENT_KNOWLEDGE.run();
+        	mainView.selectView(SelectedView.KNOWLEDGE);
+        	mainView.showStudentResults();
+    		//controller.RETOUR_STUDENT_KNOWLEDGE.run();
     		controller.setRetourHandler(controller.RETOUR_STUDENT_KNOWLEDGE);
     		presenterFactory.getResultsPresenter().init(switchViewEvent.getResultState());
     		break;
