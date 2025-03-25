@@ -165,7 +165,16 @@ public class OAuth2Client implements EntryPoint {
 					Uint8Array bytes = Uint8ArrayNative.create(t);
 					String challenge = btoa(OAuth2Client.toString(bytes));
 					UrlBuilder token = Window.Location.createUrlBuilder();
-					token.setPath(getToken());
+					String tok = getToken();
+					String[] split = tok.split("://", 2);
+					if (split.length == 2) {
+						token.setProtocol(split[0]);
+						token.setPort(UrlBuilder.PORT_UNSPECIFIED);
+						split = split[1].split("/", 2);
+						token.setHost(split[0]);
+						tok = split[1];
+					}
+					token.setPath(tok);
 					token.setParameter("response_type", "code");
 					token.setParameter("redirect_uri", returnUrl);
 					token.setParameter("code_challenge", challenge);
