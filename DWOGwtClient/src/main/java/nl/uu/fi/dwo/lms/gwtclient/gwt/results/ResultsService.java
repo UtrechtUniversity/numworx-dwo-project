@@ -217,6 +217,7 @@ public class ResultsService implements SwitchViewEventHandler {
     private DomContext getContext() {
         DomContext context = new DomContext();
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
+        context.setRealm(dwoGlobalVars.getCurrentLoginContext().getRealm());
         return context;
     }
 
