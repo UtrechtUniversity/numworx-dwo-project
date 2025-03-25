@@ -71,13 +71,14 @@
 <% if (!name.isEmpty()) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/<%=name %>.css" ><%}%>    
     <meta name="gwt:property" content="locale=nl" >
     <script>
-    	DWO_PROFILE_ID = 114
+    	DWO_PROFILE_ID = 115
     	formfactor = "<%=formfactor%>"
     	SECURE_MODE="SEB" // possibly others
         dwo_env = "<%=dwo_env%>"
         defaultPlace = "<%= defaultPlace %>"
-    	function logout() {
-    		window.location = "/react/exam/logout.html"
+        RESPONSIVE=true
+        function logout() {
+    		window.location = "/cti/exam/logout.html"
     	}
     </script>
     <title>Safe Exam Browser</title>
@@ -89,7 +90,7 @@
     <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
-  	<a href='/react/exam/logout.html' >Logout</a>
+  	<a href='/cti/exam/logout.html' >Logout</a>
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     

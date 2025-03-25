@@ -4,12 +4,18 @@
 <% 
 	int profile = 115;
 	String locale = "nl";
-	String base = "/react/";
+	String base = "/cti/";
+	String server = request.getHeader("host");
+	String scheme = request.getScheme();
+	server = scheme + "://" + server;
 %>
 <%@ include file="/dwo/index_util.jsp" %>
+<%
+	query += "&responsive=true"; // append responsive parameter.
+%>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width">
         <title>Co-Teach Informatica (CTI)</title>
     	<link type="text/css" rel="stylesheet" href="/dwo/oauth2client/OAuth2Client.css">
