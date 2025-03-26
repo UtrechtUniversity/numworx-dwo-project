@@ -43,7 +43,7 @@ public class DatabaseManager {
 
     private void init(String source) {
         try {
-            con = DriverManager.getConnection(source);
+            con = DriverManager.getConnection(source, "test", "test");
         }
         catch (SQLException e) {
             System.err.println("Unable to connect to server: " + e);

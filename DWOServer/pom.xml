@@ -44,6 +44,8 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <context.xml>context.xml</context.xml>
         <tomcat7.version>7.0.108</tomcat7.version>
+        <jdbc.driver>software.amazon.jdbc.Driver</jdbc.driver>
+        <jdbc.url>jdbc:aws-wrapper:mysql://127.0.0.1:3306/dwojunittest?useSSL=false</jdbc.url>
     </properties>
   
     <!-- dependencies -->
@@ -144,6 +146,12 @@
   		  <scope>runtime</scope>
   		  <optional>true</optional>
         </dependency>
+		<dependency>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		    <version>42.7.5</version>
+		    <scope>test</scope>
+		</dependency>
 		 <dependency> 
 		  <groupId>org.slf4j</groupId>
 		  <artifactId>slf4j-jdk14</artifactId>
@@ -233,6 +241,12 @@
     </distributionManagement>    -->
     
     <build>
+	  <testResources>
+		<testResource>
+			<directory>src/test/resources</directory>
+			<filtering>true</filtering>
+		</testResource>
+	  </testResources>
         <plugins>
              <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -608,6 +622,13 @@
     </reporting>
     <!-- profile for running junittests -->
     <profiles>
+		<profile>
+			<id>postgres</id>
+			<properties>
+				<jdbc.driver>org.postgresql.Driver</jdbc.driver>
+				<jdbc.url>jdbc:postgresql://localhost:5432/dwojunittest</jdbc.url>				
+			</properties>
+		</profile>
         <profile>
             <id>nojunittests</id>
             <activation>
