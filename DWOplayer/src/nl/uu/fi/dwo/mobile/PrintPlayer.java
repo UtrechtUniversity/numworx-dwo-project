@@ -5,17 +5,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
-
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
-import org.osgi.util.promise.Success;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -26,33 +21,22 @@ import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 //import com.googlecode.mgwt.ui.client.MGWT;
 //import com.googlecode.mgwt.ui.client.MGWTSettings;
 //import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
-import nl.uu.fi.dwo.interaction.client.event.CBookEvent;
-import nl.uu.fi.dwo.interaction.client.event.CBookEventListener;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.dagger.DaggerPrintPlayerComponent;
 import nl.uu.fi.dwo.mobile.client.dagger.PrintPlayerComponent;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
-import nl.uu.fi.dwo.mobile.client.sco.MementoModule;
-import nl.uu.fi.dwo.mobile.client.sco.SMLogger;
-import nl.uu.fi.dwo.mobile.client.sco.SMLogger.LoggingModule;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
-import nl.uu.fi.dwo.mobile.client.sco.WiskOpdrMemento;
-import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
-import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderPrint;
 import nl.uu.fi.dwo.mobile.client.ui.views.PrintSeparator;
-import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleView;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
-import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
 
 
 /**
@@ -108,18 +92,6 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 	    String  build = "Version " + BUILD.version + "." + BUILD.buildNumber;
 	    logger.severe(build);
 		
-//		VerticalPanel customLogArea = null;
-//		if( LogConfiguration.loggingIsEnabled())	
-//		{
-//			customLogArea = new VerticalPanel();
-//			Logger.getLogger("").addHandler(new HasWidgetsLogHandler(customLogArea));
-//			logger.info("start logging");
-//		}
-//		if( LogConfiguration.loggingIsEnabled())	
-//		{
-//			RootPanel.get().add(customLogArea);
-//		}
-
 		Promise<String> inject = inject();
 		Promise<Void> v = inject.then(p -> {
 

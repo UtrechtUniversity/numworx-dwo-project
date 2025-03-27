@@ -44,8 +44,8 @@
     <properties>
       <property name="eclipselink.cache.shared.default" value="false"/>
       <property name="eclipselink.allow-zero-id" value="true"/>
-      <property name="javax.persistence.jdbc.driver" value="software.amazon.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:aws-wrapper:mysql://127.0.0.1:3306/dwojunittest?useSSL=false"/>
+      <property name="javax.persistence.jdbc.driver" value="${jdbc.driver}"/>
+      <property name="javax.persistence.jdbc.url" value="${jdbc.url}"/>
       <property name="javax.persistence.jdbc.user" value="test"/>
       <property name="javax.persistence.jdbc.password" value="test"/>
 <!--      <property name="eclipselink.weaving" value="static"/>

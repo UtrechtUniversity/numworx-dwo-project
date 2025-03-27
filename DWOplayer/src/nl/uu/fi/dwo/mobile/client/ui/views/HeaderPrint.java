@@ -3,6 +3,8 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -32,7 +34,9 @@ public class HeaderPrint extends Composite {
 		double score = memento.getScore();
 		String duration = memento.getValue(Memento.TOTAL_TIME);
 		Date now = new Date();
-		description.setText("Score: " + score + " in " + duration + ". " + now);
+		DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_LONG);
+		String nowstr = formatter.format(now);
+		description.setText("Score: " + score + " in " + duration + ". " + nowstr);
 		String sconame = memento.getValue("dme.sco_name");
 		String team  = memento.getValue("dme.team");
 		activity.setText("\"" + sconame  + "\" in " + team);
