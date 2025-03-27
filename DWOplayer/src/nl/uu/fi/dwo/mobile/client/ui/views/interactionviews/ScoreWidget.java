@@ -129,7 +129,19 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		}
 		
 	}
-	
+
+	private final static String PASSED = "action.passed";
+    private final static String FAILED = "action.failed";
+    
+    private void fire(boolean mastered) {   	
+    	CBookEvent event = new CBookEvent(mastered ? PASSED : FAILED);
+		comRoot.fireEvent(event);
+    }
+    private void fire(String mastery) {
+    	if ("passed".equals(mastery)) fire(true);
+    	else if ("failed".equals(mastery)) fire(false);
+    }
+
 	private HashMap<String, Object> launchState; 
 	
 	int breedte = 40;
@@ -605,6 +617,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			removeStyleDependentName("goedFout-passed");
 			removeStyleDependentName("goedFout-failed");
 			addStyleDependentName("goedFout-" + value);
+			fire(value);
 		}
 	}
 	
@@ -620,6 +633,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		boolean passed = score.intValue() >= cesuur;
 		setStyleDependentName("goedFout-passed", passed);
 		setStyleDependentName("goedFout-failed", !passed);
+		fire(passed);
 	}
 	
 	

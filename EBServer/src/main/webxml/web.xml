@@ -176,6 +176,15 @@
   	<url-pattern>/dwo/snoop</url-pattern>
   </filter-mapping>
 
+	<filter>
+		<filter-name>rangeFilter</filter-name>
+		<filter-class>fi.dwo.server.db.RangeFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>rangeFilter</filter-name>
+		<servlet-name>DWOproperties</servlet-name>
+	</filter-mapping>
+
     
     <!-- Servlets -->
   <servlet>
@@ -232,11 +241,6 @@
             <param-name>SERVLET</param-name>
             <param-value>xmlrpc</param-value>
         </init-param>
-    </servlet>
-    <servlet>
-        <description>Download servlet</description>
-        <servlet-name>download</servlet-name>
-        <servlet-class>fi.dwo.server.persistence.DownloadServlet</servlet-class>
     </servlet>
     <servlet>
     	<servlet-name>redirect-download</servlet-name>
@@ -537,10 +541,6 @@ ${upload.servlet.mapping}
     <servlet-mapping>
     	<servlet-name>DWOproperties</servlet-name>
     	<url-pattern>/dwo/DWO.properties</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>download</servlet-name>
-        <url-pattern>*.jar</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
     	<servlet-name>redirect-download</servlet-name>

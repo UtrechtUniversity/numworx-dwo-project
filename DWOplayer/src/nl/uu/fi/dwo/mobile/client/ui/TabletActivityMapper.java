@@ -34,6 +34,8 @@ import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 
 import dagger.Lazy;
 import dagger.MembersInjector;
@@ -72,6 +74,12 @@ public class TabletActivityMapper implements ActivityMapper
 	@Override
 	public Activity getActivity(Place place)
 	{
+		if (ViewCourseActivity.bookmark != null) {
+			place = ViewCourseActivity.bookmark;
+			ViewCourseActivity.bookmark = null;
+			//Window.alert("BOOKMARK" + place);
+			lastExam.get().replacePlace(place);
+		}
 // simple case 
 		Provider<Activity> provider = activityMap.get(place.getClass());
 		if (provider != null) return provider.get();

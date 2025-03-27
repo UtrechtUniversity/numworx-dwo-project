@@ -1,3 +1,4 @@
+<%@page import="fi.dwo.server.rest.util.Origin"%>
 <%@ page language="java" contentType="text/plain"
     pageEncoding="ISO-8859-1"%>
 <%
@@ -6,11 +7,12 @@
 	String profileExtension = System.getProperty("PROFILE_EXTENSION","");
 	String auth = "BASIC";
 	if (dwo_env.contains("saml")||dwo_env.contains("entree")) auth = "BEARER";
+	String origin = Origin.of(request);
 %>
 #Property file. It should be located in the working directory of the DWO application.
 #resourceURLPath should point to a webserver supplying the applet jar files loaded by WiskOpdr.
 #serverUrlPath=https://app.dwo.nl/servlet/dwodsaccess
-serverUrlPath=/dwo/
+serverUrlPath=<%=origin %>/dwo/
 resourceUrlPath=<%=cdn %>/resources
 jarUrlPath=<%=cdn %>/jars/
 httpAuthentication=<%=auth%>

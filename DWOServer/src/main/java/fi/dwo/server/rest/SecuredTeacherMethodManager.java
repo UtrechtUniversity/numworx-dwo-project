@@ -58,7 +58,7 @@ public class SecuredTeacherMethodManager {
     	PersistentMethod old = MethodManager.findEntity(p.getMethodID());
     	p.setDwoProfileID(old.getDwoProfileID());
     	p = MethodManager.edit(p);
-    	if (old.getDwoProfileID().longValue() != profile.getDwoProfileID().longValue() && p.getSchoolID() == MethodManager.NUL) {
+    	if (old.getDwoProfileID().longValue() != profile.getDwoProfileID().longValue() && MethodManager.NUL.equals(p.getSchoolID()) ) {
     		MethodManager.addProfile(p, profile);
     		p.setDwoProfileID(profile.getDwoProfileID()); // fake 
     	}

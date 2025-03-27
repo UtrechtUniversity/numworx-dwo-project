@@ -8,7 +8,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>DWO</artifactId>
-    <version>2.5.39</version>
+    <version>2.5.40</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,7 +27,7 @@
  	   <module>../DWOformule</module>
 <!-- 	 	<module>../DWOmAccess</module> -->
        <module>../DWO-commons-lib</module>
-<!--        <module>../DWO-jclient-lib</module>-->
+        <module>../DWO-jclient-lib</module>
   	 	<module>../DWO-apps</module>
 <!-- 		<module>../chatgwt</module> -->
  	 	<module>../DWOGwtClient</module> 
@@ -36,7 +36,7 @@
        	<module>../DWOServer</module> 
      	<module>../DWOplayer</module>
 <!--	    <module>../edexml</module>-->
-        <module>../KeyboardGWT</module> 
+<!--        <module>../KeyboardGWT</module> -->
      	<module>../UploadWidget</module>
 <!--      	<module>../WriteMathGWT</module> -->
 <!--		<module>../osiris-import</module>-->
@@ -54,51 +54,51 @@
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.39</version>
+    			<version>2.5.40</version>
     		</dependency>
     		<dependency>
     			<artifactId>DWO-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>2.5.39</version>
+    			<version>2.5.40</version>
 			<classifier>sources</classifier>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo</groupId>
     			<artifactId>DWO-commons-lib</artifactId>
-    			<version>2.5.39</version>
+    			<version>2.5.40</version>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
     			<artifactId>DWO-jclient-lib</artifactId>
-    			<version>2.5.34</version>
+    			<version>2.5.40</version>
     		</dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.39</version>
+            <version>2.5.40</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
             <artifactId>DWO-gwt-lib</artifactId>
-            <version>2.5.39</version>
+            <version>2.5.40</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.39</version>
+        	<version>2.5.40</version>
         	<type>war</type>
         </dependency>
          <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>DWOServer</artifactId>
-        	<version>2.5.39</version>
+        	<version>2.5.40</version>
         	<classifier>classes</classifier>
         </dependency>
          <dependency>
          	<groupId>nl.uu.fi.dwo</groupId>
          	<artifactId>DWOJClient</artifactId>
-         	<version>2.5.39</version>
+         	<version>2.5.40</version>
          </dependency>
          <dependency>
          	<groupId>fi.beans</groupId>
@@ -118,19 +118,19 @@
 		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.39</version>
+	  		<version>2.5.40</version>
 	  		<classifier>classes</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.39</version>
+	  		<version>2.5.40</version>
 	  		<classifier>sources</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>DWOplayer</artifactId>
-	  		<version>2.5.39</version>
+	  		<version>2.5.40</version>
   			<type>war</type>
 		</dependency>
 		<dependency>

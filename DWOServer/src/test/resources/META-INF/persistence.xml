@@ -38,13 +38,14 @@
     <class>fi.dwo.commons.persistence.entities.PersistentMethod</class>
     <class>fi.dwo.commons.persistence.entities.PersistentSchoolMethod</class>
     <class>fi.dwo.commons.persistence.entities.PersistentScoPage</class>
+    <class>fi.dwo.commons.persistence.entities.PersistentMFA</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
     <properties>
       <property name="eclipselink.cache.shared.default" value="false"/>
       <property name="eclipselink.allow-zero-id" value="true"/>
-      <property name="javax.persistence.jdbc.driver" value="software.amazon.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.url" value="jdbc:aws-wrapper:mysql://127.0.0.1:3306/dwojunittest?useSSL=false"/>
+      <property name="javax.persistence.jdbc.driver" value="${jdbc.driver}"/>
+      <property name="javax.persistence.jdbc.url" value="${jdbc.url}"/>
       <property name="javax.persistence.jdbc.user" value="test"/>
       <property name="javax.persistence.jdbc.password" value="test"/>
 <!--      <property name="eclipselink.weaving" value="static"/>
@@ -54,7 +55,8 @@
       <property name="eclipselink.logging.logger" value="JavaLogger"/>
       <property name="eclipselink.logging.level.sql" value="FINE"/>
       <property name="eclipselink.logging.parameters" value="true"/>
-      
+	  <property name="eclipselink.ddl-generation" value="create-tables" />
+	  <property name="eclipselink.ddl-generation.output-mode" value="database" />     
     </properties>
   </persistence-unit>
 </persistence>

@@ -50,6 +50,7 @@ public class SecuredStudentMethodManager {
 				List<PersistentMethod> list = MethodManager.findEntities();
 				p = list.stream().filter(t  -> t.getMethodID().endsWith(key)).findAny().orElse(null);
 			}
+			if (p == null) return null; // als het effe niet klopt.
 		}
 		long ms = p.getSchoolID().longValue();
 		long ss = school.getSchoolID().longValue();

@@ -47,12 +47,15 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SchoolManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureStudentModelManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserMFAManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolsRolesAndClassesV2;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.mfa.MFA;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -220,7 +223,16 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
             DwoHelper.setContact(false);
             DomUserFullwLoginContext user = LoginManager.basicLogin(username, MD5.getHashString(String.valueOf(password)));
             DwoHelper.setCurrentUser(user.getDomUserFull(),user.getDomLoginContext());
-
+// MFA
+            DomSchoolsRolesAndClassesV2 srcs = DwoHelper.getSchoolLogins();
+            if (srcs.getActiveSchoolRoleAndClass().getHasRole().getRights().contains(MFA.MFA_RIGHT)) {
+				String code = JOptionPane.showInputDialog("Two-factor authentication code:");
+				if (! SecureUserMFAManager.verify(code)) {
+					DwoHelper.setCurrentUser(null, null);
+					throw new Dwo2Exception(Dwo2ExceptionCode.User_AuthenticationError, "mfa");
+				}
+}
+            
             if (DwoHelper.isTest() && DwoHelper.isSamlLogin() || HttpAuthenticationType.BEARER == DwoHelper.getHttpAuthentication()) {           
                 OAuthManager m = new OAuthManager();
                 token = m.authorization_token(SecureUserAccountManager.getBearerToken(), null, null, null);
@@ -247,7 +259,6 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
         }
         catch (Dwo2Exception e) {
             LOG.log(Level.WARNING, "Login failed.", e);
-            dwo.setReady();
             throw e;
         }
         finally {

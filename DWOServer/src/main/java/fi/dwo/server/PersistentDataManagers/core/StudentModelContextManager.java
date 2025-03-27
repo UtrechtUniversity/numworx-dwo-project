@@ -297,6 +297,9 @@ public class StudentModelContextManager {
 			em.getTransaction().begin();
 			m = em.merge(m);
 			profile = em.find(PersistentDwoProfile.class, profile.getDwoProfileID());
+// HIER protectie tegen dubbelen
+			if (profile.getDwoProfileID().equals(m.getDwoProfileID()))
+				return;
 			m.getProfiles().add(profile);
 			profile.getStudentModels().add(m);
 			em.getTransaction().commit();

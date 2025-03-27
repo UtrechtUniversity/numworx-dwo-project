@@ -90,6 +90,20 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
 	        new Object[] {RestAuthenticator.getInstance().getUsername()});
 	    return result;
 	  }
+
+  public DomStudentModelContext updateModel(DomStudentModelContext submit, DomDwoProfileId profile)
+	      throws Dwo2Exception {
+	    RestStudentModelContext rest = new RestStudentModelContext();
+	    rest.setRestContext(getContext());
+	    rest.setDomStudentModelContext(submit);
+	    rest.setDomDwoProfile(profile);
+
+	    DomStudentModelContext result = StoredRestManager.getInstance()
+	        .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/update", DomStudentModelContext.class, rest);
+	    LOG.log(Level.FINE, "Updated studentmodel of teacher with username {0} to his school.",
+	        new Object[] {RestAuthenticator.getInstance().getUsername()});
+	    return result;
+	  }
   
   public static DomSchoolMethod updateActiveMethod(DomSchoolMethod submit) 
   			throws Dwo2Exception {
@@ -139,6 +153,7 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
 		}
   
 
+  @Deprecated
   public DomStudentModelContext patchModel(DomStudentModelContextPatch submit)
 	      throws Dwo2Exception {
 	    RestStudentModelContextPatch rest = new RestStudentModelContextPatch();
@@ -151,6 +166,21 @@ public class SecureTeacherStudentModelManager implements SecureStudentModelManag
 	        new Object[] {RestAuthenticator.getInstance().getUsername()});
 	    return result;
 	  }
+  
+  public DomStudentModelContext patchModel(DomStudentModelContextPatch submit, DomDwoProfileId profile)
+	      throws Dwo2Exception {
+	    RestStudentModelContextPatch rest = new RestStudentModelContextPatch();
+	    rest.setRestContext(getContext());
+	    rest.setDomPatch(submit);
+	    rest.setDomDwoProfile(profile);
+
+	    DomStudentModelContext result = StoredRestManager.getInstance()
+	        .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/studentmodel/patch", DomStudentModelContext.class, rest);
+	    LOG.log(Level.FINE, "Patch studentmodel of teacher with username {0} to his school.",
+	        new Object[] {StoredRestManager.getInstance().getAuthenticator().getUsername()});
+	    return result;
+	  }
+ 
 
   public static Boolean removeModel(DomStudentModelContext submit)
 	      throws Dwo2Exception {

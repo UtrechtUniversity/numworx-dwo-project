@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.rest.entities;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextPatch;
 
@@ -16,6 +17,7 @@ public class RestStudentModelContextPatch {
     
     private DomContext restContext;
     private DomStudentModelContextPatch domPatch;
+    private DomDwoProfileId domDwoProfile;
 
     /**
      * @return the restContext
@@ -43,6 +45,14 @@ public class RestStudentModelContextPatch {
 	 */
 	public void setDomPatch(DomStudentModelContextPatch domPatch) {
 		this.domPatch = domPatch;
+	}
+
+	public DomDwoProfileId getDomDwoProfile() {
+		return domDwoProfile;
+	}
+
+	public void setDomDwoProfile(DomDwoProfileId domDwoProfile) {
+		this.domDwoProfile = domDwoProfile;
 	}
 
 }

@@ -39,7 +39,7 @@
         minEvictableIdleTimeMillis="60000"
   	username="root"
   	password="test"
-  	driverClassName="com.mysql.jdbc.Driver"
+  	driverClassName="com.mysql.cj.jdbc.Driver"
   	url="jdbc:mysql://localhost:3306/dwo_productie"
         />
 <!--        username="${RDS_USERNAME}"

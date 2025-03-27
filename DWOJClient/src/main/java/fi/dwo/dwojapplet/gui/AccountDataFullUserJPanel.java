@@ -1,8 +1,10 @@
 package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
+import nl.uu.fi.dwo.rest.dom.mfa.MFA;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.NumworxTextFieldUI;
@@ -10,6 +12,7 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserMFAManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import java.awt.Container;
@@ -55,6 +58,9 @@ public class AccountDataFullUserJPanel extends JPanel implements
     private JButton resetButton;
 
     protected JButton deleteButton;
+    
+    protected JCheckBox mfaButton;
+    
 //    protected User user;
     private AccountDataProperties prop = new AccountDataProperties();
 
@@ -313,10 +319,20 @@ public class AccountDataFullUserJPanel extends JPanel implements
                 + p.getSize().height + 10);
         deleteButton.setVisible(!prop.getUser().getSingleSchool());
         this.add(deleteButton);
+        
+        mfaButton = new JCheckBox("two-factor authentication support");
+        mfaButton.setSize(mfaButton.getPreferredSize());
+        mfaButton.setLocation(getWidth()/2 - mfaButton.getWidth()/2, 
+        			p.getY() + p.getHeight() + 40);
+        if (DwoHelper.isTest()) 
+        	add(mfaButton);
+        mfaButton.setSelected(DwoHelper.getCurrentFacadeUser().getRights().contains(MFA.MFA_RIGHT));
+        
         changeButton.addActionListener(this);
         resetButton.addActionListener(this);
         // delete mag if user is geen single school student
         deleteButton.addActionListener(this);
+        mfaButton.addActionListener(this);
     }
 
     /**
@@ -427,6 +443,27 @@ public class AccountDataFullUserJPanel extends JPanel implements
                     JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), TextMapper.getText(TextMapper.GUIW_ERR_LOGIN), JOptionPane.ERROR_MESSAGE);
                 }
             }
+        } else if (e.getSource() == mfaButton) {
+        	try {
+				if (mfaButton.isSelected())
+				{	
+					MFA mfa = SecureUserMFAManager.create();
+					AccountMFAJPanel panel = new AccountMFAJPanel(mfa);
+					JOptionPane.showMessageDialog(this, panel, "Two-factor authentication support", JOptionPane.PLAIN_MESSAGE);
+					mfaButton.setSelected(panel.isVerified());
+				} 
+				if (!mfaButton.isSelected()) {
+					SecureUserMFAManager.remove();
+					DwoHelper.getCurrentFacadeUser().setRights(
+					DwoHelper.getCurrentFacadeUser().getRights().replace(MFA.MFA_RIGHT, ""));
+				} else {
+					DwoHelper.getCurrentFacadeUser().addRight(MFA.MFA_RIGHT.charAt(0));
+				}
+				
+				
+			} catch (Dwo2Exception e1) {
+				LOG.log(Level.WARNING, "mfa panel", e1);
+			}
         }
     }
 

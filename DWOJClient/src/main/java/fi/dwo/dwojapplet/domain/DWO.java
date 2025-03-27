@@ -1578,7 +1578,7 @@ LOG.info("time results = " + (-t) + " ms");
 //        jvmChecker.check();
 
         JXBChecker jxbChecker = new JXBChecker(this);
-        jxbChecker.check();
+        DwoHelper.noJXB = jxbChecker.check();
         
         
         try {

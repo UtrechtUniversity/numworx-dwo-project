@@ -4,7 +4,7 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
-        <version>2.5.39</version>
+        <version>2.5.40</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <artifactId>DWOServer</artifactId>
@@ -44,6 +44,8 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <context.xml>context.xml</context.xml>
         <tomcat7.version>7.0.108</tomcat7.version>
+        <jdbc.driver>software.amazon.jdbc.Driver</jdbc.driver>
+        <jdbc.url>jdbc:aws-wrapper:mysql://127.0.0.1:3306/dwojunittest?useSSL=false</jdbc.url>
     </properties>
   
     <!-- dependencies -->
@@ -144,6 +146,12 @@
   		  <scope>runtime</scope>
   		  <optional>true</optional>
         </dependency>
+		<dependency>
+		    <groupId>org.postgresql</groupId>
+		    <artifactId>postgresql</artifactId>
+		    <version>42.7.5</version>
+		    <scope>test</scope>
+		</dependency>
 		 <dependency> 
 		  <groupId>org.slf4j</groupId>
 		  <artifactId>slf4j-jdk14</artifactId>
@@ -217,7 +225,12 @@
 	   			<artifactId>schoolyear-jclient-lib</artifactId>
 	   			<version>2.5.32</version>
 	   		</dependency>
-    </dependencies>
+			<dependency>
+			  <groupId>dev.samstevens.totp</groupId>
+			  <artifactId>totp</artifactId>
+			  <version>1.7.1</version>
+			</dependency>
+    	</dependencies>
     
 <!--    <distributionManagement>
         <repository>
@@ -228,6 +241,12 @@
     </distributionManagement>    -->
     
     <build>
+	  <testResources>
+		<testResource>
+			<directory>src/test/resources</directory>
+			<filtering>true</filtering>
+		</testResource>
+	  </testResources>
         <plugins>
              <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -500,13 +519,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
+                <version>3.5.2</version>
                 <configuration>
                     <includes>
                         <include>**/*Test.java</include>
                         <include>**/*IT.java</include>
                     </includes>
                     <skipTests>${junit.test}</skipTests> 
+				    <jdkToolchain>
+				        <version>11</version>
+				    </jdkToolchain>
                     <!--                   <systemProperties>
                         <property>
                             <name>jersey.config.test.container.factory</name>
@@ -600,6 +622,13 @@
     </reporting>
     <!-- profile for running junittests -->
     <profiles>
+		<profile>
+			<id>postgres</id>
+			<properties>
+				<jdbc.driver>org.postgresql.Driver</jdbc.driver>
+				<jdbc.url>jdbc:postgresql://localhost:5432/dwojunittest</jdbc.url>				
+			</properties>
+		</profile>
         <profile>
             <id>nojunittests</id>
             <activation>
@@ -638,6 +667,14 @@
             <properties>
                 <junit.test>false</junit.test>
             </properties>
+			<dependencies>
+				<dependency>
+				    <groupId>org.jsr107.ri</groupId>
+				    <artifactId>cache-ri-impl</artifactId>
+				    <version>1.1.1</version>
+				    <scope>test</scope>
+				</dependency>
+			</dependencies>
         </profile>
         
 		<profile>

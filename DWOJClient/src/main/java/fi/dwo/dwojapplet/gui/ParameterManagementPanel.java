@@ -553,7 +553,11 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
         old.remove("bgcolor");
         tmp.remove("language");
         tmp.remove("bgcolor");
-        message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_UNSAFESAVE);
+        String location = (String) tmp.remove(Sco.LESSON_LOCATION);
+        if (location != null) {
+            sco.SetValue(Sco.LESSON_LOCATION, location);
+        }
+       message = TextMapper.getText(TextMapper.GUIPA_MSG_PARAM_UNSAFESAVE);
         int result = JOptionPane.NO_OPTION;
         if (!(compareMap(tmp, old))
                 && ((result = confirm(message,JOptionPane.QUESTION_MESSAGE)) == JOptionPane.YES_OPTION || result == JOptionPane.CANCEL_OPTION)) {
@@ -562,6 +566,7 @@ public class ParameterManagementPanel extends JPanel implements CenterSubPanel, 
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             sco.setLaunchdata(tmp);
             instance.unsafeSaveSco(sco);
+            sco.setSaved();
             //MapperCreator.instance(Applet.class).removeObject(sco.getAppletID());
             instance.setReady();
             setCursor(Cursor.getDefaultCursor());

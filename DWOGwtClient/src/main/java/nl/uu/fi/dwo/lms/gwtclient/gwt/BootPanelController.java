@@ -5,9 +5,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.http.client.UrlBuilder;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasWidgets;
@@ -19,7 +17,6 @@ import fi.dwo.gwt.lib.rest.CallManagers.PublicStatusManager;
 import fi.dwo.gwt.lib.rest.util.Dwo2ExceptionGWTTranslator;
 import fi.dwo.gwt.lib.rest.util.Dwo2LocaleMessageGWTTranslator;
 
-import java.net.URLDecoder;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
@@ -35,7 +32,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.SchoolAdminComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.StudentComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.TeacherComponent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainDisplay;
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.JsMainView;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.jsutil.DwoMessageTranslator;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.locale.GwtClientModulesOnly;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEvent;
@@ -45,6 +41,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.login.LoginEventHandler;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomHeartBeat;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import nl.uu.fi.dwo.rest.util.Dwo2LocaleMessageTranslator;
 import org.osgi.util.promise.Promise;
@@ -60,13 +57,18 @@ import org.osgi.util.promise.Success;
 @Singleton //required.
 public class BootPanelController {
 
+    public static native void topReload() /*-{
+      $wnd.top.location.reload(false);
+    }-*/;
 
 	final class LoginHandler implements LoginEventHandler {
+		
     @Override
     public void onLoginEvent(LoginEvent loginEvent) {
-        final RoleType role = dwoGlobalVars.getRole();
+        DomUserFull user = dwoGlobalVars.getCurrentUser();
+        final RoleType role = user == null ? RoleType.NONE : dwoGlobalVars.getRole();
         final State state = loginEvent.getState();
-        final boolean single = dwoGlobalVars.getCurrentUser().getSingleSchool();
+		final boolean single = user != null && user.getSingleSchool();
         if (state != State.LOGOUT)
         	resetPresenters(role,single); // changes in eventbus are not immediate
         Scheduler.get().scheduleDeferred(
@@ -85,7 +87,7 @@ public class BootPanelController {
                     setSession(true);
                     LOG.log(Level.INFO, "Login succeeded. Showing welcome view.");
                     viewFactory.getMainView().setSchoolName(dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
-                    viewFactory.getMainView().setPresentationName(dwoGlobalVars.getCurrentUser().getDisplayName());
+                    viewFactory.getMainView().setPresentationName(user.getDisplayName());
                     SelectedView view = initialView;
                     initialView = SelectedView.WELCOME;
                     //eventBus.fireEvent(new SwitchViewEvent(view));
@@ -110,8 +112,11 @@ public class BootPanelController {
 //                    // viewFactory.getMainView().showPostLoginWidgets();
 //                    break;
                   case FAIL:
-                    LOG.log(Level.INFO, "Login failed, showing dialog.");
-                    eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
+                    LOG.log(Level.INFO, "Login failed, reload dialog.");
+                    if (dwoGlobalVars.isSaml())
+                    	topReload();
+                    else
+                    	eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.LOGIN));
                     break;
                   case LOGOUT:
                     dwoGlobalVars.clearCurrentUser();
@@ -373,6 +378,7 @@ public class BootPanelController {
     public static native void forceReload() /*-{
       $wnd.location.reload(true);
     }-*/;
+
 
     native static void logout() /*-{
       $wnd.logout();

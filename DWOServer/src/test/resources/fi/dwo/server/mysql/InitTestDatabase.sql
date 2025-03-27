@@ -113,7 +113,7 @@ DROP TABLE IF EXISTS `tblclass`;
 CREATE TABLE `tblclass` (
   `classID` int(11) NOT NULL AUTO_INCREMENT,
   `userid` int(11) DEFAULT '0',
-  `schoolID` int(11) NOT NULL DEFAULT '0',
+  `schoolID` int(11) NOT NULL,
   `iconizer` tinyint(1) DEFAULT '0',
   `class` varchar(100) NOT NULL DEFAULT '',
   `registrationKey` varchar(100) DEFAULT NULL,
@@ -1076,3 +1076,14 @@ CREATE TABLE `tblscopage` (
   `docentCorrect` tinyint(4),
   PRIMARY KEY (`scoID`, `sequencenr`, `userID`, `schoolgroupID`)
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;	
+
+DROP TABLE IF EXISTS `tblmfa`;
+CREATE TABLE `tblmfa` (
+  `userID` int(11) NOT NULL,
+  `lastChangeTimeStamp` bigint(22) NOT NULL,
+  `recovery` longblob NOT NULL,
+  `optlock` int(11) NOT NULL,
+  `secret` varchar(50) NOT NULL,
+  `del` tinyint(4) NOT NULL,
+  PRIMARY KEY (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

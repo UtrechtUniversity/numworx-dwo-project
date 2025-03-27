@@ -226,7 +226,11 @@ public void setupDWOPlayer() {
 
 	private boolean kiosk;
 	@Inject void setKiosk(DWOplayerParameters p) {
-		//kiosk = p.inKiosk();
+		kiosk = p.inKiosk();
+	}
+
+	private boolean legal(String alt) {
+		return !alt.startsWith("Exam");
 	}
 	
 	@Override
@@ -234,9 +238,9 @@ public void setupDWOPlayer() {
 		if (kiosk) {
 			String token = History.getToken();
 			String alt = lastexam.get().getPlace();
-			if (!token.isEmpty() &&
-				alt != null && 
-				!alt.isEmpty()) 
+//			Window.alert("START [" + token + "] [" + alt + "]"); // doe iets met schoolyear hier.
+			if (alt != null && 
+				!alt.isEmpty() && legal(alt)) 
 					token = alt;
 			GWT.log("START " + token); // doe iets met schoolyear hier.
 			History.newItem(token, false);

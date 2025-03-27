@@ -276,8 +276,33 @@ public class DescriptionPresenter {
 		}
 
 		protected String selectVariant(String json, DomStudentModelContextInfo info, DomStudentModelMethodInfo method) {
-			if (json != null && info != null && info.getVariants() != null && method != null) {
-				String string = method.getVariant();
+//			if (json != null && info != null && info.getVariants() != null && method != null) {
+//				String string = method.getVariant();
+//				Optional<DomStudentModelVariant> opt = info.getVariants().stream().filter(t -> Objects.equals(t.getName(),string)).findAny();
+//				if (opt.isPresent()) {
+//					Map<String, Boolean> layers = opt.get().getLayers();
+//					JSONValue v = JSONParser.parseStrict(json);
+//					JSONObject instellingen = v.isObject().get("instellingen").isObject();
+//					JSONBoolean hasLayers = instellingen.get("hasLayers").isBoolean();
+//					if (hasLayers.booleanValue()) {
+//						JSONArray names = instellingen.get("layerNames").isArray();
+//						JSONArray values = instellingen.get("layerVisible").isArray();
+//						for(int i = 0; i < names.size(); i++) {
+//							String n = names.get(i).isString().stringValue();
+//							Boolean visible = layers.getOrDefault(n, Boolean.FALSE);
+//							values.set(i, JSONBoolean.getInstance(visible));
+//						}
+//						json = v.toString();
+//					}
+//				}
+//			}
+//			return json;
+			return selectVariant(json, info, Optional.ofNullable(method).map(DomStudentModelMethodInfo::getVariant));
+		}
+
+		public static String selectVariant(String json, DomStudentModelContextInfo info, Optional<String> variant) {
+			if (json != null && info != null && info.getVariants() != null && variant.isPresent()) {
+				String string = variant.get();
 				Optional<DomStudentModelVariant> opt = info.getVariants().stream().filter(t -> Objects.equals(t.getName(),string)).findAny();
 				if (opt.isPresent()) {
 					Map<String, Boolean> layers = opt.get().getLayers();
@@ -294,11 +319,9 @@ public class DescriptionPresenter {
 						}
 						json = v.toString();
 					}
-				}
+				}			
 			}
 			return json;
 		}
-
-
 
 }

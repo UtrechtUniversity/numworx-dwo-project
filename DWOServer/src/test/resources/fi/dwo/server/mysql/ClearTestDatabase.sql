@@ -39,6 +39,7 @@ DROP TABLE IF EXISTS `tblstudentmodelitem`;
 DROP TABLE IF EXISTS `tblcoursedata`;
 DROP TABLE IF EXISTS `tblmethodperprofile`;
 DROP TABLE IF EXISTS `tblstudentmodelperprofile`;
+DROP TABLE IF EXISTS `tblmfa`;
 
 SET FOREIGN_KEY_CHECKS = 0;
 SET GROUP_CONCAT_MAX_LEN=32768;

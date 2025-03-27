@@ -159,16 +159,15 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 	int paddingH = 0; // padding Hbox, actief bij pasAanH
 	
 	Logging logging;
+	private boolean logExecute;
 	private String lastAttempt;
 	private String firstAttempt = "";
 	private CorrectieFacade correctie;
 	private boolean teltMee;
     private int scoreMax;
-	//private String loggingID;
 	private AnimationHandle handle;
 	private final ActivityInterface activity;
 	private TekstRegel regel;
-	//private com.google.gwt.user.client.Element formuleElement;
 	private String original = "";
 	
 	static class Scroller extends ScrollPanel {
@@ -242,6 +241,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		pasAanH = launchdata.getBoolean("pasAanH", false);
 		boolean numbered = launchdata.getBoolean("numbered", false);
 		nowrap = launchdata.getBoolean("nowrap", false);
+		logExecute = launchdata.getBoolean("logExecute", false);
 
 		if(teltMee = launchdata.containsKey("scoreMax")) 
 			scoreMax = launchdata.getInt("scoreMax");
@@ -333,6 +333,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 		
 		LogBuilder logBuilder = activity.logBuilder().setClassName("fi.wiskopdr.tekstobjects.TekstEditor").setLaunchData(launchdata);
 		//loggingID = logBuilder.getLogID();
+		logBuilder.setTeltMee(teltMee); // niet de default.
 		logging = logBuilder.build();
 		//shown = true;
 	}
@@ -803,7 +804,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 					Map<String, String> map = new HashMap<String,String>();
 					String allText = getAllText().toString();
 					map.put("content", allText);
-					if(shown && logging != null) setAttempt(allText);
+					if(shown && logging != null && logExecute) setAttempt(allText);
 					comRoot.fireEvent(new CBookEvent(TextEditor.this, TEXT, map));
 					comRoot.setVisited();
 					
