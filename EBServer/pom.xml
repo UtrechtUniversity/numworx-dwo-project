@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>DWO</artifactId>
-		<version>2.5.41-SNAPSHOT</version>
+		<version>2.5.40</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>EBServer</artifactId>
@@ -46,7 +46,7 @@
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
     				<artifactId>DWOGwtClient</artifactId>
-					<version>2.5.41-SNAPSHOT</version>
+					<version>2.5.40</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -229,14 +229,14 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>DWO-apps</artifactId>
-			<version>2.5.41-SNAPSHOT</version>
+			<version>2.5.40</version>
 			<scope>runtime</scope>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>DWO-apps</artifactId>
-			<version>2.5.41-SNAPSHOT</version>
+			<version>2.5.40</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
@@ -255,7 +255,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>DWOGwtClient</artifactId>
-		<version>2.5.41-SNAPSHOT</version>
+		<version>2.5.40</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -903,7 +903,7 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
-					<version>2.5.41-SNAPSHOT</version>
+					<version>2.5.40</version>
 					<classifier>classes</classifier>
 					</dependency>			
 				<dependency>
