@@ -494,6 +494,14 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 		  //url = wpu.url;
 		  url = client.createWorkspace(exam, u).onboarding_url;
 	  } else if (pcc.getType() == CourseType.assesment.ordinal()) {
+		  RestSchoolClass rest = new RestSchoolClass();
+		  rest.setDomSchoolClass(new DomSchoolClass());
+		  rest.setRestContext(new DomContext());
+		  rest.getRestContext().setDomHasRole(principal.getHr().buildDomHasRole());
+		  rest.getDomSchoolClass().setId(PersistentSchoolClass.buildPersistenceId(pcc.getClassID()));
+		  String bearer = account.getBearerToken(sc, rest);
+		  bearer = bearer.replace("\"", "");
+		  url = url + "&a=" + URLEncoder.encode(bearer);
 	  }
 	  Map<String,String> entity = Collections.singletonMap("url", url);
 	  return Response.ok().type(MediaType.APPLICATION_JSON_TYPE).entity(entity).build();

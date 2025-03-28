@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
@@ -15,6 +16,15 @@
 	String host = request.getRemoteAddr();
 	String server = request.getHeader("host");
 	  String leerling = request.getParameter("id");
+	  String code = request.getParameter("a");
+	  String seb;
+	  if (request.isSecure()) seb = "sebs"; else seb = "seb";
+
+	  if (code != null) {
+		  code =  (needSEB? "?": "&") +				  
+				  "a=" + URLEncoder.encode(code);
+	  } else 
+		  code = "";
 	  String id = "";
 	  try { 
 	    id = "?id=" + Long.parseLong(leerling);
@@ -28,15 +38,15 @@
 	}
 	else if ( needSEB ) {
 %>
-<a href='sebs://<%=server %>/toets/<%=leerling %>.seb'>Start de beveiligde <strong>toets</strong> omgeving</a>
+<a href='<%=seb%>://<%=server %>/toets/<%=leerling %>.seb<%=code%>'>Start de beveiligde <strong>toets</strong> omgeving</a>
 <%    if (System.getProperty("DWO_ENV", "").contains("test")) { %>
 <br>SEB QR Code: <img 
 	style='vertical-align: middle'
-	src='/dwo/qrcode.png?qr=sebs://<%=server %>/toets/<%=leerling %>.seb' >
+	src='/dwo/qrcode.png?qr=<%=seb%>://<%=server %>/toets/<%=leerling %>.seb' >
 <%    }
 	} else {
 %>
-	  <a target='_top' href='/toets/toets.jsp<%=id%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
+	  <a target='_top' href='/toets/toets.jsp<%=id%><%=code%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%	  
 	}
 
