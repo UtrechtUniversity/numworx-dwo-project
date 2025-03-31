@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
-<%@ include file='/dwo/toets_util.jsp' %>
+<%@ include file='/dwo/toets_util2.jsp' %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,8 +14,6 @@
 
 <p>
 <%
-	String host = request.getRemoteAddr();
-	String server = request.getHeader("host");
 	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
 %>
 	The device at this address <%=host %> is not allowed for assessments. Use a secured device.
@@ -23,12 +21,12 @@
 	}
 	else if ( needSEB ) {
 %>
-<a href='sebs://<%=server%>/en/he/exam/leerling.seb'>Start de beveiligde <strong>exam</strong> omgeving</a>
+<a href='sebs://<%=server%>/en/he/exam/<%=leerling%>.seb<%=code%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%
 	} else {
 		String dwo_env = System.getProperty("DWO_ENV","app");
 		String clientId = "";
-		if ("shibboleth".equals(request.getAuthType())|| dwo_env.contains("saml")) clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
+		if (dwo_env.contains("saml")) clientId = "f9af29c4-cfc5-11ea-87d0-0242ac130003";
 		String token = "/dwo/saml/uulogin";
 		if (dwo_env.contains("uu")) token = "/dwo/oauth2/uulogin";
 %>

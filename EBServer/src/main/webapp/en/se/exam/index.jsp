@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
-<%@ include file='/dwo/toets_util.jsp' %>
+<%@ include file='/dwo/toets_util2.jsp' %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,8 +12,6 @@
 <h1>Start</h1>
 <p>
 <%
-	String host = request.getRemoteAddr();
-	String server = request.getHeader("host");
 	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
 %>
 	The device at this address <%=host %> is not allowed for assessments. Use a secured device.
@@ -21,11 +19,11 @@
 	}
 	else if ( needSEB ) {
 %>
-<a href='sebs://<%=server %>/en/exam/leerling.seb'>Start the safe <strong>exam</strong> environment</a>
+<a href='sebs://<%=server %>/en/exam/<%=leerling%>.seb<%=code%>'>Start the safe <strong>exam</strong> environment</a>
 <%
 	} else {
 %>
-	  <a href='/en/exam/toets.jsp'>Start the safe <strong>exam</strong> environment</a>
+	  <a href='/en/exam/toets.jsp<%=id%><%=code%>' target='_top'>Start the safe <strong>exam</strong> environment</a>
 <%	  
 	}
 

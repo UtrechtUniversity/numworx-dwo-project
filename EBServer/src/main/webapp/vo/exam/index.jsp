@@ -1,8 +1,7 @@
-<%@page import="java.net.URLEncoder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
-<%@ include file='/dwo/toets_util.jsp' %>
+<%@ include file='/dwo/toets_util2.jsp' %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,24 +12,6 @@
 <h1>Starten</h1>
 <p>
 <%
-	String host = request.getRemoteAddr();
-	String server = request.getHeader("host");
-	  String leerling = request.getParameter("id");
-	  String code = request.getParameter("a");
-	  String seb;
-	  if (request.isSecure()) seb = "sebs"; else seb = "seb";
-
-	  if (code != null) {
-		  code =  (needSEB? "?": "&") +				  
-				  "a=" + URLEncoder.encode(code);
-	  } else 
-		  code = "";
-	  String id = "";
-	  try { 
-	    id = "?id=" + Long.parseLong(leerling);
-	  } catch(Exception e) {
-	 	leerling = "leerling";
-	  }
 	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
 %>
 	Het apparaat op dit adres <%=host %> is niet toegestaan voor toetsen. Gebruik een beveiligd apparaat.
