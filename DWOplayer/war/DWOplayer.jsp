@@ -46,7 +46,7 @@
     <%=base %>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-    <link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/DWOplayer.css?t=<%=TSTAMP%>">
+    <link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/DWOplayer.css?t=<%=TSTAMP%>">
 <% if (!name.isEmpty()) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/<%=name %>.css" ><%}%>    
     <meta name="gwt:property" content="locale=nl" >
     <script>
