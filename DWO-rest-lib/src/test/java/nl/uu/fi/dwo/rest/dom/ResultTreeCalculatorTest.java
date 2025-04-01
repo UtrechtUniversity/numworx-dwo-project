@@ -9,6 +9,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
@@ -24,6 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
 import nl.uu.fi.dwo.rest.dom.entities.util.DomResultScoreVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.SumOfSubTreeVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -326,7 +328,11 @@ public class ResultTreeCalculatorTest {
     	addSco02();
     	addStudent03();
     	tree.insertStudentCourses();
-    	DomResultScoreVisitor visitor = new SumOfSubTreeVisitor();
+    	Dwo2LocaleMessages mock = Mockito.mock(Dwo2LocaleMessages.class);
+    	Mockito.when(mock.NUM_TBL_KIJKNA()).thenReturn("kijkna");
+    	Mockito.when(mock.NUM_TBL_KIJKNA_NEEDED()).thenReturn("kijkna");
+    	
+		DomResultScoreVisitor visitor = new SumOfSubTreeVisitor(mock );
     	tree.getStudentTree().visit(visitor);
     	tree.getResultTree().visit(visitor);
     	System.out.println(tree);
