@@ -163,5 +163,18 @@ public class SchoolDataManager {
         }
     }
 
+    public static List<? extends Number> findByBRIN(String brin) {
+		EntityManager em = getEntityManager();
+		try {
+	    	Query q = em.createNativeQuery("SELECT s.schoolID from tblschooldata s where JSON_EXTRACT(s.schoolData,\"$.BRIN\") = ?");
+	    	q.setParameter(1, brin);
+	    	@SuppressWarnings("unchecked")
+			List<? extends Number> result = q.getResultList();
+			return result;
+		} finally {
+			em.close();
+		}
+	}
+
 
 }

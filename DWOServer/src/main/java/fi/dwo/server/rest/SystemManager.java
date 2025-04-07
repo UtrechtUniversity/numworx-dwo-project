@@ -36,6 +36,7 @@ import fi.dwo.server.PersistentDataManagers.actions.MySQLSchoolAdminTeacherActio
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolDataManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
@@ -112,6 +113,14 @@ public class SystemManager {
   public DomSchoolFull getSchoolByName(RestSchool rest) throws Dwo2Exception {
       String name  = rest.getDomSchool().getSchoolName();
       PersistentSchool school = SchoolManager.findBySchoolLogin(name);
+      if (school == null) {
+    	  List<? extends Number> result = SchoolDataManager.findByBRIN(name);
+    	  if (result.size() == 1) {
+    		  school = SchoolManager.findEntity(result.get(0).longValue());
+    	  } else
+    		  return null;
+      }
+      
       return buildDomSchoolFull(school);  
   }
 
