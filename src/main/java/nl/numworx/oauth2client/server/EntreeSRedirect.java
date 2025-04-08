@@ -135,7 +135,7 @@ public class EntreeSRedirect extends HttpServlet {
 			if (fullschool == null || login.uid == null) // criterium.... bijv. alles ingevuld...
 				cookie("suggestion", systemManager.getSuggestion(sugg), resp);
 			else
-				cookie("username" , user_id + "@" + fullschool.getSchoolLogin(), resp);
+				cookie("suggestion" , user_id + "@" + fullschool.getSchoolLogin(), resp);
 			if (true) {
 				resp.sendRedirect("/dwo/register/Register.html");
 				return;
