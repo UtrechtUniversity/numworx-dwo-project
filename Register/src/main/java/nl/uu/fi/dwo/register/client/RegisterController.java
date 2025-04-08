@@ -13,8 +13,10 @@ import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.util.Base64;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.function.*;
@@ -27,6 +29,14 @@ public class RegisterController {
 	private PublicUserManager pum = new PublicUserManager();
 
 	private DomSamlUser samlUser;
+	private String schoolClass;
+
+	/**
+	 * @param schoolClass the schoolClass to set
+	 */
+	public void setSchoolClass(String schoolClass) {
+		this.schoolClass = schoolClass;
+	}
 
 	private final Success<Boolean,Void> succes = (promise) ->
 		{   Boolean result = promise.getValue();
@@ -66,7 +76,11 @@ public class RegisterController {
 	public void register(DomNewUser domNewUser) {
 		SecuredUserAccountManager manager = new SecuredUserAccountManager();
 		GwtRestVars.instance().setCurrentUser(null,null);
-		Promise<Boolean> p = pum.RegisterNewUser(domNewUser);
+		Promise<Boolean> p;
+		if (schoolClass != null && domNewUser.getRole() == RoleType.STUDENT) {
+			DomNewStudent student = new DomNewStudent(domNewUser, schoolClass);
+			p = pum.RegisterNewStudent(student);
+		} else p = pum.RegisterNewUser(domNewUser);
 
 		if (samlUser != null) {
 			Success<Boolean, Boolean> link = (promise) -> {

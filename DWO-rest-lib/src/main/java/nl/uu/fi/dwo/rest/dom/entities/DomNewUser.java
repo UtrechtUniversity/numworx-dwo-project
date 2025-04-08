@@ -30,6 +30,19 @@ public class DomNewUser {
     public DomNewUser(){
         
     }
+
+    public DomNewUser(DomNewUser user) {
+		this.username = user.username;
+		this.password = user.password;
+		this.GivenName = user.GivenName;
+		this.insertion = user.insertion;
+		this.FamilyName = user.FamilyName;
+		this.email = user.email;
+		this.schoolLogin = user.schoolLogin;
+		this.schoolCode = user.schoolCode;
+		this.role = user.role;
+	}
+
     /**
      * @return the GivenName
      */

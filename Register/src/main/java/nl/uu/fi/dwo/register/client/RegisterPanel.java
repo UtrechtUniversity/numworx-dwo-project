@@ -42,9 +42,11 @@ public class RegisterPanel extends ResizeComposite {
 	final private boolean demo;
 	private static final String WISWISE_FREE = "WISWISE-FREE";
 	final private boolean wiswise;
+	final private boolean saml;
 	
 	public RegisterPanel(boolean isfree, boolean saml) {
 	    this.isfree = isfree;
+	    this.saml = saml;
 	    demo = "DEMO".equalsIgnoreCase(getCookie("form"));
 	    wiswise = WISWISE_FREE.equalsIgnoreCase(getCookie("form"));
 	    
@@ -59,6 +61,7 @@ public class RegisterPanel extends ResizeComposite {
 //		register.addTapHandler(this::onRegister);
 //		cancel.addTapHandler(this::onCancel);
 		setStyleName(css.isfree(), isfree);
+		setStyleName(css.issaml(), saml);
 		account.setVisible(saml);
 		absorbCookies();
 		
@@ -97,6 +100,7 @@ public class RegisterPanel extends ResizeComposite {
 			}
 		}
 		
+		
 		String schoolLogin = getCookieOnce("schoolLogin");
 		if (schoolLogin != null) this.schoolLogin.setText(schoolLogin);
 		
@@ -110,6 +114,14 @@ public class RegisterPanel extends ResizeComposite {
 		if (schoolCode != null) {
 		  this.schoolCode.setText(schoolCode);
 		  Cookies.removeCookie("schoolCode");
+		}
+		String schoolClass = getCookieOnce("className");
+		if (schoolClass != null && !schoolClass.isEmpty() && "STUDENT".equals(schoolGroup)) {
+			this.schoolClass = schoolClass;
+			setAndFix(this.schoolLogin, schoolLogin);
+			setAndFix(this.schoolCode, schoolCode);
+			this.schoolGroup.setEnabled(false);
+			this.schoolGroup.addStyleDependentName("disabled");
 		}
 		
 		String putRequest = getCookie("putRequest");
@@ -164,6 +176,8 @@ public class RegisterPanel extends ResizeComposite {
 	@UiField CheckBox account;
 	
 	@UiField RegisterCSS css;
+
+	private String schoolClass;
 	
 	@UiHandler("account")
 	void onValueChange(ValueChangeEvent<Boolean> event) {
@@ -216,30 +230,45 @@ public class RegisterPanel extends ResizeComposite {
 			return;
 		}
 		DomNewUser n = domUser; //FIXME java.util.regex niet in GWT
-        if ( ! SimpleValidUserFieldsChecker.isNonEmptyNorNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), password.getText()))
+        if ( ! SimpleValidUserFieldsChecker.isNonEmptyNorNull(n.getUsername(), n.getFamilyName(), n.getGivenName())
+// password alleen verplicht bij !saml
+        		|| !saml && ! SimpleValidUserFieldsChecker.isNonEmptyNorNull(n.getEmail(), password.getText() )
+        		)
         {
         	Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Required_Fields());
         	return;
         }
-		if ( ! SimpleValidUserFieldsChecker.isValidUserName(n.getUsername()))
+		String sLogin = schoolLogin.getText();
+		String check = n.getUsername();
+// realm of <sLogin> is @<sLogin>		
+		if (check.endsWith("@" + sLogin)) {
+			check = check.substring(0, check.length()- sLogin.length()-1);
+			int in = check.lastIndexOf('%');
+			if (in > 0) check = check.substring(0, in);
+			
+		}
+		if ( ! SimpleValidUserFieldsChecker.isValidUserName(check))
 		{
 			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_UserName_Invalid());
 			return;
 		}
-		if ( ! SimpleValidUserFieldsChecker.isValidEmail(n.getEmail()))
+// alleen bij saml: valid or empty
+		if ( ( !saml || !n.getEmail().isEmpty()) &&
+				! SimpleValidUserFieldsChecker.isValidEmail(n.getEmail()))
 		{
 			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Email_Address_Invalid());
 			return;
 		}
-		if ( ! SimpleValidUserFieldsChecker.isValidPassword(password.getText()))
+		if ( ( !saml || !password.getText().isEmpty()) &&			
+				! SimpleValidUserFieldsChecker.isValidPassword(password.getText()))
 		{
 			Window.alert(Dwo2ExceptionsForGWT.instance.Dwo2ExceptionCode_Rest_Registration_Password_Invalid());
 			return;
 		}
+		if (password.getText().isEmpty())
+			domUser.setPassword("one_time_password");
+		else domUser.setPassword(MD5.md5(password.getText()));
 		
-		domUser.setPassword(MD5.md5(password.getText()));
-		
-		String sLogin = schoolLogin.getText();
 		String sCode = schoolCode.getText();
 		if(isfree && !demo) {
 			if (!wiswise) sLogin = sCode = null;
@@ -260,6 +289,10 @@ public class RegisterPanel extends ResizeComposite {
 
 	public RegisterController getController() {
 		return controller;
+	}
+
+	public String getSchoolClass() {
+		return schoolClass;
 	}
 	
 

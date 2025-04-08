@@ -159,6 +159,13 @@ public class PersistentHasRole implements Serializable {
     }
 
     /**
+	 * @param schoolGroup the schoolGroup to set
+	 */
+	public void setSchoolGroup(PersistentSchoolGroup schoolGroup) {
+		this.schoolGroup = schoolGroup;
+	}
+
+	/**
      * @return the user
      */
     public PersistentUser getUser() {
@@ -204,4 +211,12 @@ public class PersistentHasRole implements Serializable {
                 PersistenceClassType.PersistentHasRole.name(), hasRoleKey.getUserID(),hasRoleKey.getSchoolGroupID()));
         return id;
     }
+
+	public void setSchoolClass(PersistentSchoolClass psc) {
+		this.schoolClass = psc;
+		if (psc != null)
+			this.classID = psc.getClassID();
+		else
+			this.classID = null;
+	}
 }

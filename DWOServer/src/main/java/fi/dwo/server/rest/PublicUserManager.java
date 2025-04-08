@@ -3,10 +3,12 @@ package fi.dwo.server.rest;
 import com.digitalmolehill.crypto.SymmetricCryptor;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.security.TOTP;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
@@ -23,10 +25,12 @@ import fi.dwo.commons.util.DatatypeConverter;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import nl.uu.fi.dwo.rest.entities.RestAuthToken;
 import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
+import nl.uu.fi.dwo.rest.entities.RestNewStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewUser;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
@@ -54,7 +58,6 @@ import java.io.UnsupportedEncodingException;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Base64;
 import java.util.Date;
@@ -110,6 +113,32 @@ public class PublicUserManager {
     @Context
     private ServletContext servletContext;
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/submitStudent")
+    public Boolean submitNewStudent(RestNewStudent newUserReg) {
+        if (newUserReg == null || newUserReg.getDomNewStudent() == null) {
+            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
+        }
+        DomNewStudent n = newUserReg.getDomNewStudent();
+        
+        PersistentHasRole hasrole = newHasRole(n);
+        PersistentSchoolGroup gr = hasrole.getSchoolGroup();
+        PersistentSchool school = gr.getSchool();
+        String sc = n.getSchoolClassName();
+        PersistentSchoolClass psc = SchoolClassManager.findEntity(sc, school);
+        PersistentUser u = hasrole.getUser();
+        PersistentStudentOfClass soc = new PersistentStudentOfClass(u.getId(), psc.getClassID(), gr.getSchoolGroupID());
+        soc.setRegisterDate(u.getRegisterDate());
+        StudentOfClassManager.create(soc);
+        hasrole.setSchoolClass(psc);
+        HasRoleManager.edit(hasrole);
+        return Boolean.TRUE;
+    }
+    
+    
+    
+    
     /**
      * Registers a new user.
      *
@@ -120,24 +149,45 @@ public class PublicUserManager {
     @Produces({"application/json"})
     @Path("/submit")
     public Boolean submitNewUser(RestNewUser newUserReg) {
-        EntityManager em = DwoEmfFactory.getEntityManager();
         if (newUserReg == null || newUserReg.getDomNewUser() == null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         DomNewUser n = newUserReg.getDomNewUser();
-        if (!ValidUserFieldsChecker.isNonEmptyNorNull(n.getUsername(), n.getFamilyName(), n.getGivenName(), n.getEmail(), n.getPassword())) {
+
+        newHasRole(n);
+
+        return true;
+    }
+
+
+
+
+	private PersistentHasRole newHasRole(DomNewUser n) {
+		EntityManager em = DwoEmfFactory.getEntityManager();
+        if (!ValidUserFieldsChecker.isNonEmptyNorNull(n.getUsername(), n.getFamilyName(), n.getGivenName())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Required_Fields, "Required fields empty or null");
         }
 
-        if (!ValidUserFieldsChecker.isValidEmail(newUserReg.getDomNewUser().getEmail())) {
+        if (!n.getEmail().isEmpty() &&
+        	!ValidUserFieldsChecker.isValidEmail(n.getEmail())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
         }
-        if (!ValidUserFieldsChecker.isValidUserName(newUserReg.getDomNewUser().getUsername())) {
+		String sLogin = n.getSchoolLogin();
+		String check = n.getUsername();
+// realm of <sLogin> is @<sLogin>		
+		if (check.endsWith("@" + sLogin)) {
+			check = check.substring(0, check.length()- sLogin.length()-1);
+// dit is twijfelachtig...
+			int in = check.lastIndexOf('%');
+			if (in > 0) check = check.substring(0, in);
+			
+		}
+		if ( ! SimpleValidUserFieldsChecker.isValidUserName(check)) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
         }
 
         PersistentUser u;
-        u = UserManager.findByUserName(newUserReg.getDomNewUser().getUsername());
+        u = UserManager.findByUserName(n.getUsername());
         if (u != null) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_UserName_exists, "User with user id " + u.getUsername() + " already exists.");
         }
@@ -146,30 +196,30 @@ public class PublicUserManager {
         PersistentSchoolGroup sg;
         PersistentSchool school = null;
         //set null school values if appropiate.
-        if (newUserReg.getDomNewUser().getSchoolLogin() == null && newUserReg.getDomNewUser().getSchoolCode() == null
-                && newUserReg.getDomNewUser().getRole().equals(RoleType.STUDENT)) {
-            newUserReg.getDomNewUser().setSchoolLogin("null"); //TODO retrieve the null school login and code from the DwoSystemParameters.
-            newUserReg.getDomNewUser().setSchoolCode("null");
+        if (n.getSchoolLogin() == null && n.getSchoolCode() == null
+                && n.getRole()==(RoleType.STUDENT)) {
+            n.setSchoolLogin("null"); //TODO retrieve the null school login and code from the DwoSystemParameters.
+            n.setSchoolCode("null");
         }
         boolean singleschool; // true if a student from a paying school.
-        singleschool = RoleType.STUDENT == newUserReg.getDomNewUser().getRole() && ! "null".equals(newUserReg.getDomNewUser().getSchoolLogin());
+        singleschool = RoleType.STUDENT == n.getRole() && ! "null".equals(n.getSchoolLogin());
 
         //TODO user EntityManager APIs
         try {
             //           school = SchoolManager.findBySchoolLogin(newUserReg.getSchoolLogin());
             javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoolID = sg.schoolID and s.schoolLogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
-            q.setParameter("schoollogin", newUserReg.getDomNewUser().getSchoolLogin());
-            q.setParameter("schoolcode", newUserReg.getDomNewUser().getSchoolCode());
-            q.setParameter("role", (newUserReg.getDomNewUser().getRole().name()));
+            q.setParameter("schoollogin", n.getSchoolLogin());
+            q.setParameter("schoolcode", n.getSchoolCode());
+            q.setParameter("role", (n.getRole().name()));
             sg = (PersistentSchoolGroup) q.getSingleResult();
             school = sg.getSchool(); // Sadly, another query.
             if (school == null) {
-                LOG.log(Level.INFO, "Registration failed for school NULL with school login {0} and school code {1} for usercode {2}.", new Object[]{newUserReg.getDomNewUser().getSchoolLogin(), newUserReg.getDomNewUser().getSchoolLogin(), newUserReg.getDomNewUser().getSchoolCode(), newUserReg.getDomNewUser().getUsername()});
-                String msg = String.format("Registration failed for school with school login {0} and school code {1} for usercode {2}.", new Object[]{newUserReg.getDomNewUser().getSchoolLogin(), newUserReg.getDomNewUser().getSchoolCode(), newUserReg.getDomNewUser().getUsername()});
+                LOG.log(Level.INFO, "Registration failed for school NULL with school login {0} and school code {1} for usercode {2}.", new Object[]{n.getSchoolLogin(), n.getSchoolLogin(), n.getSchoolCode(), n.getUsername()});
+                String msg = String.format("Registration failed for school with school login {0} and school code {1} for usercode {2}.", new Object[]{n.getSchoolLogin(), n.getSchoolCode(), n.getUsername()});
                 throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Invalid_school_role_credentials, msg);
             }
             //invariant: usercode does not exists and a school exists for schoollogin and schoolcode
-            LOG.log(Level.FINE, "School-manager retrieved school {0} from school login and school code for usercode {3}.", new Object[]{school.getSchoolName(), newUserReg.getDomNewUser().getSchoolLogin(), newUserReg.getDomNewUser().getSchoolCode(), newUserReg.getDomNewUser().getUsername()});
+            LOG.log(Level.FINE, "School-manager retrieved school {0} from school login and school code for usercode {3}.", new Object[]{school.getSchoolName(), n.getSchoolLogin(), n.getSchoolCode(), n.getUsername()});
         } catch (Exception ex) {
             LOG.log(Level.WARNING, "School registration authentication failed.", ex);
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_School_authentication_failed, "School registration authentication failed, please try again.");
@@ -187,13 +237,13 @@ public class PublicUserManager {
         //invariant: usercode does not exists and school exists for schoollogin and schoolcode and has a valid licence.
         //adding user to school in role.         
         PersistentUser user = new PersistentUser();
-        user.setEmail(newUserReg.getDomNewUser().getEmail());
-        user.setGivenName(newUserReg.getDomNewUser().getGivenName());
-        user.setInsertion(newUserReg.getDomNewUser().getInsertion());
-        user.setLastname(newUserReg.getDomNewUser().getFamilyName());
-        user.setPassword(newUserReg.getDomNewUser().getPassword());
+        user.setEmail(n.getEmail());
+        user.setGivenName(n.getGivenName());
+        user.setInsertion(n.getInsertion());
+        user.setLastname(n.getFamilyName());
+        user.setPassword(n.getPassword());
         user.setRegisterDate(now);
-        user.setUsername(newUserReg.getDomNewUser().getUsername());
+        user.setUsername(n.getUsername());
         user.setSchoolGroupId(sg.getSchoolGroupID());
         user.setSingleSchoolAccount(singleschool);
         //add user
@@ -222,29 +272,32 @@ public class PublicUserManager {
         hasRole.setRegisterDate(now);
         hasRole.setRights("_"); //TODO make a rights manager
         HasRoleManager.create(hasRole);
-        LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), newUserReg.getDomNewUser().getRole().name()});
+        LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), n.getRole().name()});
         //success
 
-        //building hasRole for null school
-        if (!newUserReg.getDomNewUser().getSchoolLogin().equals("null")
-                || !newUserReg.getDomNewUser().getSchoolCode().endsWith("null")
-                || !newUserReg.getDomNewUser().getRole().equals(RoleType.STUDENT)) {
-            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+        //building hasRole for null school, 2nd hasrole for teachers/schooladmins/dwoadmins
+        if (!n.getSchoolLogin().equals("null")
+                || !n.getSchoolCode().endsWith("null")
+                || n.getRole()!=(RoleType.STUDENT)) {
+        	PersistentHasRole hasRole2 = new PersistentHasRole();
+        	PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
             Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
+            pk = new PersistentHasRolePK();
             pk.setSchoolGroupID(schoolGroupId);
             pk.setUserID(user.getId());
-            hasRole.setPersistentHasRolePK(pk);
-
-            hasRole.setClassID(null);
-            hasRole.setLastLogin(now); //considering an account creation a first login as there is a password
-            hasRole.setRegisterDate(now);
-            hasRole.setRights("_"); //TODO make a rights manager
-            HasRoleManager.create(hasRole);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), newUserReg.getDomNewUser().getRole().name()});
+            hasRole2.setPersistentHasRolePK(pk);
+            hasRole2.setClassID(null);
+            hasRole2.setLastLogin(now); //considering an account creation a first login as there is a password
+            hasRole2.setRegisterDate(now);
+            hasRole2.setRights("_"); //TODO make a rights manager
+            HasRoleManager.create(hasRole2);
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), n.getRole().name()});
         }
-
-        return true;
-    }
+        hasRole.setUser(user);
+        hasRole.setSchoolGroup(sg);
+        
+        return hasRole;
+	}
 
     /**
      * Verifies that a user, password combination. Waits a configured amount of

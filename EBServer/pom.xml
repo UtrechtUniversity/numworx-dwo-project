@@ -817,7 +817,7 @@
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
 		<DWOmAccessVersion>2.5.20</DWOmAccessVersion>
-		<RegisterVersion>2.5.2</RegisterVersion>
+		<RegisterVersion>2.5.41-SNAPSHOT</RegisterVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testip6server</aws.environmentName>
@@ -826,7 +826,7 @@
         <http.port>80</http.port>
         <upload.servlet />
         <upload.servlet.mapping />
-        <OAuth2ClientVersion>1.0.16</OAuth2ClientVersion>
+        <OAuth2ClientVersion>2.5.41-SNAPSHOT</OAuth2ClientVersion>
 	</properties>
 	<profiles>
 		<profile>
