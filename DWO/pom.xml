@@ -41,6 +41,7 @@
 <!--      	<module>../WriteMathGWT</module> -->
 <!--		<module>../osiris-import</module>-->
 <!-- 		<module>../notebook</module> -->
+		<module>../Register</module>
         <module>../EBServer</module>
 <!--        <module>../schoolyear-jclient-lib</module>-->
 <!--        <module>../schoolyear-war</module>-->

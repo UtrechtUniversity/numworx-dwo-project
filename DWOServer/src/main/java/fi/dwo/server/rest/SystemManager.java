@@ -183,8 +183,11 @@ public class SystemManager {
     if (list.isEmpty())
       return input;
     String base = input;
-    Set<String> names = list.stream().map(PersistentUser::getUsername).collect(Collectors.toSet());
-    while ( names.contains(input) && cntr < 100) {
+    Set<String> names = list.stream()
+    		.map(PersistentUser::getUsername)
+    		.map(String::toLowerCase)
+    		.collect(Collectors.toSet());
+    while ( names.contains(input.toLowerCase()) && cntr < 100) {
       input = base + (++cntr);      
     }
     return input;
