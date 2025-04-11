@@ -934,6 +934,7 @@ pUser.setPassword(""); // INVALID PASSWORD
 // FIXME i18n         
             String content;
 // FIXME Beter subject, nu  "Nieuw wachtwoord"
+        	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
 
             InputStream in = getClass().getResourceAsStream("passwordChangeMessage_" + language + ".txt");
             if (in == null) in = getClass().getResourceAsStream("passwordChangeMessage.txt");
@@ -948,7 +949,8 @@ pUser.setPassword(""); // INVALID PASSWORD
 
             content = MessageFormat.format(r, 
             		authCode,
-            		url.toString()
+            		url.toString(),
+            		cdn
             		);
             int sep = content.indexOf("----------");
             String text = content.substring(0,sep).trim();
@@ -1006,11 +1008,13 @@ pUser.setPassword(""); // INVALID PASSWORD
         	r += line;
         }
         reader.close();
+    	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
         r = MessageFormat.format(r, 
         		result,
         		htmlEncode(back),
         		terug,
-        		nw);
+        		nw, 
+        		cdn);
         
         return r;
 	}
@@ -1053,13 +1057,15 @@ pUser.setPassword(""); // INVALID PASSWORD
         	r += line;
         }
         reader.close();
+    	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
         r = MessageFormat.format(r, 
         		htmlEncode(message),
         		htmlEncode(language),
         		htmlEncode(authCode),
         		TextMapper.getText(TextMapper.BTN_OK),
         		TextMapper.getText(TextMapper.GUIP_PASSWORD), 
-        		TextMapper.getText(TextMapper.GUIP_PASSWORD));
+        		TextMapper.getText(TextMapper.GUIP_PASSWORD), 
+        		cdn);
          TextMapper.setLanguage(old);
         return r;
     }

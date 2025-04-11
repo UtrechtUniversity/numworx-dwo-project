@@ -18,7 +18,7 @@ public class Text_nl extends ListResourceBundle {
                         { TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD, "Vul je auth-code en je nieuwe wachtwoord in om je wachtwoord te wijzigen."},
                         { TextMapper.LBL_ILLEGAL_AUTHCODE, "De auth-code is ongeldig, mogelijk is de geldigheidsduur overschreden. Vraag in dat geval een nieuwe aan."},
                         { TextMapper.LBL_UNKNOWN_COMBINATION, "Deze combinatie is onbekend en uw acties zijn gelogd."},
-                        { TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT, "Een email met de auth-code en instructies is verstuurd naar u."},
+                        { TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT, "Een email met de auth-code en instructies is verstuurd naar u. Let op, mogelijk komt het bericht in de spambox terecht."},
 			{ TextMapper.LBL_CLICK_TO_SELECT_A_STUDENT, "Selecteer een student." },
 			{ TextMapper.LBL_CLICK_TO_SELECT_A_TEACHER, "Selecteer een docent." },
 			{ TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLADMIN, "Selecteer een schooladmin." },

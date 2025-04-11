@@ -18,7 +18,7 @@ public class Text_en extends ListResourceBundle {
                         { TextMapper.LBL_ENTER_AUTHCODE_FOR_NEW_PASSWORD, "Enter your auth-code and a new password to change it."},
                         { TextMapper.LBL_ILLEGAL_AUTHCODE, "The auth-code is invalid, possible it has expired."},
                         { TextMapper.LBL_UNKNOWN_COMBINATION, "This combination is unknown and your actions have been logged."},
-                        { TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT, "An email with the auth-code has been sent to you."},
+                        { TextMapper.LBL_EMAIL_WITH_AUTHCODE_SENT, "An email with the auth-code has been sent to you. It is possible that it is going to the spambox."},
 			{ TextMapper.LBL_CLICK_TO_SELECT_A_STUDENT, "Select a student." },
 			{ TextMapper.LBL_CLICK_TO_SELECT_A_TEACHER, "Select a teacher." },
 			{ TextMapper.LBL_CLICK_TO_SELECT_A_SCHOOLADMIN, "Select a schooladmin." },
