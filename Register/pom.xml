@@ -117,10 +117,10 @@
 				<artifactId>gwt-maven-plugin</artifactId>
 				<version>${gwtVersion}</version>
 				<configuration>
+					<localWorkers>1</localWorkers>
 					<module>nl.uu.fi.dwo.register.Register</module>
 					<runTarget>${project.artifactId}.html</runTarget>
-					<extraJvmArgs>-Xms768m -Xmx1024m</extraJvmArgs>
-					<style>PRETTY</style>
+					<extraJvmArgs>-Xms768m -Xmx2048m</extraJvmArgs>
 					<i18nConstantsBundles>
 						<i18nConstantsBundle>nl.uu.fi.dwo.register.client.RegisterBundle</i18nConstantsBundle>
 					</i18nConstantsBundles>
@@ -272,7 +272,7 @@
 		<version>2.5.41-SNAPSHOT</version>
 	</parent>
 	<properties>
-		<gwtVersion>2.8.2</gwtVersion>
+		<gwtVersion>2.9.0</gwtVersion>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<tomcat7.version>7.0.107</tomcat7.version>

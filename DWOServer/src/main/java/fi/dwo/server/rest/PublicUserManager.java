@@ -789,6 +789,7 @@ pUser.setPassword(""); // INVALID PASSWORD
     @Path("/requestNewPassword")
     public String reqPasswordChangeForm(@QueryParam("language") String language, @QueryParam("back") String back) throws IOException {
     	String dwo_env = System.getProperty("DWO_ENV", "app");
+    	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
     	if (dwo_env.contains("saml"))
     		throw new WebApplicationException(HttpServletResponse.SC_NOT_FOUND);
 
@@ -818,7 +819,8 @@ pUser.setPassword(""); // INVALID PASSWORD
         		TextMapper.getText(TextMapper.BTN_OK),
         		htmlEncode(language),
         		htmlEncode(back), 
-        		TextMapper.getText(TextMapper.GUIP_PASSWORD));
+        		TextMapper.getText(TextMapper.GUIP_PASSWORD),  // (6)
+        		cdn);
         
         TextMapper.setLanguage(old);
         return r;
