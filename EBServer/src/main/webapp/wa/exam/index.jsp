@@ -36,9 +36,9 @@
 <%    }
 	} else {
 %>
-	  <a target='_top' href='/wiskunde-actief/exam/toets.jsp<%=id%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
+	  <a target='_top' href='/wa/exam/toets.jsp<%=id%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%    if (System.getProperty("DWO_ENV", "").contains("test")) { %>
-	  <br><a target='_top' href='/wiskunde-actief/exam/toetsentree.jsp<%=id%>'>Start de beveiligde <strong>exam</strong> omgeving via Entree</a>
+	  <br><a target='_top' href='/wa/exam/toetsentree.jsp<%=id%>'>Start de beveiligde <strong>exam</strong> omgeving via Entree</a>
 <%	  
 	}}
 
