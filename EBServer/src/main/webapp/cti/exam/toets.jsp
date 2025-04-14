@@ -57,7 +57,7 @@
 	String name = "";
 	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
 	try {
-		DomDwoProfile dom = PublicProfileCache.get("114");
+		DomDwoProfile dom = PublicProfileCache.get("115");
 		if (dom.getDwoProfileRights().contains("c"))
 			name = dom.getDwoProfileName();
 	} catch(Exception e) {
