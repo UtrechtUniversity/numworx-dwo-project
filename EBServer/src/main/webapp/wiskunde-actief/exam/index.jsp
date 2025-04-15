@@ -21,7 +21,7 @@
 %>
 <a href='sebs://<%=server %>/wiskunde-actief/exam/<%=leerling %>.seb<%=code%>'>Start de beveiligde <strong>toets</strong> omgeving</a>
 
-<%  }
+<%
 	} else {
 %>
 	  <a target='_top' href='/wiskunde-actief/exam/toets.jsp<%=id%><%=code%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
