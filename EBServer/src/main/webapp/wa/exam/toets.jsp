@@ -55,7 +55,7 @@
 	String name = "";
 	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
 	try {
-		DomDwoProfile dom = PublicProfileCache.get("112");
+		DomDwoProfile dom = PublicProfileCache.get("113");
 		if (dom.getDwoProfileRights().contains("c"))
 			name = dom.getDwoProfileName();
 	} catch(Exception e) {
@@ -65,17 +65,17 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
+    <link type="text/css" rel="stylesheet" href="<%=cdn %>/apps/DWOplayer.css">
 <% if (!name.isEmpty()) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/<%=name %>.css" ><%}%>    
     <meta name="gwt:property" content="locale=nl" >
     <script>
-    	DWO_PROFILE_ID = 112
+    	DWO_PROFILE_ID = 113
     	formfactor = "<%=formfactor%>"
    		SECURE_MODE="SEB" // possibly others
         dwo_env = "<%=dwo_env%>"
         defaultPlace = "<%= defaultPlace %>"
     	function logout() {
-    		window.location = "https://<%=server%>/wiskunde-actief/exam/logout.html"
+    		window.location = "https://<%=server%>/wa/exam/logout.html"
     	}
     </script>
     <title>Safe Exam Browser</title>

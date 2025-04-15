@@ -24,8 +24,8 @@
 <%
 	} else {
 %>
-	  <a target='_top' href='/wiskunde-actief/exam/toets.jsp<%=id%><%=code%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
-<%  }
+	  <a target='_top' href='/wa/exam/toets.jsp<%=id%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
+}
 
 	if ( needSEB ) {
 %>
