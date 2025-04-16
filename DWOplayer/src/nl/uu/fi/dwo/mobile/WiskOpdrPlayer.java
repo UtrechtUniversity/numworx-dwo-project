@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 
 import org.osgi.util.promise.Promise;
@@ -81,7 +82,13 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		detector.addIdleHandler(this);
 		detector.start();		
 	}
-	 
+
+	@Inject 
+	void setAPI(@Named("parentAPI") Scorm2004IF api) {
+		api.getValuePromise("dme.style.css")
+		.filter(v -> !v.isEmpty())
+		.then( style -> { DWOplayer.insertInlineCss(style.getValue()); return null; });
+	}
 	 
 	private String PREFIX;
 	@Inject void setParameters(DWOplayerParameters p) {

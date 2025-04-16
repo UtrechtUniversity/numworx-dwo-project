@@ -29,6 +29,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter.Callback;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -82,6 +83,9 @@ public class DescriptionPresenter {
           "GetValue" : function(key) {
               return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::getValue(Ljava/lang/String;)(key)
           },
+		  "GetValueAsync" : function(key, callback) {
+				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::getValueAsync(Ljava/lang/String;Lnl/uu/fi/dwo/lms/gwtclient/gwt/results/StudentScoResultPresenter$Callback;)(key, callback)
+			},
           "SetValue" : function(key, value) {
               return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
           },
@@ -121,6 +125,10 @@ public class DescriptionPresenter {
 			  LOG.info("result GetValue: " + shortValue);
 			  return value;
 			}
+		
+		private void getValueAsync(String key, Callback callback) {
+			callback.resolve(getValue(key));
+		}
 
 		private String setValue(String key, String value) {
 			LOG.info("SetValue "+ key);
