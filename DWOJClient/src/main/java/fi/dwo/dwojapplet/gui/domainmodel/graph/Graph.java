@@ -689,6 +689,8 @@ private String voorkennisPopupVariant;
 		// find variant structures of id.
 		NodeLeaf leaf = mapById.get(id);
 		List<DomStudentModelVariant> variants = leaf.getInfo().getVariants();
+		if (variants == null)
+			variants = Collections.emptyList();
 		Optional<Set<String>> deselections = variants.stream()
 				.filter(v -> Objects.equals(variant, v.getName()))
 				.findAny()
