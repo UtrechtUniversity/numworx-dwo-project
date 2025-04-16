@@ -251,16 +251,12 @@ public class UserManagerPIT {
      */
     @Test
     public void testFindByUserName() {
-        try {
             UserManager.create(userA);
             PersistentUser result = UserManager.findByUserName(userA.getUsername());
             if (!result.similar(userA)) {
                 fail("Found different user as created.");
             }
             UserManager.destroy(result.getId());
-        } catch (Exception e) {
-            fail("Exception during find.");
-        }
     }
 
     /**

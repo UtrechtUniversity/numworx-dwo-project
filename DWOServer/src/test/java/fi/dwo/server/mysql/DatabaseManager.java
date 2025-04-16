@@ -24,7 +24,7 @@ public class DatabaseManager {
 
     private static final Logger LOG = Logger.getLogger(DatabaseManager.class.getName());
 
-    private String conString = "";
+    private String conString = "", initTestDatabase;
     private Connection con = null;
 
     public DatabaseManager() {
@@ -73,6 +73,7 @@ public class DatabaseManager {
 
         //assign properties to static value.
         conString = properties.getProperty("resourceString");
+        initTestDatabase = properties.getProperty("initTestDatabase", "InitTestDatabase.sql");
         LOG.log(Level.INFO, "Parsing property file.");
         LOG.log(Level.INFO, "Property {0} has value: {1}", new Object[]{"resourceString", conString.length()});
         LOG.log(Level.INFO, "Finnished property file..");
@@ -87,7 +88,7 @@ public class DatabaseManager {
     }
 
     public void IntializeTestDatabase() {
-        RunScript("InitTestDatabase.sql");
+        RunScript(initTestDatabase);
     }
 
     private void RunScript(String script) {
