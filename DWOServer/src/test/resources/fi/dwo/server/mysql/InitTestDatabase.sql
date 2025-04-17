@@ -1087,3 +1087,24 @@ CREATE TABLE `tblmfa` (
   `del` tinyint(4) NOT NULL,
   PRIMARY KEY (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS tblscopage;
+CREATE TABLE `tblscopage` (
+  `scoID` int NOT NULL,
+  `sequencenr` int NOT NULL,
+  `userID` int NOT NULL,
+  `schoolgroupID` int NOT NULL,
+  `optlock` int NOT NULL,
+  `del` tinyint NOT NULL,
+  `lastChangeTimeStamp` bigint NOT NULL,
+  `courseID` int DEFAULT NULL,
+  `score` int DEFAULT NULL,
+  `maxScore` int DEFAULT NULL,
+  `correctie` int DEFAULT NULL,
+  `checkDocent` tinyint DEFAULT NULL,
+  `correct` tinyint DEFAULT NULL,
+  `docentCorrect` tinyint DEFAULT NULL,
+  `visited` tinyint DEFAULT NULL,
+  PRIMARY KEY (`scoID`,`sequencenr`,`userID`,`schoolgroupID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
