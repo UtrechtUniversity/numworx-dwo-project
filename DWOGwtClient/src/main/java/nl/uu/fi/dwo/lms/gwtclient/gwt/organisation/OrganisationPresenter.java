@@ -3,11 +3,13 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.organisation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -53,9 +55,16 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.OrderType;
+import nl.uu.fi.dwo.rest.dom.entities.util.SortType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class OrganisationPresenter {
+
+// same as in Helpers.sort
+		   private static native int localCompare( String source, String target ) /*-{
+		     	return source.localeCompare( target );
+		   }-*/;
 
   public interface Display extends BasicDisplay {
     
@@ -94,6 +103,8 @@ public class OrganisationPresenter {
   long restsize = 100;
   SimplePager pager;
   Stub stub;
+  OrderType order = OrderType.asc;
+  SortType  sort  = SortType.familyName;
   
   static final Predicate<Entry<String, TaggedDomUser<DomUser>>> NULL =  t -> true;
   
@@ -210,7 +221,7 @@ public class OrganisationPresenter {
     this.service = service;
     this.FAILURE = new LoggingFailure(LOG, bus);
 
-    if (vars.isTest()) {
+    if (vars.isTest()||vars.isSaml()) { // isSaml voor gebruik in numworx.uu.nl
     
 	    RootPanel root = RootPanel.get("organisationpager");
 		root.clear();
@@ -233,6 +244,8 @@ public class OrganisationPresenter {
     view.init();
     view.clear();
     view.setLoadingTableMessage();
+    sort = SortType.familyName;
+    order = OrderType.asc;
     
     DomSchool school = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
     boolean premium = dwoGlobalVars.isPremium();
@@ -300,7 +313,9 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
 	Map<String, TaggedDomUser<DomUser>> ss = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
 			student -> {
 				return new TaggedDomUser<DomUser>(student, new ArrayList<String>());
-			}));
+			}, 
+			(e1 , e2) -> e1, // drop
+			LinkedHashMap::new));
 		org.getUsersOfClasses().forEach(t -> {
 		String sid = t.getUserId().getIdString();
 		List<String> array = ss.get(sid).getMemberOf();
@@ -349,6 +364,8 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
     view.setLoadingTableMessage();
     DomSchoolOrganisation org = new DomSchoolOrganisation();
     org.setRole(RoleType.STUDENT);
+    org.setSort(sort);
+    org.setOrder(order);
     org.setLimit(restsize);
     org.setSchoolClasses(schoolClasses.values().stream().map(TaggedDomSchoolClass::getSchoolClass).collect(Collectors.toList()));
     students.clear();
@@ -566,4 +583,48 @@ static boolean containsIgnoreCase(String source, String regex) {
 	  RegExp r = RegExp.compile(regex, "i");
 	  return null !=  r.exec(source);	  
   }
+
+@JsMethod
+void clickSortButton(String value, String order, String type) {
+	LOG.info( "value is " + value + ", order = " + order);
+	if (this.order.name().equals(order) && this.sort.name().equals(value)) return;
+	
+	this.order = OrderType.valueOf(order);
+	this.sort = SortType.valueOf(value);
+	if (stub != null && stub.role == RoleType.STUDENT && students.size() > pagesize) {
+		students = students.values().stream().sorted(new Comparator<TaggedDomUser<DomUser>>() {
+
+			@Override
+			public int compare(TaggedDomUser<DomUser> o1, TaggedDomUser<DomUser> o2) {
+				String a, b;
+				switch(OrganisationPresenter.this.sort) {
+				
+				case givenName:
+						a = o1.getUser().getGivenName();
+						b = o2.getUser().getGivenName();
+						break;
+				case userName:
+						a = o1.getUser().getUserName();
+						b = o2.getUser().getUserName();
+						break;
+				case schoolClassName:
+						a = o1.getMemberOf().toString(); // niet helemaal goed...
+						b = o2.getMemberOf().toString();
+						break;
+				case familyName:
+					default:
+						a = o1.getUser().getFamilyName();
+						b = o2.getUser().getFamilyName();						
+				}
+				int result = localCompare(a, b);
+						// a.compareToIgnoreCase(b);
+				if (OrganisationPresenter.this.order == OrderType.desc) result = -result;
+				return result;
+			}}).collect(Collectors.toMap(t -> t.getUser().getId().getIdString(), Function.identity()
+					, (a,b) -> a, LinkedHashMap::new
+					));
+			stub.personen = students;
+			stub.setVisibleRange(stub.getVisibleRange());
+	}
+}
 }

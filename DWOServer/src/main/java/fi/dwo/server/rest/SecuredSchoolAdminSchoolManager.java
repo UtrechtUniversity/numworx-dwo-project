@@ -13,6 +13,7 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.OrderType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -47,6 +48,8 @@ import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import fi.dwo.server.rest.util.Realm;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -875,6 +878,28 @@ public class SecuredSchoolAdminSchoolManager {
  	 DomSchoolOrganisation org = rest.getDomSchoolOrganisation();
      PersistentSchool school = state.getSchool();
      List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
+     Collections.sort(userList, new Comparator<PersistentUser>() {
+
+		@Override
+		public int compare(PersistentUser o1, PersistentUser o2) {
+			String a; String b;
+			int result;
+			switch(org.getSort()) {
+			case familyName:
+			default: 
+				a = o1.getLastname(); b = o2.getLastname();
+				break;
+			}
+			result = a.compareToIgnoreCase(b);
+			if (org.getOrder() == OrderType.desc) result = -result;
+			return result;
+		}
+     	}
+     );
+     
+     
+     
+     
      if (org.getSkip() != null) {
     	 userList = userList.subList(org.getSkip().intValue(), userList.size());
      } else 
