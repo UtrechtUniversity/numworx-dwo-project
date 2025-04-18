@@ -55,7 +55,7 @@ public class DatabaseManager {
     }
 
     private void ReadConfigProperties(String runPropFile) throws IOException {
-        LOG.log(Level.INFO, "Opening property file for reading configuration parameters.");
+        LOG.log(Level.FINE, "Opening property file for reading configuration parameters.");
 
         Properties properties = new Properties();
 
@@ -74,9 +74,9 @@ public class DatabaseManager {
         //assign properties to static value.
         conString = properties.getProperty("resourceString");
         initTestDatabase = properties.getProperty("initTestDatabase", "InitTestDatabase.sql");
-        LOG.log(Level.INFO, "Parsing property file.");
-        LOG.log(Level.INFO, "Property {0} has value: {1}", new Object[]{"resourceString", conString.length()});
-        LOG.log(Level.INFO, "Finnished property file..");
+        LOG.log(Level.FINE, "Parsing property file.");
+        LOG.log(Level.FINE, "Property {0} has value: {1}", new Object[]{"resourceString", conString.length()});
+        LOG.log(Level.FINE, "Finnished property file..");
     }
 
     public void ClearDatabase() {

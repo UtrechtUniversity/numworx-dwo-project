@@ -16,6 +16,26 @@ USE `dwojunittest`;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+DROP TABLE IF EXISTS tblscopage;
+CREATE TABLE `tblscopage` (
+  `scoID` int NOT NULL,
+  `sequencenr` int NOT NULL,
+  `userID` int NOT NULL,
+  `schoolgroupID` int NOT NULL,
+  `optlock` int NOT NULL,
+  `del` tinyint NOT NULL,
+  `lastChangeTimeStamp` bigint NOT NULL,
+  `courseID` int DEFAULT NULL,
+  `score` int DEFAULT NULL,
+  `maxScore` int DEFAULT NULL,
+  `correctie` int DEFAULT NULL,
+  `checkDocent` tinyint DEFAULT NULL,
+  `visited` tinyint DEFAULT NULL,
+  `correct` tinyint DEFAULT NULL,
+  `docentCorrect` tinyint DEFAULT NULL,
+  PRIMARY KEY (`scoID`,`sequencenr`,`userID`,`schoolgroupID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 --
 -- Table structure for table `tblanalyticalmodel`
 --
@@ -1088,23 +1108,4 @@ CREATE TABLE `tblmfa` (
   PRIMARY KEY (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS tblscopage;
-CREATE TABLE `tblscopage` (
-  `scoID` int NOT NULL,
-  `sequencenr` int NOT NULL,
-  `userID` int NOT NULL,
-  `schoolgroupID` int NOT NULL,
-  `optlock` int NOT NULL,
-  `del` tinyint NOT NULL,
-  `lastChangeTimeStamp` bigint NOT NULL,
-  `courseID` int DEFAULT NULL,
-  `score` int DEFAULT NULL,
-  `maxScore` int DEFAULT NULL,
-  `correctie` int DEFAULT NULL,
-  `checkDocent` tinyint DEFAULT NULL,
-  `correct` tinyint DEFAULT NULL,
-  `docentCorrect` tinyint DEFAULT NULL,
-  `visited` tinyint DEFAULT NULL,
-  PRIMARY KEY (`scoID`,`sequencenr`,`userID`,`schoolgroupID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
