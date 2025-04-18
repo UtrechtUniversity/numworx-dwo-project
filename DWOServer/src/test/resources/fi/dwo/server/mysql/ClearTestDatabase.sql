@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS tblschoolmethod;
 DROP TABLE IF EXISTS tblsco;
 DROP TABLE IF EXISTS tblscocontext;
 DROP TABLE IF EXISTS tblscodata;
-DROP TABLE IF EXISTS tblscopage;
+-- DROP TABLE IF EXISTS tblscopage; -- deze wordt in jenkins weggehaald.
 DROP TABLE IF EXISTS tblscoview;
 DROP TABLE IF EXISTS tblstudentof;
 DROP TABLE IF EXISTS tblstudentmodelcontext CASCADE;
