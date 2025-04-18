@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
@@ -211,6 +212,15 @@ public class OrganisationPresenter {
 		this.filter = filter;	
 		countPersons(isRowCountExact());
 	}
+
+	public void init() {
+		filter = NULL;
+		personen = Collections.emptyMap();
+		rowCountExact = false;
+		rowCount = 0;
+		visibleRange = new Range(0,pagesize);
+		role = null;
+	}
 	  
   }
   
@@ -246,6 +256,7 @@ public class OrganisationPresenter {
     view.setLoadingTableMessage();
     sort = SortType.familyName;
     order = OrderType.asc;
+    if (stub != null) stub.init();
     
     DomSchool school = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
     boolean premium = dwoGlobalVars.isPremium();
@@ -253,36 +264,6 @@ public class OrganisationPresenter {
 	view.initEditModules(school.teachersCanWrite(), school.accessControl() && premium, visible && premium);
     view.initChooseClass(school.studentsCanRegisterForSchoolClasses());
     
-//    Promise<List<DomSchoolClass>> pp = service.getTeachersSchoolClasses().then(
-//      p -> {
-//        List<DomSchoolClass> list = p.getValue();
-//        LinkedHashMap<String,TaggedDomSchoolClass> map = new LinkedHashMap<>();
-//        Collections.sort(list, (a,b) -> {
-//          return String.CASE_INSENSITIVE_ORDER.compare(a.getSchoolClassName(), b.getSchoolClassName());
-//        });
-//        list.forEach(item -> map.put(item.getId().toString(), new TaggedDomSchoolClass(item)));
-//        view.showSchoolClasses(map);
-//        schoolClasses = map;
-//        return p;
-//      });
-//      Promise<?> p1 = pp.flatMap(this::getStudents);
-//      Promise<List<DomStudent>> p2 = service.getTeachersStudents();
-//      Promises.all(p1,p2).then(
-//        x -> {
-//          List<DomStudent> s = p2.getValue();
-//          students = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
-//                                        student -> {
-//                                          return new TaggedDomUser<DomStudent>(student, new ArrayList<String>());
-//                                          
-//                                     }));
-//          for(Entry<String, Promise<List<DomStudent>>> entry : studentMap.entrySet()) {
-//            String key = entry.getKey();
-//            entry.getValue().getValue().forEach(item -> students.get(item.getId().getIdString()).getMemberOf().add(key));
-//          }
-//          showPersonen(students, RoleType.STUDENT);
-//          return null;
-//        }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
-//      
     	DomSchoolOrganisation org = new DomSchoolOrganisation();
     	org.setLimit(restsize);
     	org.setRole(RoleType.STUDENT);
@@ -594,6 +575,21 @@ void clickSortButton(String value, String order, String type) {
 	if (stub != null && stub.role == RoleType.STUDENT && students.size() > pagesize) {
 		students = students.values().stream().sorted(new Comparator<TaggedDomUser<DomUser>>() {
 
+			private String toString(List<String> memberof) {
+				StringBuffer sb = new StringBuffer();
+				Consumer<? super String> fun = t -> sb.append(t).append(", ");
+				try {
+					memberof.stream()
+						.map ( m -> schoolClasses.get(m).getSchoolClass().getSchoolClassName())
+					    .forEach(fun);
+				} catch (Exception oops) { // NPE not fatal.
+				}
+				int l = sb.length();
+				if (l >= 2) sb.setLength(l-2); 
+				return sb.toString();
+			}
+			
+			
 			@Override
 			public int compare(TaggedDomUser<DomUser> o1, TaggedDomUser<DomUser> o2) {
 				String a, b;
@@ -608,8 +604,8 @@ void clickSortButton(String value, String order, String type) {
 						b = o2.getUser().getUserName();
 						break;
 				case schoolClassName:
-						a = o1.getMemberOf().toString(); // niet helemaal goed...
-						b = o2.getMemberOf().toString();
+						a = toString(o1.getMemberOf());
+						b = toString(o2.getMemberOf());
 						break;
 				case familyName:
 					default:

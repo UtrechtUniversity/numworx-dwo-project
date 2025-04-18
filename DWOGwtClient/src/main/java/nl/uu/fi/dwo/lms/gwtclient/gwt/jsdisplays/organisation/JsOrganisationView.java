@@ -7,7 +7,6 @@ import javax.inject.Singleton;
 
 import com.google.gwt.json.client.JSONObject;
 
-import nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.persons.JsImportPersonsDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.*;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClass;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.persons.TaggedDomSchoolClassCodec;
