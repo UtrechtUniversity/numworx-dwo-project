@@ -41,6 +41,12 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
 		return service.getDescription(id, info);
 	}
+	
+	@Override
+	public Promise<String> getCSS(DomStudentModelContextId id, DomStudentModelContextInfo info) {
+		return service.getCSS(id, info);
+	}
+	
 
 	@Override
 	public void clear() {

@@ -146,6 +146,16 @@ public class StudentModelService implements DescriptionService {
 			return put(key, manager.getDescription(id, info.getId(), lang, context));
 	}
 	
+	@Override
+	public Promise<String> getCSS(DomStudentModelContextId id, DomStudentModelContextInfo info) {
+		    String key = key(id, info);
+		    //if (containsKey(key)) return get(key);
+			Promise<String> css = manager.getCSS(id, info.getId(), lang, context);
+			return css; // no caching yet
+	}
+
+	
+	
 	public Promise<DomStudentModelContext4Student> getForClass(DomStudentModelContextId id, DomSchoolClassId sc ) {
 		String key = key(id, sc);
 		if (containsKey(key)) return get(key);
