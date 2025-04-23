@@ -13,6 +13,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.Base64.Decoder;
 import java.util.stream.Collectors;
 
@@ -44,7 +45,7 @@ import io.jsonwebtoken.impl.DefaultClaims;
 
 public class EntreeSLogin implements SigningKeyResolver, Login {
 
-
+	private static final Logger LOG = Logger.getLogger(EntreeSLogin.class.getName());
     private static final String ID_TOKEN= "id_token";
 //    private static final String PASSWORD = "urn:uu.nl:idp:contract:password";
 //    private static final String PASSWORD_MFA = "urn:uu.nl:idp:contract:password:multifactor";
@@ -188,6 +189,7 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 	
 	
 	Claims idToken(String idToken) {
+		LOG.info("idToken = " + idToken);
 		JwtParser parser = Jwts.parser().setSigningKeyResolver(this);
 		parser.setAllowedClockSkewSeconds(10);
 
@@ -231,6 +233,7 @@ public class EntreeSLogin implements SigningKeyResolver, Login {
 		OAuthResourceResponse response;
 		response = oAuthClient.resource(request, "", OAuthResourceResponse.class);
 		JSONParser parser = new JSONParser();
+		LOG.info("UserInfo = " + response.getBody());
 		Object parse = parser.parse(response.getBody());
 	    Claims body = new DefaultClaims((Map<String, Object>) parse);
 		sn = body.get("sn", String.class);
