@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Promise;
+import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.http.client.Request;
@@ -137,6 +138,10 @@ public Promise<String> getDescription(DomStudentModelContextId pid, String uuid,
 		rest.setRestContext(context);
 		rest.setDomStudentModelContext(id);
 		return F(service::getMethod, PathId.getId(context), rest);
+	}
+
+	public Promise<String> getCSS(DomStudentModelContextId id, String uuid, String lang, DomContext context) {
+		return Promises.resolved("");
 	}
 
 /*

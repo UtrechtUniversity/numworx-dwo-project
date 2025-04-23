@@ -35,12 +35,14 @@ public class StudentResultsService implements StudentResults {
 	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
 		return service.getDescription(id, info);
 	}
+	@Override
+	public Promise<String> getCSS(DomStudentModelContextId id, DomStudentModelContextInfo info) {
+		return service.getCSS(id, info);
+	}
 
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		
 	}
 
 
@@ -74,7 +76,7 @@ public class StudentResultsService implements StudentResults {
 
 	@Override
 	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {
-		DomMethod id = new DomMethod(structure.getActiveMethod());
+		//DomMethod id = new DomMethod(structure.getActiveMethod());
 		return service.getActiveMethod(structure.getActiveMethod());
 	}
 

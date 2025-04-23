@@ -7,5 +7,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 
 public interface DescriptionService {
 	Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info);
+	Promise<String> getCSS(DomStudentModelContextId current, DomStudentModelContextInfo info);
 
 }

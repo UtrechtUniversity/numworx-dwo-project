@@ -113,6 +113,7 @@ public class DescriptionPresenter {
 	  static final String WISKOPDR_SIG = "H4sIAAAAAA";
 	  static final String GOTO_URL = "dme.goto_url";
 	  private String launch_data;
+	  private Promise<String> launch_css = Promises.resolved("");
 	  private SwitchViewEvent event;
 
 		private String getValue(String key) {
@@ -127,6 +128,10 @@ public class DescriptionPresenter {
 			}
 		
 		private void getValueAsync(String key, Callback callback) {
+			if ("dme.style.css".equals(key)) {
+				launch_css.then( p -> { callback.resolve(p.getValue()); return p; });
+				return;
+			}
 			callback.resolve(getValue(key));
 		}
 
@@ -198,6 +203,7 @@ public class DescriptionPresenter {
 					}
 				}
 			}
+			launch_css = service.getCSS(current, info); // FIXME Grrrrr... side effect!!!!!
 			return service.getDescription(current, info)
 			   .then(p -> {
 				String text = p.getValue();
@@ -278,6 +284,7 @@ public class DescriptionPresenter {
 				}
 				json = selectVariant(json, info, method);
 				Widget description = this.createDescription(text, json);
+				launch_css = service.getCSS(current, info);
 				return Promises.resolved(description);
 			});
 			

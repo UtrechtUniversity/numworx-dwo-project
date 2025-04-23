@@ -207,6 +207,10 @@ public class StudentResultsService extends StudentModelScoreUtil implements Stud
 	public Promise<String> getDescription(DomStudentModelContextId id, DomStudentModelContextInfo info) {
 		return manager.getDescription(id, sc, info.getId(), lang, context);
 	}
+	
+	public Promise<String> getCSS(DomStudentModelContextId id, DomStudentModelContextInfo info) {
+		return manager.getCSS(id, sc, info.getId(), lang, context);
+	}
 
 	@Override
 	public Promise<DomMethod> getActiveMethod(DomStudentModelStructure structure) {		

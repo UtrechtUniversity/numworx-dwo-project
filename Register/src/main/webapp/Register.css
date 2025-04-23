@@ -1,5 +1,5 @@
 @CHARSET "UTF-8";
-@import url("//fonts.googleapis.com/css?family=Ubuntu:regular,medium,bold");
+@import url("//cdn.dwo.nl/apps/css/ubuntu.css");
 
 body {
 	margin: 0 !important;
