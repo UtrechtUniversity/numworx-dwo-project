@@ -266,7 +266,7 @@ public class RegisterPanel extends ResizeComposite {
 			return;
 		}
 		if (password.getText().isEmpty())
-			domUser.setPassword("one_time_password");
+			domUser.setPassword("");
 		else domUser.setPassword(MD5.md5(password.getText()));
 		
 		String sCode = schoolCode.getText();

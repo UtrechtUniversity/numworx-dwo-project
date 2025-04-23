@@ -79,8 +79,16 @@ public class RegisterController {
 		Promise<Boolean> p;
 		if (schoolClass != null && domNewUser.getRole() == RoleType.STUDENT) {
 			DomNewStudent student = new DomNewStudent(domNewUser, schoolClass);
+			student.setSamlUser(samlUser);
+			samlUser = null;
 			p = pum.RegisterNewStudent(student);
-		} else p = pum.RegisterNewUser(domNewUser);
+		} else {
+			DomNewStudent student = new DomNewStudent(domNewUser, null); // not really a student.
+			student.setSamlUser(samlUser);
+			samlUser = null;
+			p = pum.RegisterNewStudent(student);
+			///p = pum.RegisterNewUser(domNewUser);
+		}
 
 		if (samlUser != null) {
 			Success<Boolean, Boolean> link = (promise) -> {
