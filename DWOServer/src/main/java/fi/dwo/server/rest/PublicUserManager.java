@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import com.digitalmolehill.crypto.SymmetricCryptor;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewStudent;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -63,6 +64,7 @@ import java.text.MessageFormat;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,8 +124,11 @@ public class PublicUserManager {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "Incorrect formatted REST-request.");
         }
         DomNewStudent n = newUserReg.getDomNewStudent();
+        String realm = null;
+        DomContext context = newUserReg.getRestContext();
+        if (context != null) realm = context.getRealm();
         
-        PersistentHasRole hasrole = newHasRole(n);
+        PersistentHasRole hasrole = newHasRole(n, realm);
         PersistentSchoolGroup gr = hasrole.getSchoolGroup();
         PersistentSchool school = gr.getSchool();
         PersistentUser u = hasrole.getUser();
@@ -170,7 +175,7 @@ public class PublicUserManager {
         }
         DomNewUser n = newUserReg.getDomNewUser();
 
-        newHasRole(n);
+        newHasRole(n, null);
 
         return true;
     }
@@ -178,7 +183,7 @@ public class PublicUserManager {
 
 
 
-	private PersistentHasRole newHasRole(DomNewUser n) {
+	private PersistentHasRole newHasRole(DomNewUser n, String realm) {
 		EntityManager em = DwoEmfFactory.getEntityManager();
         if (!ValidUserFieldsChecker.isNonEmptyNorNull(n.getUsername(), n.getFamilyName(), n.getGivenName())) {
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Registration_Required_Fields, "Required fields empty or null");
@@ -192,10 +197,13 @@ public class PublicUserManager {
 		String check = n.getUsername();
 // realm of <sLogin> is @<sLogin>		
 		if (check.endsWith("@" + sLogin)) {
-			check = check.substring(0, check.length()- sLogin.length()-1);
-// dit is twijfelachtig...
-			int in = check.lastIndexOf('%');
-			if (in > 0) check = check.substring(0, in);
+			check = check.substring(0, check.length()- sLogin.length()-1);			
+		} else {
+			int l = check.lastIndexOf('@'); 
+			// Nu even alle realms toegestaan.
+			if (l >= 0 && Objects.equals(realm, check.substring(l))) {
+				check = check.substring(0,l);
+			}
 			
 		}
 		if ( ! SimpleValidUserFieldsChecker.isValidUserName(check)) {

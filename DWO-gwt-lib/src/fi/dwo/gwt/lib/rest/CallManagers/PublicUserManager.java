@@ -44,7 +44,12 @@ public class PublicUserManager {
             MethodCallback<Boolean> asyncCallback) {
         RestNewStudent user = new RestNewStudent();
         user.setDomNewStudent(domNewUser);
-        user.setRestContext(new DomContext());
+        DomContext context = new DomContext();
+		user.setRestContext(context);
+// set realm, altijd goed.
+		String u = domNewUser.getUsername();
+		int l = u.lastIndexOf('@');
+		if (l > 0) context.setRealm(u.substring(l));
         instance.setCurrentUser(null,null);
         caller.submitNewStudent(user, asyncCallback);
 
