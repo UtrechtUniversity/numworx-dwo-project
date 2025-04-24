@@ -136,8 +136,7 @@ public class EntreeSRedirect extends HttpServlet {
 				cookie("suggestion", systemManager.getSuggestion(sugg), resp);
 			else {
 				String sug = user_id;
-				sug = sug.split("@", 2)[0]; // MOET GELIJK ZIJN AAN SCHOOLLOGIN, dus vervangen!!!!
-				if (!user_id.contains("@"))	// in entree @realm aanwezig 
+				if (!user_id.contains("@"))	// in entree @realm aanwezig, laat dat zo 
 					sug += "@" + fullschool.getSchoolLogin(); // standaard realm is schoollogin = brincode of surfcode, niet als bij coornhert-gymnasium.nl
 				cookie("suggestion" , sug, resp);
 			}
