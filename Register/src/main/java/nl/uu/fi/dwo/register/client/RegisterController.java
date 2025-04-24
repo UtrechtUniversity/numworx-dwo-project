@@ -90,20 +90,20 @@ public class RegisterController {
 			///p = pum.RegisterNewUser(domNewUser);
 		}
 
-		if (samlUser != null) {
-			Success<Boolean, Boolean> link = (promise) -> {
-				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword(), null);			
-				DomContext context = new DomContext();
-				return manager.linkSaml(context, samlUser);
-				
-			};
-			Function<Promise<?>, Promise<? extends Boolean>> recovery = (promise) -> {
-				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword(), null);
-				DomContext context = new DomContext();
-				return manager.getAccountData(context).map(v -> Boolean.TRUE);
-			};
-			p = p.recoverWith(recovery).then(link);
-		}
+//		if (samlUser != null) {
+//			Success<Boolean, Boolean> link = (promise) -> {
+//				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword(), null);			
+//				DomContext context = new DomContext();
+//				return manager.linkSaml(context, samlUser);
+//				
+//			};
+//			Function<Promise<?>, Promise<? extends Boolean>> recovery = (promise) -> {
+//				GwtRestVars.instance().setCredentials(domNewUser.getUsername(), domNewUser.getPassword(), null);
+//				DomContext context = new DomContext();
+//				return manager.getAccountData(context).map(v -> Boolean.TRUE);
+//			};
+//			p = p.recoverWith(recovery).then(link);
+//		}
 
 		if (putRequest != null)
 		  p = p.map(x -> domNewUser).then(this::sendPutRequest);
