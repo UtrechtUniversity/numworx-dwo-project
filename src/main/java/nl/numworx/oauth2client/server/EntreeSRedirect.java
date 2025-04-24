@@ -68,8 +68,8 @@ public class EntreeSRedirect extends HttpServlet {
 			String user_id = login.studentNumber;
 			if (user_id == null || user_id.isEmpty() )
 				user_id = login.uid;
-			if (user_id != null)
-				user_id = user_id.replace('@', '%');
+//			if (user_id != null)
+//				user_id = user_id.replace('@', '%');
 			String lti_id = claims.getSubject();
 			String first = Objects.toString(login.givenName, "");
 			String middle = Objects.toString(login.insertion, "");
@@ -90,10 +90,10 @@ public class EntreeSRedirect extends HttpServlet {
 			String className = claims.get("nlEduPersonUnit", String.class);
 			className = Objects.toString(className, "");
 			// if schoolid = SURFIN then schoolid = @suffix van uid
-			if ("SURFIN".equals(schoolID)) {
-				int lastindex = user_id.lastIndexOf('%');
-				schoolID = user_id.substring(lastindex+1);
-			}
+//			if ("SURFIN".equals(schoolID)) {
+//				int lastindex = user_id.lastIndexOf('%');
+//				schoolID = user_id.substring(lastindex+1);
+//			}
 
 			// stap1 kijk of er al een link is:
 			   DomSamlUser u = new DomSamlUser();
@@ -134,8 +134,12 @@ public class EntreeSRedirect extends HttpServlet {
 			// alleen A-Za-z0-9 en - . _
 			if (fullschool == null || login.uid == null) // criterium.... bijv. alles ingevuld...
 				cookie("suggestion", systemManager.getSuggestion(sugg), resp);
-			else
-				cookie("username" , user_id + "@" + fullschool.getSchoolLogin(), resp);
+			else {
+				String sug = user_id;
+				if (!user_id.contains("@"))	// in entree @realm aanwezig, laat dat zo 
+					sug += "@" + fullschool.getSchoolLogin(); // standaard realm is schoollogin = brincode of surfcode, niet als bij coornhert-gymnasium.nl
+				cookie("suggestion" , sug, resp);
+			}
 			if (true) {
 				resp.sendRedirect("/dwo/register/Register.html");
 				return;
