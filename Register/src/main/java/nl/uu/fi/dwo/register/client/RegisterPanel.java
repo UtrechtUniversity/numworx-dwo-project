@@ -93,11 +93,14 @@ public class RegisterPanel extends ResizeComposite {
 		String suggestion = getCookieOnce("suggestion");
 		if (suggestion != null) {
 			username.setText(suggestion); // Free to choose
+			realm = realmOf(suggestion);
 		} else {
 			String username = getCookieOnce("username");
 			if (username != null) {
 				setAndFix(this.username, username);
-			}
+				realm = realmOf(username);
+			} else 
+				realm = "";
 		}
 		
 		
@@ -130,6 +133,12 @@ public class RegisterPanel extends ResizeComposite {
 		  controller.setPutRequest(putRequest);
 		}
 		
+	}
+
+	private String realmOf(String suggestion) {
+		int l = suggestion.lastIndexOf('@');
+		if (l < 0) return "";
+		return suggestion.substring(l);
 	}
 
 	static String getCookie(String string) {
@@ -178,6 +187,8 @@ public class RegisterPanel extends ResizeComposite {
 	@UiField RegisterCSS css;
 
 	private String schoolClass;
+
+	private String realm;
 	
 	@UiHandler("account")
 	void onValueChange(ValueChangeEvent<Boolean> event) {
@@ -243,9 +254,8 @@ public class RegisterPanel extends ResizeComposite {
 // realm of <sLogin> is @<sLogin>		
 		if (check.endsWith("@" + sLogin)) {
 			check = check.substring(0, check.length()- sLogin.length()-1);
-			int in = check.lastIndexOf('%');
-			if (in > 0) check = check.substring(0, in);
-			
+		} else if (check.endsWith(realm)) {
+			check = check.substring(0, check.length()-realm.length());
 		}
 		if ( ! SimpleValidUserFieldsChecker.isValidUserName(check))
 		{
@@ -266,7 +276,7 @@ public class RegisterPanel extends ResizeComposite {
 			return;
 		}
 		if (password.getText().isEmpty())
-			domUser.setPassword("one_time_password");
+			domUser.setPassword("");
 		else domUser.setPassword(MD5.md5(password.getText()));
 		
 		String sCode = schoolCode.getText();

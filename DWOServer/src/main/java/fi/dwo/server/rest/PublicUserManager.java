@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.rest.entities.RestNewUser;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.DwoLocale;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
@@ -125,14 +126,29 @@ public class PublicUserManager {
         PersistentHasRole hasrole = newHasRole(n);
         PersistentSchoolGroup gr = hasrole.getSchoolGroup();
         PersistentSchool school = gr.getSchool();
-        String sc = n.getSchoolClassName();
-        PersistentSchoolClass psc = SchoolClassManager.findEntity(sc, school);
         PersistentUser u = hasrole.getUser();
-        PersistentStudentOfClass soc = new PersistentStudentOfClass(u.getId(), psc.getClassID(), gr.getSchoolGroupID());
-        soc.setRegisterDate(u.getRegisterDate());
-        StudentOfClassManager.create(soc);
-        hasrole.setSchoolClass(psc);
-        HasRoleManager.edit(hasrole);
+        String sc = n.getSchoolClassName();
+        if (n.getRole() == RoleType.STUDENT && sc != null) {
+	        PersistentSchoolClass psc = SchoolClassManager.findEntity(sc, school);
+	        PersistentStudentOfClass soc = new PersistentStudentOfClass(u.getId(), psc.getClassID(), gr.getSchoolGroupID());
+	        soc.setRegisterDate(u.getRegisterDate());
+	        StudentOfClassManager.create(soc);
+	        hasrole.setSchoolClass(psc);
+	        HasRoleManager.edit(hasrole);
+        }
+        DomSamlUser su = n.getSamlUser();
+        if (su != null) {
+            String org = su.getSamlOrgId();
+            String account = su.getSamlUserId();
+            PersistentSamlUser saml = new PersistentSamlUser();
+            saml.setSamlorgid(org);
+            saml.setSamluserid(account);
+            saml.setUserID(u.getId());
+            saml.setAuthToken("none");
+            SamlUserManager.create(saml);
+        }
+         
+        
         return Boolean.TRUE;
     }
     

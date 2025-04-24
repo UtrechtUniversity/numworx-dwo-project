@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 public class DomNewStudent extends DomNewUser {
 	private String schoolClassName;
+	private DomSamlUser samlUser;
 	
 	public DomNewStudent() {
 		
@@ -19,5 +20,12 @@ public class DomNewStudent extends DomNewUser {
 	 */
 	public void setSchoolClassName(String schoolClassName) {
 		this.schoolClassName = schoolClassName;
+	}
+
+	public DomSamlUser getSamlUser() {
+		return samlUser;
+	}
+	public void setSamlUser(DomSamlUser samlUser) {
+		this.samlUser = samlUser;
 	}
 }
