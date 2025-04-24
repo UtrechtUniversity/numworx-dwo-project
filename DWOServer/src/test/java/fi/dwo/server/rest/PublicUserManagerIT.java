@@ -6,7 +6,9 @@ package fi.dwo.server.rest;
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFullwLoginContext;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -19,6 +21,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.system.MD5;
 import nl.uu.fi.dwo.rest.entities.RestAuthToken;
 import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
+import nl.uu.fi.dwo.rest.entities.RestNewStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewUser;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
@@ -192,6 +195,53 @@ public class PublicUserManagerIT {
         
         PersistentUser user = UserManager.findByUserName(domNewUser.getUsername());
         assertNull("should not exist", user);
+    }
+
+    @Test
+    public void testSubmitNewStudent() {
+        RestNewStudent restNewUser = new RestNewStudent();
+        DomNewStudent domNewUser= new DomNewStudent();
+        restNewUser.setDomNewStudent(domNewUser);
+        domNewUser.setUsername("testuser01");
+        domNewUser.setGivenName("a");
+        domNewUser.setInsertion("b");
+        domNewUser.setFamilyName("c");
+        domNewUser.setEmail("a@b.cd");
+        domNewUser.setPassword("pwd");
+        domNewUser.setRole(RoleType.STUDENT);
+        domNewUser.setSchoolLogin("school01");
+        domNewUser.setSchoolCode("student");
+        DomSchoolClass sc = new DomSchoolClass();
+        sc.setSchoolClassName("SchoolClass01");
+
+        domNewUser.setSchoolClassName(sc.getSchoolClassName());
+        
+        
+        PublicUserManager instance = new PublicUserManager();
+
+        try{
+            Boolean result = instance.submitNewStudent(restNewUser);
+            assertTrue("function gave false as result.", result);
+        }catch(Dwo2RestException e){
+            assertEquals(e.getDwo2Code(),Dwo2ExceptionCode.Rest_Registration_School_authentication_failed);
+        }
+        
+        PersistentUser user = UserManager.findByUserName(domNewUser.getUsername());
+        assertEquals(domNewUser.getGivenName(), user.getGivenName());
+        assertEquals(domNewUser.getInsertion(), user.getInsertion());
+        assertEquals(domNewUser.getFamilyName(), user.getLastname());
+        assertEquals(domNewUser.getEmail(), user.getEmail());
+        assertEquals(domNewUser.getPassword(), user.getPassword());
+        
+        
+        try {
+            //check for hasRole
+            PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, SchoolManager.findBySchoolLogin(domNewUser.getSchoolLogin()), RoleType.STUDENT);
+        }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);
+            fail("Could not find created user's hasRole");
+        }
     }
 
     

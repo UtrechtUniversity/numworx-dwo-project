@@ -19,9 +19,11 @@ import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolData;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.SchoolDataManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
@@ -81,6 +83,22 @@ public class SystemManagerIT {
     rest.setDomSchool(new DomSchool());
     rest.getDomSchool().setSchoolName("dwo");
     DomSchoolFull school = manager.getSchoolByName(rest);
+    assertEquals("school 0", (Long)0L, MySQLPersistenceId.getNativeId(school));
+  }
+
+  @Test
+  public void testGetSchoolBRIN() throws Dwo2Exception {
+	    RestSchool rest = new RestSchool();
+	    rest.setDomSchool(new DomSchool());
+	    rest.getDomSchool().setSchoolName("12345");
+	    DomSchoolFull school = manager.getSchoolByName(rest);
+	    assertNull("school 0", school); // not found
+	PersistentSchoolData data = new PersistentSchoolData(0L);
+	data.setSchoolData("{\"BRIN\":\"12345\"}");
+	SchoolDataManager.create(data);
+	  
+	// found  
+    school = manager.getSchoolByName(rest);
     assertEquals("school 0", (Long)0L, MySQLPersistenceId.getNativeId(school));
   }
 

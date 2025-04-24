@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ServletException;
@@ -28,6 +29,12 @@ public class SEBHosting extends HttpServlet {
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String code = req.getParameter("a"); // deze komt door
+		if (code != null) {
+			log("oauth code in seb " + code);
+			code = "&amp;a=" + URLEncoder.encode(code); // in XML embedded
+		} else code = "";
+		
 		String path = req.getPathTranslated();
 		if (path == null) {
 			path = getServletContext().getRealPath(req.getServletPath());
@@ -65,7 +72,7 @@ public class SEBHosting extends HttpServlet {
 			resp.setCharacterEncoding("UTF-8");
 			String content = sb.toString().replace(HTTPS_APP_DWO_NL, replacement);
 			if (classcourse != null)
-				content = content.replace("toets.jsp", "toets.jsp?id="+classcourse);
+				content = content.replace("toets.jsp", "toets.jsp?id="+classcourse + code);
 			resp.getWriter().write(content);
 		} finally {
 			reader.close();

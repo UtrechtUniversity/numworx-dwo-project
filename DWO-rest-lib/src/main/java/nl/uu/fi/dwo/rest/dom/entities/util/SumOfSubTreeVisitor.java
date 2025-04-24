@@ -2,13 +2,31 @@ package nl.uu.fi.dwo.rest.dom.entities.util;
 
 import java.util.Objects;
 
+import com.google.gwt.core.shared.GWT;
+
 import nl.uu.fi.dwo.rest.dom.entities.DomResultCourseInClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
+import nl.uu.fi.dwo.rest.locale.Dwo2LocaleMessages;
 
 public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
+
+	// GWT and/or Java @Inject
+	public SumOfSubTreeVisitor(Dwo2LocaleMessages rb) {
+		NAKIJKEN_NODIG = rb.NUM_TBL_KIJKNA_NEEDED();
+		KIJK_NA = rb.NUM_TBL_KIJKNA();
+	}
+
+	// GWT only
+	public SumOfSubTreeVisitor() {
+		this(GWT.create(Dwo2LocaleMessages.class));
+	}
+
+	private final String NAKIJKEN_NODIG;
+	private final String KIJK_NA;
+
 
 	private static String buildTime(String totalTime) {
 		    if (totalTime == null || totalTime.isEmpty()) return "";
@@ -102,23 +120,25 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
         String tt = Objects.toString(ss.getStudentSco().getTotalTime(), "00:00:00");
 		ss.setTotalTime(tt);
         ss.setFraction(1.0);
+    	boolean nakijken = false;
         if (!ss.getChildren().isEmpty()) {
         	double size = ss.getChildren().size();
         	int bezocht = 0;
         	for(DomResultStudentScoPage page: ss.getChildren().values()) {
         		if (page.getMaxScore() != null) bezocht ++;
+        		if (page.getScore().doubleValue() == -1) nakijken = true;
         	}
         	ss.setFraction(bezocht / size);
         }
-        
-        
-        
-        
+         
         if (ss.getScoType() == ScoType.INFO) {
         	ss.setTitle("ℹ");
         	ss.setDescription("ℹ in " + buildTime(tt));
         	ss.setMaxScore(0.0);
 //        	ss.setScore(-3.0);
+        } else if (nakijken) {
+        	ss.setTitle(KIJK_NA);
+        	ss.setDescription(NAKIJKEN_NODIG);
         } else {
         	ss.setTitle(ss.getScore() + " in " + buildTime(tt));
         	ss.setDescription(ss.getScore() + "% in " + tt + ", gedaan " + Math.round(ss.getFraction()*100) + "%");
@@ -176,8 +196,8 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 			title = "ℹ";
 			description = "informatief";
 		} else if (page.getScore().doubleValue() == -1) {
-			title = "Kijk na";
-			description = "Nakijken nodig"; // iets anders?
+			title = KIJK_NA;
+			description = NAKIJKEN_NODIG; // iets anders?
 		} else 
 			description = title = page.getScore().toString()+ bonus + "/" + page.getMaxScore() ;
 		page.setTitle(title);

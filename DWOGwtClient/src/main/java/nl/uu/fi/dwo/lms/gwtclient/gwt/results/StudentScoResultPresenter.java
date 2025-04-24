@@ -571,7 +571,7 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
     return url;
   }
 
-  final static class Callback extends JavaScriptObject {
+  final public static class Callback extends JavaScriptObject {
 	  protected Callback() {
 	}
 

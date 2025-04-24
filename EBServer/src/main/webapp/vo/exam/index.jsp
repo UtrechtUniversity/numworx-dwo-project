@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
-<%@ include file='/dwo/toets_util.jsp' %>
+<%@ include file='/dwo/toets_util2.jsp' %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,15 +12,6 @@
 <h1>Starten</h1>
 <p>
 <%
-	String host = request.getRemoteAddr();
-	String server = request.getHeader("host");
-	  String leerling = request.getParameter("id");
-	  String id = "";
-	  try { 
-	    id = "?id=" + Long.parseLong(leerling);
-	  } catch(Exception e) {
-	 	leerling = "leerling";
-	  }
 	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
 %>
 	Het apparaat op dit adres <%=host %> is niet toegestaan voor toetsen. Gebruik een beveiligd apparaat.
@@ -28,15 +19,15 @@
 	}
 	else if ( needSEB ) {
 %>
-<a href='sebs://<%=server %>/toets/<%=leerling %>.seb'>Start de beveiligde <strong>toets</strong> omgeving</a>
+<a href='<%=seb%>://<%=server %>/toets/<%=leerling %>.seb<%=code%>'>Start de beveiligde <strong>toets</strong> omgeving</a>
 <%    if (System.getProperty("DWO_ENV", "").contains("test")) { %>
 <br>SEB QR Code: <img 
 	style='vertical-align: middle'
-	src='/dwo/qrcode.png?qr=sebs://<%=server %>/toets/<%=leerling %>.seb' >
+	src='/dwo/qrcode.png?qr=<%=seb%>://<%=server %>/toets/<%=leerling %>.seb' >
 <%    }
 	} else {
 %>
-	  <a target='_top' href='/toets/toets.jsp<%=id%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
+	  <a target='_top' href='/toets/toets.jsp<%=id%><%=code%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%	  
 	}
 

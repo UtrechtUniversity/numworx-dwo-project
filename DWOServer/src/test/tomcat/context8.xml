@@ -57,7 +57,7 @@ SMTP_USER=me
 SMTP_PASSWORD=mySmtpSecret
 SMTP_EMAIL=wisweb@fi.uu.nl -->
     <Parameter name="fi.dwo.server.rest.smtp.server" override="true" value="localhost"/>
-    <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="25"/>
+    <Parameter name="fi.dwo.server.rest.smtp.port" override="true" value="2525"/>
     <Parameter name="fi.dwo.server.rest.smtp.auth" override="true" value="false"/>
     <Parameter name="fi.dwo.server.rest.smtp.tls" override="true" value="no"/>
     <Parameter name="fi.dwo.server.rest.smtp.ssl" override="true" value="no"/>

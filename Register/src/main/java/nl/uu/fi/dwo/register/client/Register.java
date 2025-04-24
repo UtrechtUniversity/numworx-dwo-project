@@ -68,6 +68,7 @@ public class Register implements EntryPoint, Command {
 			samlUser.setSamlOrgId(org_id);
 			samlUser.setSamlUserId(user_id);
 			controller.setSamlUser(samlUser);
+			controller.setSchoolClass(content.getSchoolClass());
 		}
 		
 		RootPanel.get().add(content);

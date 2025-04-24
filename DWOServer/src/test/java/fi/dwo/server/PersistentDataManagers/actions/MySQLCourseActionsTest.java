@@ -10,9 +10,11 @@ import org.junit.Test;
 import org.junit.Ignore;
 
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 
 public class MySQLCourseActionsTest {
 
@@ -40,14 +42,26 @@ public class MySQLCourseActionsTest {
       dbInstance.ClearDatabase();
   }
 
-  @Test @Ignore
+  @Test
   public void testUpdate() {
-    fail("Not yet implemented");
+	    Long courseid = Long.valueOf(3);
+	    PersistentCourse pc = CourseManager.findEntity(courseid);
+	    DomCourseFull full = pc.buildDomCourseFull();
+	    MySQLCourseActions.update(pc, full);
+	    PersistentCourse pc2 = CourseManager.findEntity(courseid);
+	    assertEquals(full.getName(), pc2.getName());	    
   }
 
-  @Test @Ignore
+  @Test
   public void testAdd() {
-    fail("Not yet implemented");
+    DomCourseFull full = new DomCourseFull();
+    full.setName("name of full");
+    full.setDwoProfileId(PersistentDwoProfile.buildPersistenceId(1L));
+    full.setDescription("no description");
+    full.setNotVisible(false);
+    
+    DomCourseFull result = MySQLCourseActions.add(full);
+    assertEquals(full.getName(), result.getName());
   }
 
   @Test

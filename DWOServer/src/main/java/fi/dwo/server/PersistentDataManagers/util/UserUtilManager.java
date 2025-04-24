@@ -55,7 +55,7 @@ public class UserUtilManager {
             PersistentUser u = UserManager.findEntity(soc.getPersistentStudentOfClassPK().getUserID());
             if(u == null) {
             LOG.log(Level.INFO, "Student with userId {0} could not be found.", new Object[]{soc.getPersistentStudentOfClassPK().getUserID()});
-        }
+        } else
             stdList.add(u);
         }
         return  stdList;

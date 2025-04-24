@@ -1,4 +1,4 @@
-USE `dwojunittest`;
+-- InitTestDatabase.pgql
 -- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
 -- Host: localhost    Database: dwojunittest
@@ -16,50 +16,194 @@ USE `dwojunittest`;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP TABLE IF EXISTS tblscopage;
-CREATE TABLE `tblscopage` (
-  `scoID` int NOT NULL,
-  `sequencenr` int NOT NULL,
-  `userID` int NOT NULL,
-  `schoolgroupID` int NOT NULL,
-  `optlock` int NOT NULL,
-  `del` tinyint NOT NULL,
-  `lastChangeTimeStamp` bigint NOT NULL,
-  `courseID` int DEFAULT NULL,
-  `score` int DEFAULT NULL,
-  `maxScore` int DEFAULT NULL,
-  `correctie` int DEFAULT NULL,
-  `checkDocent` tinyint DEFAULT NULL,
-  `visited` tinyint DEFAULT NULL,
-  `correct` tinyint DEFAULT NULL,
-  `docentCorrect` tinyint DEFAULT NULL,
-  PRIMARY KEY (`scoID`,`sequencenr`,`userID`,`schoolgroupID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+--
+-- Table structure for table `tbluser`
+--
+
+DROP TABLE IF EXISTS tbluser CASCADE;
+
+CREATE TABLE tbluser (
+	userid serial4 NOT NULL,
+	  classid int8 NULL,
+	schoolgroupid int8 NULL,
+	firstname varchar(50) NOT NULL,
+	middlename varchar(15) NULL,
+	lastname varchar(100) NOT NULL,
+	username varchar(128) NOT NULL,
+	passwd varchar(128) NOT NULL,
+	email varchar(128) NOT NULL,
+	registerdate date NOT NULL,	
+	  rights varchar(100) NULL,	
+	lastlogin date NULL,
+	lastlogintime time NULL,
+	singleschool bool NOT NULL,
+	optlock int8 NULL,
+	lastchangetimestamp int8 NULL,
+	del int4 NOT NULL,
+	CONSTRAINT tbluser_pkey PRIMARY KEY (userid),
+	CONSTRAINT unq_tbluser_0 UNIQUE (username)
+);
+
+--
+-- Dumping data for table `tbluser`
+--
+
+INSERT INTO tbluser VALUES (1,NULL,1,'John',NULL,'Doe','dwoadmin','d55b2dbcb757e1dc1725798bccda75cd','dwoadmin@dwo.nl','2015-10-13','_','2016-10-31','11:23:26',false,0,0,0),(8,NULL,8,'FirstName01',NULL,'FamiliyName01','user01','d79096188b670c2f81b7001f73801117','user01@dwo.nl','2015-10-13','_',NULL,NULL,false,0,0,0),(9,NULL,2,'FirstName02',NULL,'FamiliyName02','user02','d79096188b670c2f81b7001f73801117','user02@dwo.nl','2015-10-13','_',NULL,NULL,false,0,0,0),(10,NULL,5,'FirstName03',NULL,'FamiliyName03','user03','d79096188b670c2f81b7001f73801117','user03@dwo.nl','2015-10-13','_','2016-10-31','11:26:37',false,0,0,0),(11,NULL,2,'FirstName04',NULL,'FamiliyName04','user04','d79096188b670c2f81b7001f73801117','user04@dwo.nl','2015-10-13','_',NULL,NULL,true,0,0,0),(12,NULL,5,'FirstName05',NULL,'FamiliyName05','user05','d79096188b670c2f81b7001f73801117','user05@dwo.nl','2015-10-13','_',NULL,NULL,true,0,0,0),(13,NULL,4,'FirstName06',NULL,'FamiliyName06','user06','d79096188b670c2f81b7001f73801117','user06@dwo.nl','2015-10-13','_',NULL,NULL,true,0,0,0),(14,NULL,3,'FirstName07',NULL,'FamiliyName07','user07','d79096188b670c2f81b7001f73801117','user07@dwo.nl','2015-10-13','_','2017-04-10','13:13:40',false,0,0,0);
+ALTER SEQUENCE tbluser_userid_seq RESTART WITH 300;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2018-03-14 11:13:20
+
+
+DROP TABLE IF EXISTS tblschool;
+
+CREATE TABLE tblschool (
+	schoolid serial4 NOT NULL,
+	schoolname varchar(128) NOT NULL,
+	schoollogin varchar(128) NOT NULL,
+  		passwordSchool varchar(128) NULL,
+	export bool NULL,
+	schoolrights varchar(100) NULL,
+	image varchar(128) NULL,
+	expire date NULL,
+	optlock int8 NULL,
+  		lastChangeTimeStamp int8 NULL,
+	del int4 NULL,
+	abotype int4 NULL,
+	CONSTRAINT tblschool_pkey PRIMARY KEY (schoolid),
+	CONSTRAINT unq_tblschool_0 UNIQUE (schoollogin)
+);
+
+
+
+--
+-- Dumping data for table `tblschool`
+--
+
+INSERT INTO tblschool VALUES (0,'DwoSchool','dwo','',true,'_',NULL,NULL,0,0,0,0),
+(1,'NULL','null','',false,'_',NULL,NULL,0,0,0,0),
+(3,'School01','school01','',false,'_',NULL,NULL,0,0,0,3),
+(4,'School02','school02','',false,'_c',NULL,NULL,0,0,0,0);
+
+
+
+
+
+
+DROP TABLE IF EXISTS tblschoolgroup;
+CREATE TABLE tblschoolgroup (
+	schoolgroupid serial4 NOT NULL,
+	groupid int4 NOT NULL,
+	passwd varchar(128) NOT NULL,
+	schoolid int4 NOT NULL,
+	CONSTRAINT tblschoolgroup_pkey PRIMARY KEY (schoolgroupid)
+);
+
+
+DROP TABLE IF EXISTS tblcourse;
+
+CREATE TABLE tblcourse (
+	courseid serial4 NOT NULL,
+	schoolid int8 NULL,
+	"name" varchar(255) NOT NULL,
+	description text NULL,
+	image varchar(128) NULL,
+	dwoprofileid int8 NOT NULL,
+	imagedata bytea NULL,
+	export bool NULL,
+	withchildren bool NULL,
+	parentid int8 NOT NULL,
+	notvisible bool NOT NULL,
+	sequencenr int8 NULL,
+	optlock int4 DEFAULT 0 NULL,
+	treeindex varchar(250) NULL,
+	lastchangetimestamp int8 NULL,
+	del int4 NULL,
+	trashid int8 NULL,
+	CONSTRAINT tblcourse_pkey PRIMARY KEY (courseid),
+	CONSTRAINT unq_tblcourse_0 UNIQUE (name, schoolid, dwoprofileid, parentid, trashid)
+);
+
+--
+-- Dumping data for table `tblcourse`
+--
+
+INSERT INTO tblcourse VALUES (13333,3,'school course01','Course01 Description',NULL,1,NULL,true,false,0,false,0,0,NULL,0,0,0),
+(1,NULL,'course01','Course01 Description',NULL,1,NULL,true,true,0,false,0,0,NULL,0,0,0),
+(2,NULL,'course02','Course02 Description',NULL,1,NULL,false,true,0,false,1,0,NULL,0,0,0),
+(3,NULL,'course03','H4sIAAAAAAAAAFVUyc7zthX1nzRoJiBIU6DbBPm7MhBZky0tikazKFuTNWsTaB6twRosad3H6QMU6Ot02b5D9WVEDkiC5CUJHpx7zz//d/hoeB6+KoM5+G4ai/o7MRjyMQjr5Kt/f/HXb6T//OvDwwf84dO6DWI+iMb2CQ6fjPkzGfK2jpfu798f3vDl6+N9/MvePxsPn7dd/AyifPwB/gEe3/1XxAZA/QIB0QdrZnXaFFx4KJTY729GpmZVF6tYwQIB2NfQtzhjMWKxU7YiRGbZvBn4KMWKSNtmTNNEeqQ8CcoQbDJrKYrt+4vIgc25yysmtwWdU3KeJiJTfWlV8YKB5CNirlDW4byjRkOyDS/F5o9zVVMzlZ1jkhraSlBvHDc7voTXg6a8+FOr84Uf17cRIM+Opvstt2tz6GpQ90qLcxPjAE1qk4tNpvN9dV6RV7i6M+QkX2UepMIhAaW9SePoNqTnrcNV7MXQDM4ADtL1AG1P5p022V5Fqk6+Lkj4vNLF3DKEHCyVlOoNi+A2hA1L3E1QKhbpDXVI5aSsL0YBTtJODNJi5WbBAzTYSZRvqqWsykqoYoGRbh6icHY8MVmC+fxTUZzt3qMlFuncdemywmgmHuxi0tuqtm5xurbasqqXBtnENbcodL5WK3S/ChGu+9L+GVu+PrK+9Be+eFRtI4QCn0IWBWtamnF+4Qp52NK7un8bD38KgmYMaioai7kYk7014+EdvKdF8OvWnhaHz9QmTp5xktRfv63eA5kSuPcypb0fD//4Xcrw81a3AjyBnFaZabnxwjwy+nYniHIwi1JiuU6CbUy5HPt2TEwxesmmgMku2+CFUU9FVNVHy0lY6VULltMt9wZXjcqmU09lGZayIoyWbjW9US1Fet0mwTr1E5WP66DJpiBLxsMHTf0rNfXn9E6aNx5v1P7waOP90LvTePii7ZoimV5ymyV1UVbj4aM0qIc9+ucsqdquS+o4+e2F38KfF80wJnVdNNm+/eHp91UDm7IDmRZNH8PYNZQHGnSCxGWZKGzUAlpwNfixr0BuszxqIBvkP5uR2HBsNNWC9jyB4UtPoAeToIoYolaA6dfzAkxpM+EKv4KtYWM0fUM8+0oalFg5uhxQQ0N4cvCTuVy9l6lihOOOeIuI2gZpffxAnNJTszLELrv+N5eXH7Kr0lzaoe7UH0VbKKAbZN/w8KmEpKChtFiDvfRL4nG1WY/c6AzAwYPAfFqbYfWJEuQkzhe4gqMz+4g2mtW41u5h6zZ5Z0pJQ1i2zm5YzwJzbXDsqDbaGUpQKTQuqWJY02i7TeIlXDGbJJ72F/QCNb5zdXgnaF07yoDlRYRgKNVGWmBkbpvQN4IsPQyxES394sJiR3J4Fcpr1J6ZsVeq4EZzZyyrRI2s4ZPSTH5UgsQN7oWbkNJrWUHiiU62LJSM9XidD7bcTFfZ3AKnUs/SKZMJkl7up+vZZmwwyQTBDpTFG0MqgyiacFmiklLba7JybvNTpS8ymB0d7C5Rl8l+lQiCh+ArSVBa6h1xcau4lNFLNwdsvU04k921MRu2s8HW1bhbVMcgbqA/81Tgd1vxV6RrmNN2g41CXRg3u225kdocPeFgQXNwnA0GwqWB5tmxH7Y2pRY/gQe7DRwPS1i2EqhxMB1JkieE0GxUqgBu6tOuAruhRyoAffnMe/mC1CJy4h1nfFjC4ktaQuhp7OF2I/XYcRMddpXWVN2tppWTtTJWbQoqvk2rZKn4rZzACUpfTv8A55G9eKpdw8A/G5fp9uJex63wPBa1Z7VZ5eMiLzxoBbJyEYJ041nXZGcMp/uJ+6lc/xhmUVu3z332Lf8jlv8D6RqvY+AGAAA=',NULL,1,NULL,false,false,1,false,1,0,NULL,0,0,0),
+(4,NULL,'course04','Course04 Description',NULL,1,NULL,false,false,1,false,2,0,NULL,0,0,0),
+(5,NULL,'course05','Course05 Description',NULL,1,NULL,false,false,2,false,3,0,NULL,0,0,0),
+(6,NULL,'course06','Course06 Description',NULL,1,NULL,false,false,2,false,NULL,0,NULL,0,0,0),
+(7,NULL,'course11','Course11 Description',NULL,1,NULL,false,true,0,false,2,0,NULL,0,0,0),
+(8,NULL,'course12','Course12 Description',NULL,1,NULL,false,true,0,false,3,0,NULL,0,0,0),
+(9,NULL,'course13','Course13 Description',NULL,1,NULL,false,false,7,false,NULL,0,NULL,0,0,0),
+(10,NULL,'course14','Course14 Description',NULL,1,NULL,false,false,7,false,NULL,0,NULL,0,0,0),
+(11,NULL,'course15','Course15 Description',NULL,1,NULL,false,false,8,false,NULL,0,NULL,0,0,0),
+(12,NULL,'course16','Course16 Description',NULL,1,NULL,false,false,8,false,NULL,0,NULL,0,0,0);
+
+CREATE TABLE public.tblacl (
+	aclid serial4 NOT NULL,
+	"access" int4 NULL,
+	courseid int8 NOT NULL,
+	dwoprofileid int8 NOT NULL,
+	entity varchar(50) NOT NULL,
+	lastchangetimestamp int8 NULL,
+	optlock int8 NULL,
+	schoolid int8 NULL,
+	CONSTRAINT tblacl_pkey PRIMARY KEY (aclid),
+	CONSTRAINT unq_tblacl_0 UNIQUE (courseid, entity, dwoprofileid, schoolid)
+);
+
+CREATE TABLE public.tblscocontext (
+	scoid serial4 NOT NULL,
+	appletid int8 NOT NULL,
+	courseid int8 NOT NULL,
+	del int4 NOT NULL,
+	dwoprofileid int8 NULL,
+	lastchangetimestamp int8 NULL,
+	modelid int8 NULL,
+	optlock int8 NULL,
+	publishstate int4 NOT NULL,
+	schoolid int8 NULL,
+	scotype int4 NOT NULL,
+	sconame varchar(255) NOT NULL,
+	sequencenr int8 NOT NULL,
+	showscore bool NULL,
+	trashid int8 NULL,
+	urnid int8 NULL,
+	CONSTRAINT tblscocontext_pkey PRIMARY KEY (scoid),
+	CONSTRAINT unq_tblscocontext_0 UNIQUE (sconame, courseid, trashid)
+);
 
 --
 -- Table structure for table `tblanalyticalmodel`
 --
 
-DROP TABLE IF EXISTS `tblanalyticalmodel`;
+DROP TABLE IF EXISTS tblanalyticalmodel;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblanalyticalmodel` (
-  `modelID` int(11) NOT NULL AUTO_INCREMENT,
-  `schoolID` int(11) NOT NULL,
-  `model` json NOT NULL,
-  PRIMARY KEY (`modelID`),
-  UNIQUE KEY `modelID_UNIQUE` (`modelID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+CREATE TABLE tblanalyticalmodel (
+  modelID serial4 NOT NULL AUTO_INCREMENT,
+  schoolID serial4 NOT NULL,
+  model json NOT NULL,
+  PRIMARY KEY (modelID),
+  UNIQUE KEY modelID_UNIQUE (modelID)
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tblanalyticalmodel`
 --
 
-LOCK TABLES `tblanalyticalmodel` WRITE;
-/*!40000 ALTER TABLE `tblanalyticalmodel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tblanalyticalmodel` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `tblapplet`
@@ -201,49 +345,6 @@ INSERT INTO `tblclasscourse` VALUES
 (5,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',5,0,0,0,3,NULL,1,NULL),
 (6,2,0,'1970-01-01 00:00:01','1970-01-01 00:00:01',6,0,0,0,0,NULL,1,NULL);
 /*!40000 ALTER TABLE `tblclasscourse` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `tblcourse`
---
-
-DROP TABLE IF EXISTS `tblcourse`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblcourse` (
-`courseID` int(11) NOT NULL AUTO_INCREMENT,
-`schoolID` int(11) DEFAULT NULL,
-`name` varchar(40) NOT NULL DEFAULT '',
-`description` mediumtext DEFAULT NULL,
-`image` varchar(128) DEFAULT NULL,
-`dwoProfileID` int(11) NOT NULL DEFAULT '0',
-`imageData` longblob,
-`export` tinyint(1) DEFAULT '0',
-`withChildren` tinyint(1) DEFAULT '0',
-`parentID` int(11) NOT NULL DEFAULT '0',
-`notVisible` tinyint(11) NOT NULL DEFAULT '0',
-`sequencenr` int(11) DEFAULT '0',
-`optlock` int(11) DEFAULT '0',
-`treeIndex` varchar(250) DEFAULT NULL,
-`lastChangeTimeStamp` bigint(20) DEFAULT '0',
-`del` tinyint(4) NOT NULL DEFAULT '0',
-`trashID` bigint(20) NOT NULL DEFAULT '0',
-PRIMARY KEY (`courseID`),
-UNIQUE KEY `AK_IDENTIFIER_1` (`name`,`schoolID`,`dwoProfileID`,`parentID`,`trashID`),
-KEY `SCHOOL_COURSE_FK` (`schoolID`),
-KEY `AK_DWOPROFILE` (`dwoProfileID`),
-KEY `AK_PARENTID` (`parentID`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tblcourse`
---
-
-LOCK TABLES `tblcourse` WRITE;
-/*!40000 ALTER TABLE `tblcourse` DISABLE KEYS */;
-INSERT INTO `tblcourse` VALUES (13333,3,'school course01','Course01 Description',NULL,1,NULL,1,1,0,0,0,0,NULL,0,0,0),(1,NULL,'course01','Course01 Description',NULL,1,NULL,1,1,0,0,0,0,NULL,0,0,0),(2,NULL,'course02','Course02 Description',NULL,1,NULL,0,1,0,0,1,0,NULL,0,0,0),(3,NULL,'course03','H4sIAAAAAAAAAFVUyc7zthX1nzRoJiBIU6DbBPm7MhBZky0tikazKFuTNWsTaB6twRosad3H6QMU6Ot02b5D9WVEDkiC5CUJHpx7zz//d/hoeB6+KoM5+G4ai/o7MRjyMQjr5Kt/f/HXb6T//OvDwwf84dO6DWI+iMb2CQ6fjPkzGfK2jpfu798f3vDl6+N9/MvePxsPn7dd/AyifPwB/gEe3/1XxAZA/QIB0QdrZnXaFFx4KJTY729GpmZVF6tYwQIB2NfQtzhjMWKxU7YiRGbZvBn4KMWKSNtmTNNEeqQ8CcoQbDJrKYrt+4vIgc25yysmtwWdU3KeJiJTfWlV8YKB5CNirlDW4byjRkOyDS/F5o9zVVMzlZ1jkhraSlBvHDc7voTXg6a8+FOr84Uf17cRIM+Opvstt2tz6GpQ90qLcxPjAE1qk4tNpvN9dV6RV7i6M+QkX2UepMIhAaW9SePoNqTnrcNV7MXQDM4ADtL1AG1P5p022V5Fqk6+Lkj4vNLF3DKEHCyVlOoNi+A2hA1L3E1QKhbpDXVI5aSsL0YBTtJODNJi5WbBAzTYSZRvqqWsykqoYoGRbh6icHY8MVmC+fxTUZzt3qMlFuncdemywmgmHuxi0tuqtm5xurbasqqXBtnENbcodL5WK3S/ChGu+9L+GVu+PrK+9Be+eFRtI4QCn0IWBWtamnF+4Qp52NK7un8bD38KgmYMaioai7kYk7014+EdvKdF8OvWnhaHz9QmTp5xktRfv63eA5kSuPcypb0fD//4Xcrw81a3AjyBnFaZabnxwjwy+nYniHIwi1JiuU6CbUy5HPt2TEwxesmmgMku2+CFUU9FVNVHy0lY6VULltMt9wZXjcqmU09lGZayIoyWbjW9US1Fet0mwTr1E5WP66DJpiBLxsMHTf0rNfXn9E6aNx5v1P7waOP90LvTePii7ZoimV5ymyV1UVbj4aM0qIc9+ucsqdquS+o4+e2F38KfF80wJnVdNNm+/eHp91UDm7IDmRZNH8PYNZQHGnSCxGWZKGzUAlpwNfixr0BuszxqIBvkP5uR2HBsNNWC9jyB4UtPoAeToIoYolaA6dfzAkxpM+EKv4KtYWM0fUM8+0oalFg5uhxQQ0N4cvCTuVy9l6lihOOOeIuI2gZpffxAnNJTszLELrv+N5eXH7Kr0lzaoe7UH0VbKKAbZN/w8KmEpKChtFiDvfRL4nG1WY/c6AzAwYPAfFqbYfWJEuQkzhe4gqMz+4g2mtW41u5h6zZ5Z0pJQ1i2zm5YzwJzbXDsqDbaGUpQKTQuqWJY02i7TeIlXDGbJJ72F/QCNb5zdXgnaF07yoDlRYRgKNVGWmBkbpvQN4IsPQyxES394sJiR3J4Fcpr1J6ZsVeq4EZzZyyrRI2s4ZPSTH5UgsQN7oWbkNJrWUHiiU62LJSM9XidD7bcTFfZ3AKnUs/SKZMJkl7up+vZZmwwyQTBDpTFG0MqgyiacFmiklLba7JybvNTpS8ymB0d7C5Rl8l+lQiCh+ArSVBa6h1xcau4lNFLNwdsvU04k921MRu2s8HW1bhbVMcgbqA/81Tgd1vxV6RrmNN2g41CXRg3u225kdocPeFgQXNwnA0GwqWB5tmxH7Y2pRY/gQe7DRwPS1i2EqhxMB1JkieE0GxUqgBu6tOuAruhRyoAffnMe/mC1CJy4h1nfFjC4ktaQuhp7OF2I/XYcRMddpXWVN2tppWTtTJWbQoqvk2rZKn4rZzACUpfTv8A55G9eKpdw8A/G5fp9uJex63wPBa1Z7VZ5eMiLzxoBbJyEYJ041nXZGcMp/uJ+6lc/xhmUVu3z332Lf8jlv8D6RqvY+AGAAA=',NULL,1,NULL,0,0,1,0,1,0,NULL,0,0,0),(4,NULL,'course04','Course04 Description',NULL,1,NULL,0,0,1,0,2,0,NULL,0,0,0),(5,NULL,'course05','Course05 Description',NULL,1,NULL,0,0,2,0,3,0,NULL,0,0,0),(6,NULL,'course06','Course06 Description',NULL,1,NULL,0,0,2,0,NULL,0,NULL,0,0,0),(7,NULL,'course11','Course11 Description',NULL,1,NULL,0,1,0,0,2,0,NULL,0,0,0),(8,NULL,'course12','Course12 Description',NULL,1,NULL,0,1,0,0,3,0,NULL,0,0,0),(9,NULL,'course13','Course13 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0,0,0),(10,NULL,'course14','Course14 Description',NULL,1,NULL,0,0,7,0,NULL,0,NULL,0,0,0),(11,NULL,'course15','Course15 Description',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0,0,0),(12,NULL,'course16','Course16 Description',NULL,1,NULL,0,0,8,0,NULL,0,NULL,0,0,0);
-/*!40000 ALTER TABLE `tblcourse` ENABLE KEYS */;
 UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `tblcoursedata`;
@@ -539,40 +640,6 @@ LOCK TABLES `tblsamluser` WRITE;
 /*!40000 ALTER TABLE `tblsamluser` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `tblschool`
---
-
-DROP TABLE IF EXISTS `tblschool`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblschool` (
-  `schoolID` int(11) NOT NULL AUTO_INCREMENT,
-  `schoolName` varchar(128) NOT NULL DEFAULT '',
-  `schoollogin` varchar(128) NOT NULL DEFAULT '',
-  `passwordSchool` varchar(128) NOT NULL DEFAULT '',
-  `export` tinyint(1) DEFAULT '0',
-  `schoolRights` varchar(100) DEFAULT '_',
-  `image` varchar(128) DEFAULT '',
-  `expire` date DEFAULT NULL,
-  `optlock` int(11) DEFAULT '0',
-  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
-  `del` tinyint(4) NOT NULL DEFAULT '0',
-  `aboType` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`schoolID`),
-  UNIQUE KEY `AK_IDENTIFIER_1` (`schoollogin`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tblschool`
---
-
-LOCK TABLES `tblschool` WRITE;
-/*!40000 ALTER TABLE `tblschool` DISABLE KEYS */;
-INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',1,'_',NULL,NULL,0,0,0,0),(1,'NULL','null','',0,'_',NULL,NULL,0,0,0,0),(3,'School01','school01','',0,'_',NULL,NULL,0,0,0,3),(4,'School02','school02','',0,'_c',NULL,NULL,0,0,0,0);
-/*!40000 ALTER TABLE `tblschool` ENABLE KEYS */;
-UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `tblschooldata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -931,59 +998,6 @@ LOCK TABLES `tblurnresource` WRITE;
 /*!40000 ALTER TABLE `tblurnresource` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `tbluser`
---
-
-DROP TABLE IF EXISTS `tbluser`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbluser` (
-  `userID` int(11) NOT NULL AUTO_INCREMENT,
-  `classID` int(11) DEFAULT NULL,
-  `schoolGroupID` int(11) DEFAULT NULL,
-  `firstname` varchar(50) NOT NULL DEFAULT '',
-  `middlename` varchar(15) DEFAULT NULL,
-  `lastname` varchar(100) NOT NULL DEFAULT '',
-  `username` varchar(128) NOT NULL DEFAULT '',
-  `passwd` varchar(128) NOT NULL DEFAULT '',
-  `email` varchar(128) NOT NULL DEFAULT '',
-  `registerDate` date NOT NULL DEFAULT '0000-00-00',
-  `rights` varchar(100) DEFAULT '_',
-  `lastLogin` date DEFAULT NULL,
-  `lastLoginTime` time DEFAULT NULL,
-  `singleschool` tinyint(1) DEFAULT '1',
-  `optlock` int(11) DEFAULT '0',
-  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
-  `del` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`userID`),
-  UNIQUE KEY `AK_ID_STUDENT` (`username`),
-  KEY `USER_GROUP_FK` (`schoolGroupID`),
-  KEY `STUDENT_CLASS_FK` (`classID`),
-  CONSTRAINT `tbluser_ibfk_1` FOREIGN KEY (`schoolGroupID`) REFERENCES `tblschoolgroup` (`schoolGroupID`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tbluser`
---
-
-LOCK TABLES `tbluser` WRITE;
-/*!40000 ALTER TABLE `tbluser` DISABLE KEYS */;
-INSERT INTO `tbluser` VALUES (1,NULL,1,'John',NULL,'Doe','dwoadmin','d55b2dbcb757e1dc1725798bccda75cd','dwoadmin@dwo.nl','2015-10-13','_','2016-10-31','11:23:26',0,0,0,0),(8,NULL,8,'FirstName01',NULL,'FamiliyName01','user01','d79096188b670c2f81b7001f73801117','user01@dwo.nl','2015-10-13','_',NULL,NULL,0,0,0,0),(9,NULL,2,'FirstName02',NULL,'FamiliyName02','user02','d79096188b670c2f81b7001f73801117','user02@dwo.nl','2015-10-13','_',NULL,NULL,0,0,0,0),(10,NULL,5,'FirstName03',NULL,'FamiliyName03','user03','d79096188b670c2f81b7001f73801117','user03@dwo.nl','2015-10-13','_','2016-10-31','11:26:37',0,0,0,0),(11,NULL,2,'FirstName04',NULL,'FamiliyName04','user04','d79096188b670c2f81b7001f73801117','user04@dwo.nl','2015-10-13','_',NULL,NULL,1,0,0,0),(12,NULL,5,'FirstName05',NULL,'FamiliyName05','user05','d79096188b670c2f81b7001f73801117','user05@dwo.nl','2015-10-13','_',NULL,NULL,1,0,0,0),(13,NULL,4,'FirstName06',NULL,'FamiliyName06','user06','d79096188b670c2f81b7001f73801117','user06@dwo.nl','2015-10-13','_',NULL,NULL,1,0,0,0),(14,NULL,3,'FirstName07',NULL,'FamiliyName07','user07','d79096188b670c2f81b7001f73801117','user07@dwo.nl','2015-10-13','_','2017-04-10','13:13:40',0,0,0,0);
-/*!40000 ALTER TABLE `tbluser` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2018-03-14 11:13:20
 DROP TABLE IF EXISTS `tblacl`;
 CREATE TABLE `tblacl` (
   `aclID` int(11) NOT NULL AUTO_INCREMENT,
@@ -1107,5 +1121,3 @@ CREATE TABLE `tblmfa` (
   `del` tinyint(4) NOT NULL,
   PRIMARY KEY (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-

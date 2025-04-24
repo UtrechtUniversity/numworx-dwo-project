@@ -19,4 +19,9 @@ public class SMDescriptionService implements DescriptionService {
 		return Promises.failed(new IllegalArgumentException());
 	}
 
+	@Override
+	public Promise<String> getCSS(DomStudentModelContextId current, DomStudentModelContextInfo info) {
+		return Promises.resolved("");
+	}
+
 }

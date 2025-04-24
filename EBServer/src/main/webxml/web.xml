@@ -549,6 +549,7 @@ ${upload.servlet.mapping}
     <servlet-mapping>
     	<servlet-name>redirect-root</servlet-name>
     	<url-pattern></url-pattern>
+    	<url-pattern>/exam/</url-pattern>
     </servlet-mapping>
  	
     <!-- Jersey JAX_RS JAXB JSON service provider -->

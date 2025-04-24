@@ -3,11 +3,14 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.organisation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -53,9 +56,16 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.OrderType;
+import nl.uu.fi.dwo.rest.dom.entities.util.SortType;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 
 public class OrganisationPresenter {
+
+// same as in Helpers.sort
+		   private static native int localCompare( String source, String target ) /*-{
+		     	return source.localeCompare( target );
+		   }-*/;
 
   public interface Display extends BasicDisplay {
     
@@ -94,6 +104,8 @@ public class OrganisationPresenter {
   long restsize = 100;
   SimplePager pager;
   Stub stub;
+  OrderType order = OrderType.asc;
+  SortType  sort  = SortType.familyName;
   
   static final Predicate<Entry<String, TaggedDomUser<DomUser>>> NULL =  t -> true;
   
@@ -200,6 +212,15 @@ public class OrganisationPresenter {
 		this.filter = filter;	
 		countPersons(isRowCountExact());
 	}
+
+	public void init() {
+		filter = NULL;
+		personen = Collections.emptyMap();
+		rowCountExact = false;
+		rowCount = 0;
+		visibleRange = new Range(0,pagesize);
+		role = null;
+	}
 	  
   }
   
@@ -210,7 +231,7 @@ public class OrganisationPresenter {
     this.service = service;
     this.FAILURE = new LoggingFailure(LOG, bus);
 
-    if (vars.isTest()) {
+    if (vars.isTest()||vars.isSaml()) { // isSaml voor gebruik in numworx.uu.nl
     
 	    RootPanel root = RootPanel.get("organisationpager");
 		root.clear();
@@ -233,6 +254,9 @@ public class OrganisationPresenter {
     view.init();
     view.clear();
     view.setLoadingTableMessage();
+    sort = SortType.familyName;
+    order = OrderType.asc;
+    if (stub != null) stub.init();
     
     DomSchool school = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
     boolean premium = dwoGlobalVars.isPremium();
@@ -240,36 +264,6 @@ public class OrganisationPresenter {
 	view.initEditModules(school.teachersCanWrite(), school.accessControl() && premium, visible && premium);
     view.initChooseClass(school.studentsCanRegisterForSchoolClasses());
     
-//    Promise<List<DomSchoolClass>> pp = service.getTeachersSchoolClasses().then(
-//      p -> {
-//        List<DomSchoolClass> list = p.getValue();
-//        LinkedHashMap<String,TaggedDomSchoolClass> map = new LinkedHashMap<>();
-//        Collections.sort(list, (a,b) -> {
-//          return String.CASE_INSENSITIVE_ORDER.compare(a.getSchoolClassName(), b.getSchoolClassName());
-//        });
-//        list.forEach(item -> map.put(item.getId().toString(), new TaggedDomSchoolClass(item)));
-//        view.showSchoolClasses(map);
-//        schoolClasses = map;
-//        return p;
-//      });
-//      Promise<?> p1 = pp.flatMap(this::getStudents);
-//      Promise<List<DomStudent>> p2 = service.getTeachersStudents();
-//      Promises.all(p1,p2).then(
-//        x -> {
-//          List<DomStudent> s = p2.getValue();
-//          students = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
-//                                        student -> {
-//                                          return new TaggedDomUser<DomStudent>(student, new ArrayList<String>());
-//                                          
-//                                     }));
-//          for(Entry<String, Promise<List<DomStudent>>> entry : studentMap.entrySet()) {
-//            String key = entry.getKey();
-//            entry.getValue().getValue().forEach(item -> students.get(item.getId().getIdString()).getMemberOf().add(key));
-//          }
-//          showPersonen(students, RoleType.STUDENT);
-//          return null;
-//        }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
-//      
     	DomSchoolOrganisation org = new DomSchoolOrganisation();
     	org.setLimit(restsize);
     	org.setRole(RoleType.STUDENT);
@@ -300,7 +294,9 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
 	Map<String, TaggedDomUser<DomUser>> ss = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
 			student -> {
 				return new TaggedDomUser<DomUser>(student, new ArrayList<String>());
-			}));
+			}, 
+			(e1 , e2) -> e1, // drop
+			LinkedHashMap::new));
 		org.getUsersOfClasses().forEach(t -> {
 		String sid = t.getUserId().getIdString();
 		List<String> array = ss.get(sid).getMemberOf();
@@ -349,6 +345,8 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
     view.setLoadingTableMessage();
     DomSchoolOrganisation org = new DomSchoolOrganisation();
     org.setRole(RoleType.STUDENT);
+    org.setSort(sort);
+    org.setOrder(order);
     org.setLimit(restsize);
     org.setSchoolClasses(schoolClasses.values().stream().map(TaggedDomSchoolClass::getSchoolClass).collect(Collectors.toList()));
     students.clear();
@@ -566,4 +564,63 @@ static boolean containsIgnoreCase(String source, String regex) {
 	  RegExp r = RegExp.compile(regex, "i");
 	  return null !=  r.exec(source);	  
   }
+
+@JsMethod
+void clickSortButton(String value, String order, String type) {
+	LOG.info( "value is " + value + ", order = " + order);
+	if (this.order.name().equals(order) && this.sort.name().equals(value)) return;
+	
+	this.order = OrderType.valueOf(order);
+	this.sort = SortType.valueOf(value);
+	if (stub != null && stub.role == RoleType.STUDENT && students.size() > pagesize) {
+		students = students.values().stream().sorted(new Comparator<TaggedDomUser<DomUser>>() {
+
+			private String toString(List<String> memberof) {
+				StringBuffer sb = new StringBuffer();
+				Consumer<? super String> fun = t -> sb.append(t).append(", ");
+				try {
+					memberof.stream()
+						.map ( m -> schoolClasses.get(m).getSchoolClass().getSchoolClassName())
+					    .forEach(fun);
+				} catch (Exception oops) { // NPE not fatal.
+				}
+				int l = sb.length();
+				if (l >= 2) sb.setLength(l-2); 
+				return sb.toString();
+			}
+			
+			
+			@Override
+			public int compare(TaggedDomUser<DomUser> o1, TaggedDomUser<DomUser> o2) {
+				String a, b;
+				switch(OrganisationPresenter.this.sort) {
+				
+				case givenName:
+						a = o1.getUser().getGivenName();
+						b = o2.getUser().getGivenName();
+						break;
+				case userName:
+						a = o1.getUser().getUserName();
+						b = o2.getUser().getUserName();
+						break;
+				case schoolClassName:
+						a = toString(o1.getMemberOf());
+						b = toString(o2.getMemberOf());
+						break;
+				case familyName:
+					default:
+						a = o1.getUser().getFamilyName();
+						b = o2.getUser().getFamilyName();						
+				}
+				int result = localCompare(a, b);
+						// a.compareToIgnoreCase(b);
+				if (OrganisationPresenter.this.order == OrderType.desc) result = -result;
+				return result;
+			}}).collect(Collectors.toMap(t -> t.getUser().getId().getIdString(), Function.identity()
+					, (a,b) -> a, LinkedHashMap::new
+					));
+			stub.personen = students;
+			stub.setVisibleRange(stub.getVisibleRange());
+	}
+}
 }

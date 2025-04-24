@@ -29,6 +29,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent.SelectedView;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.results.StudentScoResultPresenter.Callback;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategory;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
@@ -82,6 +83,9 @@ public class DescriptionPresenter {
           "GetValue" : function(key) {
               return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::getValue(Ljava/lang/String;)(key)
           },
+		  "GetValueAsync" : function(key, callback) {
+				view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::getValueAsync(Ljava/lang/String;Lnl/uu/fi/dwo/lms/gwtclient/gwt/results/StudentScoResultPresenter$Callback;)(key, callback)
+			},
           "SetValue" : function(key, value) {
               return view.@nl.uu.fi.dwo.lms.gwtclient.gwt.studentresults.DescriptionPresenter::setValue(Ljava/lang/String;Ljava/lang/String;)(key, value)
           },
@@ -109,6 +113,7 @@ public class DescriptionPresenter {
 	  static final String WISKOPDR_SIG = "H4sIAAAAAA";
 	  static final String GOTO_URL = "dme.goto_url";
 	  private String launch_data;
+	  private Promise<String> launch_css = Promises.resolved("");
 	  private SwitchViewEvent event;
 
 		private String getValue(String key) {
@@ -121,6 +126,14 @@ public class DescriptionPresenter {
 			  LOG.info("result GetValue: " + shortValue);
 			  return value;
 			}
+		
+		private void getValueAsync(String key, Callback callback) {
+			if ("dme.style.css".equals(key)) {
+				launch_css.then( p -> { callback.resolve(p.getValue()); return p; });
+				return;
+			}
+			callback.resolve(getValue(key));
+		}
 
 		private String setValue(String key, String value) {
 			LOG.info("SetValue "+ key);
@@ -190,6 +203,7 @@ public class DescriptionPresenter {
 					}
 				}
 			}
+			launch_css = service.getCSS(current, info); // FIXME Grrrrr... side effect!!!!!
 			return service.getDescription(current, info)
 			   .then(p -> {
 				String text = p.getValue();
@@ -270,6 +284,7 @@ public class DescriptionPresenter {
 				}
 				json = selectVariant(json, info, method);
 				Widget description = this.createDescription(text, json);
+				launch_css = service.getCSS(current, info);
 				return Promises.resolved(description);
 			});
 			

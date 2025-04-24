@@ -103,14 +103,22 @@ public class SecuredStudentStudentModelManager implements LRSManager {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Promise<String> getDescription(DomStudentModelContextId id, DomSchoolClass sc, String uuid, String locale,
-			DomContext context) {
+			DomContext context) {		
+		return getString(id, sc, uuid, locale, context, "getDescription");		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Promise<String> getString(DomStudentModelContextId id, DomSchoolClass sc, String uuid, String locale,
+			DomContext context, String api) {
+
 		final Deferred<String> defer = new Deferred<>();
 		PersistenceId modelID = id.getId();
 		
 		String url = GwtRestVars.getInstance().getServer() + "sec:" + PathId.getId(context)
-				+ "/student/studentmodel/getDescription?modelId=" + modelID 
+				+ "/student/studentmodel/"
+				+ api
+				+ "?modelId=" + modelID 
 				+ "&id=" + uuid 
 				+ "&hasRoleId=" + context.getDomHasRole().getId() 
 				+ "&schoolClassId=" + sc.getId()
@@ -147,7 +155,7 @@ public class SecuredStudentStudentModelManager implements LRSManager {
 		} catch (RequestException e) {
 			defer.fail(e);
 		}		
-		return defer.getPromise().recoverWith(GwtRestVars.getInstance().new Retry(() -> getDescription(id, sc, uuid, locale, context) ));
+		return defer.getPromise().recoverWith(GwtRestVars.getInstance().new Retry(() -> getString(id, sc, uuid, locale, context, api) ));
 	}
 
 	@Override
@@ -155,4 +163,9 @@ public class SecuredStudentStudentModelManager implements LRSManager {
 		return getLRS(context);
 	}
 
+	public Promise<String> getCSS(DomStudentModelContextId id, DomSchoolClass sc, String uuid, String locale,
+			DomContext context) {
+		return getString(id, sc, uuid, locale, context, "getCSS");
+	}
+	
 }

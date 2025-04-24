@@ -2,13 +2,20 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import java.util.List;
 
+import nl.uu.fi.dwo.rest.dom.entities.util.OrderType;
+import nl.uu.fi.dwo.rest.dom.entities.util.SortType;
+
 public class DomSchoolOrganisation {
 	
 	private Long skip, limit;
 	private RoleType role;
+	private OrderType order = OrderType.asc;
+	private SortType  sort = SortType.familyName;
+	
 	private List<DomUser> users;
     private List<DomMemberOfClass> usersOfClasses;
 	private List<DomSchoolClass> schoolClasses;
+	
  
     public Long getSkip() {
 		return skip;
@@ -45,5 +52,17 @@ public class DomSchoolOrganisation {
 	}
 	public void setRole(RoleType role) {
 		this.role = role;
+	}
+	public OrderType getOrder() {
+		return order;
+	}
+	public void setOrder(OrderType order) {
+		this.order = order;
+	}
+	public SortType getSort() {
+		return sort;
+	}
+	public void setSort(SortType sort) {
+		this.sort = sort;
 	}
 }

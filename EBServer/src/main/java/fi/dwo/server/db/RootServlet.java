@@ -14,12 +14,19 @@ import javax.servlet.http.HttpServletResponse;
 public class RootServlet extends HttpServlet {
 
 	String index = "/index.jsp";
-	Map<String, String> roots = new HashMap<>();
+	String exam = "/toets/index.jsp";
+	
+	Map<String, String> roots = new HashMap<>(), exams = new HashMap<>();
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String host = req.getHeader("Host");
-		String index = roots.getOrDefault(host, this.index);
+		
+		String index;
+		if ("/exam/".equals(req.getRequestURI())) 
+			index = exams.getOrDefault(host, this.exam);
+		else
+		    index = roots.getOrDefault(host, this.index);
 		RequestDispatcher dispatch = req.getRequestDispatcher(index);
 		dispatch.forward(req, resp);
 	}
@@ -30,6 +37,10 @@ public class RootServlet extends HttpServlet {
 		roots.put("cti.dwo.nl", "/cti/index.jsp");
 		roots.put("app.co-teach.nl", "/cti/index.jsp");
 		roots.put("test.co-teach.nl", "/cti/index.jsp");
+
+		exams.put("cti.dwo.nl", "/cti/exam/index.jsp");
+		exams.put("app.co-teach.nl", "/cti/exam/index.jsp");
+		exams.put("test.co-teach.nl", "/cti/exam/index.jsp");
 		
 		String param = getServletContext().getInitParameter("fi.dwo.server.db.root");
 		if (param != null && !param.isEmpty() && !"${UU_INDEX}".equals(param))

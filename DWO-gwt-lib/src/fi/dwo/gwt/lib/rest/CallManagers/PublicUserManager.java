@@ -6,7 +6,9 @@ import fi.dwo.gwt.lib.rest.GwtRestVars;
 import fi.dwo.gwt.lib.rest.client.RestCallers.PublicUserRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomNewStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
+import nl.uu.fi.dwo.rest.entities.RestNewStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewUser;
 
 import org.fusesource.restygwt.client.MethodCallback;
@@ -29,6 +31,22 @@ public class PublicUserManager {
         user.setRestContext(new DomContext());
         instance.setCurrentUser(null,null);
         caller.submitNewUser(user, asyncCallback);
+
+    }
+
+    public Promise<Boolean> RegisterNewStudent(DomNewStudent domNewUser) {
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.RegisterNewStudent(domNewUser, defer);
+        return defer.getPromise();
+    }
+
+    private void RegisterNewStudent(DomNewStudent domNewUser,
+            MethodCallback<Boolean> asyncCallback) {
+        RestNewStudent user = new RestNewStudent();
+        user.setDomNewStudent(domNewUser);
+        user.setRestContext(new DomContext());
+        instance.setCurrentUser(null,null);
+        caller.submitNewStudent(user, asyncCallback);
 
     }
 

@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.numworx.uploadwidget</groupId>
     <artifactId>UploadWidget-parent</artifactId>
-    <version>2.5.40</version>
+    <version>2.5.41</version>
   </parent>
   <artifactId>uploadwidget-az</artifactId>
   <dependencyManagement>
@@ -31,4 +31,11 @@
 		<artifactId>uploadwidget-common</artifactId>
 	</dependency>
   </dependencies>
+  <repositories>
+    <repository>
+      <id>my-repo1</id>
+      <name>your custom repo</name>
+      <url>https://repo1.maven.org/maven2/</url>
+    </repository>
+  </repositories>
 </project>
