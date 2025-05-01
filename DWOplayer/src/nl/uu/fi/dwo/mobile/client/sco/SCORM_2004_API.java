@@ -150,7 +150,11 @@ public class SCORM_2004_API implements Scorm2004IF {
 
 	
 	private static native boolean hasGetValueAsync() /*-{
-		return typeof $wnd.getAPIHandle().GetValueAsync !== 'undefined';
+		try {
+			return typeof $wnd.getAPIHandle().GetValueAsync !== 'undefined';
+		} catch(e) { // NPE if getApIHandle returns null
+			return false;
+		}
 	}-*/;
 	
 	private static native void getValueAsync(String name, CallResolve callback) /*-{
