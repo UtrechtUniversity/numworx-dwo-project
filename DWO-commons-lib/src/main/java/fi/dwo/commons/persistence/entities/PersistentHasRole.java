@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -58,6 +60,10 @@ public class PersistentHasRole implements Serializable {
     @Column(name = "lastLogin")
     @Temporal(TemporalType.DATE)
     private Date lastLogin;
+    @Column(name = "lastChangeTimeStamp")
+    long lastChangeTimeStamp;
+
+    
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "schoolGroupID", insertable = false, updatable = false)
     private PersistentSchoolGroup schoolGroup;
@@ -219,4 +225,11 @@ public class PersistentHasRole implements Serializable {
 		else
 			this.classID = null;
 	}
+    
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+    	lastChangeTimeStamp = System.currentTimeMillis();
+    }
+
 }

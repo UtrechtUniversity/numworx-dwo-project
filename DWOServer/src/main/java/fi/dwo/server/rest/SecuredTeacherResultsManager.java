@@ -954,6 +954,9 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 		s.setScoID(PersistentScoContext.buildPersistenceId(page.getId().getScoID()));
 		s.setScore(page.getScore());
 		s.setSequencenr(page.getId().getSequencenr());
+		String label = page.getLabel();
+		if (label == null) label = String.valueOf(s.getSequencenr().intValue() + 1);
+		s.setLabel(label);
 		PersistentHasRolePK pk = page.getId().getHasRolePK();
 		if (pk != null)
 		{

@@ -2,9 +2,11 @@ package nl.uu.fi.dwo.rest.dom.entities;
 
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
+@SuppressWarnings("serial")
 public class DomStudentScoPage extends DomId {
 	private PersistenceId scoID, userID, schoolGroupID;
 	private Long sequencenr; // start at 0
+	private String label;
 	
 	private Boolean docentCorrectie;
 	private Integer  maxScore, score, correctie;
@@ -56,6 +58,12 @@ public class DomStudentScoPage extends DomId {
 	}
 	public void setCorrectie(Integer correctie) {
 		this.correctie = correctie;
+	}
+	public String getLabel() {
+		return label;
+	}
+	public void setLabel(String label) {
+		this.label = label;
 	}
 	
 	

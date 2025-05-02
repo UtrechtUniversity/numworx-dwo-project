@@ -60,6 +60,11 @@ public class ScoPageUtilManager {
 				scopage.setOptlock(sd.getOptlock());
 				JsonObject page = object.getJsonObject("opdracht_1_" + (i+1));
 				JsonNumber number = page.getJsonNumber("scoreMax");
+				if ( page.getBoolean("hasTitle", false)) {
+					scopage.setLabel(page.getString("titel", String.valueOf(i+1)));
+				} else {
+					scopage.setLabel("Problem " + (i+1)); // FIXME STUB!!!
+				}
 				scopage.setMaxScore(number.intValue());
 				boolean b = page.getBoolean("checkDocent", false);
 				scopage.setCheckDocent(b);
@@ -122,6 +127,7 @@ public class ScoPageUtilManager {
 				dst.setMaxScore(src.getMaxScore());
 				dst.setOptlock(src.getOptlock());
 				dst.setCorrectie(null);
+				dst.setLabel(src.getLabel());
 				ScoPageManager.create(dst);
 				map.put(i, dst);
 			}

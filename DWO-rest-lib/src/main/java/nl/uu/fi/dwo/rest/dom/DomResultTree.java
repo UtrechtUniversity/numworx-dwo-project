@@ -207,10 +207,10 @@ public class DomResultTree {
 	public static void initResultScoPages(DomResultStudentScoContext value, List<DomStudentScoPage> pages) {
 		boolean hascorrectie = "completed".equals(value.getStudentSco().getCompletionStatus());
 		for(DomStudentScoPage page: pages) {
-			String label = String.valueOf(page.getSequencenr().intValue() + 1);
+			String label = page.getLabel(); //String.valueOf(page.getSequencenr().intValue() + 1);
 			DomResultStudentScoPage resultPage = new DomResultStudentScoPage(label);
 			resultPage.setNodeId(page.getSequencenr().intValue());
-			PersistenceId pid = new PersistenceId("LOCAL;none;" + label);
+			PersistenceId pid = new PersistenceId("LOCAL;none;" + page.getSequencenr());
 			value.getChildren().put(pid, resultPage);
 			if (page.getScore() != null) {
 				if (hascorrectie && Boolean.TRUE.equals(page.getDocentCorrectie())) {
