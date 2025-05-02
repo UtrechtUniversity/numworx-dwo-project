@@ -63,7 +63,7 @@ public class ScoPageUtilManager {
 				if ( page.getBoolean("hasTitle", false)) {
 					scopage.setLabel(page.getString("titel", String.valueOf(i+1)));
 				} else {
-					scopage.setLabel("Problem " + (i+1)); // FIXME STUB!!!
+					//scopage.setLabel("Problem " + (i+1)); // FIXME STUB!!!
 				}
 				scopage.setMaxScore(number.intValue());
 				boolean b = page.getBoolean("checkDocent", false);

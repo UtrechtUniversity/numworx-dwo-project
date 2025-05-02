@@ -538,4 +538,12 @@ public abstract class XMLView {
 	{
 		return this.timer;
 	}
+	
+	protected void setTitle(Panel panel, Map<String,Object> h) {
+		if ( (Boolean) h.get("hasTitle")) {
+			String titel = (String) h.get("titel");
+			panel.setTitle(titel);
+		}
+				
+	}
 }
