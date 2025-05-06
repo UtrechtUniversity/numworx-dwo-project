@@ -9,6 +9,7 @@ import com.azure.storage.blob.models.*;
 import com.azure.storage.blob.options.BlobParallelUploadOptions;
 import com.azure.storage.blob.sas.BlobSasPermission;
 import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
+import com.azure.storage.common.StorageSharedKeyCredential;
 
 import java.io.*;
 import java.time.Duration;
@@ -33,14 +34,20 @@ public class AZProvider {
 		 * The default credential first checks environment variables for configuration
 		 * If environment configuration is incomplete, it will try managed identity
 		 */
-		DefaultAzureCredential defaultCredential = new DefaultAzureCredentialBuilder().build();
-
 		// Azure SDK client builders accept the credential as a parameter
 		// TODO: Replace <storage-account-name> with your actual storage account name
-		BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
-		        .endpoint("https://"+account+".blob.core.windows.net/")
-		        .credential(defaultCredential)
-		        .buildClient();
+		String endpoint = "https://"+account+".blob.core.windows.net/";
+		endpoint = System.getProperty("AZ_ENDPOINT", endpoint);
+		String sharedKey = System.getProperty("AZ_SHAREDKEY");
+		BlobServiceClientBuilder builder = new BlobServiceClientBuilder().endpoint(endpoint);
+		if (sharedKey != null) {
+			StorageSharedKeyCredential keyCredential = new StorageSharedKeyCredential(account, sharedKey);
+			builder = builder.credential(keyCredential);			
+		} else {
+			DefaultAzureCredential defaultCredential = new DefaultAzureCredentialBuilder().build();
+			builder = builder.credential(defaultCredential);
+		}
+		BlobServiceClient blobServiceClient = builder.buildClient();
 		client = blobServiceClient.getBlobContainerClient(bucket);
 		//client.createIfNotExists();
 	}

@@ -375,7 +375,10 @@
                     		<ALLOW_ORIGIN>http://localhost:8080</ALLOW_ORIGIN>
                     		<ENV_NOSEB>true</ENV_NOSEB>                   
                     		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>
-                    		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>               
+                    		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>
+                    		<AZ_ENDPOINT>http://127.0.0.1:10000/devstoreaccount1/</AZ_ENDPOINT>
+                    		<AZ_SHAREDKEY>Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==</AZ_SHAREDKEY>
+                    		<S3_BUCKET>devstoreaccount1</S3_BUCKET>      
                         </systemProperties>
                         <warFile>target/${project.artifactId}-${project.version}.war</warFile>
                             <contextFile>src/test/tomcat/${context.xml}</contextFile>
@@ -383,8 +386,8 @@
                        	<webapps>
                          <webapp>
 						    <groupId>nl.numworx.uploadwidget</groupId>
-						    <artifactId>uploadwidget-local</artifactId>
-						    <version>2.5.34</version>
+						    <artifactId>uploadwidget-az</artifactId>
+						    <version>2.5.42-SNAPSHOT</version>
                             <type>war</type>
                             <contextPath>/dwo/dav/upload</contextPath>
                             <asWebapp>true</asWebapp>
