@@ -4,6 +4,11 @@
   	<param-name>dbrest.url</param-name>
 	<param-value>${dbrest.url}</param-value>  
   </context-param>
+  <session-config>
+    <cookie-config>
+        <path>/</path>
+    </cookie-config>
+  </session-config>
   <servlet>
   	<servlet-name>upload</servlet-name>
   	<servlet-class>nl.numworx.uploadwidgetgwt.server.Upload</servlet-class>
