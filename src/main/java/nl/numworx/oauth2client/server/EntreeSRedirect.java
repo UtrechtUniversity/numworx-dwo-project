@@ -48,8 +48,22 @@ public class EntreeSRedirect extends HttpServlet {
     StoredRestManager restManager;
     SystemManager systemManager;
 
+    /*
+     * 109.42.179.112 - - [04/May/2025:15:56:31 +0000] "GET /redirect?error=access_denied&error_description=Unknown+exception+has+occurred HTTP/1.1" 500 1489
+     */
+    
+    
+    
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String error = req.getParameter("error");
+		if (error != null) {			
+			log("Got an error: "  + error + ", " + req.getParameter("error_description"));
+			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+			return;			
+		}
+		
+		
 		String state = req.getParameter("state");
 		String scope = req.getParameter("scope");
 		String code = req.getParameter("code");
