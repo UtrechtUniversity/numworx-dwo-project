@@ -43,9 +43,9 @@ public class AZProvider {
 		// TODO: Replace <storage-account-name> with your actual storage account name
 		String endpoint = "https://"+account+".blob.core.windows.net/";
 		endpoint = System.getProperty("AZ_ENDPOINT", endpoint);
-		String sharedKey = System.getProperty("AZ_SHAREDKEY");
+		String sharedKey = System.getProperty("AZ_SHAREDKEY", "");
 		BlobServiceClientBuilder builder = new BlobServiceClientBuilder().endpoint(endpoint);
-		if (sharedKey != null) {
+		if (!sharedKey.isEmpty()) {
 			StorageSharedKeyCredential keyCredential = new StorageSharedKeyCredential(account, sharedKey);
 			builder = builder.credential(keyCredential);			
 		} else {

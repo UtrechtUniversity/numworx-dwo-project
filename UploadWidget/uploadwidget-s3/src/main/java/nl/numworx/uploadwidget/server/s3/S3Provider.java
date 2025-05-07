@@ -1,6 +1,7 @@
 package nl.numworx.uploadwidget.server.s3;
 
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.time.Duration;
 import java.util.List;
@@ -10,10 +11,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3ClientBuilder;
 import software.amazon.awssdk.services.s3.model.CommonPrefix;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -22,6 +26,7 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import software.amazon.awssdk.services.s3.model.S3Object;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner.Builder;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
@@ -43,10 +48,29 @@ public class S3Provider {
 	}
 
 	public void init() {
-		client = S3Client.builder()
-                .region(Region.EU_WEST_1)
-                .build();
-		presigner = S3Presigner.builder().region(Region.EU_WEST_1).build();
+	// Scaleway extra
+		String scwEndpoint = System.getenv("SCW_ENDPOINT");
+		Region region = Region.EU_WEST_1;
+		S3ClientBuilder builder = S3Client.builder();
+		if (scwEndpoint != null) {
+			builder = builder.endpointOverride(URI.create(scwEndpoint));
+		}
+		String swcRegion = System.getenv("AWS_DEFAULT_REGION");
+		if (swcRegion != null) region = Region.of(swcRegion);
+		String accessKey = System.getenv("AWS_ACCESS_KEY_ID");
+		String secretKey = System.getenv("AWS_SECRET_ACCESS_KEY");
+		StaticCredentialsProvider provider = null;
+		if (accessKey != null && secretKey != null) {
+			provider = StaticCredentialsProvider.create(
+			        AwsBasicCredentials.create(accessKey, secretKey));
+			builder = builder.credentialsProvider(
+			        provider);
+		}
+		client = builder.region(region).build();
+		Builder builder2 = S3Presigner.builder();
+		if (scwEndpoint != null) builder2 = builder2.endpointOverride(URI.create(scwEndpoint));
+		if (provider != null) builder2.credentialsProvider(provider);
+		presigner = builder2.region(region).build();
 	}
 	
 	public Set<String> list() {
