@@ -3,6 +3,7 @@ package nl.numworx.uploadwidgetgwt.server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Base64;
 import java.util.Collections;
@@ -105,6 +106,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 		
 		if (paths.length == 3) {
 			StringBuffer url = req.getRequestURL();
+			URI u = URI.create(url.toString());
 			resp.setContentType("application/atom+xml");
 			resp.setCharacterEncoding("UTF-8");
 			PrintWriter out = resp.getWriter();
@@ -112,7 +114,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 			for (AtomEntry entry: store.getEntries(prefix)) {
 				out.println("<entry>");
 				out.print(" <title>");out.print(entry.title);out.println("</title>");
-				out.print(" <link href='");out.print(url + entry.url);out.print("' type='");out.print(entry.type);out.print("' length='");out.print(entry.length);out.println("' />");
+				out.print(" <link href='");out.print(u.resolve(entry.url).toString());out.print("' type='");out.print(entry.type);out.print("' length='");out.print(entry.length);out.println("' />");
 				out.print(" <id>urn:uuid:");out.print(entry.id);out.println("</id>");
 				out.println("</entry>");
 			}
@@ -130,8 +132,8 @@ public class JavaUpload extends HttpServlet implements Constants {
 				//resp.sendRedirect(found.get().url);
 //				String proxy = Proxy.encode(found.get().url, System.getProperty("ALLOW_ORIGIN"));
 //				resp.sendRedirect(proxy);
-				Proxy.write(found.get().url, resp);
-				
+//				Proxy.write(found.get().url, resp);
+				store.write(found.get(), resp);
 				return;
 			}
  		} 

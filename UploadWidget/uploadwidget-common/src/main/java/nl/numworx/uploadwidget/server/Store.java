@@ -1,5 +1,6 @@
 package nl.numworx.uploadwidget.server;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Vector;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -78,5 +81,7 @@ public class Store {
 		entries.add(entry);
 	}
 	
-	
+	public void write(AtomEntry entry, HttpServletResponse resp) throws IOException {
+		Proxy.write(entry.url, resp);
+	}
 }

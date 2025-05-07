@@ -56,11 +56,6 @@
             <version>${restyVersion}</version>
             <classifier>sources</classifier>
         </dependency>
-	<dependency>
-	    <groupId>org.apache.httpcomponents</groupId>
-	    <version>4.5.14</version> <!-- of 4.5??? -->
- 	    <artifactId>httpclient</artifactId>
-	</dependency>
   	<dependency>
   		<groupId>nl.numworx.uploadwidget</groupId>
   		<artifactId>uploadwidget-s3</artifactId>

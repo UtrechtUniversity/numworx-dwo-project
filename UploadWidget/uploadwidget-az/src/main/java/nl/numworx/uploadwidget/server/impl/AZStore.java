@@ -13,6 +13,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileItem;
 
 import com.azure.storage.blob.models.BlobItem;
@@ -110,4 +112,15 @@ public class AZStore extends Store {
 		return entry.learnerId.startsWith(user);
 	}
 
+	@Override
+	public void write(AtomEntry entry, HttpServletResponse resp) throws IOException {
+		resp.setContentType(entry.type);
+		try {
+			resp.setContentLengthLong(entry.length.longValue()); // niet in tomcat7
+		} catch (NoSuchMethodError e) {
+			resp.setContentLength(entry.length.intValue());
+		}
+		provider.writeTo(entry, resp.getOutputStream());
+		resp.getOutputStream().close();
+	}
 }

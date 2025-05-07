@@ -11,12 +11,17 @@ import com.azure.storage.blob.sas.BlobSasPermission;
 import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
 import com.azure.storage.common.StorageSharedKeyCredential;
 
+import nl.numworx.uploadwidget.server.impl.AZStore.AZAtomEntry;
+import nl.numworx.uploadwidget.shared.AtomEntry;
+
 import java.io.*;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.servlet.ServletOutputStream;
 
 public class AZProvider {
 
@@ -96,16 +101,21 @@ public class AZProvider {
 		options.getDetails().setRetrieveMetadata(true);
 		BlobItem item = client.listBlobs(options, Duration.ofMillis(100000)).stream().findAny().get();
 		Entity result = new Entity(item, "");
-		result.url = blob.getBlobUrl();
-		OffsetDateTime now = OffsetDateTime.now().minusMinutes(10);
-		OffsetDateTime expiryTime = now.plusDays(1);
-		BlobSasPermission permission = new BlobSasPermission().setReadPermission(true);
-		UserDelegationKey key = client.getServiceClient().getUserDelegationKey(now, expiryTime);
-		BlobServiceSasSignatureValues values = new BlobServiceSasSignatureValues(expiryTime, permission)
-		     .setStartTime(now);
-
-		result.url += "?" + blob.generateUserDelegationSas(values, key);
+//		result.url = blob.getBlobUrl();
+//		OffsetDateTime now = OffsetDateTime.now().minusMinutes(10);
+//		OffsetDateTime expiryTime = now.plusDays(1);
+//		BlobSasPermission permission = new BlobSasPermission().setReadPermission(true);
+//		UserDelegationKey key = client.getServiceClient().getUserDelegationKey(now, expiryTime);
+//		BlobServiceSasSignatureValues values = new BlobServiceSasSignatureValues(expiryTime, permission)
+//		     .setStartTime(now);
+//
+//		result.url += "?" + blob.generateUserDelegationSas(values, key);
 
 		return result;
+	}
+
+	public void writeTo(AtomEntry item, ServletOutputStream outputStream) {
+		BlobClient blob = client.getBlobClient(item.url);
+		blob.downloadStream(outputStream);
 	}
 }

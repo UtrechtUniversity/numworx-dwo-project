@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.fileupload.FileItem;
+
 import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
 
@@ -38,8 +40,19 @@ public class LocalStore extends Store {
 	}
 
 	@Override
+	public void addEntry(AtomEntry entry, Map<String, String> tags, FileItem item) {
+		try {
+			addEntry(entry, tags, item.getInputStream());
+			entry.type = item.getContentType();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
 	public void addEntry(AtomEntry entry, Map<String, String> map, InputStream inputStream) {
-		File f = new File(root, entry.title);
+		File f = new File(root, encode(entry.title));
 		entry.url = f.toURI().toString();
 		entry.type = "application/octet-stream";
 		try {
@@ -57,6 +70,10 @@ public class LocalStore extends Store {
 		}		
 		entry.length = f.length();
 		super.addEntry(entry, map, inputStream);
+	}
+
+	private String encode(String title) {
+		return title.replace(';', '_');
 	}
 
 	@Override

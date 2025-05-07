@@ -1,4 +1,4 @@
-package nl.numworx.uploadwidgetgwt.server;
+package nl.numworx.uploadwidget.server;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -68,7 +68,12 @@ public class Proxy extends HttpServlet {
 		resp.setContentType(mimetype);
 //		if (entity.getContentEncoding() != null) 
 //			resp.setContentEncoding(entity.getContentEncoding().getValue()); // gzip en zo..
-		resp.setContentLengthLong(entity.getContentLength());
+		long contentLength = entity.getContentLength();
+		try {
+			resp.setContentLengthLong(contentLength);
+		} catch (NoSuchMethodError e) {
+			resp.setContentLength((int) contentLength);
+		}
 		entity.writeTo(resp.getOutputStream());
 	}
 
