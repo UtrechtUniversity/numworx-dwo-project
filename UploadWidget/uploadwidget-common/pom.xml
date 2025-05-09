@@ -28,11 +28,6 @@
             <version>3.1.0</version>
             <scope>provided</scope>
       </dependency>
-	<dependency>
-	    <groupId>org.apache.httpcomponents</groupId>
-	    <version>4.5.14</version> <!-- of 4.5??? -->
- 	    <artifactId>httpclient</artifactId>
-	</dependency>
   </dependencies>
   
   <build>

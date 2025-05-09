@@ -17,7 +17,7 @@ import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolRoleAndClassV2;
 
-public class Store {
+public abstract class Store {
 
 	public static final String LEARNERID = "learnerid";
     
@@ -81,7 +81,5 @@ public class Store {
 		entries.add(entry);
 	}
 	
-	public void write(AtomEntry entry, HttpServletResponse resp) throws IOException {
-		Proxy.write(entry.url, resp);
-	}
+	public abstract void write(AtomEntry entry, HttpServletResponse resp) throws IOException;
 }

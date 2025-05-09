@@ -441,7 +441,7 @@
                         </webapp>
                          <webapp>
 						    <groupId>nl.numworx.uploadwidget</groupId>
-						    <artifactId>uploadwidget-az</artifactId>
+						    <artifactId>uploadwidget-local</artifactId>
 						    <version>2.5.42-SNAPSHOT</version>
                             <type>war</type>
                             <contextPath>/dwo/dav/upload</contextPath>
