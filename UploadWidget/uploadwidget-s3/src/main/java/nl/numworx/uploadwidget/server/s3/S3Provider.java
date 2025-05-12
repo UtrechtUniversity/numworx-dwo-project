@@ -53,7 +53,7 @@ public class S3Provider {
 		Region region = Region.EU_WEST_1;
 		S3ClientBuilder builder = S3Client.builder();
 		if (scwEndpoint != null) {
-			builder = builder.endpointOverride(URI.create(scwEndpoint));
+			builder = builder.endpointOverride(URI.create(scwEndpoint)).forcePathStyle(true);
 		}
 		String swcRegion = System.getenv("AWS_DEFAULT_REGION");
 		if (swcRegion != null) region = Region.of(swcRegion);
