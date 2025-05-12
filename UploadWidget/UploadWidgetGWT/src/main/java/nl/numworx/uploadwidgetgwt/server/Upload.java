@@ -74,7 +74,7 @@ public class Upload extends UploadAction {
 				String key = item.getFieldName();
 				if ("learnerId-0".equals(key)) {
 					learnerId = item.getString();
-					actor = JavaUpload.getActor(authorization, learnerId);
+					actor = JavaUpload.getActor(authorization, learnerId, request.getSession());
 				} else if ("registration-0".equals(key)) {
 					registration = item.getString();
 				} else if ("uuid-0".equals(key)) {
