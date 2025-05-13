@@ -47,6 +47,7 @@ public class DatabaseManager {
         }
         catch (SQLException e) {
             System.err.println("Unable to connect to server: " + e);
+            throw new RuntimeException("<init>",e);
         }
     }
 
