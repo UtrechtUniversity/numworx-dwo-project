@@ -35,7 +35,6 @@ public class S3Provider {
 	private static final String DEFAULT_S3_BUCKET = "cds-dev-dwo-nl";
 	private static final String S3_BUCKET = "S3_BUCKET";
 	S3Client client;
-	S3Presigner presigner;
 	String bucket;
 	
 	public S3Provider(String bucket) {
@@ -67,10 +66,6 @@ public class S3Provider {
 			        provider);
 		}
 		client = builder.region(region).build();
-		Builder builder2 = S3Presigner.builder();
-		if (scwEndpoint != null) builder2 = builder2.endpointOverride(URI.create(scwEndpoint));
-		if (provider != null) builder2.credentialsProvider(provider);
-		presigner = builder2.region(region).build();
 	}
 	
 	public Set<String> list() {
@@ -140,27 +135,6 @@ public class S3Provider {
 	}
 	
 	
-	public URL getRedirect(String key) {
-		GetObjectRequest getObjectRequest =
-	             GetObjectRequest.builder()
-	                             .bucket(bucket)
-	                             .key(key)
-	                             .build();
-
-	     // Create a GetObjectPresignRequest to specify the signature duration
-	     GetObjectPresignRequest getObjectPresignRequest =
-	         GetObjectPresignRequest.builder()
-	                                .signatureDuration(Duration.ofMinutes(10))
-	                                .getObjectRequest(getObjectRequest)
-	                                .build();
-
-	     // Generate the presigned request
-	     PresignedGetObjectRequest presignedGetObjectRequest =
-	         presigner.presignGetObject(getObjectPresignRequest);
-
-	     return presignedGetObjectRequest.url();
-
-	}
 
 	private Entity wrap(ResponseInputStream<GetObjectResponse> result) {
 		return new Entity(result);

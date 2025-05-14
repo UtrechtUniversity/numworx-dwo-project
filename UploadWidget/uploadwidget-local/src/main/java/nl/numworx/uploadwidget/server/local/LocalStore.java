@@ -134,7 +134,9 @@ public class LocalStore extends Store {
 			resp.setContentLength(entry.length.intValue());
 		}
 		File u = new File(entry.id);
-		IOUtils.copy(new FileInputStream(u), resp.getOutputStream());
+		FileInputStream out = new FileInputStream(u);
+		IOUtils.copy(out, resp.getOutputStream());
+		IOUtils.closeQuietly(out);
 	}
 
 }

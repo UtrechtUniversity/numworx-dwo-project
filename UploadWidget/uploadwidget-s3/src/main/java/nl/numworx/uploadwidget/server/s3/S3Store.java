@@ -122,6 +122,7 @@ public class S3Store extends Store {
 		}
 		Entity e = provider.get(entry.url);
 		IOUtils.copy(e.inputstream(), resp.getOutputStream());
+		IOUtils.closeQuietly(e);
 	}
 
 }

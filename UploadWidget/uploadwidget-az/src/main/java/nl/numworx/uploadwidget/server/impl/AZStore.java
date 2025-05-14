@@ -121,6 +121,5 @@ public class AZStore extends Store {
 			resp.setContentLength(entry.length.intValue());
 		}
 		provider.writeTo(entry, resp.getOutputStream());
-		resp.getOutputStream().close();
 	}
 }
