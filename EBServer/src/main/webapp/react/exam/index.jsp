@@ -24,7 +24,7 @@
 <%
 	} else {
 %>
-	  <a href='toets.jsp<%=id%><%=code%>'>' target="_top">Start de beveiligde <strong>exam</strong> omgeving</a>
+	  <a href='toets.jsp<%=id%><%=code%>' target="_top">Start de beveiligde <strong>exam</strong> omgeving</a>
 <%	  
 	}
 
