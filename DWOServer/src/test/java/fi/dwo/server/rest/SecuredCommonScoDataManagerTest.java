@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
+import javax.persistence.PersistenceException;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -21,8 +22,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import fi.dwo.commons.persistence.entities.PersistentScoPage;
+import fi.dwo.commons.persistence.entities.PersistentScoPagePK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
+import fi.dwo.server.PersistentDataManagers.core.ScoPageManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
@@ -116,6 +120,47 @@ public class SecuredCommonScoDataManagerTest {
 		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
 		assertEquals("score", "5", result);		
 	}
+	@Test
+	public void testScore3() { 
+		String key = "dme.scorewidget.s.1.1.score.scaled";
+		pssc = new PersistentStudentScoContext(1L);
+		pssc.setScoID(1L);
+
+		PersistentScoPage psp = new PersistentScoPage();
+		psp.setMaxScore(10);
+		psp.setScore(5);
+		psp.setId(new PersistentScoPagePK(1L, 0L, pssc.getPersistentHasRolePK()));
+		psp.setOptlock(0L);
+		try{ScoPageManager.destroy(psp);}catch(PersistenceException e){}
+		ScoPageManager.create(psp);		
+		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
+		ScoPageManager.destroy(psp);
+		assertEquals("score", "0.5", result);		
+	}
+	@Test
+	public void testScore4() throws IOException { 
+		String key = "dme.scorewidget.cs.1.score.scaled";
+		pssc = new PersistentStudentScoContext();
+		pssc.setCompletionStatus(SecuredCommonScoDataManager.COMPLETE);
+		pssc.setScoID(1L);
+		InputStream cocd = getClass().getResourceAsStream("cocd.xml");
+		byte buf[]= new byte[cocd.available()];
+		cocd.read(buf);
+		pssd.setCocd(new String(buf, StandardCharsets.UTF_8));
+		PersistentScoPage psp = new PersistentScoPage();
+		psp.setMaxScore(20);
+		psp.setScore(5);
+		psp.setCorrectie(14);
+		psp.setId(new PersistentScoPagePK(1L, 0L, pssc.getPersistentHasRolePK()));
+		psp.setOptlock(0L);
+		try{ScoPageManager.destroy(psp);}catch(PersistenceException e){}
+		ScoPageManager.create(psp);
+		String result = SecuredCommonScoDataManager.scoreWidget(key, pssd, pssc);
+		try{ScoPageManager.destroy(psp);}catch(PersistenceException e){}
+		assertEquals("score", "0.95", result);		
+	}
+
+	
 	@Test
 	public void testId() { 
 		String key = "dme.scorewidget.s.1.1.id";
