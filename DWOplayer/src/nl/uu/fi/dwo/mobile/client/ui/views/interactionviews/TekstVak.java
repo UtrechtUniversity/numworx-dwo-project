@@ -58,7 +58,7 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 	protected int aantalRegels;
 	
 	private int cellMarge;
-	private int bovenMarge;
+	int bovenMarge;
 	private int interlinie = 0;
 	
 	//voor als er een uitklapknop links in dit vak staat:
@@ -1122,7 +1122,15 @@ public class TekstVak extends LayoutPanel //implements InteractionView
 			{
 				Object currentObject = opdrachtObjects.get(i);
 				if(currentObject instanceof SymboolPanel)
-				{	((SymboolPanel) currentObject).zetVolledigeHoogte(this.hoogte);
+				{
+					int resthoogte = 0;
+					for(int j = 0; j < aantalRegels; j++) {
+						ArrayList<Object> regelList = getRegelVak(j).getRegelObjects();
+						if (!regelList.contains(currentObject)) 
+							resthoogte += getRegelVak(j).getHeight();
+					}
+					
+					((SymboolPanel) currentObject).zetVolledigeHoogte(this.hoogte - bovenMarge*2 - resthoogte);
 					
 					for(int j = 0; j < aantalRegels; j++)
 					{

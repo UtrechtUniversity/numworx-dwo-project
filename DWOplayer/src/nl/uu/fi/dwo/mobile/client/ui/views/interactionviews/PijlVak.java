@@ -33,6 +33,8 @@ import nl.uu.fi.dwo.mobile.client.ui.views.XMLView;
 
 import org.vectomatic.dom.svg.OMSVGDocument;
 import org.vectomatic.dom.svg.OMSVGEllipseElement;
+import org.vectomatic.dom.svg.OMNode;
+import org.vectomatic.dom.svg.OMNodeList;
 import org.vectomatic.dom.svg.OMSVGCircleElement;
 import org.vectomatic.dom.svg.OMSVGLineElement;
 import org.vectomatic.dom.svg.OMSVGLength;
@@ -344,6 +346,13 @@ public class PijlVak extends LayoutPanel
 	
 	public void paintComponent()
 	{
+		// start fresh
+		
+		OMNode node;
+		while (null != (node= svg.getLastChild()))
+			svg.removeChild(node);
+		
+		
 		 // Create an arrow-shaped path
         OMSVGPathElement pijl = doc.createSVGPathElement();
         OMSVGPathSegList segsPijl = pijl.getPathSegList();
@@ -351,7 +360,7 @@ public class PijlVak extends LayoutPanel
         segsPijl.appendItem(pijl.createSVGPathSegCurvetoQuadraticAbs(1f, height-7, 16, height/2));
         pijl.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, SVGConstants.CSS_BLACK_VALUE);
         pijl.getStyle().setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1.5");
-        pijl.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_WHITE_VALUE);
+        pijl.getStyle().setSVGProperty(SVGConstants.CSS_FILL_PROPERTY, SVGConstants.CSS_NONE_VALUE);
         
         svg.appendChild(pijl);
         

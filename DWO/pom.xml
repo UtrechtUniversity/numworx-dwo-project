@@ -18,6 +18,12 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.26</chatGWTVersion>
     </properties>
+ 	<repositories>	<!-- als de mirror uit staat -->
+		<repository>
+		  <id>repos</id>
+		  <url>https://repos.dwo.nl/artifactory/repos</url>
+		</repository>
+	</repositories>
     
     <!-- should move project role names here that fall in the full project scope -->
     <modules>

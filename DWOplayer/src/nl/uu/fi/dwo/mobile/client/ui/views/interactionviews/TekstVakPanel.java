@@ -1857,7 +1857,8 @@ if (zichtbaarNaNakijken && activity.isReview()) {
 			else if (currentObject instanceof SymboolPanel)
 			{
 				aantalVakken++;
-				((SymboolPanel) currentObject).zetVolledigeHoogte(tekstVakken[rij][kolom].hoogte);
+				TekstVak tv = tekstVakken[rij][kolom];
+				((SymboolPanel) currentObject).zetVolledigeHoogte(tv.hoogte-2*tv.bovenMarge);
 			}
 			else if (currentObject instanceof SamengesteldeStappenPanel)
 			{

@@ -163,6 +163,7 @@ public class ScoreManager implements ScoreWidgetIF, CBookEventListener {
 							return "failed";
 						});
 						map.computeIfPresent(k + "score.raw", (kk,v) -> String.valueOf(parameters.getInt("score.raw")));
+						map.computeIfPresent(k + "score.scaled", (kk,v) -> String.valueOf(parameters.getDouble("score.scaled")));
 						ObjectList l = parameters.getObjectList("visited");
 						map.computeIfPresent(k + "entry", (kk,v) -> (l == null || l.size() > 0) ? "ab-initio" : "resume" );
 						// visited list/null/empty-list

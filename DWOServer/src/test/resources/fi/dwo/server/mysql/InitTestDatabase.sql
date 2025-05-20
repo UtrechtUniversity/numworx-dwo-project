@@ -123,10 +123,53 @@ LOCK TABLES `tblappletconfig` WRITE;
 /*!40000 ALTER TABLE `tblappletconfig` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `tblschool`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblschool` (
+  `schoolID` int(11) NOT NULL AUTO_INCREMENT,
+  `schoolName` varchar(128) NOT NULL DEFAULT '',
+  `schoollogin` varchar(128) NOT NULL DEFAULT '',
+  `passwordSchool` varchar(128) NOT NULL DEFAULT '',
+  `export` tinyint(1) DEFAULT '0',
+  `schoolRights` varchar(100) DEFAULT '_',
+  `image` varchar(128) DEFAULT '',
+  `expire` date DEFAULT NULL,
+  `optlock` int(11) DEFAULT '0',
+  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
+  `del` tinyint(4) NOT NULL DEFAULT '0',
+  `aboType` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`schoolID`),
+  UNIQUE KEY `AK_IDENTIFIER_1` (`schoollogin`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tblschool`
+--
+
+LOCK TABLES `tblschool` WRITE;
+/*!40000 ALTER TABLE `tblschool` DISABLE KEYS */;
+INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',1,'_',NULL,NULL,0,0,0,0),(1,'NULL','null','',0,'_',NULL,NULL,0,0,0,0),(3,'School01','school01','',0,'_',NULL,NULL,0,0,0,3),(4,'School02','school02','',0,'_c',NULL,NULL,0,0,0,0);
+/*!40000 ALTER TABLE `tblschool` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `tblschooldata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tblschooldata` (
+  `schoolID` int(11) NOT NULL,
+  `optlock` int(11) DEFAULT '0',
+  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
+  `del` tinyint(4) NOT NULL DEFAULT '0',
+  `schoolData` json DEFAULT NULL,
+  PRIMARY KEY (`schoolID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 --
 -- Table structure for table `tblclass`
 --
-
+DROP TABLE IF EXISTS `tblhasrole`;
 DROP TABLE IF EXISTS `tblclass`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -543,49 +586,6 @@ UNLOCK TABLES;
 -- Table structure for table `tblschool`
 --
 
-DROP TABLE IF EXISTS `tblschool`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblschool` (
-  `schoolID` int(11) NOT NULL AUTO_INCREMENT,
-  `schoolName` varchar(128) NOT NULL DEFAULT '',
-  `schoollogin` varchar(128) NOT NULL DEFAULT '',
-  `passwordSchool` varchar(128) NOT NULL DEFAULT '',
-  `export` tinyint(1) DEFAULT '0',
-  `schoolRights` varchar(100) DEFAULT '_',
-  `image` varchar(128) DEFAULT '',
-  `expire` date DEFAULT NULL,
-  `optlock` int(11) DEFAULT '0',
-  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
-  `del` tinyint(4) NOT NULL DEFAULT '0',
-  `aboType` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`schoolID`),
-  UNIQUE KEY `AK_IDENTIFIER_1` (`schoollogin`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tblschool`
---
-
-LOCK TABLES `tblschool` WRITE;
-/*!40000 ALTER TABLE `tblschool` DISABLE KEYS */;
-INSERT INTO `tblschool` VALUES (0,'DwoSchool','dwo','',1,'_',NULL,NULL,0,0,0,0),(1,'NULL','null','',0,'_',NULL,NULL,0,0,0,0),(3,'School01','school01','',0,'_',NULL,NULL,0,0,0,3),(4,'School02','school02','',0,'_c',NULL,NULL,0,0,0,0);
-/*!40000 ALTER TABLE `tblschool` ENABLE KEYS */;
-UNLOCK TABLES;
-
-DROP TABLE IF EXISTS `tblschooldata`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tblschooldata` (
-  `schoolID` int(11) NOT NULL,
-  `optlock` int(11) DEFAULT '0',
-  `lastChangeTimeStamp` bigint(20) DEFAULT '0',
-  `del` tinyint(4) NOT NULL DEFAULT '0',
-  `schoolData` json DEFAULT NULL,
-  PRIMARY KEY (`schoolID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 
 
