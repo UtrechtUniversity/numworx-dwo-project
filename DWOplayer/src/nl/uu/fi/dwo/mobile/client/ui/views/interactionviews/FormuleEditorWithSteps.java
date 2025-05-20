@@ -508,7 +508,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		splitsKnop.setVisible(bewerkingKnoppenExtra);
 		wortelBewerkKnop.setVisible(bewerkingKnoppenExtra);
 		
-		sp = new ScrollPanel();
+		sp = new ScrollPanel();sp.setStylePrimaryName("gwt-ScrollPanel");
 		sp.setPixelSize(breedte-3-2*borderWidth, hoogte-50 + 20); // waar komt die 50 vandaan, er kan nog 20 pixels bij
 		sp.getElement().getStyle().setOverflow(Overflow.AUTO);
 		sp.getElement().getStyle().setFloat(Style.Float.LEFT);
@@ -4526,7 +4526,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		{
 			mainPanel.remove(sp);
 			
-			stelselScrollPanel = new ScrollPanel();
+			stelselScrollPanel = new ScrollPanel();stelselScrollPanel.setStylePrimaryName("gwt-ScrollPanel");
 			stelselScrollPanel.setPixelSize(breedte-5, hoogte);//-50 + 20); // waar komt die 50 vandaan, er kan nog 20 pixels bij
 			stelselScrollPanel.getElement().getStyle().setOverflowX(Overflow.AUTO);
 			stelselScrollPanel.getElement().getStyle().setOverflowY(Overflow.HIDDEN);
