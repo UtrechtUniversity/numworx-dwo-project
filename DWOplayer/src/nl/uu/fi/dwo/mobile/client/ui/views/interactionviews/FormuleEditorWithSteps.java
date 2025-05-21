@@ -3218,7 +3218,8 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 				currentTekst = removePrefix(currentTekst);
 			
 			currentTekst = removeIsTeken(currentTekst);
-			editor.insert(currentTekst);
+			editor.insert(currentTekst); // set de cursor ergens
+			if (!focusEnabled) editor.setCurrentElementRepaint();
 			
 			if (stepsForLinKwad && start > 0)
 			{
@@ -4622,6 +4623,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 
 	void setEditable(boolean editable) {
 		this.editable = editable;
+		setFocusEnabled(editable);
 		mainPanel.setStyleDependentName("readonly", !editable);
 // TODO in css regelen 
 		if(!editable) contentPanel.getElement().getStyle().setProperty("pointerEvents", "none");
