@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
+import fi.dwo.server.PersistentDataManagers.util.DwoSystemParametersUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -857,7 +858,7 @@ public class SecuredSchoolAdminSchoolManager {
     	if (user.isSingleSchoolAccount()) {
     		if (!Boolean.FALSE.equals(rest.getDomStudent().getSingleSchool()))
     				return Boolean.FALSE; // FIXME..... upgrade user to non-single-school-account first
-            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
         	HasRoleUtilManager.getOrCreateHasRoleInSchool(user, nullSchool, RoleType.STUDENT);
         	user.setSingleSchoolAccount(Boolean.FALSE);
         	UserManager.edit(user);
