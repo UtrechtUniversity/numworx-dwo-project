@@ -1,7 +1,7 @@
 @external numworx-popup, cbg-RP, v, nr, gwt-PushButton;
 @external navigatiebalk, score, scoreBtn, scoreBtn-cursor, scoreBtn-max0, spaceLabel, spaceShiftLabel, shiftBtn, navigatiebalkLabel;
 @external myPushButton myPushButton-disabled;
-@external content, gwt-InlineHTML;
+@external content, gwt-InlineHTML, gwt-ScrollPanel;
 @url goednumworx goednumworx;
 
 div { padding: 0px; }
@@ -170,6 +170,14 @@ span.textEditor_select {
 
 .disabled {
 	pointer-events: none !important;
+}
+
+.disabled .gwt-ScrollPanel {
+	pointer-events: all;
+}
+
+.disabled .gwt-ScrollPanel > * {
+	pointer-events: none;
 }
 
 .StubView_readonly {

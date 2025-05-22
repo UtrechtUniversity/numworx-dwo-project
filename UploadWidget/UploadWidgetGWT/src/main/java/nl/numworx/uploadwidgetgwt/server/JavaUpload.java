@@ -3,12 +3,14 @@ package nl.numworx.uploadwidgetgwt.server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
@@ -23,6 +26,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import nl.numworx.uploadwidget.server.Store;
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidgetgwt.shared.Constants;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountLoginsManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
@@ -41,6 +45,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -88,11 +93,14 @@ public class JavaUpload extends HttpServlet implements Constants {
 			}
 			
 		}
-		else req.getSession().setAttribute(AUTHORIZATION, bearer);
+		else {
+			req.getSession().setAttribute(AUTHORIZATION, bearer);
+			req.getSession().removeAttribute(TOKEN_RETRY);
+		}
 		String path = req.getPathInfo();
 		int index = path.indexOf("/sec:");
 		String paths[] = path.substring(index+5).split("/");
-		Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0]);
+		Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0], req.getSession());
 
 		if (!actor.isPresent()) {
 			LOG.severe("Actor not present " + bearer + " " + paths[0]);
@@ -105,6 +113,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 		
 		if (paths.length == 3) {
 			StringBuffer url = req.getRequestURL();
+			URI u = URI.create(url.toString());
 			resp.setContentType("application/atom+xml");
 			resp.setCharacterEncoding("UTF-8");
 			PrintWriter out = resp.getWriter();
@@ -112,7 +121,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 			for (AtomEntry entry: store.getEntries(prefix)) {
 				out.println("<entry>");
 				out.print(" <title>");out.print(entry.title);out.println("</title>");
-				out.print(" <link href='");out.print(url + entry.url);out.print("' type='");out.print(entry.type);out.print("' length='");out.print(entry.length);out.println("' />");
+				out.print(" <link href='");out.print(u.resolve(entry.url).toString());out.print("' type='");out.print(entry.type);out.print("' length='");out.print(entry.length);out.println("' />");
 				out.print(" <id>urn:uuid:");out.print(entry.id);out.println("</id>");
 				out.println("</entry>");
 			}
@@ -127,11 +136,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 			log("result " + found);
 // bij instance andere logica, groter publiek		
 			if ( (instance && found.isPresent()) || store.ownedBy(found, actor)) {
-				//resp.sendRedirect(found.get().url);
-//				String proxy = Proxy.encode(found.get().url, System.getProperty("ALLOW_ORIGIN"));
-//				resp.sendRedirect(proxy);
-				Proxy.write(found.get().url, resp);
-				
+				store.write(found.get(), resp);
 				return;
 			}
  		} 
@@ -171,7 +176,48 @@ public class JavaUpload extends HttpServlet implements Constants {
 		return pid + "/" + uuid + "/" + registration + "/";
 	}
 
-	static Optional<DomSchoolRoleAndClassV2> getActor(String bearer, String pathid) {
+	public static final String PREFIX = "nl.numworx.oauth2client.server.Oauth2Filter.";
+	public static final String PREFIX_TOKEN = PREFIX + "token.";
+    public static final String TOKEN_RETRY = PREFIX_TOKEN + "retry";
+	
+	static class Retry implements Predicate<Dwo2Exception> {
+		HttpSession storage;
+		StoredRestManager rest;
+		private final OAuthManager m;
+		@Override
+		public boolean test(Dwo2Exception t) {
+		    if (t.getDwo2Code() != Dwo2ExceptionCode.User_AuthenticationError) return false;
+			String token = (String) storage.getAttribute(TOKEN_RETRY);
+		    if (token == null) return false;
+		    token = m.refresh_token(token);
+		    if (token == null) {
+		      t = new Dwo2Exception(Dwo2ExceptionCode.Rest_LoginNeeded, "invalid_grant");
+		      storage.removeAttribute(TOKEN_RETRY);
+		      throw new RuntimeException(t);
+		    }
+		    storage.setAttribute(TOKEN_RETRY, token);
+		    return true;
+		}
+		public Retry(HttpSession storage, StoredRestManager rest) {
+			super();
+			this.storage = storage;
+			this.rest = rest;
+			m = new OAuthManager(rest);
+			Object token = storage.getAttribute(TOKEN_RETRY);
+			if (token == null) {
+	            try {
+					token = m.authorization_token(SecureUserAccountManager.getBearerToken(rest), null, null, null);
+				    storage.setAttribute(TOKEN_RETRY, token);
+				} catch (Dwo2Exception e) {
+				}
+			}
+		}		
+	}
+    
+	
+	
+	
+	static Optional<DomSchoolRoleAndClassV2> getActor(String bearer, String pathid, HttpSession session) {
 		StoredRestManager rest = StoredRestManager.getInstance().duplicate(); // Should not be a singleton!
 		DomContext context = new DomContext();
 		context.setRealm(null);
@@ -189,6 +235,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 			LOG.severe("unrecognized bearer [" + bearer + "]");
 			return Optional.empty();
 		}
+		rest.setRecover(new Retry(session, rest));
 		DomUserFull user;
 		DomSchoolsRolesAndClassesV2 logins;
 		DomHasRole hasRole;
@@ -264,7 +311,7 @@ LOG.info("class " + b2);
 		String path = req.getPathInfo();
 		int index = path.indexOf("/sec:");
 		String paths[] = path.substring(index+5).split("/");
-		Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0]);
+		Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0], req.getSession());
 
 		if (!actor.isPresent()) {
 			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -307,7 +354,7 @@ LOG.info("class " + b2);
 		int index = path.indexOf("/sec:");
 		String paths[] = path.substring(index+5).split("/");
 		if (paths.length == 4) {
-			Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0]);
+			Optional<DomSchoolRoleAndClassV2> actor = getActor(bearer, paths[0], req.getSession());
 			if (actor.isPresent()) {
 				DomSchool school = actor.get().getSchool();
 				String url = getPrefix(paths, school) + paths[3];

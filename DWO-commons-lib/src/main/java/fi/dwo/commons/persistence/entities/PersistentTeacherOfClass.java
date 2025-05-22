@@ -13,6 +13,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -46,6 +48,8 @@ public class PersistentTeacherOfClass implements Serializable {
     @Column(name = "registerDate", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date registerDate;
+    @Column(name = "lastChangeTimeStamp")
+    long lastChangeTimeStamp;
 
     public PersistentTeacherOfClass() {
     }
@@ -122,5 +126,12 @@ public class PersistentTeacherOfClass implements Serializable {
         id.setIdString(String.format("MYSQL;%s;%020d;%020d;%020d",
                 PersistenceClassType.PersistentTeacherOfClass.name(), aProfileId.getUserID(), aProfileId.getSchoolGroupID(),aProfileId.getClassID()));
         return id;
-    }    
+    }
+
+    @PrePersist
+    @PreUpdate
+    void changeTimestamp() {
+        lastChangeTimeStamp = System.currentTimeMillis();
+    }
+
 }

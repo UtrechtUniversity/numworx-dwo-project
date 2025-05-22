@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -65,6 +67,15 @@ public class PersistentSchoolGroup implements Serializable {
     @Size(min = 1, max = 128)
     @Column(name = "passwd", nullable = false, length = 128)
     private String passwd;
+
+    @Basic(optional = false)
+    @Column(name = "lastChangeTimeStamp", nullable = true)
+    private long lastChangeTimeStamp;
+    @PrePersist
+    @PreUpdate
+    private void now() {
+      lastChangeTimeStamp = System.currentTimeMillis();
+    }
 
     public PersistentSchoolGroup() {
     }

@@ -41,6 +41,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.DwoSystemParametersUtilManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
 import java.util.ArrayList;
@@ -203,7 +204,7 @@ public class SecuredUserAccountLoginsManagerV2 {
         curSac = this.getCurrentSchoolRoleAndClass(sc.getUserPrincipal().getName(), user.getId());
         sacs.setActiveSchoolRoleAndClass(curSac);
         sacs.setSchoolsRolesAndClassesList(sacList);
-        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
         sacs.setNullSchool(nullSchool.buildDomSchool());
         return sacs;
     }
@@ -420,7 +421,7 @@ public class SecuredUserAccountLoginsManagerV2 {
             Logger.getLogger(SecuredUserAccountLoginsManagerV2.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
         Long sgId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
         PersistenceId sgPid = PersistentSchoolGroup.buildPersistenceId(sgId);
         if (sarc.getDomSchoolRoleAndClass().getHasRole().getSchoolGroupId().equals(sgPid)) {

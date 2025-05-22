@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -65,6 +67,9 @@ public class PersistentSamlUser implements Serializable {
     @NotNull
     @Column(name = "timestampauthtoken", nullable = false)
     private long authTokenTimestamp;
+    @Basic(optional = false)
+    @Column(name = "lastChangeTimeStamp", nullable = true)
+    private long lastChangeTimeStamp;
 
     public PersistentSamlUser() {
     }
@@ -198,4 +203,11 @@ public class PersistentSamlUser implements Serializable {
                 PersistenceClassType.PersistentSamlUser.name(), aId));
         return id;
     }
+
+    @PrePersist
+    @PreUpdate
+      private void now() {
+        lastChangeTimeStamp = System.currentTimeMillis();
+      }
+
 }

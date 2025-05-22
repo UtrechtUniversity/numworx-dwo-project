@@ -56,7 +56,8 @@ public class PersistentScoPage {
   Boolean docentCorrect;
   @Column(name = "visited")
   Boolean visited;
-  
+  @Column(name = "label")
+  String label;
   
 /**
  * @return the id
@@ -189,6 +190,13 @@ public Boolean getVisited() {
  */
 public void setVisited(Boolean visited) {
 	this.visited = visited;
+}
+
+public String getLabel() {
+	return label;
+}
+public void setLabel(String label) {
+	this.label = label;
 }
   
 }

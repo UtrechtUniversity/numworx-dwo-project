@@ -916,6 +916,38 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 			}
 			return n.toString();
 		}
+
+		if (key.endsWith(".score.scaled")) {
+				if (pagenr<0) {
+					if (pssc.getCompletionStatus() == null||"not attempted".equals(pssc.getCompletionStatus())) // null of aangemaakt door docent alleen.
+						return ""; // ab-initio
+					if (onsState != null && !sealed) {
+						JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
+						if (nakijken != null && 0 == nakijken.getInt(0) && !sealed) {
+							return "";
+						}
+					}
+					return String.valueOf(pssc.getScore() / 100.0f); // max is 100
+				}
+	// de moderne manier
+				if (scopage != null) {
+					if (Boolean.TRUE.equals(scopage.getCheckDocent())) { return ""; }
+					if (!sealed) {
+						if (scopage.getScore() != null)
+							return Float.toString(scopage.getScore().floatValue()/scopage.getMaxScore().floatValue());
+					} else {
+						Integer score = scopage.getScore(); if (score == null) score = 0;
+						Integer correctie = scopage.getCorrectie(); 
+						if (correctie == null) {
+							correctie = 0;
+						}  
+						return Float.toString((correctie.intValue() + score.intValue())/scopage.getMaxScore().floatValue());
+						
+					}
+				}
+		
+			return ""; // geen idee zonder launchdata
+		}
 		if (key.endsWith(".success_status")) {
 			if (pagenr < 0) {
 				return pssc.getScore() > 99f ? "passed" : "";

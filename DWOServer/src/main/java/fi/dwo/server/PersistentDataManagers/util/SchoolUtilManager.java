@@ -219,7 +219,7 @@ public class SchoolUtilManager {
         }
 
         //building hasRole for null school
-        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
         Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
         pk.setSchoolGroupID(schoolGroupId);
         pk.setUserID(user.getId());
@@ -300,7 +300,7 @@ public class SchoolUtilManager {
 
         if (!user.isSingleSchoolAccount()) {
             //building hasRole for null school if not a single school student.
-            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
             Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
             pk.setSchoolGroupID(schoolGroupId);
             pk.setUserID(user.getId());
@@ -382,7 +382,7 @@ public class SchoolUtilManager {
 
         if (!user.isSingleSchoolAccount()) {
             //building hasRole for null school if not a single school student.
-            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersManager.findByName("NullSchoolLogin").getValue());
+            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
             Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
             pk.setSchoolGroupID(schoolGroupId);
             pk.setUserID(user.getId());

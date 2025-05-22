@@ -66,7 +66,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				if (cesuur == null)
 					goedfout(goedfout);
 				else
-					goedfout(value.get(pfx + first + SCORE_RAW));
+					goedfout(value.get(pfx + first + (cesuurPerc ? SCORE_SCALED : SCORE_RAW)));
 			} else {
 				bezocht(bezocht);
 			}
@@ -76,6 +76,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	}
 
 	private static final String SCORE_RAW = ".score.raw";
+	private static final String SCORE_SCALED = ".score.scaled";
 
 	private static final String COMPLETION_STATUS = ".completion_status";
 
@@ -101,7 +102,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				if (cesuur == null)
 					goedfout(goedfout);
 				else
-					goedfout(value.get(pfx + SCORE_RAW));
+					goedfout(value.get(pfx + (cesuurPerc ? SCORE_SCALED : SCORE_RAW)));
 			} else {
 				bezocht(bezocht);
 			}
@@ -163,6 +164,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
     String paginaTitel = "";
     String hash = "";
     Integer cesuur = null;
+    boolean cesuurPerc;
 
     final Anchor anchor;
     final AnchorContext context;
@@ -385,6 +387,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				 hash = "#" + map.getString("anchor");
 			 if (map.containsKey("cesuur")) {
 				 cesuur = map.getInt("cesuur");
+				 cesuurPerc = map.getBoolean("cesuur%", false);
 			 }
 			 if (map.containsKey("activiteitScore")) {
 				 activiteitScore = map.getBoolean("activiteitScore");
@@ -465,7 +468,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			}
 			if (goedFout && bezocht) {
 				String key;
-				if (cesuur != null) key = pfx + SCORE_RAW;
+				if (cesuur != null) key = pfx + (cesuurPerc ? SCORE_SCALED : SCORE_RAW);
 				else key = pfx + SUCCESS_STATUS;
 				keys.add(key);
 				key = pfx + ENTRY;
@@ -478,7 +481,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			} else
 			if (goedFout) {
 				Promise<String> result;
-				String key = cesuur != null ? pfx + SCORE_RAW : pfx + SUCCESS_STATUS;
+				String key = cesuur != null ? pfx + (cesuurPerc ? SCORE_SCALED : SCORE_RAW) : pfx + SUCCESS_STATUS;
 				result = defer.getPromise().map( m -> m.getOrDefault(key, ""));
 				keys.add(key);			
 				result.then(this::doGoedFout);			
@@ -504,7 +507,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 				anchorSetText("");				
 			}
 			if (goedFout && bezocht) {
-				String item = cesuur == 0 ? SUCCESS_STATUS : SCORE_RAW;
+				String item = cesuur == null ? SUCCESS_STATUS : (cesuurPerc ? SCORE_SCALED : SCORE_RAW);
 				Collection<String> scores = paginaSet.stream().map(n -> pfx00  + n + item).collect(Collectors.toSet());
 				scores.addAll( paginaSet.stream().map(n-> pfx00 + n + ENTRY).collect(Collectors.toSet()));
 				scores.addAll( paginaSet.stream().limit(1).map(n -> pfx00 + n + COMPLETION_STATUS).collect(Collectors.toList()));
@@ -520,7 +523,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 					scores = paginaSet.stream().map(n -> pfx00  + n + SUCCESS_STATUS).collect(Collectors.toSet());
 					result = defer.getPromise().map(m -> addGoedFout(m, scores));
 				} else {
-					scores = paginaSet.stream().map(n -> pfx00  + n + SCORE_RAW).collect(Collectors.toSet());
+					scores = paginaSet.stream().map(n -> pfx00  + n + (cesuurPerc ? SCORE_SCALED : SCORE_RAW)).collect(Collectors.toSet());
 					result = defer.getPromise().map(m -> addScores(m, scores));
 				}
 				keys.addAll(ids);
@@ -612,7 +615,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	private void goedfout(String value) {
 		if (cesuur != null)
 		{
-			goedfout(value, cesuur.intValue());
+			goedfout(value, cesuur.floatValue(), cesuurPerc);
 		} else {
 			removeStyleDependentName("goedFout-passed");
 			removeStyleDependentName("goedFout-failed");
@@ -621,7 +624,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 		}
 	}
 	
-	private void goedfout(String value, int cesuur) {
+	private void goedfout(String value, float cesuur, boolean cesuurPerc) {
 		Double score;
 		try { 
 			score = Double.valueOf(value);
@@ -630,7 +633,8 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 			removeStyleDependentName("goedFout-failed");			
 			return;
 		}
-		boolean passed = score.intValue() >= cesuur;
+		if (cesuurPerc) cesuur /= 100f; // % -> 0..1
+		boolean passed = score.floatValue() >= cesuur;
 		setStyleDependentName("goedFout-passed", passed);
 		setStyleDependentName("goedFout-failed", !passed);
 		fire(passed);
@@ -712,7 +716,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 						else if (Boolean.FALSE.equals(success)) gf = "failed";
 						else gf = "";
 					} else {
-						gf = Objects.toString(param.get("score.raw"));
+						gf = Objects.toString(param.get(cesuurPerc?"score.scaled":"score.raw"));
 					}
 					this.successStatus = gf;
 					goedfout(gf);

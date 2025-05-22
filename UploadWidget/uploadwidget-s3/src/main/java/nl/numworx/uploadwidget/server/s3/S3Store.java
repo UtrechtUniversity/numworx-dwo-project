@@ -8,7 +8,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.IOUtils;
 
 import nl.numworx.uploadwidget.shared.AtomEntry;
 import nl.numworx.uploadwidget.server.Store;
@@ -75,7 +79,7 @@ public class S3Store extends Store {
 	public Optional<AtomEntry> findByURL(String url) {
 		try {
 			S3AtomEntry value = new S3AtomEntry(provider.getHead(url));
-			value.url = provider.getRedirect(url).toExternalForm();
+			value.url = url;
 			value.title = url.substring(url.lastIndexOf('/')+1);
 			return Optional.of(value );
 		} catch (Exception e) {
@@ -90,7 +94,8 @@ public class S3Store extends Store {
 	@Override
 	public boolean ownedBy(Optional<AtomEntry> item, Optional<DomSchoolRoleAndClassV2> actor) {
 		if (!item.isPresent()) return false;
-		S3AtomEntry entry = (S3AtomEntry) item.get();		
+		S3AtomEntry entry = (S3AtomEntry) item.get();
+		if (entry.learnerId == null) return true; // public/emulation.
 		String user = Store.getPathId(actor.get().getHasRole());
 		return entry.learnerId.startsWith(user);
 	}
@@ -107,5 +112,17 @@ public class S3Store extends Store {
 	public void addEntry(AtomEntry entry, Map<String, String> tags, InputStream item) {
 		provider.put(entry.url, entry.type, item, entry.length, tags);
 	}
-	
+
+	public void write(AtomEntry entry, HttpServletResponse resp) throws IOException {
+		resp.setContentType(entry.type);
+		try {
+			resp.setContentLengthLong(entry.length.longValue()); // niet in tomcat7
+		} catch (NoSuchMethodError e) {
+			resp.setContentLength(entry.length.intValue());
+		}
+		Entity e = provider.get(entry.url);
+		IOUtils.copy(e.inputstream(), resp.getOutputStream());
+		IOUtils.closeQuietly(e);
+	}
+
 }

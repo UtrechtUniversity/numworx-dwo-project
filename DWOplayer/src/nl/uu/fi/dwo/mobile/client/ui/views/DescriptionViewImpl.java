@@ -254,17 +254,20 @@ public class DescriptionViewImpl extends XMLView implements DescriptionView, Opd
 		//New editor version
 		if (opdrachtGegevens != null || newVersion)
 		{
-			if ((Boolean) opdracht.get("hasTitle"))
-			{
-				SimplePanel title = new SimplePanel();
-				title.getElement().setInnerHTML((String) opdracht.get("titel") + "<br />");
-				title.getElement().getStyle().setProperty("fontWeight", "bold");
-				title.getElement().getStyle().setFontSize(font_size * 1.33, Unit.PX);
-				title.getElement().getStyle().setPaddingBottom(5, Unit.PX);
-				title.getElement().getStyle().setPaddingTop(5, Unit.PX);
-				//title.getElement().getStyle().setFloat(Float.LEFT);
-				contentPanel.add(title);
-			}
+			
+			setTitle(contentPanel, opdracht);
+			
+//			if ((Boolean) opdracht.get("hasTitle"))
+//			{
+//				SimplePanel title = new SimplePanel();
+//				title.getElement().setInnerHTML((String) opdracht.get("titel") + "<br />");
+//				title.getElement().getStyle().setProperty("fontWeight", "bold");
+//				title.getElement().getStyle().setFontSize(font_size * 1.33, Unit.PX);
+//				title.getElement().getStyle().setPaddingBottom(5, Unit.PX);
+//				title.getElement().getStyle().setPaddingTop(5, Unit.PX);
+//				//title.getElement().getStyle().setFloat(Float.LEFT);
+//				contentPanel.add(title);
+//			}
 //			opdrachtObjects = tb.convertTekst(opdracht);
 //			int aantalVakken = 0;
 //			for (int i = 0; i < opdrachtObjects.size(); i++)
