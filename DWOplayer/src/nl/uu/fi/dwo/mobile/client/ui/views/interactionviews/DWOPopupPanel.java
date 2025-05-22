@@ -63,10 +63,11 @@ public class DWOPopupPanel extends PopupPanel {
 	private Label titleLabel;
 	private ResizableContentIF content;
 	
-	private Widget parent;
+	//private Widget parent;
 	
 	private boolean moving = false;
 	private int startX, startY;
+	private int deltaX, deltaY;
 	
 	private int minWidth = MIN_WIDTH;
 	private int minHeight = MIN_HEIGHT;
@@ -134,15 +135,15 @@ public class DWOPopupPanel extends PopupPanel {
 		mouseUpHandler = addDomHandler((MouseUpHandler)mousePopupHandler, MouseUpEvent.getType()); 
 		addDomHandler(mousePopupHandler, MouseOutEvent.getType());
 		
-		TouchPopupHandler touchPopupHandler = new TouchPopupHandler();
-		touchMoveHandler = addDomHandler((TouchMoveHandler)touchPopupHandler, TouchMoveEvent.getType()); 
-		touchStartHandler = addDomHandler((TouchStartHandler)touchPopupHandler,TouchStartEvent.getType()); 
-		touchEndHandler = addDomHandler((TouchEndHandler)touchPopupHandler, TouchEndEvent.getType()); 
-		
-		PointerPopupHandler pointerPopupHandler = new PointerPopupHandler();
-		pointerMoveHandler = addDomHandler((PointerMoveHandler)pointerPopupHandler, PointerMoveEvent.getType()); 
-		pointerUpHandler = addDomHandler((PointerUpHandler)pointerPopupHandler, PointerUpEvent.getType()); 
-		pointerDownHandler = addDomHandler((PointerDownHandler)pointerPopupHandler, PointerDownEvent.getType()); 
+//		TouchPopupHandler touchPopupHandler = new TouchPopupHandler();
+//		touchMoveHandler = addDomHandler((TouchMoveHandler)touchPopupHandler, TouchMoveEvent.getType()); 
+//		touchStartHandler = addDomHandler((TouchStartHandler)touchPopupHandler,TouchStartEvent.getType()); 
+//		touchEndHandler = addDomHandler((TouchEndHandler)touchPopupHandler, TouchEndEvent.getType()); 
+//		
+//		PointerPopupHandler pointerPopupHandler = new PointerPopupHandler();
+//		pointerMoveHandler = addDomHandler((PointerMoveHandler)pointerPopupHandler, PointerMoveEvent.getType()); 
+//		pointerUpHandler = addDomHandler((PointerUpHandler)pointerPopupHandler, PointerUpEvent.getType()); 
+//		pointerDownHandler = addDomHandler((PointerDownHandler)pointerPopupHandler, PointerDownEvent.getType()); 
 	}
 	
 	private void removeMouseTouchHandlers() {
@@ -313,6 +314,8 @@ public class DWOPopupPanel extends PopupPanel {
 		removeMouseTouchHandlers();
 		startX = x;
 		startY = y;
+		deltaX = x - getAbsoluteLeft();
+		deltaY = y - getAbsoluteTop();
 		
 		dragMode = calcDragMode(x,y);
 		updateCursor(dragMode,this.getElement());
@@ -332,10 +335,16 @@ public class DWOPopupPanel extends PopupPanel {
 		if(moving) {
 			int dx = x - startX;
 			int dy = y - startY;
-			parent = this.getParent();
-			int w = parent.getOffsetWidth();
-			int h = parent.getOffsetHeight();
-			this.setPopupPosition(Math.min(w-20, Math.max(40-this.getOffsetWidth(),this.getAbsoluteLeft()+dx)), Math.min(h-20, Math.max(0,this.getAbsoluteTop()+dy)));
+			int w = Window.getClientWidth();
+			int h = Window.getClientHeight();
+			//logger.severe("parent "  + w + "x" + h);
+//			logger.severe("d1 "  + dx + "," + dy);
+//			dx = (x - deltaX) - this.getAbsoluteLeft(); // deltaX is constant!
+//			dy = (y - deltaY) - this.getAbsoluteTop();
+//			logger.severe("d2 "  + dx + "," + dy);
+			this.setPopupPosition(
+					Math.min(w-20, Math.max(40-this.getOffsetWidth(),this.getAbsoluteLeft()+dx)), 
+					Math.min(h-20, Math.max(0,this.getAbsoluteTop()+dy)));
 			this.show();
 			startX = x;
 			startY = y;
@@ -365,19 +374,25 @@ public class DWOPopupPanel extends PopupPanel {
 	class MousePopupHandler implements MouseDownHandler, MouseMoveHandler, MouseUpHandler, MouseOutHandler {
 		@Override
 		public void onMouseUp(MouseUpEvent event) {
+			logger.log(Level.SEVERE, "mouse up " + event.getClientX() + "," + event.getClientY());
 			mouseTouchPointerEnd(event.getClientX(),event.getClientY());
+			event.preventDefault();
 			event.stopPropagation();
 		}
 		@Override
 		public void onMouseMove(MouseMoveEvent event) {
+			logger.log(Level.SEVERE, "mouse move " + event.getClientX() + "," + event.getClientY());
 			mouseTouchPointerMove(event.getClientX(),event.getClientY());
 			event.stopPropagation();
+			event.preventDefault();
 		}
 		@Override
 		public void onMouseDown(MouseDownEvent event) {
+			logger.log(Level.SEVERE, "mouse down " + event.getClientX() + "," + event.getClientY());
 			hasMouseSupport = true;
 			mouseTouchPointerDown(event.getClientX(),event.getClientY());
 			event.stopPropagation();
+			event.preventDefault();
 		}
 		@Override
 		public void onMouseOut(MouseOutEvent event) {
