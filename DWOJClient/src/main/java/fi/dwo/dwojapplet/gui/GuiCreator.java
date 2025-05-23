@@ -1250,7 +1250,6 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
   }
 
 public void loginWithRefreshToken(String refreshToken) throws LoginException, Dwo2Exception {
-	LOG.log(Level.SEVERE, "Not implemented " + refreshToken) ;
     DwoHelper.setContact(false);
     OAuthManager m = new OAuthManager();
     token = m.refresh_token(refreshToken);
