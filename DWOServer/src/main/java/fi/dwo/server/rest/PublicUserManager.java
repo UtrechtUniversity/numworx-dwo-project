@@ -232,10 +232,10 @@ public class PublicUserManager {
         //TODO user EntityManager APIs
         try {
             //           school = SchoolManager.findBySchoolLogin(newUserReg.getSchoolLogin());
-            javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoolID = sg.schoolID and s.schoolLogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
+            javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoolID = sg.schoolID and s.schoolLogin = :schoollogin and sg.groupID = :role and sg.passwd = :schoolcode");
             q.setParameter("schoollogin", n.getSchoolLogin());
             q.setParameter("schoolcode", n.getSchoolCode());
-            q.setParameter("role", (n.getRole().name()));
+            q.setParameter("role", (n.getRole().ordinal()));
             sg = (PersistentSchoolGroup) q.getSingleResult();
             school = sg.getSchool(); // Sadly, another query.
             if (school == null) {
@@ -305,7 +305,7 @@ public class PublicUserManager {
                 || !n.getSchoolCode().endsWith("null")
                 || n.getRole()!=(RoleType.STUDENT)) {
         	PersistentHasRole hasRole2 = new PersistentHasRole();
-        	PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
+        	PersistentSchool nullSchool = SchoolUtilManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
             Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
             pk = new PersistentHasRolePK();
             pk.setSchoolGroupID(schoolGroupId);
@@ -316,7 +316,7 @@ public class PublicUserManager {
             hasRole2.setRegisterDate(now);
             hasRole2.setRights("_"); //TODO make a rights manager
             HasRoleManager.create(hasRole2);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), n.getRole().name()});
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), n.getRole().name()});
         }
         hasRole.setUser(user);
         hasRole.setSchoolGroup(sg);

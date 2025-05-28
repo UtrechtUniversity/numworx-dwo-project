@@ -13,7 +13,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
+import fi.dwo.server.PersistentDataManagers.cache.SchoolCache;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -219,7 +219,7 @@ public class SchoolUtilManager {
         }
 
         //building hasRole for null school
-        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
+        PersistentSchool nullSchool = findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
         Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
         pk.setSchoolGroupID(schoolGroupId);
         pk.setUserID(user.getId());
@@ -300,7 +300,7 @@ public class SchoolUtilManager {
 
         if (!user.isSingleSchoolAccount()) {
             //building hasRole for null school if not a single school student.
-            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
+            PersistentSchool nullSchool = findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
             Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
             pk.setSchoolGroupID(schoolGroupId);
             pk.setUserID(user.getId());
@@ -382,7 +382,7 @@ public class SchoolUtilManager {
 
         if (!user.isSingleSchoolAccount()) {
             //building hasRole for null school if not a single school student.
-            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
+            PersistentSchool nullSchool = findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
             Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
             pk.setSchoolGroupID(schoolGroupId);
             pk.setUserID(user.getId());
@@ -397,5 +397,16 @@ public class SchoolUtilManager {
         }
 
         return true;
-    }    
+    }
+    
+    public static PersistentSchool findBySchoolLogin(String schoolLogin) {
+    	PersistentSchool school = SchoolCache.get(schoolLogin);
+    	if (school == null) {
+    		school = SchoolManager.findBySchoolLogin(schoolLogin);
+    		if (school != null) 
+    			SchoolCache.put(school);
+    	}
+    	return school;
+    }
+
 }

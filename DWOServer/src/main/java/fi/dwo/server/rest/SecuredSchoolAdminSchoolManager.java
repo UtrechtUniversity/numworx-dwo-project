@@ -858,7 +858,7 @@ public class SecuredSchoolAdminSchoolManager {
     	if (user.isSingleSchoolAccount()) {
     		if (!Boolean.FALSE.equals(rest.getDomStudent().getSingleSchool()))
     				return Boolean.FALSE; // FIXME..... upgrade user to non-single-school-account first
-            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
+            PersistentSchool nullSchool = SchoolUtilManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
         	HasRoleUtilManager.getOrCreateHasRoleInSchool(user, nullSchool, RoleType.STUDENT);
         	user.setSingleSchoolAccount(Boolean.FALSE);
         	UserManager.edit(user);

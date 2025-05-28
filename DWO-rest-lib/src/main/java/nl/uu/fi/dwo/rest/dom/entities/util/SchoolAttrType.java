@@ -4,7 +4,8 @@ public enum SchoolAttrType {
 	SY_API_ENDPOINT("Sy_Api_Endpoint"),
 	SY_API_KEY("Sy_Api_Key"),
 	XAPI_ENDPOINT("XAPI-Endpoint"),
-	XAPI_AUTHORIZATION("XAPI-Authorization");
+	XAPI_AUTHORIZATION("XAPI-Authorization"),
+	BRIN("BRIN");
 	
 	private SchoolAttrType(String key) {
 		this.key = key;

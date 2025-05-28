@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStatistics;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -41,6 +42,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.cache.SchoolCache;
 import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
@@ -132,6 +134,7 @@ public class SecuredDwoAdminSchoolManager {
             s.setSchoolName(newSchool.getDomSchoolFull().getSchoolName());
             s.setSchoolRights(newSchool.getDomSchoolFull().getSchoolRights());
             s.setAboType(newSchool.getDomSchoolFull().getAboType());
+            SchoolCache.remove(s.getSchoolLogin());
             try {
                 SchoolManager.create(s);
                 s = SchoolManager.findBySchoolLogin(newSchool.getDomSchoolFull().getSchoolLogin());
@@ -297,6 +300,7 @@ public class SecuredDwoAdminSchoolManager {
       try {
         PersistentSchool editSchool =
             SchoolManager.findEntity(MySQLPersistenceId.getNativeId(school));
+        SchoolCache.remove(editSchool.getSchoolLogin());
         // User to update is logged in user.
         editSchool.setExpire(school.getExpire());
         // editSchool.setExport(school.getExport());
@@ -467,7 +471,7 @@ public class SecuredDwoAdminSchoolManager {
                         }
                     }
                     //Clear tblUser schoolgroup values
-                    PersistentSchoolGroup nulSg = (PersistentSchoolGroup) SchoolGroupManager.findEntity(SchoolManager.findBySchoolLogin("null"), RoleType.STUDENT);
+                    PersistentSchoolGroup nulSg = (PersistentSchoolGroup) SchoolGroupManager.findEntity(SchoolUtilManager.findBySchoolLogin("null"), RoleType.STUDENT);
                     List<PersistentUser> userList = UserManager.findEntities(sg);
                     if (userList != null) {
                         for (PersistentUser u : userList) {

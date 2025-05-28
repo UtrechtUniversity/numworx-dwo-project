@@ -16,6 +16,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -34,7 +35,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentSchoolGroup.findBySchoolGroupID", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.schoolGroupID = :schoolGroupID"),
     @NamedQuery(name = "PersistentSchoolGroup.findByGroupID", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.groupID = :groupID"),
     @NamedQuery(name = "PersistentSchoolGroup.findBySchoolID", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.schoolID = :schoolID"),
-    @NamedQuery(name = "PersistentSchoolGroup.findBySchoolIDAndRole", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.schoolID = :schoolID and p.role.groupname = :rolename"),
+    @NamedQuery(name = "PersistentSchoolGroup.findBySchoolIDAndRole", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.schoolID = :schoolID and p.groupID = :groupID"),
     @NamedQuery(name = "PersistentSchoolGroup.findByPasswd", query = "SELECT p FROM PersistentSchoolGroup p WHERE p.passwd = :passwd")})
 //@Cache( type=CacheType.SOFT, // Cache everything until the JVM decides memory is low. 
 //        size=10000, // Use 64,000 as the initial cache size. 
@@ -52,9 +53,9 @@ public class PersistentSchoolGroup implements Serializable {
     @NotNull
     @Column(name = "groupID", nullable = false)
     private int groupID;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn(name = "groupID")
-    private PersistentRole role;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @PrimaryKeyJoinColumn(name = "groupID")
+//    private PersistentRole role;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolID", nullable = false)
@@ -67,6 +68,8 @@ public class PersistentSchoolGroup implements Serializable {
     @Size(min = 1, max = 128)
     @Column(name = "passwd", nullable = false, length = 128)
     private String passwd;
+    @Column(name = "optlock")
+    @Version Long optlock;
 
     @Basic(optional = false)
     @Column(name = "lastChangeTimeStamp", nullable = true)
@@ -159,14 +162,22 @@ public class PersistentSchoolGroup implements Serializable {
      * @return the role
      */
     public PersistentRole getRole() {
-        return role;
+        try {
+			return PersistentRole.roles[groupID];
+		} catch (Exception e) {
+			return null;
+		}
     }
 
     /**
      * @param role the role to set
      */
     public void setRole(PersistentRole role) {
-        this.role = role;
+    	if (role != null) {
+    		groupID = role.getGroupID().intValue();
+    	} else 
+    		groupID = 0;
+        
     }
 
    /**
@@ -189,5 +200,20 @@ public class PersistentSchoolGroup implements Serializable {
         id.setIdString(String.format("MYSQL;%s;%020d",
                 PersistenceClassType.PersistentSchoolGroup.name(), aSchoolGroupId));
         return id;
-    }    
+    }   
+    
+    /**
+     * @return the optlock
+     */
+    public Long getOptlock() {
+    	return optlock;
+    }
+
+    /**
+     * @param optlock the optlock to set
+     */
+    public void setOptlock(Long optlock) {
+    	this.optlock = optlock;
+    }
+
 }

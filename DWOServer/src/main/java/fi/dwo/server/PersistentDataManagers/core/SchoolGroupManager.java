@@ -163,7 +163,7 @@ public class SchoolGroupManager {
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentSchoolGroup.findBySchoolIDAndRole");
             q.setParameter("schoolID", school.getSchoolID());
-            q.setParameter("rolename", roleType.name());
+            q.setParameter("groupID", roleType.ordinal());
             PersistentSchoolGroup result = (PersistentSchoolGroup) q.getSingleResult();
             LOG.log(Level.FINE, "SchoolGroup-manager retrieved PersistentSchoolGroup of schoolid {0} with schoolgroupid {1} for RoleType {2}", new Object[]{school.getSchoolID(), result.getSchoolGroupID(), roleType.name()});
             return result;
@@ -204,7 +204,7 @@ public class SchoolGroupManager {
         try {
             javax.persistence.Query q = em.createNamedQuery("PersistentSchoolGroup.findBySchoolIDAndRole");
             q.setParameter("schoolID", school.getSchoolID());
-            q.setParameter("rolename", role.name());
+            q.setParameter("groupID", role.ordinal());
             PersistentSchoolGroup sg = (PersistentSchoolGroup) q.getSingleResult();
             LOG.log(Level.FINE, "PersistentSchool-manager retrieved schoolgroup {0} for null-school students.", new Object[]{sg.getSchoolGroupID()});
             return sg;

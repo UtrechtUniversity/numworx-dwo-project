@@ -20,6 +20,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -86,6 +88,9 @@ public class PersistentSchool implements Serializable {
     @Column(name = "optlock")
     @Version 
     private Long optlock;
+    @Basic(optional = false)
+    @Column(name = "lastChangeTimeStamp", nullable = true)
+    private long lastChangeTimeStamp;
 // since 1.5.3
     @NotNull
     @Column(name= "aboType")
@@ -348,5 +353,12 @@ public class PersistentSchool implements Serializable {
       build.setId(buildPersistenceId());
       build.setSchoolName(getSchoolName());
       return build;
-    }    
+    }  
+    
+    @PrePersist
+    @PreUpdate
+    private void now() {
+      lastChangeTimeStamp = System.currentTimeMillis();
+    }
+
 }

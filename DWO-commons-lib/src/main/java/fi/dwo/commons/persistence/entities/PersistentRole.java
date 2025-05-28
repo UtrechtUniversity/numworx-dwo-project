@@ -42,6 +42,17 @@ import org.eclipse.persistence.annotations.CacheType;
 //)
 public class PersistentRole implements Serializable {
 
+	public static final PersistentRole roles[] = {
+			new PersistentRole((long) RoleType.NONE.ordinal(), RoleType.NONE.name(), "No group"),
+			new PersistentRole((long) RoleType.STUDENT.ordinal(), RoleType.STUDENT.name(), "The students group"),
+			new PersistentRole((long) RoleType.TEACHER.ordinal(), RoleType.TEACHER.name(), "The teachers groop"),
+			new PersistentRole((long) RoleType.ADMIN.ordinal(), RoleType.ADMIN.name(), "The admin group"),
+			new PersistentRole((long) RoleType.ANONYMOUS.ordinal(), RoleType.ANONYMOUS.name(), "The anonymous user"),
+			new PersistentRole((long) RoleType.SCHOOLADMIN.ordinal(), RoleType.SCHOOLADMIN.name(), "The schooladmin group")
+	};
+
+	
+	
     private static final long serialVersionUID = 1L;
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY) NO WAY, groupID = ordinal of RoleType
@@ -60,19 +71,19 @@ public class PersistentRole implements Serializable {
     @Column(name = "description", nullable = false, length = 65535)
     private String description;
 
-    public PersistentRole() {
-    }
+//    public PersistentRole() {
+//    }
+//
+//    public PersistentRole(Long groupID) {
+//        this.groupID = groupID;
+//    }
 
-    public PersistentRole(Long groupID) {
-        this.groupID = groupID;
-    }
+//    public PersistentRole(RoleType type) {
+//        this.groupID = (long) type.ordinal();
+//        this.groupname = type.name();
+//    }
 
-    public PersistentRole(RoleType type) {
-        this.groupID = (long) type.ordinal();
-        this.groupname = type.name();
-    }
-
-    public PersistentRole(Long groupID, String groupname, String description) {
+    private PersistentRole(Long groupID, String groupname, String description) {
         this.groupID = groupID;
         this.groupname = groupname;
         this.description = description;
@@ -82,25 +93,25 @@ public class PersistentRole implements Serializable {
         return groupID;
     }
 
-    public void setGroupID(Long groupID) {
-        this.groupID = groupID;
-    }
+//    public void setGroupID(Long groupID) {
+//        this.groupID = groupID;
+//    }
 
     public String getGroupname() {
         return groupname;
     }
 
-    public void setGroupname(String groupname) {
-        this.groupname = groupname;
-    }
+//    public void setGroupname(String groupname) {
+//        this.groupname = groupname;
+//    }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+//    public void setDescription(String description) {
+//        this.description = description;
+//    }
 
     @Override
     public int hashCode() {

@@ -215,7 +215,7 @@ public class HasRoleUtilManager {
         if ( hr.getPersistentHasRolePK().getSchoolGroupID().equals(user.getSchoolGroupId())) //userid's already match...
         {
             RoleType type = RoleType.STUDENT;
-            PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(SchoolManager.findBySchoolLogin("null"), type);
+            PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(SchoolUtilManager.findBySchoolLogin("null"), type);
             user.setSchoolGroupId(sg.getSchoolGroupID());
         }
 
