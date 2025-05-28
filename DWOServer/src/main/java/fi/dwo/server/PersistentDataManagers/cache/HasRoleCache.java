@@ -48,7 +48,7 @@ public class HasRoleCache {
 		}
 	}
 
-	private static void remove(PersistentHasRole hr) {
+	public static void remove(PersistentHasRole hr) {
 		if (hr != null) remove(hr.getPersistentHasRolePK());
 	}
 }

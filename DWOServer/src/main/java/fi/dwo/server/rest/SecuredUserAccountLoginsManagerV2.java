@@ -325,10 +325,14 @@ public class SecuredUserAccountLoginsManagerV2 {
             	PersistentStudentOfClassPK id = new PersistentStudentOfClassPK(user.getId(), scId, hr.getPersistentHasRolePK().getSchoolGroupID());
             	PersistentStudentOfClass soc = StudentOfClassManager.findEntity(id);
 // soc != null is een test of student lid is van klas.
-            	if (soc != null) hr.setClassID(soc.getPersistentStudentOfClassPK().getClassID());
+            	if (soc != null) {
+            		scId = soc.getPersistentStudentOfClassPK().getClassID();
+            		//hr.setSchoolClass(SchoolClassManager.findEntity(scId));
+            		hr.setClassID(scId); // hier komen we mee weg?
+            	}
             }
-            HasRoleManager.edit(hr);
-            HasRoleCache.put(hr);
+            hr = HasRoleManager.edit(hr);
+            HasRoleCache.remove(hr);
 
             //update class in hasRole
             LOG.log(Level.INFO, "Username {0}: Updated SchoolGroupID to {1} for User with username {2}", new Object[]{sc.getUserPrincipal().getName(), u.getSchoolGroupId(), user.getUsername()});

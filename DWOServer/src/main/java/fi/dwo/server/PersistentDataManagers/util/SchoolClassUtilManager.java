@@ -17,6 +17,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
@@ -43,7 +44,7 @@ public class SchoolClassUtilManager {
             if (phr.getClassID() != null && socId != null && phr.getClassID().equals(socId.getClassID())) {
 
 // Switch to a better class rather than null                	
-                phr.setClassID(null);
+                phr.setSchoolClass(null);
 // Strategy: take last/newest
                 List<PersistentStudentOfClass> candidates = StudentOfClassManager.findEntities(phr.getPersistentHasRolePK());
                 candidates = new ArrayList<>(candidates);
@@ -65,7 +66,7 @@ public class SchoolClassUtilManager {
                         break;
                     }
                 }
-
+                HasRoleCache.remove(phr);
                 HasRoleManager.edit(phr);
             }
             StudentOfClassManager.destroy(socId);
@@ -85,7 +86,8 @@ public class SchoolClassUtilManager {
             StudentOfClassManager.create(soc);
 
             if (phr.getClassID() == null) {
-                phr.setClassID(schoolClass.getClassID());
+                phr.setSchoolClass(schoolClass);
+                HasRoleCache.remove(phr);
                 HasRoleManager.edit(phr); // TODO met try/catch?
             }
 

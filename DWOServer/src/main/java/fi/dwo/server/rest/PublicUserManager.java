@@ -24,6 +24,7 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.commons.util.DatatypeConverter;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import nl.uu.fi.dwo.rest.entities.RestAuthToken;
 import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
 import nl.uu.fi.dwo.rest.entities.RestNewStudent;
@@ -573,8 +574,9 @@ pUser.setPassword("");
                             //throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                         }
                         PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, school, roleType);
-                        hr.setClassID(schoolClass.getClassID());
-                        HasRoleManager.edit(hr);
+                        hr.setSchoolClass(schoolClass);
+                        hr = HasRoleManager.edit(hr);
+                        HasRoleCache.put(hr);
                         break;
                     case TEACHER:
                         pUser.setSingleSchoolAccount(false);
@@ -624,8 +626,8 @@ pUser.setPassword("");
 //                            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                         }
                     }
-                    hr.setClassID(schoolClass.getClassID());
-                    HasRoleManager.edit(hr);
+                    hr.setSchoolClass(schoolClass);
+                    HasRoleCache.put(HasRoleManager.edit(hr));
                 }
                 LOG.log(Level.FINE, "Set class and update samluser.");
             } catch (Exception ex) {
@@ -770,8 +772,8 @@ pUser.setPassword(""); // INVALID PASSWORD
                         throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                     }
                     PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, school, roleType);
-                    hr.setClassID(schoolClass.getClassID());
-                    HasRoleManager.edit(hr);
+                    hr.setSchoolClass(schoolClass);
+                    HasRoleCache.put(HasRoleManager.edit(hr));
                     break;
 //                case TEACHER:
 //                    if (schoolClass == null) {

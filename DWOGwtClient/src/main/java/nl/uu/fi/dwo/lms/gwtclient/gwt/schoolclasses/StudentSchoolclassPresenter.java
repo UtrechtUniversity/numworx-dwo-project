@@ -85,7 +85,9 @@ private static final Logger LOG = Logger.getLogger(StudentSchoolclassPresenter.c
           list.forEach(item -> {
             String key = item.getId().getIdString();
             TaggedDomSchoolClass value = new TaggedDomSchoolClass(item);
-            value.setTag(key.equals(active.getId().getIdString()));
+            value.setTag(
+            		active != null &&
+            		key.equals(active.getId().getIdString()));
             schoolClasses.put(key, value);
           });
           view.setSchoolClasses(schoolClasses);        

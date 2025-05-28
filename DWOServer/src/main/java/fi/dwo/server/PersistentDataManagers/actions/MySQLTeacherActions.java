@@ -16,6 +16,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.Context;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
@@ -160,7 +161,8 @@ public class MySQLTeacherActions implements TeacherActions {
             StudentOfClassManager.create(soc);
 
             if (shr.getClassID() == null) {
-                shr.setClassID(sc.getClassID());
+                shr.setSchoolClass(sc);
+                HasRoleCache.remove(shr);
                 HasRoleManager.edit(shr); // TODO met try/catch?
             }
 
