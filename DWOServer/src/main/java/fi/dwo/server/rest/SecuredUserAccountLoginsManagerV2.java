@@ -332,6 +332,7 @@ public class SecuredUserAccountLoginsManagerV2 {
             	}
             }
             hr = HasRoleManager.edit(hr);
+            user = hr.getUser();
             HasRoleCache.remove(hr);
 
             //update class in hasRole
