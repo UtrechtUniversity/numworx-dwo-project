@@ -73,9 +73,10 @@ public class SecuredUserAccountLoginsManagerV2IT {
 
     /**
      * Test of getSchoolLogins method, of class SecuredUserAccountLoginsManager.
+     * @throws Dwo2Exception 
      */
     @Test
-    public void testGetSchoolLogins() {
+    public void testGetSchoolLogins() throws Dwo2Exception {
         System.out.println("getSchoolLogins");
         SecuredUserAccountLoginsManagerV2 instance = new SecuredUserAccountLoginsManagerV2();
 
