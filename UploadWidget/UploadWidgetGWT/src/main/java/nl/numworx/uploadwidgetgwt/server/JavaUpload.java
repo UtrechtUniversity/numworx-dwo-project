@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +20,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.http.client.utils.URLEncodedUtils;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
@@ -121,7 +124,11 @@ public class JavaUpload extends HttpServlet implements Constants {
 			for (AtomEntry entry: store.getEntries(prefix)) {
 				out.println("<entry>");
 				out.print(" <title>");out.print(entry.title);out.println("</title>");
-				out.print(" <link href='");out.print(u.resolve(entry.url).toString());out.print("' type='");out.print(entry.type);out.print("' length='");out.print(entry.length);out.println("' />");
+				out.print(" <link href='");String eu = entry.url;
+// Dit doen we hier.
+				eu = URLEncoder.encode(eu).replace("+", "%20");
+				
+				out.print(u.resolve(eu).toString());out.print("' type='");out.print(entry.type);out.print("' length='");out.print(entry.length);out.println("' />");
 				out.print(" <id>urn:uuid:");out.print(entry.id);out.println("</id>");
 				out.println("</entry>");
 			}
