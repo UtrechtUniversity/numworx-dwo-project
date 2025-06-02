@@ -4,6 +4,7 @@ package nl.uu.fi.dwo.lms.jclient.lib.rest.transport;
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
+import com.owlike.genson.JsonBindingException;
 import com.owlike.genson.ext.jaxb.JAXBBundle;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomAppletConfig;
@@ -148,6 +149,7 @@ public RestAuthenticator getAuthenticator() {
    * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
    */
   protected <T> T get(String path, Class<T> c) throws Dwo2Exception {
+	StringBuilder json = new StringBuilder();
     try {
       URL url = new URL(authenticator.getServerUrlPath(), path); // TODO make login
 
@@ -168,7 +170,6 @@ public RestAuthenticator getAuthenticator() {
               new InputStreamReader((conn.getErrorStream()), StandardCharsets.UTF_8));
 
           String output;
-          StringBuilder json = new StringBuilder();
           while ((output = br.readLine()) != null) {
             json.append(output);
           }
@@ -191,7 +192,6 @@ public RestAuthenticator getAuthenticator() {
                                                                                    // UTF-8 encoding
 
       String output;
-      StringBuilder json = new StringBuilder();
       while ((output = br.readLine()) != null) {
         json.append(output);
       }
@@ -211,6 +211,9 @@ public RestAuthenticator getAuthenticator() {
       } else {
         throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
       }
+    } catch(JsonBindingException e) { // komt voor, geen idee waarom....
+    	LOG.log(Level.SEVERE, "error in json: " + json, e);
+    	throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, e.getMessage());
     }
   }
 
