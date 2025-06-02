@@ -16,6 +16,17 @@
 		  <url>https://europe-maven.pkg.dev/jxbrowser/releases</url>
 		</repository>
 	</repositories>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bom</artifactId>
+        <version>${aws.java.sdk.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 	<dependencies>
 <!-- jackson 2.13.4.2 voor Azure -->
 				<dependency>
@@ -131,18 +142,6 @@
             		<artifactId>protobuf-java</artifactId>
             	</exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-		  <groupId>software.amazon.jdbc</groupId>
-  		  <artifactId>aws-advanced-jdbc-wrapper</artifactId>
-  		  <version>2.3.7</version>
-  		  <scope>runtime</scope>
-  		  <exclusions>
-  		  	<exclusion>
-  		  		<groupId>org.slf4j</groupId>
-  		  		<artifactId>slf4j-api</artifactId>
-  		  	</exclusion>
-  		  </exclusions>
         </dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -365,6 +364,19 @@
 			<version>0.0.3</version>
 			<classifier>classes</classifier>
 		</dependency>
+<!-- AWS SDK same version -->
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>s3</artifactId>
+    <version>2.31.40</version>
+    <scope>compile</scope>
+</dependency>
+<dependency>
+    <groupId>software.amazon.awssdk</groupId>
+    <artifactId>rds</artifactId>
+    <version>2.31.40</version>
+</dependency>
+
 	</dependencies>
 	<build>
 		<resources>
@@ -528,14 +540,6 @@
 					<port>${http.port}</port>
 					<webapps>
 						<webapp>
-							<groupId>nl.numworx.uploadwidget</groupId>
-    							<artifactId>uploadwidget-local</artifactId>
-    							<version>2.5.40-SNAPSHOT</version>
-                          		<type>war</type>
-							<contextPath>/dwo/dav/upload</contextPath>
-                            	<asWebapp>true</asWebapp> 
-						</webapp>
-						<webapp>
 							<groupId>nl.numworx.schoolyear</groupId>
   							<artifactId>sy</artifactId>
 							<version>2.5.34</version>
@@ -658,11 +662,6 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>8.4.0</version>
         </dependency>
-        <dependency>
-		  <groupId>software.amazon.jdbc</groupId>
-  		  <artifactId>aws-advanced-jdbc-wrapper</artifactId>
-  		  <version>2.3.7</version>
-		</dependency>
 	</dependencies>
 			</plugin>
 			<plugin>
@@ -826,6 +825,7 @@
         <upload.servlet />
         <upload.servlet.mapping />
         <OAuth2ClientVersion>2.5.42</OAuth2ClientVersion>
+    	<aws.java.sdk.version>2.31.40</aws.java.sdk.version>
 	</properties>
 	<profiles>
 		<profile>
@@ -909,6 +909,12 @@
 				    <groupId>org.slf4j</groupId>
 				    <artifactId>slf4j-jdk14</artifactId>
 				    <version>1.7.7</version>
+				</dependency>
+		        <dependency>
+				  <groupId>software.amazon.jdbc</groupId>
+		  		  <artifactId>aws-advanced-jdbc-wrapper</artifactId>
+		  		  <version>2.3.7</version>
+		  		  <scope>runtime</scope>
 				</dependency>
 			</dependencies>
 		</profile>
