@@ -90,6 +90,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 abstract class SecuredCommonScoDataManager {
   private static final Logger LOG = Logger.getLogger(SecuredCommonScoDataManager.class.getName());
   static final String COMPLETE = "completed";
+  static final String INCOMPLETE = "incomplete";
+  static final String NOT_ATTEMPTED = "not attempted";
   static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
   static final String REVIEW_CORRECT = "cmi.comments_from_lms.2.comment";
   static final CmiConvert CMI = new CmiConvert(); // utility class
@@ -319,6 +321,10 @@ abstract class SecuredCommonScoDataManager {
             StringWriter newValue = new StringWriter();
             Json.createWriter(newValue).write(newObject);
             ssData.setSuspendData(UEscape.convertUEsc(newValue.toString()));
+
+            if (NOT_ATTEMPTED.equals(ssContext.getCompletionStatus())) {
+            	ssContext.setCompletionStatus(INCOMPLETE);
+            }
             break;
         default:
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "wrong key");
@@ -709,10 +715,16 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
             break;
         case SESSION_TIME:
             pssc.setSessionTime(value);
+            if (NOT_ATTEMPTED.equals(pssc.getCompletionStatus())) {
+            	pssc.setCompletionStatus(INCOMPLETE);
+            }
             break;
         case SESSION_TIME2004:
             try {
                 pssc.setSessionTime(CMI.to1_2Timex(CMI.from2004Time(value)));
+                if (NOT_ATTEMPTED.equals(pssc.getCompletionStatus())) {
+                	pssc.setCompletionStatus(INCOMPLETE);
+                }
             } catch (Exception e) {
                 LOG.warning("setValues: sessiontime= " + entry.getKey() + ","+ value + " e:" + e);
             }
@@ -731,6 +743,9 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
                     }
                 } else {
                     pssd.setSuspendData(value);
+                }
+                if (NOT_ATTEMPTED.equals(pssc.getCompletionStatus())) {
+                	pssc.setCompletionStatus(INCOMPLETE);
                 }
 //           if (phr.getSchoolGroup().getGroupID() == RoleType.STUDENT.ordinal())
                ScoPageUtilManager.updateSuspendData(pssc, value);
