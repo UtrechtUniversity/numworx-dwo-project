@@ -16,6 +16,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -55,7 +56,8 @@ public class PersistentSchoolGroup implements Serializable {
     private int groupID;
 //    @ManyToOne(fetch = FetchType.EAGER)
 //    @PrimaryKeyJoinColumn(name = "groupID")
-//    private PersistentRole role;
+    @Transient
+    private PersistentRole role;
     @Basic(optional = false)
     @NotNull
     @Column(name = "schoolID", nullable = false)
@@ -163,7 +165,7 @@ public class PersistentSchoolGroup implements Serializable {
      */
     public PersistentRole getRole() {
         try {
-			return PersistentRole.roles[groupID];
+			return role = PersistentRole.roles[groupID];
 		} catch (Exception e) {
 			return null;
 		}
@@ -173,6 +175,7 @@ public class PersistentSchoolGroup implements Serializable {
      * @param role the role to set
      */
     public void setRole(PersistentRole role) {
+    	this.role = role;
     	if (role != null) {
     		groupID = role.getGroupID().intValue();
     	} else 

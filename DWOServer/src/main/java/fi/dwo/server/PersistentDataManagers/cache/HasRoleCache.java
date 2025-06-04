@@ -23,12 +23,18 @@ public class HasRoleCache {
 
 	public static void put(PersistentHasRole role) {
 		if (cache != null)
+		{	role.getSchoolGroup().getRole();
 			cache.put(role.getPersistentHasRolePK(), role);
+		}
 	}
 	
 	public static PersistentHasRole get(Object roleid) {
 		if (cache == null || ! (roleid instanceof PersistentHasRolePK)) return null;
-		return cache.get((PersistentHasRolePK) roleid);
+		try {
+			return cache.get((PersistentHasRolePK) roleid);
+		} catch (Exception e) {
+			return null; // never crash on cache
+		}
 	}
 	
 	public static void remove(PersistentHasRolePK id) {
