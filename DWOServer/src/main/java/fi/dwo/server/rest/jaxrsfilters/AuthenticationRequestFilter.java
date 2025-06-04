@@ -209,7 +209,11 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 	private DwoUserPrincipal fromCache(PersistentHasRole hr, String username, String password) {
 		PersistentUser u = hr.getUser();
 		if (u.getUsername().equalsIgnoreCase(username) && u.getPassword().equals(password)) {
-			return new DwoUserPrincipal(hr);
+			try {
+				return new DwoUserPrincipal(hr);
+			} catch (Exception e) {
+				LOG.log(Level.SEVERE, "Exception " + hr.getSchoolGroup().getRole(), e);
+			}
 		}
 		return null;
 	}
