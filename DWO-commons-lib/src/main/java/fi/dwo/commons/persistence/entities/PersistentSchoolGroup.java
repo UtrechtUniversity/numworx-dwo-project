@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -81,7 +82,12 @@ public class PersistentSchoolGroup implements Serializable {
     private void now() {
       lastChangeTimeStamp = System.currentTimeMillis();
     }
-
+    @PostLoad
+    private void loadRoleOnLoad() {
+    		getRole();
+    }
+    
+    
     public PersistentSchoolGroup() {
     }
 
