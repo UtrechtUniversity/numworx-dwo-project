@@ -57,7 +57,6 @@ class CourseMapper  implements Comparator<Course> {
      * @param oid
      * @param obj
      * @throws java.io.IOException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
      *
      */
     void put(int oid, Course obj)  {

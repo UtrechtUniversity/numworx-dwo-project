@@ -51,7 +51,6 @@ class UserMapper {
      * @param oid
      * @param obj
      * @throws java.io.IOException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      *
      */
@@ -63,7 +62,6 @@ class UserMapper {
      * @param data
      * @return Object
      * @throws java.io.IOException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      * @throws PersistenceException 
      *
@@ -85,7 +83,6 @@ class UserMapper {
      * </ul>
      * @return The Users who satisfies the restriction.
      * @throws java.io.IOException
-     * @throws org.apache.xmlrpc.applet.XmlRpcException
      * @throws java.sql.SQLException
      * @throws PersistenceException 
      */

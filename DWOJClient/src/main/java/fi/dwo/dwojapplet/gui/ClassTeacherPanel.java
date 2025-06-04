@@ -64,8 +64,6 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
-
 /**
  * The panel which shows the school classes for a teacher.
  */

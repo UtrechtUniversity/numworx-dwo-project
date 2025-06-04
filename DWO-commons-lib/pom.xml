@@ -136,18 +136,6 @@
             <artifactId>DWO-rest-lib</artifactId>
         </dependency>
         <dependency>
-            <groupId>nl.numworx</groupId>
-            <artifactId>org.apache.ws.xmlrpc</artifactId>
-            <version>2.0.1</version>
-            <!--            <scope>provided</scope>-->
-            <exclusions>
-            	<exclusion>
-            		<groupId>javax.servlet</groupId>
-            		<artifactId>servlet-api</artifactId>
-            	</exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.1</version>

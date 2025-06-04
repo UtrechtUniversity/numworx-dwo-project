@@ -103,7 +103,7 @@ class AccountSchoolsRolesTableModel extends AbstractTableModel {
      * would contain text ("true"/"false"), rather than a check box.
      */
     @Override
-    public Class getColumnClass(int c) {
+    public Class<?> getColumnClass(int c) {
     	if( getRowCount() > 0 && getValueAt(0, c) != null)
     		return getValueAt(0, c).getClass();
     	return super.getColumnClass(c);

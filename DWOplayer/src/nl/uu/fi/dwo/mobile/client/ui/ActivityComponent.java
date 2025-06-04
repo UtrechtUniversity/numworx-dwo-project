@@ -6,10 +6,8 @@ import java.util.logging.Logger;
 import javax.annotation.Nullable;
 import javax.inject.Named;
 
-import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.ResettableEventBus;
 
-import dagger.BindsInstance;
 import dagger.Lazy;
 import dagger.Subcomponent;
 import nl.uu.fi.dwo.account.client.DwoGlobalVars;
