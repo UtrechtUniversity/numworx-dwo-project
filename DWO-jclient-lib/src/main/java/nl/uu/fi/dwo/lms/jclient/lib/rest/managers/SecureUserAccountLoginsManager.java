@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
 import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
@@ -45,11 +46,18 @@ public class SecureUserAccountLoginsManager {
       throws Dwo2Exception {
     RestSchoolRoleAndClassV2 rest = new RestSchoolRoleAndClassV2();
     DomContext context = StoredRestManager.getInstance().getContext();
-	rest.setRestContext(context);
-    rest.setDomSchoolRoleAndClass(src);
+    DomHasRole old = context.getDomHasRole();
+    try {
+    	rest.setRestContext(context);
+    	context.setDomHasRole(src.getHasRole());
+    	rest.setDomSchoolRoleAndClass(src);
     DomSchoolRoleAndClassV2 result = StoredRestManager.getInstance()
         .put("rest/sec:" + PathId.getId(context) + "/user/account/loginsV2/select", DomSchoolRoleAndClassV2.class, rest);
     return result;
+    } catch(Dwo2Exception oops) {
+    	context.setDomHasRole(old);
+    	throw oops;
+    }
   }
 
   /**
