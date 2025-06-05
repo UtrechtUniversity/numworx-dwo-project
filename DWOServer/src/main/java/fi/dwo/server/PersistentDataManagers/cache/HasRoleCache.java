@@ -23,7 +23,7 @@ public class HasRoleCache {
 
 	public static void put(PersistentHasRole role) {
 		if (cache != null)
-		{	role.getSchoolGroup().getRole();
+		{	
 			cache.put(role.getPersistentHasRolePK(), role);
 		}
 	}

@@ -188,11 +188,11 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
         		if (hr.getUser() == null) {
         			LOG.severe("USER is null " + uid + " " + sgid);
         		}
-        		if (sg.getRole() == null) {
-        			LOG.severe("ROLE is null " + sg.getGroupID());
-        		} else if (sg.getRole().getGroupID() == null) {
-        			LOG.severe("GROUPID is null " + sg.getRole() + " " + sg.getGroupID());
-        		}
+//        		if (sg.getRole() == null) {
+//        			LOG.severe("ROLE is null " + sg.getGroupID());
+//        		} else if (sg.getRole().getGroupID() == null) {
+//        			LOG.severe("GROUPID is null " + sg.getRole() + " " + sg.getGroupID());
+//        		}
         		HasRoleCache.put(hr);
         		DwoUserPrincipal du = new DwoUserPrincipal(u, hr, sg);
         		sc = new DwoUserSecurityContext(du, secCtx.isSecure(), SecurityContext.BASIC_AUTH, du.getRole());
@@ -212,7 +212,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter, Sign
 			try {
 				return new DwoUserPrincipal(hr);
 			} catch (Exception e) {
-				LOG.log(Level.SEVERE, "Exception " + hr.getSchoolGroup().getRole(), e);
+				LOG.log(Level.SEVERE, "Exception " + hr.getSchoolGroup().getRoleType(), e);
 			}
 		}
 		return null;

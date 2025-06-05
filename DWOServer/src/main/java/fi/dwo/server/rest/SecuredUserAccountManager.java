@@ -154,7 +154,8 @@ public class SecuredUserAccountManager {
         PersistentLoginContext loginContext = null;
 
         try {
-            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            //user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            user = AnonDomainAuthorizer.build().submitUser(sc).getUser();
             List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
             if (list.size() == 1) {
                 loginContext = list.get(0);
@@ -197,7 +198,7 @@ public class SecuredUserAccountManager {
         PersistentUser u;
 
         try {
-            u = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            u = AnonDomainAuthorizer.build().submitUser(sc).getUser();
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), u.getUsername()});
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "User " + sc.getUserPrincipal() + ": Unexpected exception", e);

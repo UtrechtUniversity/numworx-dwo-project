@@ -22,6 +22,8 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -166,8 +168,17 @@ public class PersistentSchoolGroup implements Serializable {
         return school;
     }
 
+    public RoleType getRoleType() {
+    	try {
+    		return RoleType.values()[groupID];
+    	} catch(Exception oops) {
+    		return RoleType.NONE;
+    	}
+    }
+    
     /**
      * @return the role
+     * @Deprecated
      */
     public PersistentRole getRole() {
         try {

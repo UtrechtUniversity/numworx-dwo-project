@@ -197,7 +197,7 @@ public class SecuredDwoAdminSchoolManager {
                 LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
                 DomSchoolFull full = s.buildDomSchoolFull();
                 List<PersistentSchoolGroup> list = SchoolGroupManager.findEntities(s);
-                full.setPasswords(list.stream().map(item -> new DomMapEntry<>(RoleType.valueOf(item.getRole().getGroupname()), item.getPasswd())).collect(Collectors.toList()));
+                full.setPasswords(list.stream().map(item -> new DomMapEntry<>(item.getRoleType(), item.getPasswd())).collect(Collectors.toList()));
 				return full;
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "School " + school.getDomSchool4DwoAdmin().getId() + "Could not be found.", e);
@@ -714,11 +714,11 @@ public class SecuredDwoAdminSchoolManager {
     {    List<PersistentSchoolGroup> groups = SchoolGroupManager.findEntity(school);
         long studentsco = 0;
         for (PersistentSchoolGroup g: groups) {
-        	entry = new DomMapEntry<>(g.getRole().getGroupname() + " id", g.buildPersistenceId().getIdString());
+        	entry = new DomMapEntry<>(g.getRoleType() + " id", g.buildPersistenceId().getIdString());
         	stats.add(entry);        	
         	List<PersistentHasRole> users = HasRoleManager.findEntities(g);
 			int size = users.size();
-        	entry = new DomMapEntry<>(g.getRole().getGroupname() + " size", Integer.toString(size));
+        	entry = new DomMapEntry<>(g.getRoleType() + " size", Integer.toString(size));
         	stats.add(entry);
             long count;
             long stamp = (System.currentTimeMillis() - 365 * 24 * 3600 * 1000L);
@@ -732,7 +732,7 @@ public class SecuredDwoAdminSchoolManager {
         	        .filter(u -> {
         	          return u.getLastLogin() != null && u.getLastLogin().longValue()>(stamp);
         	        }).count();
-            entry = new DomMapEntry<>(g.getRole().getGroupname() + " active", Long.toString(count));
+            entry = new DomMapEntry<>(g.getRoleType().name() + " active", Long.toString(count));
             stats.add(entry);
         	count = users.stream()
         	    .filter(f -> f.getUser() != null) // NPE checks

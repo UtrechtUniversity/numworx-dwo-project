@@ -231,7 +231,7 @@ public class SchoolUtilManager {
         hr.setRights("_"); //TODO make a rights manager
         HasRoleManager.create(hr);
 
-        LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+        LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
 
         return true;
     }
@@ -292,7 +292,7 @@ public class SchoolUtilManager {
 
         try {
             HasRoleManager.create(hr);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
         } catch (PersistenceException e) {
             LOG.log(Level.SEVERE, "User creation failed.");
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
@@ -311,7 +311,7 @@ public class SchoolUtilManager {
             hr.setRegisterDate(now);
             hr.setRights("_"); //TODO make a rights manager
             HasRoleManager.create(hr);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
         }
 
         return true;
@@ -374,7 +374,7 @@ public class SchoolUtilManager {
 
         try {
             HasRoleManager.create(hr);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
         } catch (PersistenceException e) {
             LOG.log(Level.SEVERE, "User creation failed.");
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
@@ -393,7 +393,7 @@ public class SchoolUtilManager {
             hr.setRegisterDate(now);
             hr.setRights("_"); //TODO make a rights manager
             HasRoleManager.create(hr);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
         }
 
         return true;
