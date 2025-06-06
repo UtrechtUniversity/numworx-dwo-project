@@ -172,4 +172,13 @@ public class PersistentRole implements Serializable {
                 PersistenceClassType.PersistentRole.name(), roleId));
         return id;
     }
+    
+    public static DomRole buildDomRole(RoleType role) {
+    	DomRole r = new DomRole();
+    	if (role != null) {
+    		r.setRoleName(role.name());
+    		r.setId(buildPersistenceId(Long.valueOf(role.ordinal())));
+    	}
+    	return r;
+    }
 }
