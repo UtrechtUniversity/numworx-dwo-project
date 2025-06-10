@@ -142,9 +142,10 @@ public class SecuredUserAccountLoginsManagerV2IT {
     /**
      * Test of submitASchoolLogin method, of class
      * SecuredUserAccountLoginsManager.
+     * @throws Exception 
      */
     @Test
-    public void testSubmitASchoolLogin() {
+    public void testSubmitASchoolLogin() throws Exception {
         System.out.println("submitASchoolLogin");
         SecurityContext sc = new TestSecurityContext("user03", RoleType.STUDENT);
         PersistentUser user = UserManager.findByUserName("user03");
@@ -178,9 +179,10 @@ public class SecuredUserAccountLoginsManagerV2IT {
     /**
      * Test of removeASchoolLogin method, of class
      * SecuredUserAccountLoginsManager.
+     * @throws Exception 
      */
     @Test
-    public void testRemoveASchoolLogin() {
+    public void testRemoveASchoolLogin() throws Exception {
         System.out.println("removeASchoolLogin");
         SecurityContext sc = new TestSecurityContext("user03", RoleType.STUDENT);
         PersistentUser user = UserManager.findByUserName("user03");

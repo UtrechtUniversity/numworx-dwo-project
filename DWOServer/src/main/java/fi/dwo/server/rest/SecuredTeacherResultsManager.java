@@ -479,9 +479,10 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
         final PersistentDwoProfile profile;
 
         try {
-            PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-            phr = HasRoleManager.findEntity(hasRoleKey);
-            PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+        	UserState_HR_R_S_SG_U hstate = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(domHasRole);
+            phr = hstate.getHasRole();
+            PersistentUser user = hstate.getUser();
+            school = hstate.getSchool();
             if (user == null || !user.getId().equals(phr.getPersistentHasRolePK().getUserID())) {
                 LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using uid {1} in HasRole differs from user principal name {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
                 throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -496,13 +497,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        try {
-            school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(ex);
-        }
-
+ 
         //fetch Profile
         if (phr != null && school != null) {
             long prevTime = curTime;

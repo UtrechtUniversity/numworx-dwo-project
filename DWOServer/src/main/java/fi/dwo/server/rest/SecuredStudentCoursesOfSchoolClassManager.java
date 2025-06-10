@@ -113,15 +113,15 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         MySQLPersistenceId.getNativeId(rest.getRestContext().getDomHasRole());
     PersistentSchool school = null;
     PersistentSchoolClass schoolClass = null;
-
+    UserState_HR_R_S_SG_U hstate = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(rest.getRestContext().getDomHasRole());
     // check if user has matching hasRole
     try {
-      PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
+      PersistentUser u = hstate.getUser();
       if (!u.getId().equals(phrPK.getUserID())) {
         throw new Dwo2Exception();
       }
-      phr = HasRoleManager.findEntity(phrPK);
-      school = HasRoleUtilManager.getSchoolforHasRole(phr);
+      phr = hstate.getHasRole();
+      school = hstate.getSchool();
     } catch (Dwo2Exception ex) {
       LOG.log(Level.WARNING,
           "Username {0}: ILLEGAL USER-OPERATION: Trying to access student functionality by user with usercode {0}.",

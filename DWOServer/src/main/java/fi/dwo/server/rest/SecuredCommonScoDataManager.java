@@ -353,8 +353,10 @@ abstract class SecuredCommonScoDataManager {
   String getJSONLaunchDataBytes(SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
 //Context
       PersistentUser user = null;
-      try {
-          user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+      UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc);
+      UserState_HR_R_S_SG_U hstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
+     try {
+		user = hstate.getUser();
           LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
       } catch (Exception e) {
           LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
@@ -381,9 +383,7 @@ abstract class SecuredCommonScoDataManager {
       }
       Long schoolID = course.getSchoolID();
       if(schoolID != null) {
-          DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
-          PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-          PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+          PersistentHasRole phr = hstate.getHasRole();
 //userid must match
               if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
               {
@@ -497,17 +497,18 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
     
     // Context
     PersistentUser user = null;
+    UserState_HR_R_S_SG_U hstate = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(domHasRole);
     try {
-        user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+        user = hstate.getUser();
         LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
     } catch (Exception e) {
         LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
         throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
     }
-    PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-    PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+    PersistentHasRole phr = hstate.getHasRole();
+    PersistentHasRolePK hasRoleKey = phr.getPersistentHasRolePK();
 //userid must match
-    if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
+    if (user.getId().longValue() != hasRoleKey.getUserID().longValue())
     {
         LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Hasrole mismatch");
         throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "This will be logged.");          

@@ -139,7 +139,7 @@ public class LoginContextUtilManager {
                     	loginContext.setSchoolGroupId(user.getSchoolGroupId());
                     }
                     
-                    LoginContextManager.edit(loginContext);
+                    loginContext = LoginContextManager.edit(loginContext);
                     break;
                 default:
             }
