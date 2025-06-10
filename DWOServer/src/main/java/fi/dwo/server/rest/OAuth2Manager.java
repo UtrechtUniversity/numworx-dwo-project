@@ -178,7 +178,9 @@ static final String AUTHORIZATION_CODE = "authorization_code";
             if (u != null) {
             List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
             for (PersistentLoginContext l : loginContextList) {
-                if (TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
+                if (
+                		l.getSecretKey() != null &&
+                		TOTP.verifyTOTP(authFields[1], DatatypeConverter.printHexBinary(l.getSecretKey()), "8")) {
                     return buildTokenResponse(u, l);
              }
                 // return "invalid_grant"
