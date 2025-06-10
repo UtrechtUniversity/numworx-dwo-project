@@ -72,6 +72,7 @@ import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAutho
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
+import fi.dwo.server.PersistentDataManagers.cache.LimitedSchoolCache;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
@@ -306,6 +307,8 @@ public class SecuredUserCourseManager {
         PersistentDwoProfile profile = DwoProfileManager.findEntity(profileID);
         if ( profile.isLimited())
         {
+        	if (!LimitedSchoolCache.isLimitedSchool(profileID, school.getSchoolID()))
+        		return Collections.emptyList();
             // check schools
         }       
         List<PersistentCourse> list;
@@ -351,7 +354,8 @@ public class SecuredUserCourseManager {
     			PersistentHasRole hr = phr;
     			PersistentSchool limited = hrstate.getSchool();
 // SECURITY
-    			// if ! limitedschools .contains (limited) return EMPTY_LIST;  			
+    			// if ! limitedschools .contains (limited) return EMPTY_LIST;  	
+    			if (!LimitedSchoolCache.isLimitedSchool(id, limited.getSchoolID())) return Collections.emptyList();
     		}
     		
     		PersistentSchool school = new PersistentSchool(null);
