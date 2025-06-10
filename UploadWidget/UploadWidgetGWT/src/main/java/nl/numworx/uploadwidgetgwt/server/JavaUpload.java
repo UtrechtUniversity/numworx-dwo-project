@@ -266,7 +266,7 @@ LOG.info("searching ");
 				split[1] = "MYSQL;PersistentUser;"+split[1];
 				split[2] = "MYSQL;PersistentSchoolClass;" + split[2];
 				List<DomStudent> students = SecureTeacherSchoolClassManager.getTeachersStudents(rest);
-LOG.info("found students " + students);
+LOG.info("found students " + students.size());
 				Optional<DomStudent> b1 = students.stream().filter(s -> s.getId().toString().equals(split[1])).findAny();
 LOG.info("student " + b1);
 				List<DomSchoolClass> classes = SecureTeacherSchoolClassManager.getTeachersSchoolClasses(rest);
