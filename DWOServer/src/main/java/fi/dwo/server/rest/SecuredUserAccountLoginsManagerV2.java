@@ -52,6 +52,7 @@ import fi.dwo.server.rest.jaxrsfilters.DwoUserPrincipal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -533,7 +534,7 @@ public class SecuredUserAccountLoginsManagerV2 {
         }
         List<PersistentLoginContext> ctx = LoginContextManager.findEntities(userId);
         for(PersistentLoginContext item: ctx) {
-        	if (item.getSchoolGroupId().equals(hr.getPersistentHasRolePK().getSchoolGroupID())) {
+        	if (Objects.equals(item.getSchoolGroupId(),hr.getPersistentHasRolePK().getSchoolGroupID())) {
         		item.setSchoolGroupId(sg.getSchoolGroupID());
         		LoginContextManager.edit(item);
         		LoginContextCache.remove(item.getId());

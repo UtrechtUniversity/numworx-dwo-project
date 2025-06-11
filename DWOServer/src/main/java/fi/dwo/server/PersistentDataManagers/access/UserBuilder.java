@@ -95,6 +95,7 @@ class UserBuilder implements UserDomainAuthorizer.UserState_U, UserDomainAuthori
      */
     @Override
     public UserDomainAuthorizer.UserState_HR_R_S_SG_U setHasRole(DomHasRole hr) throws Dwo2Exception {
+    	if (hr == null) return setDefaultHasRole();
         PersistentHasRolePK phrPK;
         phrPK = MySQLPersistenceId.getNativeId(hr);
         return setHasRole(phrPK);

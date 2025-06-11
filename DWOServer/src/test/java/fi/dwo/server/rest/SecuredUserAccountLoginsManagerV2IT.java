@@ -4,6 +4,7 @@
 package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
+import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSchoolLogin;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.server.testutil.TestSecurityContext;
@@ -153,6 +154,7 @@ public class SecuredUserAccountLoginsManagerV2IT {
         //should fail
         DomNewSchoolLogin domUserReg = new DomNewSchoolLogin();
         existingUserReg.setDomNewSchoolLogin(domUserReg);
+        existingUserReg.setRestContext(new DomContext());
         domUserReg.setRole(RoleType.STUDENT);
         domUserReg.setSchoolLogin("school01");
         domUserReg.setSchoolCode("schooladmin");
@@ -187,6 +189,7 @@ public class SecuredUserAccountLoginsManagerV2IT {
         SecurityContext sc = new TestSecurityContext("user03", RoleType.STUDENT);
         PersistentUser user = UserManager.findByUserName("user03");
         RestSchoolRoleAndClassV2 sarc = new RestSchoolRoleAndClassV2();
+        sarc.setRestContext(new DomContext());
         DomSchoolRoleAndClassV2 darc = new DomSchoolRoleAndClassV2();
         sarc.setDomSchoolRoleAndClass(darc);
         darc.setRole(RoleManager.findEntity(1L).buildDomRole());
