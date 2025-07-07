@@ -136,12 +136,17 @@ public class PublicUserManager {
         PersistentUser u = hasrole.getUser();
         String sc = n.getSchoolClassName();
         if (n.getRole() == RoleType.STUDENT && sc != null) {
-	        PersistentSchoolClass psc = SchoolClassManager.findEntity(sc, school);
-	        PersistentStudentOfClass soc = new PersistentStudentOfClass(u.getId(), psc.getClassID(), gr.getSchoolGroupID());
-	        soc.setRegisterDate(u.getRegisterDate());
-	        StudentOfClassManager.create(soc);
-	        hasrole.setSchoolClass(psc);
-	        HasRoleManager.edit(hasrole);
+	        try {
+				PersistentSchoolClass psc = SchoolClassManager.findEntity(sc, school);
+				if (psc != null) {
+				PersistentStudentOfClass soc = new PersistentStudentOfClass(u.getId(), psc.getClassID(), gr.getSchoolGroupID());
+				soc.setRegisterDate(u.getRegisterDate());
+				StudentOfClassManager.create(soc);
+				hasrole.setSchoolClass(psc);
+				HasRoleManager.edit(hasrole);
+        }} catch (Exception e) {
+				LOG.log(Level.WARNING, "create student in schoolclass", e);
+			}
         }
         DomSamlUser su = n.getSamlUser();
         if (su != null) {
