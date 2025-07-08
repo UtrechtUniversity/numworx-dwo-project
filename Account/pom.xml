@@ -42,7 +42,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>3.2.3</version>
                 <executions>
                     <execution>
                         <phase>compile</phase>
@@ -91,9 +90,7 @@
                     <server>TomcatServer</server>
                     <path>/Account</path>
                     <warFile>target/${project.artifactId}-${project.version}.war</warFile>
-                    <tomcat.local.deploy.url>http://127.0.0.1:8080/manager/text</tomcat.local.deploy.url> 
                     <warSourceDirectory>target/${project.artifactId}-${project.version}</warSourceDirectory>
-                    <archiveClasses>true</archiveClasses> 
 <!--                    <webapps> 
                         <webapp> 
                             <groupId>nl.uu.fi.dwo</groupId>
@@ -116,15 +113,6 @@
                                 </dependency>        
                             </dependencies>                    -->
                 </configuration>                                        
-            </plugin>            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <preparationGoals>clean verify install</preparationGoals>
-                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/Account/tags/</tagBase>
-                </configuration>            
             </plugin>            
         </plugins>
     </build>
