@@ -61,7 +61,7 @@ public class DWO2playerDefaults extends DWOplayerDefaults {
 	}-*/;
 
 	private static native String getDwoEnv0() /*-{
-		return $wnd.dwo_env
+		return $wnd.dwo_env || "unknown";
 	}-*/;
 	
 
