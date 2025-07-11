@@ -643,9 +643,9 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     }
 
     @Override
-    public Boolean addCourseToClass(CourseType courseType, Date from, Date to, String accessKey) throws Dwo2Exception {
+    public Boolean addCourseToClass(CourseType courseType, Date from, Date to, String accessKey, ViewState state) throws Dwo2Exception {
         if (from==null || to==null || from.before(to)) {
-            return instance.teacherActions.addCourseToClass(instance.getContext(), courseType, from, to, accessKey);
+            return instance.teacherActions.addCourseToClass(instance.getContext(), courseType, from, to, accessKey, state);
         } else {
             throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "Date range is invalid.");
         }

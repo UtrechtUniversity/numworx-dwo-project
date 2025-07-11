@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewFrom;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewTo;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseAndProfileNew;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClassCourseProfilewAccessKey;
@@ -80,7 +81,7 @@ public class ModulesOfSchoolclassService {
         });
     }
 
-    public Promise<Boolean> addCourseToClass(final DomSchoolClass sc, final DomCourse course, CourseType courseType, Date fromDate, Date toDate, String accessKey) {
+    public Promise<Boolean> addCourseToClass(final DomSchoolClass sc, final DomCourse course, CourseType courseType, Date fromDate, Date toDate, String accessKey, ViewState viewState) {
         DomContext context = new DomContext();
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 
@@ -97,6 +98,7 @@ public class ModulesOfSchoolclassService {
                 sap.setFrom(fromDate);
                 sap.setTo(toDate);
                 sap.setAccessKey(accessKey);
+                sap.setViewState(viewState);
                 RestSchoolClassCourseAndProfileNew rest = new RestSchoolClassCourseAndProfileNew();
                 rest.setRestContext(context);
                 rest.setDomSchoolClassCourseAndProfileNew(sap);
@@ -231,7 +233,7 @@ public class ModulesOfSchoolclassService {
     
     public Promise<DomClassCourseFull> setClassCourse(
     		PersistenceId id,
-    		DomSchoolClass sc, DomCourse course, CourseType type, String accessKey, Date from, Date to) {
+    		DomSchoolClass sc, DomCourse course, CourseType type, String accessKey, Date from, Date to, ViewState state) {
     	DomClassCourseFull dom = new DomClassCourseFull();
     	dom.setId(id);
     	dom.setAccessKey(accessKey);
@@ -240,6 +242,7 @@ public class ModulesOfSchoolclassService {
     	dom.setCourseType(type);
     	dom.setNotBefore(from);
     	dom.setNotAfter(to);
+    	dom.setViewState(state);
     	DomContext context = new DomContext();
         context.setDomHasRole(dwoGlobalVars.getActiveSchoolRoleAndClass().getHasRole());
 		Promise<DomClassCourseFull> result = ccm.update(context, dom);    	

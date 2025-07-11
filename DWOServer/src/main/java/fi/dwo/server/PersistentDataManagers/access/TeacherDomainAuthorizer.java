@@ -35,6 +35,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelScorePerTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 /**
@@ -289,7 +290,7 @@ public class TeacherDomainAuthorizer {
         
         Boolean attachCourseToClass()  throws Dwo2Exception;
         
-        Boolean addCourseToClass(CourseType courseType, Date from, Date to, String accessKey)  throws Dwo2Exception;
+        Boolean addCourseToClass(CourseType courseType, Date from, Date to, String accessKey, ViewState viewstate)  throws Dwo2Exception;
         
         Boolean detachCourseFromClass()  throws Dwo2Exception;
     }

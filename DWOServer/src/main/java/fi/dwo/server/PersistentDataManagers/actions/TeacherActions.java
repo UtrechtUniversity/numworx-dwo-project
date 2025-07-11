@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import nl.uu.fi.dwo.rest.dom.entities.DomLRS;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -37,7 +38,7 @@ public interface TeacherActions  {
     public void addStudent(TeacherDomainAuthorizer.Context context, PersistentSchoolClass schoolClass, PersistentHasRole student) throws Dwo2Exception;
     public List<PersistenceId> getSharedTeacherClasses(TeacherDomainAuthorizer.Context context, PersistentUser user) throws Dwo2Exception;
     public List<PersistenceId> getTeachersClassesOfStudent(TeacherDomainAuthorizer.Context context, PersistentSchoolGroup studentSg, PersistentUser user) throws Dwo2Exception;
-    public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, CourseType courseType, Date from, Date to, String accessKey) throws Dwo2Exception;
+    public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, CourseType courseType, Date from, Date to, String accessKey, ViewState state) throws Dwo2Exception;
     public Boolean attachCourseToClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
     public Boolean detachCourseFromClass(TeacherDomainAuthorizer.Context context) throws Dwo2Exception;
     public DomLRS getLRS(TeacherDomainAuthorizer.Context context, UriInfo info);

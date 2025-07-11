@@ -1,6 +1,7 @@
 package fi.dwo.server.rest;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfileNew;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
@@ -55,6 +56,7 @@ import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
@@ -1541,20 +1543,21 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Path("/addCourseToClass")
     public Boolean addCourseToClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfileNew rest) throws Dwo2Exception {
         //secure builder to detach course by setting it invisible.
-        try {
-            TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
+            final DomSchoolClassCourseAndProfileNew dom = rest.getDomSchoolClassCourseAndProfileNew();
+			TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                     .setHasRole(rest.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
                     .setTeacher()
-                    .addProfile(rest.getDomSchoolClassCourseAndProfileNew().getDomDwoProfile())
-                    .addSchoolClass(rest.getDomSchoolClassCourseAndProfileNew().getDomSchoolClass())
-                    .addCourse(rest.getDomSchoolClassCourseAndProfileNew().getCourse());
-            return build.addCourseToClass(rest.getDomSchoolClassCourseAndProfileNew().getCourseType(), rest.getDomSchoolClassCourseAndProfileNew().getFrom(),
-                    rest.getDomSchoolClassCourseAndProfileNew().getTo(),
-                    rest.getDomSchoolClassCourseAndProfileNew().getAccessKey());
-        } catch (Dwo2Exception e) {
-            throw new Dwo2RestException(e);
-        }
+                    .addProfile(dom.getDomDwoProfile())
+                    .addSchoolClass(dom.getDomSchoolClass())
+                    .addCourse(dom.getCourse());
+            ViewState viewstate = dom.getViewState();
+            if (viewstate == null) viewstate = ViewState.studentsAndTeachers; // the default.
+            
+            return build.addCourseToClass(dom.getCourseType(), dom.getFrom(),
+                    dom.getTo(),
+                    dom.getAccessKey(),
+                    viewstate);
     }
     
     /**

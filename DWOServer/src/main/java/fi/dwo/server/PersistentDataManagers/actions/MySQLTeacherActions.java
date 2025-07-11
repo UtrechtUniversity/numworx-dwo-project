@@ -184,7 +184,7 @@ public class MySQLTeacherActions implements TeacherActions {
     }
     
     @Override
-    public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, CourseType courseType, Date from, Date to, String accessKey) throws Dwo2Exception {
+    public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, CourseType courseType, Date from, Date to, String accessKey, ViewState state) throws Dwo2Exception {
         //Loop up the course tree and find the tree path
         Deque<PersistentCourse> treePath = new LinkedList<>();
         PersistentCourse curCourse = context.getTeacherCtx().getCourse();
@@ -220,13 +220,14 @@ public class MySQLTeacherActions implements TeacherActions {
                 		setKioskMode(cc, context.getUserCtx().school, context.getTeacherCtx().getCourse(), context.getTeacherCtx().getSchoolClass() );
                 	}
                }
-                cc.setViewState(ViewState.studentsAndTeachers);
+// mappen altijd de default
+                cc.setViewState(curCourse.isWithChildren() ? ViewState.studentsAndTeachers : state);
                 ClassCourseManager.insertOrUpdateViewState(cc);
 //                    LOG.log(Level.INFO, "created cc of "+ccResult);
             } else {
                 for (PersistentClassCourse cc : ccResult) {
 //                    LOG.log(Level.INFO, "setting visibility of "+cc.getClassCourseID());
-                    ClassCourseManager.editViewState(cc.getClassCourseID(),ViewState.studentsAndTeachers);
+                    ClassCourseManager.editViewState(cc.getClassCourseID(),state);
                 }
             }
         }

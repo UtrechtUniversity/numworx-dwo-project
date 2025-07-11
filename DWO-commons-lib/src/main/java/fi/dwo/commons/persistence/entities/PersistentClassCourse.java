@@ -147,7 +147,13 @@ public class PersistentClassCourse implements Serializable {
     private Long dwoProfileID;
     
     private String syExamID;
-   
+
+    /**
+     * @Since 1.5.7
+     */
+    @Column(name = "results")
+    private Boolean results;
+    
     @PrePersist
     @PreUpdate
     void changeTimestamp() {
@@ -293,6 +299,7 @@ public class PersistentClassCourse implements Serializable {
         classCourse.setCourseType(CourseType.values()[this.type]);
         classCourse.setViewState(this.viewState);
         classCourse.setAccessKey(this.accessKey);
+        classCourse.setResults(this.results);
     }
 
     private void fillDomClassCourseFull(DomClassCourseFull classCourse) {
@@ -394,6 +401,20 @@ public String getSyExamID() {
 
 public void setSyExamID(String syExamId) {
 	this.syExamID = syExamId;
+}
+
+/**
+ * @return the results
+ */
+public Boolean hasResults() {
+	return results;
+}
+
+/**
+ * @param results the results to set
+ */
+public void setResults(Boolean results) {
+	this.results = results;
 }
     
 }
