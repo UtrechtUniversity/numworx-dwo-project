@@ -167,7 +167,11 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     // List<PersistentClassCourse> listClassCourse = ClassCourseManager.findEntities(schoolClass);
     List<PersistentClassCourse> listClassCourse =
         ClassCourseManager.findVisibleEntities(schoolClass, ViewState.studentsAndTeachers, profileID);
-
+    List<PersistentClassCourse> l2 = ClassCourseManager.findVisibleEntities(schoolClass, ViewState.onlyStudents, profileID);
+    List<PersistentClassCourse> l3 = ClassCourseManager.findVisibleEntities(schoolClass, ViewState.studentsOrTeachers, profileID);
+    listClassCourse.addAll(l2);
+    listClassCourse.addAll(l3);
+    
     Map<PersistenceId, DomClassCourse> classCourseMap = new HashMap<>();
     Map<PersistenceId, DomCourseStudent> courseMap = new HashMap<>();
     Date NOW = new Date();
@@ -238,6 +242,12 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       
       PersistentCourse pc = s.getCourse();
       PersistentSchoolClass psc = s.getSchoolClass();
+      
+// FIXME StudentState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(hr).buildStudent().setDwoProfile(profileid).setSchoolClass(classid);
+     
+      
+      
+      
 // FIXME security logic: public courses are ALWAYS accessible. Move to State?
       DomCoursesOfSchoolClass result = getCourseForStudent(pcc, pc, psc, s.getSchool(), request,hr);
       return result;
@@ -258,7 +268,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       pcc.setCourseID(pc.getCourseID());
       pcc.setLastChangeTimeStamp(NOW.getTime());
       pcc.setType(0);
-      pcc.setViewState(ViewState.students);
+      pcc.setViewState(ViewState.none);
       if (psc != null && pc.getParentID() != 0) {
     	  PersistentCourse parent = CourseManager.findEntity(pc.getParentID());
     	  if (parent.isNotVisible()) {
@@ -283,16 +293,22 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     if (pcc != null && pcc.getNotBefore() != null) {
       if (NOW.before(pcc.getNotBefore())) pcc = null;
     }
-    if (pcc != null 
-    		&& (pcc.getViewState() != ViewState.students)
-    		&& (pcc.getViewState() != ViewState.studentsAndTeachers)
-    ) pcc = null;
+// FIXME Hier over nadenken
+//    if (pcc != null 
+//    		&& (pcc.getViewState() != ViewState.students)
+//    		&& (pcc.getViewState() != ViewState.studentsAndTeachers)
+//    ) pcc = null;
 
     if (pcc == null) {
       result.setClassCourses(Collections.emptyList());
       result.setCourses(Collections.emptyList());
       result.setScoContexts(Collections.emptyList());
     } else {
+    	if (!Boolean.TRUE.equals(pcc.hasResults()))
+    	{
+    		pcc.setResults(Boolean.TRUE); // we weten zeker dat er resultaten zijn of komen
+    		pcc = ClassCourseManager.edit(pcc);
+    	}  	
       DomClassCourse dcc = pcc.buildDomClassCourse();
       URI uri = URI.create(request.getRequestURL().toString());
       String pfx = uri.resolve(PUBLIC_COURSE_GET_IMAGE).toString();
@@ -347,7 +363,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     	  pcc.setCourseID(pc.getCourseID());
     	  pcc.setLastChangeTimeStamp(NOW.getTime());
     	  pcc.setType(0);
-    	  pcc.setViewState(ViewState.students);
+    	  pcc.setViewState(ViewState.none);
     	  long parentpid = pc.getParentID();
     	  if (parentpid != 0 && s.getSchool().getAboType() == AboType.premium) {
     		  PersistentCourse parentcourse = CourseManager.findEntity(parentpid);
@@ -375,7 +391,9 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       if (pcc != null && pcc.getNotBefore() != null) {
         if (NOW.before(pcc.getNotBefore())) pcc = null;
       }
-      if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers) && pcc.getViewState() != ViewState.students) pcc = null;
+// FIXME nog over denken: 
+      
+      //if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers) && pcc.getViewState() != ViewState.students) pcc = null;
       if (pcc != null && inExam(pcc)) pcc = null; // No deeplink for exams
 
       if (pcc == null) {
@@ -383,6 +401,8 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         result.setCourses(Collections.emptyList());
         result.setScoContexts(Collections.emptyList());
       } else {
+    	if (! Boolean.TRUE.equals(pcc.hasResults())) { pcc.setResults(Boolean.TRUE); pcc = ClassCourseManager.edit(pcc); }
+    	  
         DomClassCourse dcc = pcc.buildDomClassCourse();
         dcc.setType(pcc.getType()); // geen fratsen voor een student!
         DomCourseStudent dcs = pc.buildDomCourseStudent();

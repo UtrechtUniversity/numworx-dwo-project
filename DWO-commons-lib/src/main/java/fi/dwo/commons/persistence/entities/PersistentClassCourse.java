@@ -321,7 +321,7 @@ public class PersistentClassCourse implements Serializable {
         classCourse.setCourseId(PersistentCourse.buildPersistenceId(this.courseID));
         classCourse.setNotAfter(this.notAfter);
         classCourse.setNotBefore(this.notBefore);
-        if (ViewState.students == viewState && this.type == CourseType.normal.ordinal()) //
+        if (!viewState.moduleVisible() && this.type == CourseType.normal.ordinal()) // mark normal invisible modules.
         	classCourse.setCourseType(CourseType.invisible);
         else
             classCourse.setCourseType(CourseType.values()[this.type]);
