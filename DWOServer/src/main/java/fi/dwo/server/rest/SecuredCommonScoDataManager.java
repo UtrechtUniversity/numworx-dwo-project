@@ -259,7 +259,7 @@ abstract class SecuredCommonScoDataManager {
             PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
             List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
             PersistentClassCourse pcc = pccList.get(0);
-            boolean ok = pcc.getViewState() == ViewState.studentsAndTeachers;
+            boolean ok = pcc.getViewState() != ViewState.invisible;
             ok &= isSoC(phr, schoolClass);
             if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
             if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
@@ -611,7 +611,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
                 PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
                 List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
                 PersistentClassCourse pcc = pccList.get(0);
-                boolean ok = pcc.getViewState() == ViewState.studentsAndTeachers;
+                boolean ok = pcc.getViewState() != ViewState.invisible;
                 ok &= isSoC(phr, schoolClass);
                 if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
                 if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
@@ -619,8 +619,27 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
                       LOG.severe("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
                       return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();                       
                 }
+                if (!Boolean.TRUE.equals(pcc.hasResults())) {
+                	pcc.setResults(Boolean.TRUE);
+                	ClassCourseManager.edit(pcc);
+                }
             }
-         }
+         } else if (rstate.getRoleType() == RoleType.STUDENT) {
+             try {
+				 DomSchoolClassId domClassID = rest.getDomScormValues().getSchoolClassID();
+				 Long classID = MySQLPersistenceId.getNativeId(domClassID);
+				 if (classID != null) {
+				 PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
+				 List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
+				 if (!pccList.isEmpty()) {
+				 PersistentClassCourse pcc = pccList.get(0);
+				 if (!Boolean.TRUE.equals(pcc.hasResults())) {
+				 	pcc.setResults(Boolean.TRUE);
+				 	ClassCourseManager.edit(pcc);
+				 }}}
+			} catch (Exception e) {
+				LOG.log(Level.WARNING, "Not fatal", e);
+			}}
         
         
     LOG.log(Level.INFO, "setValues starts " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());

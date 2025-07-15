@@ -331,7 +331,7 @@ public class EditSchoolclassPresenter {
                     Promise<DomDwoProfile> resolved) throws Exception {
                 DomSchoolClassAndProfile sap = new DomSchoolClassAndProfile();
                 DomDwoProfile profile = new DomDwoProfile(resolved.getValue());
-                profile.setDwoProfileRights("");
+                //profile.setDwoProfileRights(""); // With visible "R"emedial modules
 				sap.setDomDwoProfile(profile);
                 sap.setDomSchoolClass(sc);
                 return manager.getModules(context, sap);

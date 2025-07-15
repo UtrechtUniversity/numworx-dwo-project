@@ -155,7 +155,7 @@ public class ModulesOfSchoolclassPresenter {
     
     
     private Promise<DomCoursesOfSchoolclassTree> reloadTree() {
-        Promise<DomCoursesOfSchoolClass4Teacherv2> promise = service.getModules(schoolClass, false);
+        Promise<DomCoursesOfSchoolClass4Teacherv2> promise = service.getModules(schoolClass, true);
         if (hasKiosk()) {
         	promise = promise.map(this::toKiosk);
         }
