@@ -158,7 +158,7 @@ public class ResultsPresenter extends AbstractResultsPresenter {
     public void setView(Display aView) {
         view = aView;
         view.setHelp(dwoGlobalVars.buildHelpUrl("#results"));
-        view.setRemedialView(dwoGlobalVars.isPremium() && dwoGlobalVars.isRemedial());
+        view.setRemedialView(dwoGlobalVars.isPremium() &&  dwoGlobalVars.isModulesOnly());
     }
 
     @JsMethod
