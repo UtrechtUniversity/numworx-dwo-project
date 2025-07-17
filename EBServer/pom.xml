@@ -49,11 +49,11 @@
 				    <artifactId>jackson-core</artifactId>
 				    <version>2.13.4</version>
 				</dependency>
- <dependency>
-  <groupId>commons-fileupload</groupId>
-  <artifactId>commons-fileupload</artifactId>
-  <version>1.3.3</version>
-</dependency>
+					 <dependency>
+					  <groupId>commons-fileupload</groupId>
+					  <artifactId>commons-fileupload</artifactId>
+					  <version>1.3.3</version>
+					</dependency>
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
     				<artifactId>DWOGwtClient</artifactId>
@@ -476,16 +476,16 @@
 						<artifactInstaller>
 							<groupId>org.apache.tomcat</groupId>
 							<artifactId>tomcat</artifactId>
-							<version>9.0.102</version>
+							<version>9.0.107</version>
 						</artifactInstaller>
 						<systemProperties>
 							<DWO_ENV>test</DWO_ENV>
 						</systemProperties>
 						<dependencies>
-							<dependency>
-								  <groupId>software.aws.rds</groupId>
-								  <artifactId>aws-mysql-jdbc</artifactId>
-							</dependency>
+					        <dependency>
+					            <groupId>com.mysql</groupId>
+					            <artifactId>mysql-connector-j</artifactId>
+					        </dependency>
 						</dependencies>
 					</container>
 					<deployables>
@@ -506,7 +506,7 @@
 						<datasources>
 							<datasource>
 								<jndiName>jdbc/dwodb</jndiName>
-								<driverClass>software.aws.rds.jdbc.mysql.Driver</driverClass>
+								<driverClass>com.mysql.cj.jdbc.Driver</driverClass>
 								<url>jdbc:mysql://localhost:3306/dwo_productie_v1_2</url>
 								<username>${cargo.username}</username>
 								<password>${cargo.password}</password>

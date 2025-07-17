@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.tuckey.web.filters.urlrewrite.gzip.FilterServletOutputStream;
 
+import com.google.common.base.Charsets;
+
 import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -40,7 +42,7 @@ public class GwtClientWrap implements Filter {
 		
 	}
 	
-	static class MyWrapper extends HttpServletResponseWrapper {
+	class MyWrapper extends HttpServletResponseWrapper {
 
 //		MyOutput out;
 		Writer writer;
@@ -63,6 +65,16 @@ public class GwtClientWrap implements Filter {
 			if (writer == null) 
 				writer = new CharArrayWriter(10240*15);
 			return new PrintWriter(writer);
+		}
+
+		@Override
+		public void setContentLength(int len) {
+//			LOG.info("discard content length " + len);
+		}
+
+		@Override
+		public void setContentLengthLong(long len) {
+//			LOG.info("discard content length long " + len);
 		}
 	}
 
@@ -182,7 +194,9 @@ public class GwtClientWrap implements Filter {
 			
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.setCharacterEncoding("UTF-8");
-			resp.getWriter().write(content);
+			byte[] utf8 = content.getBytes(Charsets.UTF_8);
+			resp.setContentLength(utf8.length);
+			resp.getOutputStream().write(utf8);
 		}
 
 	}
