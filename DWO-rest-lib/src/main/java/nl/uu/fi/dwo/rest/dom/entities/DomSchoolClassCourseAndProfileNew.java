@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 
 
 /**
@@ -16,6 +17,7 @@ public class DomSchoolClassCourseAndProfileNew extends DomSchoolClassAndProfile{
     private Date from;
     private Date to;
     private String accessKey;
+    private ViewState viewState;
 
     public DomSchoolClassCourseAndProfileNew() {
     }
@@ -89,4 +91,18 @@ public class DomSchoolClassCourseAndProfileNew extends DomSchoolClassAndProfile{
     public void setCourseType(CourseType courseType) {
         this.courseType = courseType;
     }
+
+	/**
+	 * @return the viewState
+	 */
+	public ViewState getViewState() {
+		return viewState;
+	}
+
+	/**
+	 * @param viewState the viewState to set
+	 */
+	public void setViewState(ViewState viewState) {
+		this.viewState = viewState;
+	}
 }

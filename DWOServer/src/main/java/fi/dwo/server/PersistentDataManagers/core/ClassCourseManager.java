@@ -415,4 +415,22 @@ public class ClassCourseManager {
 	public static List<PersistentClassCourse> findEntities(PersistentSchoolClass schoolClass, Long profileID) {
 		return findEntities(schoolClass); // FIXME nu is er toch nog een test op een bestaande course.
 	}
+
+	public static PersistentClassCourse editResults(long id, Boolean results) {
+        EntityManager em = null;
+        PersistentClassCourse cc = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            cc = em.find(PersistentClassCourse.class, id);
+            cc.setResults(results);
+            cc = em.merge(cc);
+            em.getTransaction().commit();
+            return cc;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+	}
 }

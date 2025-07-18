@@ -18,6 +18,8 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -102,9 +104,9 @@ public class SecuredStudentCourseResultsManager extends AbstractSchoolClassManag
         final PersistentCourse course;
 
         try {
-            PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-            phr = HasRoleManager.findEntity(hasRoleKey);
-            PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+        	UserState_HR_R_S_SG_U hstate = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(domHasRole);
+            phr = hstate.getHasRole();
+            PersistentUser user = hstate.getUser();
             if (user == null || !user.getId().equals(phr.getPersistentHasRolePK().getUserID())) {
                 LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using uid {1} in HasRole differs from user principal name {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
                 throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");

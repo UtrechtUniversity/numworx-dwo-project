@@ -29,6 +29,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.cache.LimitedSchoolCache;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -209,9 +210,10 @@ public class SecuredUserScoContextManager {
 		DomHasRole    domHasRole = rest.getRestContext().getDomHasRole();
 		DomScoContext domScoContext = rest.getDomScoContext();	
 // Context
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(domHasRole);
         PersistentUser user = null;
         try {
-            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            user = state.getUser();
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
         }
         catch (Exception e) {
@@ -220,14 +222,12 @@ public class SecuredUserScoContextManager {
         }
 // Security:	
 		long pid = MySQLPersistenceId.getNativeId(domDwoProfile);
-		PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
 		long sid = MySQLPersistenceId.getNativeId(domScoContext);
 		PersistentScoContext scoContext = ScoContextManager.findEntity(sid);
 		long cid = scoContext.getCourseID();
 		PersistentCourse parent = CourseManager.findEntity(cid);
-        PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-        PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
-        PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(phr);
+        PersistentHasRole phr = state.getHasRole();
+        PersistentSchool school = state.getSchool();
 		
 // profile match		
 		if ( pid != parent.getDwoProfileID().longValue())
@@ -242,7 +242,7 @@ public class SecuredUserScoContextManager {
 	            LOG.log(Level.SEVERE, "school mismatch " + sc.getUserPrincipal().getName() );		
 				throw new Dwo2Exception(Dwo2ExceptionCode.Rest_LoginNeeded, "wrong credentials");
 			}
-			RoleType role = RoleType.values()[phr.getSchoolGroup().getGroupID()];
+			RoleType role = phr.getSchoolGroup().getRoleType();
 			switch (role) {
 			case STUDENT: 
 				LOG.severe("Check schoolclass/course?" ); // Not used!
@@ -258,8 +258,10 @@ public class SecuredUserScoContextManager {
 			default:
 			}
 		} else {
+			PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
 			if (profile.isLimited()) {
-				// assert school in profile database....
+				if (!LimitedSchoolCache.isLimitedSchool(profile.getDwoProfileID(), school.getSchoolID()))
+					throw new Dwo2RestException(Dwo2ExceptionCode.Rest_LoginNeeded, "wrong school");
 			}
 		}
 // userid must match

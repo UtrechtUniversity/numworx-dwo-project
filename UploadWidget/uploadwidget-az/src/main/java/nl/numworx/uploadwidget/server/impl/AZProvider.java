@@ -1,27 +1,29 @@
 package nl.numworx.uploadwidget.server.impl;
 
-import com.azure.core.http.rest.PagedIterable;
-import com.azure.core.http.rest.Response;
-import com.azure.core.util.Context;
-import com.azure.identity.*;
-import com.azure.storage.blob.*;
-import com.azure.storage.blob.models.*;
-import com.azure.storage.blob.options.BlobParallelUploadOptions;
-import com.azure.storage.blob.sas.BlobSasPermission;
-import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
-import com.azure.storage.common.StorageSharedKeyCredential;
-
-import nl.numworx.uploadwidget.server.impl.AZStore.AZAtomEntry;
-import nl.numworx.uploadwidget.shared.AtomEntry;
-
-import java.io.*;
+import java.io.InputStream;
 import java.time.Duration;
-import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletOutputStream;
+
+import com.azure.core.http.rest.Response;
+import com.azure.core.util.Context;
+import com.azure.identity.DefaultAzureCredential;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.azure.storage.blob.BlobClient;
+import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.models.BlobHttpHeaders;
+import com.azure.storage.blob.models.BlobItem;
+import com.azure.storage.blob.models.BlockBlobItem;
+import com.azure.storage.blob.models.ListBlobsOptions;
+import com.azure.storage.blob.options.BlobParallelUploadOptions;
+import com.azure.storage.common.StorageSharedKeyCredential;
+
+import nl.numworx.uploadwidget.shared.AtomEntry;
 
 public class AZProvider {
 
@@ -96,7 +98,7 @@ public class AZProvider {
 	}
 
 	public Entity get(String first) {
-		BlobClient blob = client.getBlobClient(first);
+		//BlobClient blob = client.getBlobClient(first);
 		ListBlobsOptions options = new ListBlobsOptions().setPrefix(first).setMaxResultsPerPage(1);
 		options.getDetails().setRetrieveMetadata(true);
 		BlobItem item = client.listBlobs(options, Duration.ofMillis(100000)).stream().findAny().get();

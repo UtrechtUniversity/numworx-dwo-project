@@ -24,7 +24,6 @@ import org.apache.xmlrpc.applet.XmlRpcException;
 import org.xml.sax.SAXException;
 
 import fi.dwo.commons.exceptions.CourseException;
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;

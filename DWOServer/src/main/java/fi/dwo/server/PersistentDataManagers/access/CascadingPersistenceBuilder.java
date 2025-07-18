@@ -438,15 +438,15 @@ public class CascadingPersistenceBuilder {
                     throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, msg);
                 }
                 this.instance.context.hasRole = phr;
-                Long roleId = (long) RoleType.NONE.ordinal();
+                int roleId = RoleType.NONE.ordinal();
                 try {
-                    roleId = this.instance.context.hasRole.getSchoolGroup().getRole().getGroupID();
+                    roleId = this.instance.context.hasRole.getSchoolGroup().getGroupID();
                 } catch (Exception e) {
                     LOG.log(Level.SEVERE, "RoleId of hasRole {1} for userlogin {0} could not be found.",
                             new Object[]{instance.context.user.getUsername(), this.instance.context.hasRole.getPersistentHasRolePK()});
                     throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Current Role could not be found.");
                 }
-                if (roleId.intValue() == r.ordinal()) {
+                if (roleId == r.ordinal()) {
                     this.instance.context.hasRole = phr;
                     this.instance.context.roleType = r;
                     return this;
@@ -656,7 +656,8 @@ public class CascadingPersistenceBuilder {
             List<PersistentStudentOfClass> socList = StudentOfClassManager.findEntities(instance.context.schoolClass);
             //detach classcourse to ensure no new results occur.
             //TODO mark marked for deleted in the future.
-            //ClassCourseManager.editViewState(this.getClassCourse().getClassCourseID(), ViewState.invisible);
+            instance.context.classCourse = 
+            ClassCourseManager.editResults(this.getClassCourse().getClassCourseID(), Boolean.FALSE);
             //clean all existing results
             for (PersistentStudentOfClass soc : socList) {
                 PersistentHasRolePK key = new PersistentHasRolePK(soc.getPersistentStudentOfClassPK().getUserID(), soc.getPersistentStudentOfClassPK().getSchoolGroupID());

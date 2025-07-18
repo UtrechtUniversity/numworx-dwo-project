@@ -479,9 +479,10 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
         final PersistentDwoProfile profile;
 
         try {
-            PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-            phr = HasRoleManager.findEntity(hasRoleKey);
-            PersistentUser user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+        	UserState_HR_R_S_SG_U hstate = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(domHasRole);
+            phr = hstate.getHasRole();
+            PersistentUser user = hstate.getUser();
+            school = hstate.getSchool();
             if (user == null || !user.getId().equals(phr.getPersistentHasRolePK().getUserID())) {
                 LOG.log(Level.SEVERE, "Username {0}: ILLEGAL USER-OPERATION: Using uid {1} in HasRole differs from user principal name {0}.", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
                 throw new Dwo2Exception(Dwo2ExceptionCode.User_IllegalAction, "You Don't Have Permission to access this using usercode " + sc.getUserPrincipal().getName() + ".");
@@ -496,13 +497,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             throw new Dwo2RestException(ex);
         }
 
-        try {
-            school = HasRoleUtilManager.getSchoolforHasRole(phr);
-        } catch (Dwo2Exception ex) {
-            LOG.log(Level.SEVERE, "", ex);
-            throw new Dwo2RestException(ex);
-        }
-
+ 
         //fetch Profile
         if (phr != null && school != null) {
             long prevTime = curTime;
@@ -763,28 +758,31 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
             //TODO clear all excess classcourses.
             
             PersistentClassCourse cc = build.getClassCourse();
-            if(cc != null && cc.getViewState() == ViewState.invisible) {
+            if(cc != null && 
+            		(cc.getViewState() == ViewState.invisible || cc.getViewState() == ViewState.none )
+            		) {
               // check for studentscocontexts in sco_of_course X student_of_class
               PersistentCourse pc = build.getCourse();
-              List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
-              scos.addAll(ScoContextManager.findTrashedEntities(pc));
-              List<PersistentStudentOfClass> students = StudentOfClassManager.findEntities(build.getSchoolClass());
-              if( ! students.isEmpty() && scos.size() > 0 ) { // kan >1 zijn, als de bovenstaande clear goed z'n best doet.
-                long sgId = students.get(0).getPersistentStudentOfClassPK().getSchoolGroupID().longValue();
-                Set<Long> users = students.stream().map(s -> s.getPersistentStudentOfClassPK().getUserID()).collect(Collectors.toSet());
-                for ( PersistentScoContext scoContext: scos) {
-// Bulk: all students results of a school
-                  List<PersistentStudentScoContext> ss = StudentScoContextManager.findEntities(scoContext, sgId);
-                  boolean match = ss.stream().anyMatch(pss -> 
-                      {
-                        Long uid = pss.getPersistentHasRolePK().getUserID();
-                        return users.contains(uid);
-                      }
-                      
-                      );
-                  
-                  if (match) return false;
-                }
+              if (!SchoolClassUtilManager.hasNoResults(pc, build.getSchoolClass(), true)) return false;
+//              List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
+//              scos.addAll(ScoContextManager.findTrashedEntities(pc));
+//              List<PersistentStudentOfClass> students = StudentOfClassManager.findEntities(build.getSchoolClass());
+//              if( ! students.isEmpty() && scos.size() > 0 ) { // kan >1 zijn, als de bovenstaande clear goed z'n best doet.
+//                long sgId = students.get(0).getPersistentStudentOfClassPK().getSchoolGroupID().longValue();
+//                Set<Long> users = students.stream().map(s -> s.getPersistentStudentOfClassPK().getUserID()).collect(Collectors.toSet());
+//                for ( PersistentScoContext scoContext: scos) {
+//// Bulk: all students results of a school
+//                  List<PersistentStudentScoContext> ss = StudentScoContextManager.findEntities(scoContext, sgId);
+//                  boolean match = ss.stream().anyMatch(pss -> 
+//                      {
+//                        Long uid = pss.getPersistentHasRolePK().getUserID();
+//                        return users.contains(uid);
+//                      }
+//                      
+//                      );
+//                  
+//                  if (match) return false;
+//                }
                 try {
                   ClassCourseManager.destroy(cc.getClassCourseID());
                 } catch (PersistenceException e) {
@@ -793,7 +791,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
                 }
                 return true;
               }
-            }
+            
             
         } catch (Dwo2Exception e) {
             throw new Dwo2RestException(e);

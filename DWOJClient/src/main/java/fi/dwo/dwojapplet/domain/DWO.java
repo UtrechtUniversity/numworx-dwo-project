@@ -52,8 +52,6 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.plaf.ColorUIResource;
 
-import org.apache.xmlrpc.applet.MySimpleXmlRpcClient;
-
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.dwomaccess.Compressor;
 import fi.beans.jxbchecker.JXBChecker;
@@ -322,8 +320,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         String xmlrpc_debug = (System.getProperty("xmlrpc.debug") == null) 
                 ? properties.getProperty("xmlrpc.debug", "false") : System.getProperty("xmlrpc.debug") ;
         
-        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug", xmlrpc_debug});
-        MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
+//        LOG.log(Level.INFO, "Property {0} is value: {1}", new Object[]{"xmlrpc.debug", xmlrpc_debug});
+//        MySimpleXmlRpcClient.setDebug("true".equals(xmlrpc_debug));
 
         dwo_env = properties.getProperty(DWO_ENV, super.getParameter(DWO_ENV));
         if (dwo_env == null) dwo_env = "";
@@ -524,7 +522,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         idleOn();
     	setUserName(username);
     	setPassWord(password);
-    	MySimpleXmlRpcClient.AUTHORIZATION = StoredRestManager.getInstance().getBasicAuthString();
+    	//MySimpleXmlRpcClient.AUTHORIZATION = StoredRestManager.getInstance().getBasicAuthString();
         return setExtraRights(DwoHelper.getCurrentFacadeUser());
     }
 
@@ -627,7 +625,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public boolean login() throws LoginException {
         DwoHelper.setCurrentFacadeUser(Guest.instance());
-        MySimpleXmlRpcClient.AUTHORIZATION = null;
+        //MySimpleXmlRpcClient.AUTHORIZATION = null;
         /*
 	 * Object[] args = new Object[5]; args[0] =
 	 * "http://www.fi.uu.nl/wisweb/scorm/scos/nabouwenaanzichten/NabouwenAanzichten1.htm";

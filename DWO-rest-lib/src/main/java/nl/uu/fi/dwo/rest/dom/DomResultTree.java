@@ -150,7 +150,18 @@ public class DomResultTree {
             //build the subtrees
             DomClassCourse4Teacher cc = resultData.getClassCourses().get(key);
             //           if (cc.getViewState() == ViewState.invisible || cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.teachers) {
-            if (cc.getViewState() == ViewState.studentsAndTeachers || cc.getViewState() == ViewState.students || cc.getViewState() == ViewState.invisible) {
+            if (
+//            		cc.getViewState() == ViewState.studentsAndTeachers || 
+//            		cc.getViewState() == ViewState.students || 
+//            		cc.getViewState() == ViewState.invisible
+            		
+            		cc.getViewState() != ViewState.none &&
+            		cc.getViewState() != ViewState.onlyStudents &&
+            		cc.getViewState() != ViewState.studentsNorTeachers &&
+            		! (cc.getViewState() == ViewState.students && Boolean.FALSE.equals(cc.getResults())) &&
+            		! (cc.getViewState() == ViewState.studentsOrTeachers && Boolean.FALSE.equals(cc.getResults()))
+            		
+            ) {
                 DomResultCourseInClass resultCourse = new DomResultCourseInClass(resultData.getCourses().get(cc.getCourseId()), cc.getViewState());
                 //attach to class
                 schoolClasses.get(cc.getClassId()).getChildren().put(cc.getCourseId(), resultCourse); //add course to parent

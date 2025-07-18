@@ -51,7 +51,9 @@ public class AccountSchoolsRolesProperties {
     public void setActiveSchoolRoleAndClass() throws Dwo2Exception {
             DomSchoolRoleAndClassV2 src = SecureUserAccountLoginsManager.switchToSchoolLogin(getSelectedSchoolRoleAndClass());
             srcs.setActiveSchoolRoleAndClass(src);
-            DwoHelper.getSchoolLogins().setActiveSchoolRoleAndClass(src);        
+            DwoHelper.getSchoolLogins().setActiveSchoolRoleAndClass(src);
+            DwoHelper.getCurrentLoginContext().setHasRoleId(src.getHasRole().getId());
+            DwoHelper.getCurrentLoginContext().setSchoolGroupId(src.getHasRole().getSchoolGroupId());
     }
 
     /**

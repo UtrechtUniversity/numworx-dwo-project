@@ -1,7 +1,6 @@
 package fi.dwo.dwojapplet.form;
 
 import fi.dwo.commons.exceptions.CourseException;
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.dwojapplet.domain.Course;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
@@ -18,7 +17,6 @@ import java.util.zip.GZIPOutputStream;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
 import org.xml.sax.SAXException;
 public class DWOFile {
 
@@ -48,7 +46,6 @@ public class DWOFile {
 	 * @throws DwoXmlRpcException
 	 * @throws SQLException
 	 * @throws IOException
-	 * @throws XmlRpcException
 	 * @throws PersistenceException 
 	 * @throws CourseException 
 	 * @throws Dwo2Exception 

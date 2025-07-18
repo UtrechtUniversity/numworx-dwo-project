@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.HttpAuthenticationType;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 /**
@@ -16,7 +16,7 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
  * @author G.A.J. van der Plas
  */
 public class AccountDataProperties {
-    private static final Logger LOG = Logger.getLogger(AccountDataProperties.class.getName());
+    //private static final Logger LOG = Logger.getLogger(AccountDataProperties.class.getName());
     
     private DomUserFull user;
 

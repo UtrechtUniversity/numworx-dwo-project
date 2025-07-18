@@ -21,6 +21,9 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
@@ -57,9 +60,10 @@ public class SecuredUserResultsManager {
         DomCourse domCourse = rest.getDomCourse();
         DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 // Context
+        UserState_HR_R_S_SG_U state = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(domHasRole);
         PersistentUser user = null;
         try {
-            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+			user = state.getUser();
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
@@ -72,8 +76,8 @@ public class SecuredUserResultsManager {
 
         PersistentDwoProfile profile = DwoProfileManager.findEntity(pid);
         PersistentCourse parent = CourseManager.findEntity(cid);
-        PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
-        PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(phr);
+        PersistentHasRole phr = state.getHasRole();
+        PersistentSchool school = state.getSchool();
 
         CacheControl cc = new CacheControl();
         cc.setMaxAge(0);

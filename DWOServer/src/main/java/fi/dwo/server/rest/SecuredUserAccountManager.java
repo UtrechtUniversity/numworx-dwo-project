@@ -154,7 +154,8 @@ public class SecuredUserAccountManager {
         PersistentLoginContext loginContext = null;
 
         try {
-            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            //user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            user = AnonDomainAuthorizer.build().submitUser(sc).getUser();
             List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
             if (list.size() == 1) {
                 loginContext = list.get(0);
@@ -197,7 +198,7 @@ public class SecuredUserAccountManager {
         PersistentUser u;
 
         try {
-            u = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            u = AnonDomainAuthorizer.build().submitUser(sc).getUser();
             LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), u.getUsername()});
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "User " + sc.getUserPrincipal() + ": Unexpected exception", e);
@@ -259,7 +260,7 @@ public class SecuredUserAccountManager {
     @PUT
     @Produces({"application/json"})
     @Path("/basicAuthLogout")
-    public Response basicAuthLogout(@Context SecurityContext sc, @Context HttpServletRequest servletRequest, RestLoginContext loginContext) {
+    public Response basicAuthLogout(@Context SecurityContext sc, @Context HttpServletRequest servletRequest, RestLoginContext loginContext) throws Dwo2Exception {
         logoutUser(sc, loginContext);
         String userName = sc.getUserPrincipal().getName();
         //TODO REST update lastLogin and such.
@@ -323,12 +324,13 @@ public class SecuredUserAccountManager {
      * @param sc
      * @param loginContext
      * @return Returns null if there was an error.
+     * @throws Dwo2Exception 
      */
     @PUT
     @Produces({"application/json"})
     @Path("/logout")
-    public Boolean logoutUser(@Context SecurityContext sc, RestLoginContext loginContext) {
-        PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
+    public Boolean logoutUser(@Context SecurityContext sc, RestLoginContext loginContext) throws Dwo2Exception {
+        PersistentUser u = AnonDomainAuthorizer.build().submitUser(sc).getUser();
 //        try {//LoginData may fail, but login should succeed.
 //            //register login action
 //            PersistentLogData loginData = new PersistentLogData();
@@ -482,10 +484,10 @@ public class SecuredUserAccountManager {
     @Produces({"application/json"})
     @Path("/remove")
     public Boolean removeCurrentUser(@Context SecurityContext sc) throws Dwo2Exception {
-        PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
-        if (u == null) {
-            return Boolean.TRUE;
-        }
+//        PersistentUser u = UserManager.findByUserName(sc.getUserPrincipal().getName());
+//        if (u == null) {
+//            return Boolean.TRUE;
+//        }
         UserState_U state = AnonDomainAuthorizer.build().submitUser(sc);
         PersistentUser user = state.getUser();
         if (user.isSingleSchoolAccount())
@@ -510,7 +512,7 @@ public class SecuredUserAccountManager {
         PersistentLoginContext loginContext = null;
 
         try {
-            user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+            user = AnonDomainAuthorizer.build().submitUser(sc).getUser();
             List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
             if (list.size() == 1) {
                 loginContext = list.get(0);
@@ -612,9 +614,8 @@ public class SecuredUserAccountManager {
         }
     }
 
-    public static String getToken(PersistentClassCourse pcc, SecurityContext sc) {
-      String userName = sc.getUserPrincipal().getName();
-      PersistentUser u = UserManager.findByUserName(userName);
+    public static String getToken(PersistentClassCourse pcc, SecurityContext sc) throws Dwo2Exception {
+      PersistentUser u = AnonDomainAuthorizer.build().submitUser(sc).getUser();
       List<PersistentLoginContext> loginContextList = LoginContextManager.findEntities(u.getId());
       PersistentLoginContext context = loginContextList.get(0);
       SecretKey key = OAuth2Manager.getKey(context);

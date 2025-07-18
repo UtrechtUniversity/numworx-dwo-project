@@ -13,7 +13,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
+import fi.dwo.server.PersistentDataManagers.cache.SchoolCache;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -219,7 +219,7 @@ public class SchoolUtilManager {
         }
 
         //building hasRole for null school
-        PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
+        PersistentSchool nullSchool = findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
         Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
         pk.setSchoolGroupID(schoolGroupId);
         pk.setUserID(user.getId());
@@ -231,7 +231,7 @@ public class SchoolUtilManager {
         hr.setRights("_"); //TODO make a rights manager
         HasRoleManager.create(hr);
 
-        LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+        LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
 
         return true;
     }
@@ -292,7 +292,7 @@ public class SchoolUtilManager {
 
         try {
             HasRoleManager.create(hr);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
         } catch (PersistenceException e) {
             LOG.log(Level.SEVERE, "User creation failed.");
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
@@ -300,7 +300,7 @@ public class SchoolUtilManager {
 
         if (!user.isSingleSchoolAccount()) {
             //building hasRole for null school if not a single school student.
-            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
+            PersistentSchool nullSchool = findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
             Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
             pk.setSchoolGroupID(schoolGroupId);
             pk.setUserID(user.getId());
@@ -311,7 +311,7 @@ public class SchoolUtilManager {
             hr.setRegisterDate(now);
             hr.setRights("_"); //TODO make a rights manager
             HasRoleManager.create(hr);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
         }
 
         return true;
@@ -374,7 +374,7 @@ public class SchoolUtilManager {
 
         try {
             HasRoleManager.create(hr);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
         } catch (PersistenceException e) {
             LOG.log(Level.SEVERE, "User creation failed.");
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");
@@ -382,7 +382,7 @@ public class SchoolUtilManager {
 
         if (!user.isSingleSchoolAccount()) {
             //building hasRole for null school if not a single school student.
-            PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
+            PersistentSchool nullSchool = findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
             Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
             pk.setSchoolGroupID(schoolGroupId);
             pk.setUserID(user.getId());
@@ -393,9 +393,20 @@ public class SchoolUtilManager {
             hr.setRegisterDate(now);
             hr.setRights("_"); //TODO make a rights manager
             HasRoleManager.create(hr);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
         }
 
         return true;
-    }    
+    }
+    
+    public static PersistentSchool findBySchoolLogin(String schoolLogin) {
+    	PersistentSchool school = SchoolCache.get(schoolLogin);
+    	if (school == null) {
+    		school = SchoolManager.findBySchoolLogin(schoolLogin);
+    		if (school != null) 
+    			SchoolCache.put(school);
+    	}
+    	return school;
+    }
+
 }

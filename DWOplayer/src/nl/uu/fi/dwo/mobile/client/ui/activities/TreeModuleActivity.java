@@ -100,7 +100,10 @@ public class TreeModuleActivity extends AbstractActivity implements GotoControll
 		
 		if(item.getType() == Type.MODULE && vars.withUser()) {
 			SelectModuleItem t = item;
-			if (t.getCourseType() == CourseType.invisible) t = t.getParent();
+			if (t.getCourseType() == CourseType.invisible) {
+				t = t.getParent();
+				if (t == null) t = SelectModuleItem.ROOT;
+			}
 			last.get().putPlace(t.getPlace());
 			Object userID = vars.getUserID();
 		if(userID != null && item.getPromisedScoreMap() == null) {

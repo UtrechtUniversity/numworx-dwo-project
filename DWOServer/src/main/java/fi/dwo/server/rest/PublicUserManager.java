@@ -24,6 +24,7 @@ import fi.dwo.commons.system.MD5;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.commons.util.DatatypeConverter;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import nl.uu.fi.dwo.rest.entities.RestAuthToken;
 import nl.uu.fi.dwo.rest.entities.RestLoginCheck;
 import nl.uu.fi.dwo.rest.entities.RestNewStudent;
@@ -135,12 +136,17 @@ public class PublicUserManager {
         PersistentUser u = hasrole.getUser();
         String sc = n.getSchoolClassName();
         if (n.getRole() == RoleType.STUDENT && sc != null) {
-	        PersistentSchoolClass psc = SchoolClassManager.findEntity(sc, school);
-	        PersistentStudentOfClass soc = new PersistentStudentOfClass(u.getId(), psc.getClassID(), gr.getSchoolGroupID());
-	        soc.setRegisterDate(u.getRegisterDate());
-	        StudentOfClassManager.create(soc);
-	        hasrole.setSchoolClass(psc);
-	        HasRoleManager.edit(hasrole);
+	        try {
+				PersistentSchoolClass psc = SchoolClassManager.findEntity(sc, school);
+				if (psc != null) {
+				PersistentStudentOfClass soc = new PersistentStudentOfClass(u.getId(), psc.getClassID(), gr.getSchoolGroupID());
+				soc.setRegisterDate(u.getRegisterDate());
+				StudentOfClassManager.create(soc);
+				hasrole.setSchoolClass(psc);
+				HasRoleManager.edit(hasrole);
+        }} catch (Exception e) {
+				LOG.log(Level.WARNING, "create student in schoolclass", e);
+			}
         }
         DomSamlUser su = n.getSamlUser();
         if (su != null) {
@@ -232,10 +238,10 @@ public class PublicUserManager {
         //TODO user EntityManager APIs
         try {
             //           school = SchoolManager.findBySchoolLogin(newUserReg.getSchoolLogin());
-            javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoolID = sg.schoolID and s.schoolLogin = :schoollogin and sg.role.groupname = :role and sg.passwd = :schoolcode");
+            javax.persistence.Query q = em.createQuery(" select sg from PersistentSchoolGroup sg join PersistentSchool s where s.schoolID = sg.schoolID and s.schoolLogin = :schoollogin and sg.groupID = :role and sg.passwd = :schoolcode");
             q.setParameter("schoollogin", n.getSchoolLogin());
             q.setParameter("schoolcode", n.getSchoolCode());
-            q.setParameter("role", (n.getRole().name()));
+            q.setParameter("role", (n.getRole().ordinal()));
             sg = (PersistentSchoolGroup) q.getSingleResult();
             school = sg.getSchool(); // Sadly, another query.
             if (school == null) {
@@ -305,7 +311,7 @@ public class PublicUserManager {
                 || !n.getSchoolCode().endsWith("null")
                 || n.getRole()!=(RoleType.STUDENT)) {
         	PersistentHasRole hasRole2 = new PersistentHasRole();
-        	PersistentSchool nullSchool = SchoolManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
+        	PersistentSchool nullSchool = SchoolUtilManager.findBySchoolLogin(DwoSystemParametersUtilManager.findByName("NullSchoolLogin").getValue());
             Long schoolGroupId = SchoolGroupManager.findEntity(nullSchool, RoleType.STUDENT).getSchoolGroupID();
             pk = new PersistentHasRolePK();
             pk.setSchoolGroupID(schoolGroupId);
@@ -316,7 +322,7 @@ public class PublicUserManager {
             hasRole2.setRegisterDate(now);
             hasRole2.setRights("_"); //TODO make a rights manager
             HasRoleManager.create(hasRole2);
-            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {3} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), n.getRole().name()});
+            LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2} was added to the database.", new Object[]{hasRole.getPersistentHasRolePK().getUserID(), hasRole.getPersistentHasRolePK().getSchoolGroupID(), n.getRole().name()});
         }
         hasRole.setUser(user);
         hasRole.setSchoolGroup(sg);
@@ -573,8 +579,9 @@ pUser.setPassword("");
                             //throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                         }
                         PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, school, roleType);
-                        hr.setClassID(schoolClass.getClassID());
-                        HasRoleManager.edit(hr);
+                        hr.setSchoolClass(schoolClass);
+                        hr = HasRoleManager.edit(hr);
+                        HasRoleCache.put(hr);
                         break;
                     case TEACHER:
                         pUser.setSingleSchoolAccount(false);
@@ -624,8 +631,8 @@ pUser.setPassword("");
 //                            throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                         }
                     }
-                    hr.setClassID(schoolClass.getClassID());
-                    HasRoleManager.edit(hr);
+                    hr.setSchoolClass(schoolClass);
+                    HasRoleCache.put(HasRoleManager.edit(hr));
                 }
                 LOG.log(Level.FINE, "Set class and update samluser.");
             } catch (Exception ex) {
@@ -770,8 +777,8 @@ pUser.setPassword(""); // INVALID PASSWORD
                         throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error, schoolclass registration failed.");
                     }
                     PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, school, roleType);
-                    hr.setClassID(schoolClass.getClassID());
-                    HasRoleManager.edit(hr);
+                    hr.setSchoolClass(schoolClass);
+                    HasRoleCache.put(HasRoleManager.edit(hr));
                     break;
 //                case TEACHER:
 //                    if (schoolClass == null) {

@@ -315,7 +315,10 @@ private String encode(String string) {
     
     String server = req.getRequestURL().toString();
     String jwt = req.getParameter("j");
-  
+    if (jwt == null) {
+    	resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+    	return;
+    }
     Jws<Claims> claims = Jwts.parser()
   //      .requireIssuer(server)
         .setSigningKey(key).parseClaimsJws(jwt);

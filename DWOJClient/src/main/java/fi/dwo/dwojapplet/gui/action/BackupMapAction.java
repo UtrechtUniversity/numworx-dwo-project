@@ -16,8 +16,6 @@ import javax.swing.JFileChooser;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
-
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
@@ -86,7 +84,7 @@ public class BackupMapAction extends GuiAction {
 
 	private void export(CourseMap[] children, String pfx, Set<String> names,
 			ZipOutputStream zipper)
-					throws IOException, ParserConfigurationException, TransformerException, SQLException, XmlRpcException, PersistenceException {
+					throws IOException, ParserConfigurationException, TransformerException, SQLException, PersistenceException {
 		for(CourseMap item: children) {
 			if(item instanceof Course) {
 				Course course = (Course) item;
@@ -121,7 +119,7 @@ public class BackupMapAction extends GuiAction {
 		
 	}
 
-	private void exportCourse(Course map, OutputStream out) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
+	private void exportCourse(Course map, OutputStream out) throws ParserConfigurationException, TransformerException, SQLException, IOException, PersistenceException {
 		DWOFile builder = new DWOFile();
 		builder.createIMSManifest(map, out);
 	}

@@ -60,14 +60,16 @@ public class LoginContextManager {
      * Update
      *
      * @param loginContext
+     * @return 
      */
-    public static void edit(PersistentLoginContext loginContext) throws PersistenceException {
+    public static PersistentLoginContext edit(PersistentLoginContext loginContext) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             loginContext = em.merge(loginContext);
             em.getTransaction().commit();
+            return loginContext;
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {

@@ -123,7 +123,9 @@ public class JavaUpload extends HttpServlet implements Constants {
 			out.print(feed);
 			for (AtomEntry entry: store.getEntries(prefix)) {
 				out.println("<entry>");
-				out.print(" <title>");out.print(entry.title);out.println("</title>");
+				out.print(" <title>");String et = entry.title;
+				et = xmlencode(et);
+				out.print(et);out.println("</title>");
 				out.print(" <link href='");String eu = entry.url;
 // Dit doen we hier.
 				eu = URLEncoder.encode(eu).replace("+", "%20");
@@ -150,6 +152,10 @@ public class JavaUpload extends HttpServlet implements Constants {
 		log("NOT FOUND: " + prefix + paths[3] + " actor " + actor );
 		
 		resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+	}
+
+	private static String xmlencode(String et) {
+		return et.replace("&", "&amp;").replace("<", "&lt;");
 	}
 
 	private String getPrefix(String[] paths, DomSchoolId school) {

@@ -61,14 +61,16 @@ public class HasRoleManager {
      * Update
      *
      * @param hasRole
+     * @return 
      */
-    public static void edit(PersistentHasRole hasRole) throws PersistenceException {
+    public static PersistentHasRole edit(PersistentHasRole hasRole) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             hasRole = em.merge(hasRole);
             em.getTransaction().commit();
+            return hasRole;
         }
         catch (Exception e) {
             String msg = e.getLocalizedMessage();

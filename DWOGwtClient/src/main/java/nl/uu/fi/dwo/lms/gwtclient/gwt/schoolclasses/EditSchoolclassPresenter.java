@@ -294,7 +294,7 @@ public class EditSchoolclassPresenter {
                 moduleData.getCourses().forEach((k) -> courseMap.put(k.getKey().getIdString(), k.getValue()));
                 Map<String, DomClassCourse4Teacher> ccMap = new HashMap<>();
                 moduleData.getClassCourses().forEach((k) -> {
-                    if (k.getValue().getViewState() == ViewState.studentsAndTeachers && courseMap.get(k.getValue().getCourseId().getIdString()) != null && !courseMap.get(k.getValue().getCourseId().getIdString()).getWithChildren()) {
+                    if (k.getValue().getViewState().moduleVisible() && courseMap.get(k.getValue().getCourseId().getIdString()) != null && !courseMap.get(k.getValue().getCourseId().getIdString()).getWithChildren()) {
                         courseList.add(courseMap.get(k.getValue().getCourseId().getIdString()));
                         LOG.log(Level.INFO, "Course attached to class: " + courseMap.get(k.getValue().getCourseId().getIdString()).getName());
                     }
@@ -331,7 +331,7 @@ public class EditSchoolclassPresenter {
                     Promise<DomDwoProfile> resolved) throws Exception {
                 DomSchoolClassAndProfile sap = new DomSchoolClassAndProfile();
                 DomDwoProfile profile = new DomDwoProfile(resolved.getValue());
-                profile.setDwoProfileRights("");
+                //profile.setDwoProfileRights(""); // With visible "R"emedial modules
 				sap.setDomDwoProfile(profile);
                 sap.setDomSchoolClass(sc);
                 return manager.getModules(context, sap);

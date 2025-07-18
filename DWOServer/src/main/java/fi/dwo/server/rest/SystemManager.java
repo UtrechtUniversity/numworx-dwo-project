@@ -43,6 +43,7 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
@@ -112,7 +113,7 @@ public class SystemManager {
   @Path("/school/getByName")
   public DomSchoolFull getSchoolByName(RestSchool rest) throws Dwo2Exception {
       String name  = rest.getDomSchool().getSchoolName();
-      PersistentSchool school = SchoolManager.findBySchoolLogin(name);
+      PersistentSchool school = SchoolUtilManager.findBySchoolLogin(name);
       if (school == null) {
     	  List<? extends Number> result = SchoolDataManager.findByBRIN(name);
     	  if (result.size() == 1) {

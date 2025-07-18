@@ -66,14 +66,14 @@ public class HasRoleUtilManager {
             LOG.log(Level.SEVERE, "Current HasRole of user for userlogin {0} could not be found.", new Object[]{usercode});
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "HasRole could not be found.");
         }
-        Long roleId = 0L;
+        int roleId = 0;
         try {
-            roleId = hr.getSchoolGroup().getRole().getGroupID();
+            roleId = hr.getSchoolGroup().getGroupID();
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "RoleId of hasRole {1} for userlogin {0} could not be found.", new Object[]{usercode, hr.getPersistentHasRolePK()});
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Current Role could not be found.");
         }
-        if (roleId.intValue() != r.ordinal()) {
+        if (roleId != r.ordinal()) {
             return null;
         }
         return hr;
@@ -115,7 +115,10 @@ public class HasRoleUtilManager {
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Given hasRole could not be found.");
         }
 
-        PersistentSchoolGroup sg = SchoolGroupManager.findEntity(hr.getPersistentHasRolePK().getSchoolGroupID());
+        PersistentSchoolGroup sg = hr.getSchoolGroup();
+        		
+        if (sg == null||sg.getSchool() == null)		
+        	sg = SchoolGroupManager.findEntity(hr.getPersistentHasRolePK().getSchoolGroupID());
         if (sg == null) {
             LOG.log(Level.SEVERE, "SchoolGroup of hasRole {0} could not be found.", new Object[]{hr.getPersistentHasRolePK()});
             throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "SchoolGroup could not be found.");
@@ -215,7 +218,7 @@ public class HasRoleUtilManager {
         if ( hr.getPersistentHasRolePK().getSchoolGroupID().equals(user.getSchoolGroupId())) //userid's already match...
         {
             RoleType type = RoleType.STUDENT;
-            PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(SchoolManager.findBySchoolLogin("null"), type);
+            PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(SchoolUtilManager.findBySchoolLogin("null"), type);
             user.setSchoolGroupId(sg.getSchoolGroupID());
         }
 
@@ -263,7 +266,7 @@ public class HasRoleUtilManager {
 
             try {
                 HasRoleManager.create(hr);
-                LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRole().getGroupname()});
+                LOG.log(Level.INFO, "HasRole for user, schoolgroup index {0} {1} and role {2}  was added to the database.", new Object[]{hr.getPersistentHasRolePK().getUserID(), hr.getPersistentHasRolePK().getSchoolGroupID(), sg.getRoleType()});
             } catch (PersistenceException e) {
                 LOG.log(Level.SEVERE, "User creation failed.");
                 throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, "Illegal parameters.");

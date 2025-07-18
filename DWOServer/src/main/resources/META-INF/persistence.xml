@@ -15,7 +15,6 @@
     <class>fi.dwo.commons.persistence.entities.PersistentHasRole</class>
     <class>fi.dwo.commons.persistence.entities.PersistentImage</class>
     <class>fi.dwo.commons.persistence.entities.PersistentLoginContext</class>
-    <class>fi.dwo.commons.persistence.entities.PersistentRole</class>
     <class>fi.dwo.commons.persistence.entities.PersistentSamlUser</class>
     <class>fi.dwo.commons.persistence.entities.PersistentScoContext</class>
     <class>fi.dwo.commons.persistence.entities.PersistentScoData</class>

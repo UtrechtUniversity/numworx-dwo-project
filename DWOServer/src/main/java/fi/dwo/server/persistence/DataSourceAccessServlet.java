@@ -11,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.xmlrpc.XmlRpc;
 
 //import com.jamonapi.proxy.MonProxyFactory;
 
@@ -51,12 +50,12 @@ public class DataSourceAccessServlet extends HttpServlet {
         String projectVersion = BUILD.version;
         LOG.log(Level.INFO, "Software version, buildnumber: {0}, {1}", new Object[]{projectVersion, buildnumber});
 
-        int maxthreads = 200;
-        String param = getInitParameter("xmlrpc.maxthreads");
-        if (param != null) {
-            maxthreads = Integer.parseInt(param);
-        }
-        XmlRpc.setMaxThreads(maxthreads);
+//        int maxthreads = 200;
+//        String param = getInitParameter("xmlrpc.maxthreads");
+//        if (param != null) {
+//            maxthreads = Integer.parseInt(param);
+//        }
+//		  XmlRpc.setMaxThreads(maxthreads);
 					
 	
         if (DbAccess.checkPersistentVersion())

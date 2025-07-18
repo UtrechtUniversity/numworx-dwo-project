@@ -322,6 +322,7 @@ public class ScoreWidget extends Composite implements InteractionView, ClickHand
 	@Override
 	public void zetVolledigeBreedte(int breedte) {
 		if(volledigeBreedte) {
+			this.breedte = breedte;
 		}
 		
 	}

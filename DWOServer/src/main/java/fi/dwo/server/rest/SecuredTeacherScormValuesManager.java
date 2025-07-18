@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,6 +27,8 @@ import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoData;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.UEscape;
+import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
@@ -60,22 +63,28 @@ public class SecuredTeacherScormValuesManager {
     	DomStudentScoContext ssc = rest.getDomTeacherScormValues().getStudentScoContext();
     	// Context
     	PersistentUser user = null;
+    	UserState_HR_R_S_SG_U hstate = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(domHasRole, RoleType.TEACHER);
     	try {
-    		user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+    		user = hstate.getUser();
     		LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
     	} catch (Exception e) {
     		LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
     		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
     	}
-        PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-        PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
-// TODO check if domHasRole is a teacher of same school as pssc
+        PersistentHasRole phr = hstate.getHasRole();
+// FIXED check if domHasRole is a teacher of same school as pssc
         // ...
         Long id = MySQLPersistenceId.getNativeId(ssc);
 		List<DomMapEntry<String, String>> entryList = rest.getDomTeacherScormValues().getValues();
 		PersistentStudentScoContext pssc = StudentScoContextManager.findEntity(id);
-		SecuredUserScoDataManager.getScormValues(entryList, pssc);
-    	return rest.getDomTeacherScormValues();
+		Long sgid = pssc.getPersistentHasRolePK().getSchoolGroupID();
+		PersistentSchoolGroup sg = SchoolGroupManager.findEntity(sgid);
+		if (Objects.equals(hstate.getSchool(), sg.getSchool())) {
+		
+			SecuredUserScoDataManager.getScormValues(entryList, pssc);
+		}
+		return rest.getDomTeacherScormValues();
+		
     }
 
     @PUT
@@ -85,16 +94,17 @@ public class SecuredTeacherScormValuesManager {
     	DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
     	DomStudentScoContext ssc = rest.getDomTeacherScormValues().getStudentScoContext();
 // Context
+    	UserState_HR_R_S_SG_U hstate = AnonDomainAuthorizer.build().submitUser(sc).setHasRoleIfType(domHasRole, RoleType.TEACHER);
     	PersistentUser user = null;
     	try {
-    		user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+    		user = hstate.getUser();
     		LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
     	} catch (Exception e) {
     		LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
     		throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
     	}
         PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-        PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+        PersistentHasRole phr = hstate.getHasRole();
 // its own hasrole!
         Long u1 = phr.getPersistentHasRolePK().getUserID();
         Long u2 = user.getId();
@@ -102,8 +112,8 @@ public class SecuredTeacherScormValuesManager {
         	LOG.log(Level.SEVERE,"Wrong hasrole for Username " + sc.getUserPrincipal().getName() );
         	throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "");
         }        
-// FIXME check if domHasRole is TEACHER  of same school as pssc
-        PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(phr);
+// FIXED check if domHasRole is TEACHER  of same school as pssc
+        PersistentSchool school = hstate.getSchool();
 		PersistentSchoolGroup studentSchoolGroup = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
         Long studentSchoolGroupID = studentSchoolGroup.getSchoolGroupID();
         Long sg2 = phr.getSchoolGroup().getSchoolGroupID();

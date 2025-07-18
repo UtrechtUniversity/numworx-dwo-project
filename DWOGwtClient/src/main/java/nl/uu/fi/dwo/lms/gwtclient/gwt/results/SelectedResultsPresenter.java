@@ -147,7 +147,6 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         view.setHelp(dwoGlobalVars.buildHelpUrl("#selectedResults"));
    }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @JsMethod
     public void sealModuleActivities(String courseID, String classid) {
         PersistenceId schoolclass = new PersistenceId(classid);
@@ -174,7 +173,6 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 
     private static final String WAIT = DwoLocalesForGWT.instance.NUM_DLG_SELECTEDRESULTS_PAGES();
     
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @JsMethod
     public void sealSingleActivity(String scoId, String classid) {
         PersistenceId schoolclass = new PersistenceId(classid);

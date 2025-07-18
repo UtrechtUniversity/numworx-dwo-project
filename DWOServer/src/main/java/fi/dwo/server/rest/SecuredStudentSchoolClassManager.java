@@ -23,6 +23,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -171,8 +172,9 @@ public class SecuredStudentSchoolClassManager extends AbstractSchoolClassManager
 
         if (schoolClass != null && schoolClass.getSchoolID().equals(school.getSchoolID())) {
             try {
-                phr.setClassID(schoolClass.getClassID());
-                HasRoleManager.edit(phr);
+                phr.setSchoolClass(schoolClass);
+                phr = HasRoleManager.edit(phr);
+                HasRoleCache.put(phr);                
             } catch (PersistenceException e) {
                 LOG.log(Level.WARNING, "Unexpected persistence exception", e);
             }

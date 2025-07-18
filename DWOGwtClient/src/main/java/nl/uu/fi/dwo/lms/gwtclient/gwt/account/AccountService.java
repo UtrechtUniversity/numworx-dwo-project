@@ -2,8 +2,6 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.account;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserAccountManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredUserSchoolLoginManagerV2;
-import java.util.logging.Logger;
-
 import javax.inject.Inject;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
@@ -25,7 +23,7 @@ import dagger.Reusable;
 @Reusable
 public class AccountService {
     
-    private static final Logger LOG = Logger.getLogger(AccountService.class.getName());
+    //private static final Logger LOG = Logger.getLogger(AccountService.class.getName());
 
     private final SecuredUserAccountManager accountManager;
     private SecuredUserSchoolLoginManagerV2 schoolLoginManager = new SecuredUserSchoolLoginManagerV2();

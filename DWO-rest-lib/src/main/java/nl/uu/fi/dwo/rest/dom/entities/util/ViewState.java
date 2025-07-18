@@ -10,5 +10,19 @@ public enum ViewState {
     invisible,
     students,
     teachers,
-    studentsAndTeachers 
+    studentsAndTeachers,
+    
+    none,
+    onlyStudents,
+    studentsNorTeachers,
+    studentsOrTeachers;
+	
+	/**
+	 * visible for students in modules.
+	 * @return
+	 */
+	public boolean moduleVisible() {
+		return this == studentsAndTeachers || this == onlyStudents || this == studentsOrTeachers;
+	}
+    
 }

@@ -237,6 +237,57 @@ public class PublicUserManagerIT {
         try {
             //check for hasRole
             PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, SchoolManager.findBySchoolLogin(domNewUser.getSchoolLogin()), RoleType.STUDENT);
+            assertNotNull(hr.getSchoolClass());
+       }
+        catch (Dwo2Exception ex) {
+            Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);
+            fail("Could not find created user's hasRole");
+        }
+    }
+
+    
+    
+    @Test
+    public void testSubmitNewStudentNoClass() {
+        RestNewStudent restNewUser = new RestNewStudent();
+        DomNewStudent domNewUser= new DomNewStudent();
+        restNewUser.setDomNewStudent(domNewUser);
+        domNewUser.setUsername("testuser01");
+        domNewUser.setGivenName("a");
+        domNewUser.setInsertion("b");
+        domNewUser.setFamilyName("c");
+        domNewUser.setEmail("a@b.cd");
+        domNewUser.setPassword("pwd");
+        domNewUser.setRole(RoleType.STUDENT);
+        domNewUser.setSchoolLogin("school01");
+        domNewUser.setSchoolCode("student");
+        DomSchoolClass sc = new DomSchoolClass();
+        sc.setSchoolClassName("no such schoolclassname");
+
+        domNewUser.setSchoolClassName(sc.getSchoolClassName());
+        
+        
+        PublicUserManager instance = new PublicUserManager();
+
+        try{
+            Boolean result = instance.submitNewStudent(restNewUser);
+            assertTrue("function gave false as result.", result);
+        }catch(Dwo2RestException e){
+            assertEquals(e.getDwo2Code(),Dwo2ExceptionCode.Rest_Registration_School_authentication_failed);
+        }
+        
+        PersistentUser user = UserManager.findByUserName(domNewUser.getUsername());
+        assertEquals(domNewUser.getGivenName(), user.getGivenName());
+        assertEquals(domNewUser.getInsertion(), user.getInsertion());
+        assertEquals(domNewUser.getFamilyName(), user.getLastname());
+        assertEquals(domNewUser.getEmail(), user.getEmail());
+        assertEquals(domNewUser.getPassword(), user.getPassword());
+        
+        
+        try {
+            //check for hasRole
+            PersistentHasRole hr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, SchoolManager.findBySchoolLogin(domNewUser.getSchoolLogin()), RoleType.STUDENT);
+            assertNull(hr.getSchoolClass());
         }
         catch (Dwo2Exception ex) {
             Logger.getLogger(PublicUserManagerIT.class.getName()).log(Level.SEVERE, "", ex);

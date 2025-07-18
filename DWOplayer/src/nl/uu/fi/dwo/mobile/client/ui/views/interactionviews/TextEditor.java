@@ -174,6 +174,7 @@ public class TextEditor  implements InteractionStub, TouchStartHandler, FormuleE
 
 		Scroller(Widget child) {
 			super(child);
+			setStylePrimaryName("gwt-ScrollPanel");
 		}
 		void setScrollable(boolean e) { 
 			getScrollableElement().getStyle().setOverflow(e ? Overflow.AUTO : Overflow.HIDDEN);

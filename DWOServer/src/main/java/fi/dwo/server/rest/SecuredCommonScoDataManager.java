@@ -90,6 +90,8 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 abstract class SecuredCommonScoDataManager {
   private static final Logger LOG = Logger.getLogger(SecuredCommonScoDataManager.class.getName());
   static final String COMPLETE = "completed";
+  static final String INCOMPLETE = "incomplete";
+  static final String NOT_ATTEMPTED = "not attempted";
   static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
   static final String REVIEW_CORRECT = "cmi.comments_from_lms.2.comment";
   static final CmiConvert CMI = new CmiConvert(); // utility class
@@ -257,7 +259,7 @@ abstract class SecuredCommonScoDataManager {
             PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
             List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
             PersistentClassCourse pcc = pccList.get(0);
-            boolean ok = pcc.getViewState() == ViewState.studentsAndTeachers;
+            boolean ok = pcc.getViewState() != ViewState.invisible;
             ok &= isSoC(phr, schoolClass);
             if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
             if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
@@ -319,6 +321,10 @@ abstract class SecuredCommonScoDataManager {
             StringWriter newValue = new StringWriter();
             Json.createWriter(newValue).write(newObject);
             ssData.setSuspendData(UEscape.convertUEsc(newValue.toString()));
+
+            if (NOT_ATTEMPTED.equals(ssContext.getCompletionStatus())) {
+            	ssContext.setCompletionStatus(INCOMPLETE);
+            }
             break;
         default:
             throw new Dwo2RestException(Dwo2ExceptionCode.Rest_FormatError, "wrong key");
@@ -347,8 +353,10 @@ abstract class SecuredCommonScoDataManager {
   String getJSONLaunchDataBytes(SecurityContext sc, RestScoContext rest) throws Dwo2Exception {
 //Context
       PersistentUser user = null;
-      try {
-          user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+      UserState_U ustate = AnonDomainAuthorizer.build().submitUser(sc);
+      UserState_HR_R_S_SG_U hstate = ustate.setHasRole(rest.getRestContext().getDomHasRole());
+     try {
+		user = hstate.getUser();
           LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
       } catch (Exception e) {
           LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
@@ -375,9 +383,7 @@ abstract class SecuredCommonScoDataManager {
       }
       Long schoolID = course.getSchoolID();
       if(schoolID != null) {
-          DomHasRole domHasRole = rest.getRestContext().getDomHasRole();
-          PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-          PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+          PersistentHasRole phr = hstate.getHasRole();
 //userid must match
               if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
               {
@@ -491,17 +497,18 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
     
     // Context
     PersistentUser user = null;
+    UserState_HR_R_S_SG_U hstate = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(domHasRole);
     try {
-        user = UserManager.findByUserName(sc.getUserPrincipal().getName());
+        user = hstate.getUser();
         LOG.log(Level.FINE, "Username {0}: Fetched User with username {1}", new Object[]{sc.getUserPrincipal().getName(), user.getUsername()});
     } catch (Exception e) {
         LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Unexpected exception", e);
         throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Failed to query user id " + sc.getUserPrincipal().getName() + " .");
     }
-    PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(domHasRole);
-    PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+    PersistentHasRole phr = hstate.getHasRole();
+    PersistentHasRolePK hasRoleKey = phr.getPersistentHasRolePK();
 //userid must match
-    if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
+    if (user.getId().longValue() != hasRoleKey.getUserID().longValue())
     {
         LOG.log(Level.SEVERE, "Username " + sc.getUserPrincipal().getName() + ": Hasrole mismatch");
         throw new Dwo2RestException(Dwo2ExceptionCode.User_IllegalAction, "This will be logged.");          
@@ -604,7 +611,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
                 PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
                 List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
                 PersistentClassCourse pcc = pccList.get(0);
-                boolean ok = pcc.getViewState() == ViewState.studentsAndTeachers;
+                boolean ok = pcc.getViewState() != ViewState.invisible;
                 ok &= isSoC(phr, schoolClass);
                 if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
                 if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
@@ -612,8 +619,25 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
                       LOG.severe("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
                       return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();                       
                 }
+                if (!Boolean.TRUE.equals(pcc.hasResults())) {
+                	pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE);
+                }
             }
-         }
+         } else if (rstate.getRoleType() == RoleType.STUDENT) {
+             try {
+				 DomSchoolClassId domClassID = rest.getDomScormValues().getSchoolClassID();
+				 Long classID = MySQLPersistenceId.getNativeId(domClassID);
+				 if (classID != null) {
+				 PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
+				 List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
+				 if (!pccList.isEmpty()) {
+				 PersistentClassCourse pcc = pccList.get(0);
+				 if (!Boolean.TRUE.equals(pcc.hasResults())) {
+				 	pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE);
+				 }}}
+			} catch (Exception e) {
+				LOG.log(Level.WARNING, "Not fatal", e);
+			}}
         
         
     LOG.log(Level.INFO, "setValues starts " + sc.getUserPrincipal().getName() + " " + scoContext.getScoID());
@@ -709,10 +733,16 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
             break;
         case SESSION_TIME:
             pssc.setSessionTime(value);
+            if (NOT_ATTEMPTED.equals(pssc.getCompletionStatus())) {
+            	pssc.setCompletionStatus(INCOMPLETE);
+            }
             break;
         case SESSION_TIME2004:
             try {
                 pssc.setSessionTime(CMI.to1_2Timex(CMI.from2004Time(value)));
+                if (NOT_ATTEMPTED.equals(pssc.getCompletionStatus())) {
+                	pssc.setCompletionStatus(INCOMPLETE);
+                }
             } catch (Exception e) {
                 LOG.warning("setValues: sessiontime= " + entry.getKey() + ","+ value + " e:" + e);
             }
@@ -731,6 +761,9 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
                     }
                 } else {
                     pssd.setSuspendData(value);
+                }
+                if (NOT_ATTEMPTED.equals(pssc.getCompletionStatus())) {
+                	pssc.setCompletionStatus(INCOMPLETE);
                 }
 //           if (phr.getSchoolGroup().getGroupID() == RoleType.STUDENT.ordinal())
                ScoPageUtilManager.updateSuspendData(pssc, value);

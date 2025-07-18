@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 public class DomClassCourse4Teacher extends DomClassCourse{
     private ViewState viewState;
 	private String accessKey;
+	private Boolean results;
 
 	/**
 	 * @return the accessKey
@@ -41,5 +42,16 @@ public class DomClassCourse4Teacher extends DomClassCourse{
         this.viewState = viewState;
     }
 
+	public void setResults(Boolean results) {
+		this.results = results;
+	}
+	
+	public boolean hasResults() {
+		return Boolean.TRUE.equals(results);
+	}
+
+	public Boolean getResults() {
+		return results;
+	}
 
 }

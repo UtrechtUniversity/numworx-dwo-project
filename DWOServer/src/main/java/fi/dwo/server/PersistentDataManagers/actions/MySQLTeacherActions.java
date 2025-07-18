@@ -16,6 +16,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.Context;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
@@ -160,7 +161,8 @@ public class MySQLTeacherActions implements TeacherActions {
             StudentOfClassManager.create(soc);
 
             if (shr.getClassID() == null) {
-                shr.setClassID(sc.getClassID());
+                shr.setSchoolClass(sc);
+                HasRoleCache.remove(shr);
                 HasRoleManager.edit(shr); // TODO met try/catch?
             }
 
@@ -182,7 +184,7 @@ public class MySQLTeacherActions implements TeacherActions {
     }
     
     @Override
-    public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, CourseType courseType, Date from, Date to, String accessKey) throws Dwo2Exception {
+    public Boolean addCourseToClass(TeacherDomainAuthorizer.Context context, CourseType courseType, Date from, Date to, String accessKey, ViewState state) throws Dwo2Exception {
         //Loop up the course tree and find the tree path
         Deque<PersistentCourse> treePath = new LinkedList<>();
         PersistentCourse curCourse = context.getTeacherCtx().getCourse();
@@ -218,13 +220,14 @@ public class MySQLTeacherActions implements TeacherActions {
                 		setKioskMode(cc, context.getUserCtx().school, context.getTeacherCtx().getCourse(), context.getTeacherCtx().getSchoolClass() );
                 	}
                }
-                cc.setViewState(ViewState.studentsAndTeachers);
+// mappen altijd de default
+                cc.setViewState(curCourse.isWithChildren() ? ViewState.studentsAndTeachers : state);
                 ClassCourseManager.insertOrUpdateViewState(cc);
 //                    LOG.log(Level.INFO, "created cc of "+ccResult);
             } else {
                 for (PersistentClassCourse cc : ccResult) {
 //                    LOG.log(Level.INFO, "setting visibility of "+cc.getClassCourseID());
-                    ClassCourseManager.editViewState(cc.getClassCourseID(),ViewState.studentsAndTeachers);
+                    ClassCourseManager.editViewState(cc.getClassCourseID(),state);
                 }
             }
         }

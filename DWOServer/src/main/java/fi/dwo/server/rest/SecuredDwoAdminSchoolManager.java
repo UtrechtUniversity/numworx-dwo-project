@@ -9,6 +9,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStatistics;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
@@ -41,6 +42,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.cache.SchoolCache;
 import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
@@ -132,6 +134,7 @@ public class SecuredDwoAdminSchoolManager {
             s.setSchoolName(newSchool.getDomSchoolFull().getSchoolName());
             s.setSchoolRights(newSchool.getDomSchoolFull().getSchoolRights());
             s.setAboType(newSchool.getDomSchoolFull().getAboType());
+            SchoolCache.remove(s.getSchoolLogin());
             try {
                 SchoolManager.create(s);
                 s = SchoolManager.findBySchoolLogin(newSchool.getDomSchoolFull().getSchoolLogin());
@@ -194,7 +197,7 @@ public class SecuredDwoAdminSchoolManager {
                 LOG.log(Level.FINER, "Fetched school with id {0}. ", new Object[]{s.getSchoolID()});
                 DomSchoolFull full = s.buildDomSchoolFull();
                 List<PersistentSchoolGroup> list = SchoolGroupManager.findEntities(s);
-                full.setPasswords(list.stream().map(item -> new DomMapEntry<>(RoleType.valueOf(item.getRole().getGroupname()), item.getPasswd())).collect(Collectors.toList()));
+                full.setPasswords(list.stream().map(item -> new DomMapEntry<>(item.getRoleType(), item.getPasswd())).collect(Collectors.toList()));
 				return full;
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "School " + school.getDomSchool4DwoAdmin().getId() + "Could not be found.", e);
@@ -297,6 +300,7 @@ public class SecuredDwoAdminSchoolManager {
       try {
         PersistentSchool editSchool =
             SchoolManager.findEntity(MySQLPersistenceId.getNativeId(school));
+        SchoolCache.remove(editSchool.getSchoolLogin());
         // User to update is logged in user.
         editSchool.setExpire(school.getExpire());
         // editSchool.setExport(school.getExport());
@@ -467,7 +471,7 @@ public class SecuredDwoAdminSchoolManager {
                         }
                     }
                     //Clear tblUser schoolgroup values
-                    PersistentSchoolGroup nulSg = (PersistentSchoolGroup) SchoolGroupManager.findEntity(SchoolManager.findBySchoolLogin("null"), RoleType.STUDENT);
+                    PersistentSchoolGroup nulSg = (PersistentSchoolGroup) SchoolGroupManager.findEntity(SchoolUtilManager.findBySchoolLogin("null"), RoleType.STUDENT);
                     List<PersistentUser> userList = UserManager.findEntities(sg);
                     if (userList != null) {
                         for (PersistentUser u : userList) {
@@ -710,11 +714,11 @@ public class SecuredDwoAdminSchoolManager {
     {    List<PersistentSchoolGroup> groups = SchoolGroupManager.findEntity(school);
         long studentsco = 0;
         for (PersistentSchoolGroup g: groups) {
-        	entry = new DomMapEntry<>(g.getRole().getGroupname() + " id", g.buildPersistenceId().getIdString());
+        	entry = new DomMapEntry<>(g.getRoleType() + " id", g.buildPersistenceId().getIdString());
         	stats.add(entry);        	
         	List<PersistentHasRole> users = HasRoleManager.findEntities(g);
 			int size = users.size();
-        	entry = new DomMapEntry<>(g.getRole().getGroupname() + " size", Integer.toString(size));
+        	entry = new DomMapEntry<>(g.getRoleType() + " size", Integer.toString(size));
         	stats.add(entry);
             long count;
             long stamp = (System.currentTimeMillis() - 365 * 24 * 3600 * 1000L);
@@ -728,7 +732,7 @@ public class SecuredDwoAdminSchoolManager {
         	        .filter(u -> {
         	          return u.getLastLogin() != null && u.getLastLogin().longValue()>(stamp);
         	        }).count();
-            entry = new DomMapEntry<>(g.getRole().getGroupname() + " active", Long.toString(count));
+            entry = new DomMapEntry<>(g.getRoleType().name() + " active", Long.toString(count));
             stats.add(entry);
         	count = users.stream()
         	    .filter(f -> f.getUser() != null) // NPE checks

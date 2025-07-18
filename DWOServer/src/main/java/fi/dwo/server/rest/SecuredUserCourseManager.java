@@ -71,6 +71,8 @@ import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoA
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.StudentDomainAuthorizer.StudentState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
+import fi.dwo.server.PersistentDataManagers.cache.LimitedSchoolCache;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseDataManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
@@ -241,14 +243,12 @@ public class SecuredUserCourseManager {
 // TODO NPE tests 		    		
 		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
 		DomHasRole    hasRole = rest.getRestContext().getDomHasRole();
-		PersistentUser user = getUserFromContext(sc);		
+
+		UserState_HR_R_S_SG_U hrstate = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(hasRole);
+		
 		Long id = MySQLPersistenceId.getNativeId(domDwoProfile);
 		PersistentDwoProfile profile = DwoProfileManager.findEntity(id);
-        PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);        
-		PersistentHasRole hr = HasRoleManager.findEntity(hasRoleKey);
-// FIXME check role is not a guest/student
-		
-		PersistentSchool school = HasRoleUtilManager.getSchoolforHasRole(hr);
+        PersistentSchool school = hrstate.getSchool();
 		List<PersistentCourse> courses = CourseManager.findChildrenOf(profile, school);		
 		Stream<PersistentCourse> stream = courses.stream();
 		String pfx = info.getRequestUri().resolve(PUBLIC_COURSE_GET_IMAGE).toString();
@@ -307,6 +307,8 @@ public class SecuredUserCourseManager {
         PersistentDwoProfile profile = DwoProfileManager.findEntity(profileID);
         if ( profile.isLimited())
         {
+        	if (!LimitedSchoolCache.isLimitedSchool(profileID, school.getSchoolID()))
+        		return Collections.emptyList();
             // check schools
         }       
         List<PersistentCourse> list;
@@ -333,9 +335,12 @@ public class SecuredUserCourseManager {
    // TODO NPE tests 		    		
     		DomDwoProfile domDwoProfile = rest.getDomDwoProfile();
     		DomHasRole    hasRole = rest.getRestContext().getDomHasRole();
-    		PersistentUser user = getUserFromContext(sc);
-			PersistentHasRolePK hasRoleKey = MySQLPersistenceId.getNativeId(hasRole);
-            PersistentHasRole phr = HasRoleManager.findEntity(hasRoleKey);
+ 
+    		UserState_HR_R_S_SG_U hrstate = AnonDomainAuthorizer.build().submitUser(sc).setHasRole(hasRole);
+    		
+    		
+    		PersistentUser user = hrstate.getUser();
+			PersistentHasRole phr = hrstate.getHasRole();
             boolean premium = phr.getSchoolGroup().getSchool().getAboType() == AboType.premium;
 // userid must match hasrole
          		if (user.getId().longValue() != phr.getPersistentHasRolePK().getUserID().longValue())
@@ -347,9 +352,10 @@ public class SecuredUserCourseManager {
     		if ( profile.isLimited())
     		{
     			PersistentHasRole hr = phr;
-    			PersistentSchool limited = HasRoleUtilManager.getSchoolforHasRole(hr);
+    			PersistentSchool limited = hrstate.getSchool();
 // SECURITY
-    			// if ! limitedschools .contains (limited) return EMPTY_LIST;  			
+    			// if ! limitedschools .contains (limited) return EMPTY_LIST;  	
+    			if (!LimitedSchoolCache.isLimitedSchool(id, limited.getSchoolID())) return Collections.emptyList();
     		}
     		
     		PersistentSchool school = new PersistentSchool(null);

@@ -86,9 +86,9 @@ public class PlotDataStructureIT {
                 }
             }
             for (PersistentSchoolGroup sg : SchoolGroupManager.findEntity(s)) {
-                System.out.print(tabs.substring(0, 2) + sg.buildPersistenceId() + " " + sg.getRole().getGroupname() + "\n");
+                System.out.print(tabs.substring(0, 2) + sg.buildPersistenceId() + " " + sg.getRoleType() + "\n");
                 for (PersistentHasRole hr : HasRoleManager.findEntities(sg)) {
-                    System.out.print(tabs.substring(0, 3) + hr.buildPersistenceId() + " " + sg.getRole().getGroupname() + " " + s.getSchoolName() + "\n");
+                    System.out.print(tabs.substring(0, 3) + hr.buildPersistenceId() + " " + sg.getRoleType() + " " + s.getSchoolName() + "\n");
                     for (PersistentStudentOfClass st : StudentOfClassManager.findEntities(hr.getPersistentHasRolePK())) {
                         PersistentSchoolClass sc = SchoolClassManager.findEntity(st.getPersistentStudentOfClassPK().getClassID());
                         System.out.print(tabs.substring(0, 4) + st.buildPersistenceId() + " " + sc.getClass1() + " " + sc.buildPersistenceId() + " " + s.getSchoolName() + "\n");

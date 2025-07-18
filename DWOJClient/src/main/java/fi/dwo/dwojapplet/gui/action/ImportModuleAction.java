@@ -2,7 +2,6 @@ package fi.dwo.dwojapplet.gui.action;
 
 import fi.beans.numworxlf.JFileChooser;
 import fi.dwo.commons.exceptions.CourseException;
-import fi.dwo.commons.exceptions.DwoXmlRpcException;
 import fi.dwo.commons.exceptions.PersistenceException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.Course;
@@ -18,9 +17,6 @@ import fi.dwo.dwojapplet.gui.ModuleTreePanel;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
-//import fi.dwo.dwojapplet.persistence.MapperCreator;
-//import fi.dwo.dwojapplet.persistence.MapperIF;
-import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -37,7 +33,6 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.xmlrpc.applet.XmlRpcException;
 import org.xml.sax.SAXException;
 
 public class ImportModuleAction extends GuiAction {
@@ -120,7 +115,7 @@ public class ImportModuleAction extends GuiAction {
 
     }
 
-    private void importScos(Course course) throws ParserConfigurationException, SAXException, IOException, DwoXmlRpcException, XmlRpcException, SQLException, PersistenceException, Dwo2Exception {
+    private void importScos(Course course) throws ParserConfigurationException, SAXException, IOException, SQLException, PersistenceException, Dwo2Exception {
         File naam;
         openDial.setDialogTitle(getToolTipText());
         final Frame topFrame = DwoHelper.getFrameForComponent(null);
@@ -182,9 +177,7 @@ public class ImportModuleAction extends GuiAction {
  * @throws ParserConfigurationException
  * @throws SAXException
  * @throws IOException
- * @throws DwoXmlRpcException
  * @throws SQLException
- * @throws XmlRpcException
  * @throws PersistenceException 
  * @throws CourseException 
  * @throws Dwo2Exception 

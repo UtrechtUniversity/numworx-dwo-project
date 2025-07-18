@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import org.apache.xmlrpc.applet.XmlRpcException;
 
 public class BackupModuleAction extends GuiAction {
     private static final Logger LOG = Logger.getLogger(BackupModuleAction.class.getName());
@@ -61,7 +60,7 @@ public class BackupModuleAction extends GuiAction {
         }
     }
 
-    private void export(Course course) throws ParserConfigurationException, TransformerException, SQLException, IOException, XmlRpcException, PersistenceException {
+    private void export(Course course) throws ParserConfigurationException, TransformerException, SQLException, IOException, PersistenceException {
         File naam;
         final Frame topFrame = DwoHelper.getFrameForComponent(null);
         saveDial = new JFileChooser();saveDial.setDialogTitle(tip);

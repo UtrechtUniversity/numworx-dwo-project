@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourseOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -154,7 +155,7 @@ public class ModulesOfSchoolclassPresenter {
     
     
     private Promise<DomCoursesOfSchoolclassTree> reloadTree() {
-        Promise<DomCoursesOfSchoolClass4Teacherv2> promise = service.getModules(schoolClass, false);
+        Promise<DomCoursesOfSchoolClass4Teacherv2> promise = service.getModules(schoolClass, true);
         if (hasKiosk()) {
         	promise = promise.map(this::toKiosk);
         }
@@ -217,9 +218,9 @@ public class ModulesOfSchoolclassPresenter {
     }
 
     @JsMethod
-    void openSettings(String key, String typeString, String fromData, String toData, String accessKey) {
+    void openSettings(String key, String typeString, String fromData, String toData, String accessKey, char teacher, boolean student) {
     	Promise<String> url = 
-    			update(key, typeString, fromData, toData, accessKey)
+    			update(key, typeString, fromData, toData, accessKey, calcViewState(teacher, student))
     			.then(p -> service.openSettingsUI(p.getValue()));
     	
     	url = url.then(s -> {
@@ -230,9 +231,9 @@ public class ModulesOfSchoolclassPresenter {
     }
     
     @JsMethod
-    void openDashboard(String key, String typeString, String fromData, String toData, String accessKey) {
+    void openDashboard(String key, String typeString, String fromData, String toData, String accessKey, char teacher, boolean student) {
     	Promise<String> url = 
-    			update(key, typeString, fromData, toData, accessKey)
+    			update(key, typeString, fromData, toData, accessKey, calcViewState(teacher, student))
     			.then(p -> service.openDashboardUI(p.getValue()));
     	
     	url = url.then(s -> {
@@ -245,7 +246,7 @@ public class ModulesOfSchoolclassPresenter {
     
     
     @JsMethod
-    void addModule(String key, String typeString, String fromDate, String toDate, String accessKey) {
+    void addModule(String key, String typeString, String fromDate, String toDate, String accessKey, char teacher, boolean student) {
         //TODO FIX sloppy addModule implementation
         if (key == null) {
             eventBus.fireEvent(new AlertDialogWithOKEvent(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "Internal error, key not given.")));
@@ -302,7 +303,7 @@ public class ModulesOfSchoolclassPresenter {
         }
 
         p = tree.then(pp -> 
-        		service.addCourseToClass(schoolClass, pp.getValue().getNode(key).getObject().getCourse(), ftype, from, to, accessKey));
+        		service.addCourseToClass(schoolClass, pp.getValue().getNode(key).getObject().getCourse(), ftype, from, to, accessKey, calcViewState(teacher, student)));
 
         p.then(new Success<Boolean, Object>() {
             @Override
@@ -313,8 +314,9 @@ public class ModulesOfSchoolclassPresenter {
     }
 
     @JsMethod
-    void setModuleSettings(String key, String typeString, String fromData, String toData, String accessKey) {
-    	Promise<DomClassCourseFull> f = update(key, typeString, fromData, toData, accessKey);
+    void setModuleSettings(String key, String typeString, String fromData, String toData, String accessKey, char teacher, boolean student) {
+    	ViewState state = calcViewState(teacher, student);
+		Promise<DomClassCourseFull> f = update(key, typeString, fromData, toData, accessKey, state);
 
     	f.then((resolved) -> {
             return updateViewData();
@@ -322,8 +324,25 @@ public class ModulesOfSchoolclassPresenter {
     	
     }
 
+	protected ViewState calcViewState(char teacher, boolean student) {
+		ViewState state = ViewState.studentsAndTeachers;
+    	switch(teacher) {
+    	default:
+    	case 'A': 
+    		if (!student) state = ViewState.teachers;
+    		break;
+    	case 'R': 
+    		state = student ? ViewState.studentsOrTeachers : ViewState.students;
+    		break;
+    	case 'N': 
+    		state = student ? ViewState.onlyStudents : ViewState.studentsNorTeachers;
+    		break;
+    	}
+		return state;
+	}
+
 	private Promise<DomClassCourseFull> update(String key, String typeString, String fromData, String toData,
-			String accessKey) {
+			String accessKey, ViewState state) {
 		Promise<DomClassCourseFull> f = 
     	tree.then( (Promise<DomCoursesOfSchoolclassTree>p) -> 
     	{
@@ -352,7 +371,7 @@ public class ModulesOfSchoolclassPresenter {
 				throw new Dwo2Exception(Dwo2ExceptionCode.User_NotAValidDateString, "after " + to + " < before " + from);///
 			}
 			
-			return service.setClassCourse(id, schoolClass, course, type, accessKey, from, to)
+			return service.setClassCourse(id, schoolClass, course, type, accessKey, from, to, state)
 					.then(x -> {object.setClassCourse(x.getValue());return x; });
     	});
 		return f;
