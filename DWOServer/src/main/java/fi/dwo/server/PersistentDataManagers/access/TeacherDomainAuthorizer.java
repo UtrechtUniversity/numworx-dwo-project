@@ -236,9 +236,9 @@ public class TeacherDomainAuthorizer {
 
         PersistentScoContext getScoContext();
 
-        Boolean removeStudentScoforClassAndCourse() throws Dwo2Exception;
+        Boolean removeStudentScoforClassAndCourse() throws Dwo2Exception; // FIXME Not used!
 
-        Boolean removeStudentScoWithClassCourse() throws Dwo2Exception;
+        Boolean removeStudentScoWithClassCourse() throws Dwo2Exception; // FIXME Not used and not equal deprecated version.
 
         PersistentScoData getScoData() throws Dwo2Exception;
     }

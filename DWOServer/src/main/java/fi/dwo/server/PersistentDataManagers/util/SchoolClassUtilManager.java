@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,21 +13,27 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
+import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -166,4 +173,30 @@ where cc.classid = 2  and withchildren = 0 group by cc.classcourseid, cc.coursei
 		return work;
 		
 	}
+	
+	public static boolean hasNoResults(PersistentCourse pc, PersistentSchoolClass sc, boolean trash) {
+        List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
+        if (trash) scos.addAll(ScoContextManager.findTrashedEntities(pc));
+        List<PersistentStudentOfClass> students = StudentOfClassManager.findEntities(sc);
+        if( ! students.isEmpty() && scos.size() > 0 ) { // kan >1 zijn, als de bovenstaande clear goed z'n best doet.
+          long sgId = students.get(0).getPersistentStudentOfClassPK().getSchoolGroupID().longValue();
+          Set<Long> users = students.stream().map(s -> s.getPersistentStudentOfClassPK().getUserID()).collect(Collectors.toSet());
+          for ( PersistentScoContext scoContext: scos) {
+//Bulk: all students results of a school
+            List<PersistentStudentScoContext> ss = StudentScoContextManager.findEntities(scoContext, sgId);
+            boolean match = ss.stream().anyMatch(pss -> 
+                {
+                  Long uid = pss.getPersistentHasRolePK().getUserID();
+                  return users.contains(uid);
+                }
+                
+                );
+            
+            if (match) return false;
+          }
+        }
+        return true;
+	}
+	
+	
 }

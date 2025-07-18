@@ -620,8 +620,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
                       return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();                       
                 }
                 if (!Boolean.TRUE.equals(pcc.hasResults())) {
-                	pcc.setResults(Boolean.TRUE);
-                	ClassCourseManager.edit(pcc);
+                	pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE);
                 }
             }
          } else if (rstate.getRoleType() == RoleType.STUDENT) {
@@ -634,8 +633,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				 if (!pccList.isEmpty()) {
 				 PersistentClassCourse pcc = pccList.get(0);
 				 if (!Boolean.TRUE.equals(pcc.hasResults())) {
-				 	pcc.setResults(Boolean.TRUE);
-				 	ClassCourseManager.edit(pcc);
+				 	pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE);
 				 }}}
 			} catch (Exception e) {
 				LOG.log(Level.WARNING, "Not fatal", e);

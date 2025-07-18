@@ -1517,7 +1517,23 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     if (course == null) {
                         LOG.log(Level.INFO, "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
                     } else {
-                        DomClassCourse4Teacher dcc = scc.buildDomClassCourse4Teacher();
+                    	if (scc.getViewState() == ViewState.students || scc.getViewState() == ViewState.studentsOrTeachers) {
+                    		if (scc.hasResults() == null) {
+                    			try {
+                    				boolean results = SchoolClassUtilManager.hasNoResults(course, schoolClass, false);
+                    				scc.setResults(!results);
+                    				PersistentClassCourse copy = ClassCourseManager.editResults(scc.getClassCourseID(), scc.hasResults());
+                    				scc.setOptlock(copy.getOptlock()); // more????
+                    			} catch(Exception oops) { 
+                    				LOG.log(Level.WARNING, "ignored", oops);
+                    			}
+                    		}
+                    		
+                    		
+                    	}
+                    	
+                    	
+                    	DomClassCourse4Teacher dcc = scc.buildDomClassCourse4Teacher();
                         classCourseMap.add(dcc);
                     }
                 });

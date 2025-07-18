@@ -656,7 +656,8 @@ public class CascadingPersistenceBuilder {
             List<PersistentStudentOfClass> socList = StudentOfClassManager.findEntities(instance.context.schoolClass);
             //detach classcourse to ensure no new results occur.
             //TODO mark marked for deleted in the future.
-            //ClassCourseManager.editViewState(this.getClassCourse().getClassCourseID(), ViewState.invisible);
+            instance.context.classCourse = 
+            ClassCourseManager.editResults(this.getClassCourse().getClassCourseID(), Boolean.FALSE);
             //clean all existing results
             for (PersistentStudentOfClass soc : socList) {
                 PersistentHasRolePK key = new PersistentHasRolePK(soc.getPersistentStudentOfClassPK().getUserID(), soc.getPersistentStudentOfClassPK().getSchoolGroupID());

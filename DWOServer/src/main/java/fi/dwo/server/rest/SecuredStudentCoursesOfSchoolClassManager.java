@@ -306,8 +306,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     } else {
     	if (!Boolean.TRUE.equals(pcc.hasResults()))
     	{
-    		pcc.setResults(Boolean.TRUE); // we weten zeker dat er resultaten zijn of komen
-    		pcc = ClassCourseManager.edit(pcc);
+    		pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE);
     	}  	
       DomClassCourse dcc = pcc.buildDomClassCourse();
       URI uri = URI.create(request.getRequestURL().toString());
@@ -401,7 +400,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         result.setCourses(Collections.emptyList());
         result.setScoContexts(Collections.emptyList());
       } else {
-    	if (! Boolean.TRUE.equals(pcc.hasResults())) { pcc.setResults(Boolean.TRUE); pcc = ClassCourseManager.edit(pcc); }
+    	if (! Boolean.TRUE.equals(pcc.hasResults())) { pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE); }
     	  
         DomClassCourse dcc = pcc.buildDomClassCourse();
         dcc.setType(pcc.getType()); // geen fratsen voor een student!

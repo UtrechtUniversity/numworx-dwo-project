@@ -284,7 +284,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
     /**
      * Removes StudentSco and corresponding ClassCourses. FIXME Issue met
      * DWOJClient (Wim)
-     *
+     * NOTA BENE: deze wordt niet gebruikt en is niet gelijk aan de cascade versie die wel wordt gebruikt.
      * @return
      * @throws Dwo2Exception
      */

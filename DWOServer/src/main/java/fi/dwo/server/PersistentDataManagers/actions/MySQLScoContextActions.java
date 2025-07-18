@@ -10,6 +10,7 @@ import javax.persistence.RollbackException;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentApplet;
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentImage;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
@@ -17,6 +18,7 @@ import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.server.PersistentDataManagers.core.AppletManager;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.ImageManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
@@ -33,6 +35,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoData;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.util.ScoType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -180,6 +183,16 @@ public class MySQLScoContextActions {
         for (PersistentStudentModelData item : list2) {
             StudentModelDataManager.destroy(item.getModelDataId());
         }
+        Long courseID = pc.getCourseID();
+// invalidate course result cache
+        List<PersistentClassCourse> ccs = ClassCourseManager.findEntities(new PersistentCourse(courseID));
+        ccs.forEach(cc -> {
+        	if (Boolean.TRUE.equals(cc.hasResults())
+//        			&& (cc.getViewState() == ViewState.students||cc.getViewState() == ViewState.studentsOrTeachers)
+        			) {
+        		ClassCourseManager.editResults(cc.getClassCourseID(), null);
+        	}
+        });
     }
 
     static DomScoContextFull add(PersistentCourse c, DomScoContextFull scoContext,
