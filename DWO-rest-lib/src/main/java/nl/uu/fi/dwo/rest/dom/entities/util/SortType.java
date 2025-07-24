@@ -4,5 +4,6 @@ public enum SortType {
 	familyName,
 	givenName,
 	userName,
-	schoolClassName
+	schoolClassName,
+	lastLogin
 }

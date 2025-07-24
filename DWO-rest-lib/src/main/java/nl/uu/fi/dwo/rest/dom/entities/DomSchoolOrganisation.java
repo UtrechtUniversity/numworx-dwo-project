@@ -15,6 +15,7 @@ public class DomSchoolOrganisation {
 	private List<DomUser> users;
     private List<DomMemberOfClass> usersOfClasses;
 	private List<DomSchoolClass> schoolClasses;
+	private List<DomHasRole> hasRoles;
 	
  
     public Long getSkip() {
@@ -64,5 +65,17 @@ public class DomSchoolOrganisation {
 	}
 	public void setSort(SortType sort) {
 		this.sort = sort;
+	}
+	/**
+	 * @return the hasRoles
+	 */
+	public List<DomHasRole> getHasRoles() {
+		return hasRoles;
+	}
+	/**
+	 * @param hasRoles the hasRoles to set
+	 */
+	public void setHasRoles(List<DomHasRole> hasRoles) {
+		this.hasRoles = hasRoles;
 	}
 }

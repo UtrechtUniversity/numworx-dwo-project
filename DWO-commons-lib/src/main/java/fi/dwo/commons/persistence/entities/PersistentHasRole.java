@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
+
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 /**
@@ -62,6 +64,9 @@ public class PersistentHasRole implements Serializable {
     private Date lastLogin;
     @Column(name = "lastChangeTimeStamp")
     long lastChangeTimeStamp;
+    // since 1.5.0
+    @Column(name = "optlock")
+    @Version private Long optlock;
 
     
     @ManyToOne(fetch = FetchType.EAGER)
@@ -192,7 +197,8 @@ public class PersistentHasRole implements Serializable {
             hr.setSchoolGroupId(PersistentSchoolGroup.buildPersistenceId(persistentHasRolePK.getSchoolGroupID()));
             hr.setUserId(PersistentUser.buildPersistenceId(persistentHasRolePK.getUserID()));
         }
-        hr.setRights(this.getRights());
+        hr.setRights(getRights());
+        hr.setLastLogin(getLastLogin());
         return hr;
     }
 
