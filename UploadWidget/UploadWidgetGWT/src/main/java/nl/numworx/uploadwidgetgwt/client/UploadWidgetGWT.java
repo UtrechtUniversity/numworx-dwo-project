@@ -4,7 +4,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -89,6 +92,36 @@ public class UploadWidgetGWT implements EntryPoint, InteractionStub {
 	public void setCommunicationRoot(OpdrNavIF comRoot) {
 		this.comRoot = comRoot;
 		panel.setComRoot(comRoot);
+// like leerdoelwidget
+		// font overerven, altijd aan
+					ObjectMap instellingen = comRoot.getConfiguration();
+					// fontSize, fontName, fgColor
+					if (instellingen.containsKey("fontSize")) {
+						panel.getElement().getStyle().setFontSize(instellingen.getInt("fontSize"), Unit.PX);
+					}
+					if (instellingen.containsKey("fontName")) {
+						panel.getElement().getStyle().setProperty("fontFamily", instellingen.getString("fontName"));
+					}
+					if (instellingen.containsKey("fgColor")) {
+						String fgcolor;
+						Object o = instellingen.get("fgColor");
+						if (o instanceof JSONString) {
+							fgcolor = ((JSONString) o).stringValue();
+						} else
+						if (o instanceof String) {
+							fgcolor = o.toString();
+						} else {
+							ObjectMap m = instellingen.getObjectMap("fgColor");
+							if (m != null) {
+								int red = m.getInt("red");
+								int green = m.getInt("green");
+								int blue = m.getInt("blue");
+								fgcolor = CssColor.make(red, green, blue).value();
+							} else 
+								fgcolor = CssColor.make(0,0,0).value();
+						}
+						panel.getElement().getStyle().setColor(fgcolor);
+					}
 	}
 
 	@Override
