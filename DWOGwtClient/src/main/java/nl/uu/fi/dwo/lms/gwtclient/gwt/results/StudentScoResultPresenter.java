@@ -391,6 +391,8 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
     XAPIService x = xapiService.get();
 	x.getAgent().then( a -> { 
       s.actor.account.homePage = a.getValue().account.homePage;
+      s.context.team.account.homePage = a.getValue().account.homePage;
+      s.context.instructor = a.getValue();
       return x.saveStatement(s);
     });
     
