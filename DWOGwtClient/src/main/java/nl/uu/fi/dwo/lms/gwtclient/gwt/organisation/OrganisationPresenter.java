@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ import org.osgi.util.promise.Promises;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -47,6 +50,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -288,12 +292,26 @@ public class OrganisationPresenter {
     
   }
 
+  
+private final static DateTimeFormat DATE = DateTimeFormat.getFormat("yyMM");
 protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
 	DomSchoolOrganisation org = p0.getValue();
 	List<DomUser> s = org.getUsers();
+	List<DomHasRole> roles = org.getHasRoles();
+	if (roles == null) roles = Collections.emptyList();
+	Map<String,Date> dates = new HashMap<>();
+	roles.forEach(item -> {
+		String key = item.getUserId().getIdString();
+		Date value = item.getLastLogin();
+		if (value != null) 	dates.put(key, value);
+	});
 	Map<String, TaggedDomUser<DomUser>> ss = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
 			student -> {
-				return new TaggedDomUser<DomUser>(student, new ArrayList<String>());
+				String extra = "";
+				String key = student.getId().getIdString();
+				Date date = dates.get(key);
+				if (date != null) extra = DATE.format(date);
+				return new TaggedDomUser<DomUser>(student, new ArrayList<String>(), extra);
 			}, 
 			(e1 , e2) -> e1, // drop
 			LinkedHashMap::new));
@@ -567,6 +585,7 @@ static boolean containsIgnoreCase(String source, String regex) {
 
 @JsMethod
 void clickSortButton(String value, String order, String type) {
+	if ("extra".equals(value)) value = "lastLogin";
 	LOG.info( "value is " + value + ", order = " + order);
 	if (this.order.name().equals(order) && this.sort.name().equals(value)) return;
 	
@@ -594,7 +613,10 @@ void clickSortButton(String value, String order, String type) {
 			public int compare(TaggedDomUser<DomUser> o1, TaggedDomUser<DomUser> o2) {
 				String a, b;
 				switch(OrganisationPresenter.this.sort) {
-				
+				case lastLogin:
+						a = o1.getExtra();
+						b = o2.getExtra();
+						break;			
 				case givenName:
 						a = o1.getUser().getGivenName();
 						b = o2.getUser().getGivenName();

@@ -960,11 +960,14 @@ public class SecuredSchoolAdminSchoolManager {
     	 role = RoleType.STUDENT;
      }
 	 List<PersistentHasRole> userList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, role);
+	 
+	 userList = userList.stream().filter(t -> t.getUser() != null).collect(Collectors.toList());
+	 
      Collections.sort(userList, new Comparator<PersistentHasRole>() {
 
 		@Override
 		public int compare(PersistentHasRole o1, PersistentHasRole o2) {
-			String a; String b;
+			String a=""; String b="";
 			int result;
 			switch (org.getSort()) {
 			case lastLogin:
@@ -975,7 +978,12 @@ public class SecuredSchoolAdminSchoolManager {
 				return result;
 			case familyName:
 			default:
-				a = o1.getUser().getLastname(); b = o1.getUser().getLastname();
+				try {
+					a = o1.getUser().getLastname(); b = o2.getUser().getLastname();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			result = a.compareToIgnoreCase(b);
 			if (org.getOrder() == OrderType.desc) result = -result;

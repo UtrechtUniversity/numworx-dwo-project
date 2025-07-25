@@ -1,5 +1,6 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class TaggedDomUser<T extends DomUser> {
     private boolean tag;
     private T user;
     private List<String> memberOf;
+    private String extra;
 
     public TaggedDomUser() {
     }
@@ -22,14 +24,21 @@ public class TaggedDomUser<T extends DomUser> {
     public TaggedDomUser(T aUser) {
         user = aUser;
         memberOf = Collections.emptyList();
+        extra = "";
     }
 
     public TaggedDomUser(T aUser, List<String> memberOf) {
       user = aUser;
       this.memberOf = memberOf;
+      extra = "";
   }
 
-    /**
+    public TaggedDomUser(T student, List<String> arrayList, String extra2) {
+		this(student, arrayList);
+		setExtra(extra2);
+	}
+
+	/**
      * @return the tag
      */
     public boolean isTag() {
@@ -70,5 +79,13 @@ public class TaggedDomUser<T extends DomUser> {
     public void setMemberOf(List<String> memberOf) {
       this.memberOf = memberOf;
     }
+
+	public String getExtra() {
+		return extra;
+	}
+
+	public void setExtra(String extra) {
+		this.extra = extra;
+	}
     
 }
