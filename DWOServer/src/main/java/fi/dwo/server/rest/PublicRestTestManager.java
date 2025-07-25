@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Date;
+import java.util.List;
 import java.util.logging.Level;
 
 import nl.numworx.schoolyear.jclient.SchoolyearClient;
@@ -22,6 +24,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 
 /**
  * REST functions that allows one to test the proper catching of HTML-errors.
@@ -139,4 +148,33 @@ public class PublicRestTestManager {
 		return false;
 	}
 
+	
+	@GET
+	@Path("system/maintenance")
+	@Produces({"text/plain"})
+	public String maintenance(@QueryParam("skip") Integer start, @QueryParam("limit") Integer limit) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		
+		if (start == null) start = 0;
+		if (limit == null) limit = 100;
+		
+		
+		List<PersistentHasRole> hr = HasRoleManager.findEntities(limit, start);
+		for(PersistentHasRole item: hr) {
+			start = start + 1;
+			if (item.optlock > 0) continue;
+			Long userid = item.getPersistentHasRolePK().getUserID();
+			List<PersistentLoginContext> lc = LoginContextManager.findEntities(userid);
+			if (!lc.isEmpty() && null != lc.get(0).getLastLogin()) {
+				item.setLastLogin(new Date(lc.get(0).getLastLogin()));
+			} else {
+				PersistentUser u = UserManager.findEntity(userid);
+				item.setLastLogin(u.getLastLogin());
+			}
+			item = HasRoleManager.edit(item);
+			sb.append(start).append(" ").append(userid).append("\n");
+		}
+		sb.append(start).append(" END");
+		return sb.toString();
+	}
 }

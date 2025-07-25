@@ -66,7 +66,8 @@ public class PersistentHasRole implements Serializable {
     long lastChangeTimeStamp;
     // since 1.5.0
     @Column(name = "optlock")
-    @Version private Long optlock;
+    @Version
+	public Long optlock; // testing
 
     
     @ManyToOne(fetch = FetchType.EAGER)
