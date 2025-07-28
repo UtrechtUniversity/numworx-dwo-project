@@ -248,20 +248,8 @@ private boolean checkDocent;
   }
  
   @UiHandler("correctie") 
-  void onClick(ClickEvent ev) {
-	  GWT.log("mouse Click in textbox");
-	  correctie.setFocus(true);
-	  ev.stopPropagation();
-  }
-  @UiHandler("correctie") 
-  void onMouseUp(MouseUpEvent ev) {
-	  GWT.log("mouse Up in textbox");
-	  correctie.setFocus(true);
-	  ev.stopPropagation();
-  }
-  @UiHandler("correctie") 
   void onMouseDown(MouseDownEvent ev) {
-	  GWT.log("mouse Down in textbox");
+	  comroot.getKeyboard().blur();
 	  correctie.setFocus(true);
 	  ev.stopPropagation();
   }
