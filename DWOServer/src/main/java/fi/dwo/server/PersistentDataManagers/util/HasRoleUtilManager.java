@@ -8,6 +8,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelData;
@@ -15,7 +16,10 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
+import fi.dwo.server.PersistentDataManagers.cache.LoginContextCache;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
@@ -208,6 +212,7 @@ public class HasRoleUtilManager {
         }
         //Ready to remove hasRoles
         HasRoleManager.destroy(hr.getPersistentHasRolePK());
+        HasRoleCache.remove(hr);
 
         PersistentUser user = UserManager.findEntity(hr.getPersistentHasRolePK().getUserID());
         if (user == null) {
@@ -220,6 +225,12 @@ public class HasRoleUtilManager {
             RoleType type = RoleType.STUDENT;
             PersistentSchoolGroup sg = SchoolGroupManager.findBySchoolAndRole(SchoolUtilManager.findBySchoolLogin("null"), type);
             user.setSchoolGroupId(sg.getSchoolGroupID());
+            List<PersistentLoginContext> list = LoginContextManager.findEntities(user.getId());
+            for(PersistentLoginContext item: list) {
+            	item.setSchoolGroupId(sg.getSchoolGroupID());
+            	item = LoginContextManager.edit(item);
+            	LoginContextCache.putIfPresent(item);
+            }
         }
 
         UserManager.edit(user);

@@ -10,6 +10,7 @@ import java.util.logging.Level;
 
 import nl.numworx.schoolyear.jclient.SchoolyearClient;
 import nl.numworx.schoolyear.jclient.dto.SignatureDTO;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import java.util.logging.Logger;
@@ -28,6 +29,7 @@ import javax.ws.rs.core.UriInfo;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
@@ -169,9 +171,16 @@ public class PublicRestTestManager {
 				item.setLastLogin(new Date(lc.get(0).getLastLogin()));
 			} else {
 				PersistentUser u = UserManager.findEntity(userid);
-				item.setLastLogin(u.getLastLogin());
+				if (u == null) 
+				{
+					item.delState = DelState.marked;
+					userid = null;
+				}
+				else
+					item.setLastLogin(u.getLastLogin());
 			}
 			item = HasRoleManager.edit(item);
+			HasRoleCache.remove(item);
 			sb.append(start).append(" ").append(userid).append("\n");
 		}
 		sb.append(start).append(" END");

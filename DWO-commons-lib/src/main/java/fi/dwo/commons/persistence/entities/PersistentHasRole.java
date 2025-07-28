@@ -2,6 +2,7 @@
 package fi.dwo.commons.persistence.entities;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import java.io.Serializable;
 import java.util.Date;
@@ -21,6 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -68,6 +70,9 @@ public class PersistentHasRole implements Serializable {
     @Column(name = "optlock")
     @Version
 	public Long optlock; // testing
+    @NotNull
+    @Column(name="del",nullable = false)
+    public DelState delState = DelState.not;
 
     
     @ManyToOne(fetch = FetchType.EAGER)

@@ -16,6 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdminAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
@@ -26,6 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
@@ -183,8 +185,15 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
     return manager2.removeSchoolAdminFromSchool(context, user);
   }
 
-public Promise<DomSchoolOrganisation> getStudentsInSchool(DomSchoolOrganisation domSchoolOrganisation) {
-	return manager2.getStudentsInSchool(context, domSchoolOrganisation);
-} 
+	public Promise<DomSchoolOrganisation> getStudentsInSchool(DomSchoolOrganisation domSchoolOrganisation) {
+		return manager2.getStudentsInSchool(context, domSchoolOrganisation);
+	}
+
+	public Promise<List<DomTeacherAndHasRole>> getTeachersAndHasRoleInSchool() {
+		return manager2.getTeachersAndHasRoleInSchool(context);
+	} 
+	public Promise<List<DomSchoolAdminAndHasRole>> getSchoolAdminsAndHasRoleInSchool() {
+		return manager2.getSchoolAdminsAndHasRoleInSchool(context);
+	} 
   
 }
