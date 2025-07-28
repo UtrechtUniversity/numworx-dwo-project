@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
 import javax.ws.rs.PUT;
@@ -29,6 +33,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolData;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -43,6 +48,7 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolDataUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -55,6 +61,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.SchoolAttrType;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
@@ -125,6 +132,8 @@ public class SystemManager {
       return buildDomSchoolFull(school);  
   }
 
+  static final SchoolAttrType[] KEYS = { SchoolAttrType.REALM, SchoolAttrType.BRIN };
+  
   private DomSchoolFull buildDomSchoolFull(PersistentSchool school) {
 	if (school == null) return null;
     DomSchoolFull dom = school.buildDomSchoolFull();
@@ -134,6 +143,20 @@ public class SystemManager {
           .map(item -> new DomMapEntry<RoleType, String>(RoleType.values()[item.getGroupID()], item.getPasswd()))
           .collect(Collectors.toList());
     dom.setPasswords(passwords);
+    PersistentSchoolData data = SchoolDataUtilManager.find(school);
+    List<DomMapEntry<SchoolAttrType, String>> attrs = new ArrayList<>(KEYS.length);
+    if (data != null) {
+    	JsonReader reader = Json.createReader(new StringReader(data.getSchoolData()));
+    	JsonObject object = reader.readObject();
+    	reader.close();
+    	for (SchoolAttrType key : KEYS ) {
+    		String value = object.getString(key.key(), null);
+    		if (value != null) {
+    			attrs.add(new DomMapEntry<SchoolAttrType, String>(key, value));
+    		}    		
+    	}
+    }
+    dom.setAttributes(attrs);
     return dom;
   }
 
