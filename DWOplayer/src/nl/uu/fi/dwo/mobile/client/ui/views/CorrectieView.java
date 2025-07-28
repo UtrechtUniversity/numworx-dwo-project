@@ -9,6 +9,7 @@ import javax.inject.Provider;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -246,6 +247,26 @@ private boolean checkDocent;
     if (leerdoelenPopup != null) leerdoelenPopup.hide();
   }
  
+  @UiHandler("correctie") 
+  void onClick(ClickEvent ev) {
+	  GWT.log("mouse Click in textbox");
+	  correctie.setFocus(true);
+	  ev.stopPropagation();
+  }
+  @UiHandler("correctie") 
+  void onMouseUp(MouseUpEvent ev) {
+	  GWT.log("mouse Up in textbox");
+	  correctie.setFocus(true);
+	  ev.stopPropagation();
+  }
+  @UiHandler("correctie") 
+  void onMouseDown(MouseDownEvent ev) {
+	  GWT.log("mouse Down in textbox");
+	  correctie.setFocus(true);
+	  ev.stopPropagation();
+  }
+  
+  
   @UiHandler("correctie")
   void onChange(ValueChangeEvent<String> e) {
 	  String v = e.getValue();
