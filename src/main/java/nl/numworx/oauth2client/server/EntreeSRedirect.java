@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import javax.servlet.ServletContext;
@@ -35,6 +36,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.entities.util.SchoolAttrType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -149,7 +151,12 @@ public class EntreeSRedirect extends HttpServlet {
 			if (fullschool == null || login.uid == null) // criterium.... bijv. alles ingevuld...
 				cookie("suggestion", systemManager.getSuggestion(sugg), resp);
 			else {
+				Optional<String> realm =
+					fullschool.getAttributes().stream().filter(a -> a.getKey() == SchoolAttrType.REALM).findAny().map(DomMapEntry::getValue);
 				String sug = user_id;
+				if (realm.isPresent()) {
+					sug = user_id.split("@",1)[0] + "@" + realm.get();
+				} else
 				if (!user_id.contains("@"))	// in entree @realm aanwezig, laat dat zo 
 					sug += "@" + fullschool.getSchoolLogin(); // standaard realm is schoollogin = brincode of surfcode, niet als bij coornhert-gymnasium.nl
 				cookie("suggestion" , sug, resp);
