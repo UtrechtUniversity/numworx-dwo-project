@@ -145,9 +145,13 @@ public class SecuredUserAccountLoginsManagerV2 {
     }
 
 protected PersistentHasRole stampHasRole(PersistentHasRole role) {
-	PersistentLoginContext context = LoginContextManager.findEntities(role.getPersistentHasRolePK().getUserID()).get(0); // From Cache?????
-	role.setLastLogin(new java.sql.Date(context.getLastLogin()));
-	role = HasRoleManager.edit(role);
+	List<PersistentLoginContext> contexts = LoginContextManager.findEntities(role.getPersistentHasRolePK().getUserID());
+	if(!contexts.isEmpty()) {
+		PersistentLoginContext context = contexts.get(0); // From Cache?????
+		if (context.getLastLogin() != null) {
+		role.setLastLogin(new java.sql.Date(context.getLastLogin()));
+		role = HasRoleManager.edit(role);
+	}}
 	return role;
 }
 
