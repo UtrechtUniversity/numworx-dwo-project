@@ -13,6 +13,7 @@
 		background-color: rgb(237,239,241);
 		color: rgb(49,71,112);
 		font-size: 14px;
+		pointer-events: all;
 	}
 	.max {
 		margin-left: 10px;
