@@ -138,10 +138,11 @@ public class EntreeSRedirect extends HttpServlet {
 			if (fullschool != null) {
 				cookie("schoolLogin", fullschool.getSchoolLogin(), resp);
 				cookie("schoolCode", getSchoolCode(fullschool, role), resp);
+				if (AboType.premium != fullschool.getAboType()) className = null;
 			} else {
 				cookie("schoolLogin", null, resp);
 				cookie("schoolCode", null, resp);
-				
+				className = null;
 			}
 			cookie("cancel", redirectUri, resp);
 			cookie("next", redirectUri + "?with=" + login, resp);
@@ -156,7 +157,7 @@ public class EntreeSRedirect extends HttpServlet {
 					fullschool.getAttributes().stream().filter(a -> a.getKey() == SchoolAttrType.REALM).findAny().map(DomMapEntry::getValue);
 				String sug = user_id;
 				if (realm.isPresent()) {
-					sug = user_id.split("@",1)[0] + "@" + realm.get();
+					sug = user_id.split("@",2)[0] + "@" + realm.get();
 				} else
 				if (!user_id.contains("@"))	// in entree @realm aanwezig, laat dat zo 
 					sug += "@" + fullschool.getSchoolLogin(); // standaard realm is schoollogin = brincode of surfcode, niet als bij coornhert-gymnasium.nl
