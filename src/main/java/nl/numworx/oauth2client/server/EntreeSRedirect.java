@@ -115,6 +115,7 @@ public class EntreeSRedirect extends HttpServlet {
 			   DomSamlUser u = new DomSamlUser();
 			   u.setSamlOrgId(s(org_id));
 			   u.setSamlUserId(s(lti_id));
+			   u.setSamlUnit(className);
 			   try {
 				   u = systemManager.requestSamlToken(u);
 				   String authToken = u.getAuthToken();
