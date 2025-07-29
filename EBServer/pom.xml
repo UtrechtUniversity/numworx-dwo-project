@@ -831,7 +831,7 @@
 		<profile>
 			<id>local</id>
 			<properties>
-        		<http.port>8080</http.port>
+        		<http.port>8000</http.port>
 			</properties>
 		</profile>
 		<profile>

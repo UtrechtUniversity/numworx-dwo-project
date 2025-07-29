@@ -191,6 +191,10 @@ public class SystemManager {
         throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error. Can't update samluser with id:" + samlUser.getId() + ".");
     }
     u.setAuthToken(samlUser.getAuthToken());
+    String unit = u.getSamlUnit();
+	if (unit != null && !unit.isEmpty()) {
+		u.setAuthToken(u.getAuthToken() + "\f" + unit);
+	}
     return u;
   }
   
