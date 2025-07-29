@@ -6,12 +6,12 @@
   <groupId>nl.numworx.oauth2</groupId>
   <artifactId>OAuth2Client</artifactId>
   <packaging>war</packaging>
-  <version>2.5.44-SNAPSHOT</version>
   <name>nl.numworx.oauth2client.OAuth2Client</name>
   <parent>
-	    <groupId>nl.uu.fi.dwo</groupId>
-	    <artifactId>DWO.master.pom</artifactId>
-	    <version>1.1</version>
+		<groupId>nl.uu.fi.dwo</groupId>
+		<artifactId>DWO</artifactId>
+		<relativePath>../DWO</relativePath>
+		<version>2.5.44-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -27,7 +27,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <tomcat7.version>7.0.76</tomcat7.version>
     <context.xml>context.xml</context.xml>
-    <DWOServerVersion>2.5.25</DWOServerVersion>
+    <DWOServerVersion>${project.version}</DWOServerVersion>
     <local.dwo>/dwox</local.dwo>
   </properties>
 
@@ -69,12 +69,10 @@
       <dependency>
         <groupId>nl.uu.fi.dwo.rest</groupId>
         <artifactId>DWO-jclient-lib</artifactId>
-        <version>2.5.44-SNAPSHOT</version>
       </dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>DWO-commons-lib</artifactId>
-			<version>2.5.44-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.ws.xmlrpc</groupId>
@@ -89,7 +87,7 @@
 	<dependency>
 	    <groupId>fi.servlet</groupId>
 	    <artifactId>DWOmAccess</artifactId>
-	    <version>2.5.20</version>
+	    <version>2.5.20-p1</version>
 	    <classifier>classes</classifier>	
 	</dependency>
 	<dependency>
@@ -174,18 +172,9 @@
       </plugin>
 	  <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-  				<version>3.2.3</version>
                 <configuration>
                     <attachClasses>true</attachClasses>
                 </configuration>
-	  </plugin>
-	  <plugin>
-		<groupId>external.atlassian.jgitflow</groupId>
-		<artifactId>jgitflow-maven-plugin</artifactId>
-		<version>1.0-m5.1</version>
-		<configuration>
-			<localOnly>true</localOnly>
-		</configuration>
 	  </plugin>
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
