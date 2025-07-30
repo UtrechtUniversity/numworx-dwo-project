@@ -48,6 +48,7 @@ import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter;
@@ -261,13 +262,10 @@ static final String AUTHORIZATION_CODE = "authorization_code";
 							if (sc != null && AboType.premium == school.getAboType() && school.licenseIsValid()) {
 							PersistentStudentOfClassPK id = new PersistentStudentOfClassPK(user.getId(), sc.getClassID(), user.getSchoolGroupId());
 							PersistentStudentOfClass soc = StudentOfClassManager.findEntity(id);
-							if (soc == null) {
-								soc = new PersistentStudentOfClass(id, new Date());
-								StudentOfClassManager.create(soc);
+							if (soc == null) {			
 								PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), user.getSchoolGroupId()));
-								hr.setSchoolClass(sc);
-								hr = HasRoleManager.edit(hr);
-								HasRoleCache.put(hr);
+								hr.setClassID(null); // force a switch
+								SchoolClassUtilManager.registerStudentForSchoolClass(hr, sc);
 							}}
 						}
 					} catch (Throwable e) {
