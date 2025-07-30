@@ -831,6 +831,12 @@
 		<profile>
 			<id>local</id>
 			<properties>
+        		<http.port>8080</http.port>
+			</properties>
+		</profile>
+		<profile>
+			<id>sentree</id> <!-- voor staging-entree, werkt 8080 niet maar 8000 wel -->
+			<properties>
         		<http.port>8000</http.port>
 			</properties>
 		</profile>
