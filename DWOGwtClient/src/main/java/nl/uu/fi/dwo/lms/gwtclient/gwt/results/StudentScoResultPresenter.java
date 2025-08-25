@@ -414,7 +414,7 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
     }
     Map<String,String> userState = new TreeMap<> (this.userState);
     userState.keySet().retainAll(Arrays.asList("cmi.score.raw",ResultsService.REVIEW_DATA, ResultsService.REVIEW_CHECK, ResultsService.REVIEW_CORRECT));
-    boolean empty = this.userState.getOrDefault(ResultsService.SUSPEND_DATA, "").isEmpty();
+    //boolean empty = this.userState.getOrDefault(ResultsService.SUSPEND_DATA, "").isEmpty();
     LOG.info( "update Score/Review " + userState);
     
     if (dwoGlobalVars.isPremium() && sealed)
@@ -426,9 +426,6 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
     	resultService.setValues(ssc.getStudentSco(), userState)
 // haal beide op, alleen als ssc.getchildren 
     	.then( x -> {
-//    		if (ssc.getChildren().isEmpty()) { // ALWAYS EMPTY! Geen shortcut nog mogelijk.
-//    			return x.map(q -> new DomResultStudentScoContext(q, student));
-//    		}
     		Promise<DomResultsPerTeacherv2> p = resultService.selectedResultsPerStudentSco(parent.getSchoolClass(), student, ssc.getStudentSco());
  // eigenlijk return x + list of studentscopages.
     		return p.map(this::mapToResultStudentScoContext);

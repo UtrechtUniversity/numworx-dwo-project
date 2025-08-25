@@ -258,7 +258,7 @@ public class ScoPageUtilManager {
 					PersistentScoPagePK id = new PersistentScoPagePK(pssc.getScoID(), Long.valueOf(i), null);
 					PersistentScoPage org = ScoPageManager.findEntity(id);
 					if (org == null) continue;  // should not happen!
-					page.setCheckDocent(org.getCheckDocent());
+					page.setCheckDocent(org.getCheckDocent()); page.setLabel(org.getLabel());
 					page.setCourseID(org.getCourseID());
 					page.setMaxScore(org.getMaxScore());
 					map.put(page.getId().getSequencenr(), page);
