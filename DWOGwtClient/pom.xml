@@ -705,5 +705,24 @@
 		            </dependency>
 		        </dependencies>
 		    </profile>
+    	    <profile>
+		        <id>x86_64-macos-users</id>
+		        <activation>
+		            <os>
+		                <family>mac</family>
+		                <arch>x86_64</arch>
+		            </os>
+		        </activation>
+		        <dependencies>
+		            <dependency>
+		                <groupId>io.netty</groupId>
+		                <artifactId>netty-resolver-dns-native-macos</artifactId>
+		                <classifier>osx-x86_64</classifier>
+		                <version>4.1.86.Final</version>
+		                <scope>runtime</scope>
+		                <optional>true</optional>
+		            </dependency>
+		        </dependencies>
+		    </profile>
     </profiles>
 </project>
