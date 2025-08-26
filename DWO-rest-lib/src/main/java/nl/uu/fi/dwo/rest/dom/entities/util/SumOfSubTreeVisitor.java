@@ -199,7 +199,11 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 			title = KIJK_NA;
 			description = NAKIJKEN_NODIG; // iets anders?
 		} else 
-			description = title = page.getScore().toString()+ bonus + "/" + page.getMaxScore() ;
+		{
+			String score = page.getScore().toString();
+			if ("0".equals(score) && bonus.startsWith("+")) score = "";
+			description = title = score + bonus + "/" + page.getMaxScore() ;
+		}
 		page.setTitle(title);
 		page.setDescription(description);
 		page.setFraction(1.0);
