@@ -4,7 +4,7 @@
 <%@ page import="fi.dwo.server.db.Util" %>
 <!DOCTYPE html>
 <% 
-	int profile = 77;
+	int profile = 116;
 	long tstamp = TStamp.BOOT;
 	String query = request.getQueryString();
 	if(Util.illegal(query))

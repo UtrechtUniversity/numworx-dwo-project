@@ -52,11 +52,11 @@
     <link type="text/css" rel="stylesheet" href="<%=cdn %>/apps/DWOplayer.css">
     <meta name="gwt:property" content="locale=en" >
     <script>
-    	DWO_PROFILE_ID = 77
+    	DWO_PROFILE_ID = 116
     	formfactor = "<%=formfactor%>"
     	SECURE_MODE="SEB" // possibly others
     	function logout() {
-    		window.location = "https://<%=server%>/sh/logout.html"
+    		window.location = "https://<%=server%>/sh/exam/logout.html"
     	}
     </script>
     <title>Safe Exam Browser</title>
