@@ -62,8 +62,14 @@ public class ScoPageUtilManager {
 				JsonNumber number = page.getJsonNumber("scoreMax");
 				if ( page.getBoolean("hasTitle", false)) {
 					scopage.setLabel(page.getString("titel", String.valueOf(i+1)));
+					JsonNumber maxFactor = page.getJsonNumber("maxFactor");
+					if (maxFactor != null)
+						scopage.setMaxFactor(maxFactor.numberValue());
+					else 
+						scopage.setMaxFactor(null);
 				} else {
-					//scopage.setLabel("Problem " + (i+1)); // FIXME STUB!!!
+					scopage.setLabel(null);
+					scopage.setMaxFactor(null);
 				}
 				scopage.setMaxScore(number.intValue());
 				boolean b = page.getBoolean("checkDocent", false);
@@ -128,6 +134,7 @@ public class ScoPageUtilManager {
 				dst.setOptlock(src.getOptlock());
 				dst.setCorrectie(null);
 				dst.setLabel(src.getLabel());
+				dst.setMaxFactor(src.getMaxFactor());
 				ScoPageManager.create(dst);
 				map.put(i, dst);
 			}
@@ -258,7 +265,7 @@ public class ScoPageUtilManager {
 					PersistentScoPagePK id = new PersistentScoPagePK(pssc.getScoID(), Long.valueOf(i), null);
 					PersistentScoPage org = ScoPageManager.findEntity(id);
 					if (org == null) continue;  // should not happen!
-					page.setCheckDocent(org.getCheckDocent()); page.setLabel(org.getLabel());
+					page.setCheckDocent(org.getCheckDocent()); page.setLabel(org.getLabel()); page.setMaxFactor(org.getMaxFactor());
 					page.setCourseID(org.getCourseID());
 					page.setMaxScore(org.getMaxScore());
 					map.put(page.getId().getSequencenr(), page);

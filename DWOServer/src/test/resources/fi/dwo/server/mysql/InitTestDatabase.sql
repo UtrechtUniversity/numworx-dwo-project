@@ -1096,6 +1096,7 @@ CREATE TABLE `tblscopage` (
   `correct` tinyint(4),
   `docentCorrect` tinyint(4),
   `label` varchar(255),
+  `maxFactor` decimal(6,3) NOT NULL,
   PRIMARY KEY (`scoID`, `sequencenr`, `userID`, `schoolgroupID`)
   ) ENGINE=InnoDB DEFAULT CHARSET=latin1;	
 

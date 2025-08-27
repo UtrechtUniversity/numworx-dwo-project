@@ -124,6 +124,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	private HashMap<String, Object>[][] opdrachten;
 	private HashMap<String, Object>[][] states;
 	private int[][] scoresMax;
+	private float[][] factorMax;
 	private int[][] scores;
 	/**
 	 * Scores (per activiteit, per opdracht/pagina, vgl. scores) die getoond worden 
@@ -261,6 +262,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		opdrachten = new HashMap[aantalActiviteiten][maxAantalOpdrachten];
 		scoresMax = new int[aantalActiviteiten][maxAantalOpdrachten];
+		factorMax = new float[aantalActiviteiten][maxAantalOpdrachten];
 		scores = new int[aantalActiviteiten][maxAantalOpdrachten];
 		scoresZelftoets = new int[aantalActiviteiten][maxAantalOpdrachten];
 		isCorrect = new Boolean[aantalActiviteiten][maxAantalOpdrachten];
@@ -333,6 +335,11 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 					scoresMax[i][j] = ht.getInt("scoreMax");
 				else
 					scoresMax[i][j] = 10;
+				boolean hasfactor = ht != null && ht.getBoolean("hasTitle", false);
+				if (hasfactor && ht.containsKey("maxFactor"))
+					factorMax[i][j] = (float) ht.getDouble("maxFactor");
+				else 
+					factorMax[i][j] = 1.0f;
 				scoreMax += scoresMax[i][j];
 			}
 		}

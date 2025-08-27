@@ -10,6 +10,7 @@ public class DomStudentScoPage extends DomId {
 	
 	private Boolean docentCorrectie;
 	private Integer  maxScore, score, correctie;
+	private Float maxFactor;
 
 	public PersistenceId getScoID() {
 		return scoID;
@@ -64,6 +65,12 @@ public class DomStudentScoPage extends DomId {
 	}
 	public void setLabel(String label) {
 		this.label = label;
+	}
+	public Float getMaxFactor() {
+		return maxFactor;
+	}
+	public void setMaxFactor(Float maxFactor) {
+		this.maxFactor = maxFactor;
 	}
 	
 	
