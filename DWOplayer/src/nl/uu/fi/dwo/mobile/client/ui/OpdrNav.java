@@ -1314,7 +1314,8 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * naar 100%. Als het een zelftoets is het high score, dan wordt de
 	 * high score teruggegeven.
 	 */
-	public double getScore()
+	@Deprecated
+	private double getScore()
 	{
 		if (entry.zelftoetsHighScore && mode == ZELFTOETS)
 			return getZelftoetsHighScore();
@@ -1338,11 +1339,36 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			return doubleScore;
 		}
 	}
+	public double getScore_factor()
+	{
+		if (entry.zelftoetsHighScore && mode == ZELFTOETS)
+			return getZelftoetsHighScore();
+		else
+		{
+			double totaalScore = getTotaalScore_factor();
+			
+// De correctie bij score optellen.			
+			if (memento.isEindtoetsVerzegeld()) totaalScore += memento.getReviewScore_factor(factorMax[0]);
+			
+			double totaalMax = getTotaalMax_factor();
+	
+			if (totaalMax == 0)
+				return 100.0;
+	
+			double doubleScore = Math.round(100.0 * totaalScore / totaalMax);
+	
+			if (Double.isInfinite(doubleScore) || Double.isNaN(doubleScore))
+				doubleScore = 0;
+	
+			return doubleScore;
+		}
+	}
 
 	/**
 	 * Berekent de totale score van het applet, en geeft deze terug, geschaald
 	 * naar 100%.
 	 */
+	@Deprecated
 	public double getActualScore()
 	{
 		int totaalScore = getTotaalScore();
@@ -1358,12 +1384,26 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 		return doubleScore;
 	}
+	
+	public double getActualScore_factor() {
+		double totaalScore = getTotaalScore_factor();
+		double totaalMax = getTotaalMax_factor();
+		if (totaalMax == 0.0) 
+			return 0.0;
+		double doubleScore = Math.round(100.0 * totaalScore / totaalMax);
+
+		if (Double.isInfinite(doubleScore) || Double.isNaN(doubleScore))
+			doubleScore = 0;
+
+		return doubleScore;
+	}
 
 	/**
 	 * Berekent de totale score van de activiteit (over alle activiteiten (?) en
 	 * opdrachten), inclusief nakijkstraf indien van toepassing.
 	 */
-	public int getTotaalScore()
+	@Deprecated
+	private int getTotaalScore()
 	{
 
 		// int mode = EINDTOETS; // TODO wat zijn de modes? Launchdata?
@@ -1414,6 +1454,70 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return totaalScore;
 	}
 
+	
+	public double getTotaalScore_factor()
+	{
+
+		// int mode = EINDTOETS; // TODO wat zijn de modes? Launchdata?
+		double totaalScore = 0;
+
+		for (int i = 0; i < aantalActiviteiten; i++)
+		{
+			switch (mode)
+			{
+				case ZELFTOETS:
+					double hulp = (getAantalNakijken(i) * aftrekCorrectieZelftoets - aftrekCorrectieZelftoets); // een
+																												// keer
+																												// gratis
+																												// nakijken.
+
+					if (hulp <= 0)
+						hulp = 0;
+					else {
+						hulp *= -getTotaalMax_factor()/getTotaalMax();
+					}
+					
+					
+					int size = aantalOpdrachten[i];
+
+					for (int j = 0; j < size; j++)
+					{
+						hulp += scoresZelftoets[i][j] * factorMax[i][j];
+					}
+
+					if (hulp > 0)
+						totaalScore += hulp;
+					if (getAantalNakijken(i) == 0)
+						totaalScore = 0; // geen score tonen voor een niet nagekeken zelftoets
+
+					break;
+				case EINDTOETS:
+//					for (int j = 0; j < aantalOpdrachten[i]; j++) // identitiek
+//					{
+//						totaalScore += scores[i][j];
+//					}
+//					break;
+				default:
+					for (int j = 0; j < aantalOpdrachten[i]; j++)
+					{
+						totaalScore += scores[i][j] * factorMax[i][j];
+					}
+				}
+
+		} // for-loop i
+
+		return totaalScore;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Berekent het aantal keer nagekeken (over alle activiteiten (?)).
 	 */
@@ -1435,6 +1539,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	private int getTotaalMax()
 	{
 		int totaalMax = 0;
@@ -1447,6 +1552,17 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			}
 		}
 
+		return totaalMax;
+	}
+	
+	private double getTotaalMax_factor() {
+		double totaalMax = 0.0;
+		int[] scoresMax = this.scoresMax[0]; // 1 activiteit
+		float[] factorMax = this.factorMax[0];
+		for (int j = 0; j < aantalOpdrachten[0]; j++)
+		{
+			totaalMax += scoresMax[j] * factorMax[j];
+		}
 		return totaalMax;
 	}
 
@@ -1547,7 +1663,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		memento.setCurrentActiviteit(currentActiviteit);
 		memento.setCurrentOpdracht(currentOpdracht);
 		memento.setOrGoedFout(isCorrect);
-		double score = getScore();
+		double score = getScore_factor();
 		// THIS ORDER!!!!!
 		memento.setScore(score);
 		memento.setScores(scores);
@@ -1622,7 +1738,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 					goon = old;
 				}
 		     memento.mergeIntoReview(currentActiviteit, currentOpdracht, entryState);
-		     memento.setScore(getScore()); // update review
+		     memento.setScore(getScore_factor()); // update review
 			 memento.mergeIntoReview(currentActiviteit, currentOpdracht, Boolean.TRUE.equals(entry.isCorrect()));
 		   }
 		}
@@ -1676,7 +1792,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		if (entry.bolletjesZichtbaar())
 			setButtonCorrect(buttons.get(j), isCorrect(currentActiviteit,j), j);
 		source.setItemScore(j, scores[currentActiviteit][j]);
-		source.setTotaalScore((int) getScore());
+		source.setTotaalScore((int) getScore_factor());
 		unpause();
 	}
 	
@@ -1702,9 +1818,10 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		setScoresZelftoets(scores);
 		setIsCorrectZelftoets(isCorrect);
 
-		memento.setZelftoetsHighScore(getActualScore());
-		setZelftoetsHighScore((int) getActualScore());
-		memento.addScoreZelftoetsHistorie((int) getActualScore());
+		final double actualScore = getActualScore_factor();
+		memento.setZelftoetsHighScore(actualScore);
+		setZelftoetsHighScore((int) actualScore);
+		memento.addScoreZelftoetsHistorie((int) actualScore);
 		
 		// in memento de high score zetten als score opdat de score in het moduleoverzicht komt voor de docent
 		if (entry.zelftoetsHighScore)
@@ -1717,7 +1834,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			source.setItemScore(j, scores[currentActiviteit][j]);
 		}
 
-		source.setTotaalScore((int) getScore());
+		source.setTotaalScore((int) getScore_factor());
 		unpause();
 	}
 
@@ -1954,7 +2071,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		{
 			source.setBeantwoord(getAantalBeantwoord());
 			source.setOpdracht(getCurrentOpdracht());
-			source.setTotaalScore((int) getScore());
+			source.setTotaalScore((int) getScore_factor());
 			source.setItemScore(oldOpdr, getScoresHuidigeActiviteit()[oldOpdr]);
 		}
 
@@ -2500,7 +2617,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 			resetBezocht(currentActiviteit, opdracht);
 		}
 		source.setBeantwoord(getAantalBeantwoord());
-		source.setTotaalScore((int) getScore());
+		source.setTotaalScore((int) getScore_factor());
 
 		// setButtonCorrect(buttons.get(currentOpdracht),
 		// isCorrect[currentActiviteit][currentOpdracht], currentOpdracht);

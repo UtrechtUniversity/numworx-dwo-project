@@ -604,7 +604,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 
 		if (scoresZichtbaar && (!(on.getMode() == OpdrNav.EINDTOETS) || on.scoresVisible()))// scores niet tonen in niet-verzegelde eindtoets
 		{
-			scoreNav.setTotaalScoreLabel((int) on.getScore()); // toon percentagescore
+			scoreNav.setTotaalScoreLabel((int) on.getScore_factor()); // toon percentagescore
 			// nu de score gezet is kunnen we de breedte bepalen
 			if (score != null) sbw.widthScore = score.getOffsetWidth() + margin;
 		}
@@ -852,7 +852,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 			scoreNav.setViewMisconceptionsKnop(on.zijnMisconceptionsAanwezig());
 			
 //			scoreNav.setTotaalScoreLabel(on.getTotaalScore());
-			scoreNav.setTotaalScoreLabel((int) on.getScore()); // toon percentagescore
+			scoreNav.setTotaalScoreLabel((int) on.getScore_factor()); // toon percentagescore
 			scoreNav.setKeerNagekekenLabel(on.getKeerNagekeken());
 		}
 	}
@@ -2383,7 +2383,7 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	public Number getScoreRaw() {
 		if(on == null)
 			return null;
-		return Double.valueOf(on.getScore());
+		return Double.valueOf(on.getScore_factor());
 	}
 
 	

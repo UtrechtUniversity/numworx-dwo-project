@@ -1534,6 +1534,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
   private static String REVIEW_CORRECTIE_SCORE = CorrectieView.REVIEW_SCORE_CORRECTIE;
 
+  @Deprecated
   public int getReviewScore() {
 	  if (isReview()||isBrowse()) {
 		  String reviewData = api.GetValue(REVIEW_DATA);
@@ -1721,6 +1722,33 @@ public JSONObject getShareMap() {
 	
 	public VariableCollection get(int opdrachtnr, Supplier<VariableCollection> f) {
 		return collection.computeIfAbsent(opdrachtnr, x -> f.get());		
+	}
+
+	public double getReviewScore_factor(float[] maxFactor) {
+		// TODO Auto-generated method stub
+		if (isReview()||isBrowse()) {
+			  String reviewData = api.GetValue(REVIEW_DATA);
+			  if (reviewData.startsWith("{")) {
+				JSONValue data = JSONParser.parseStrict(reviewData);
+				if (data == null) return 0;
+				final JSONObject object = data.isObject();
+				if (object == null) return 0;
+				data = object.get("opdrContStates");
+				if (data == null) return 0;
+				JSONArray array = data.isArray();
+				if (array == null || array.size() == 0) return 0;
+				data = array.get(0);
+				if (data == null) return 0;
+				array = data.isArray();
+				if (array == null) return 0;
+				double sum = 0;
+				for (int i = 0; i < array.size(); i++) {
+					sum += getReviewScore(array.get(i)) * maxFactor[i];
+				}
+				return sum;			  
+			  }
+		  }
+		  return 0;
 	}
 	
 	

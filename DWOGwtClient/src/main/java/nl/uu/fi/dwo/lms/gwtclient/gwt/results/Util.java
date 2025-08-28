@@ -104,9 +104,14 @@ class Util {
     boolean checkDocent[] = getCheckDocent(launchdata, review_check, correctie, aantal, premium);
     for(int i = 0; i < aantal; i++) {
       String label = String.valueOf(i+1);
+      // if hasTitle, dan label = launchdata....getString("titel");
+      JSONObject opdracht = launchdata.isObject().get("opdracht_1_"+(i+1)).isObject();
+      if (JSONBoolean.getInstance(true).equals(opdracht.get("hasTitle"))) {
+    	  label = opdracht.get("titel").isString().stringValue();
+      }
       DomResultStudentScoPage item = new DomResultStudentScoPage(label);
       item.setNodeId(i);
-
+      
       //if (scores[i] == null) scores[i] = new JSONNumber(0); // FIXME dit is alleen voor het testen XXX 
 
       if (i < ls && scores[i] != null)
