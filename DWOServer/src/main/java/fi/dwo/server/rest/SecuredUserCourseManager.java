@@ -148,7 +148,7 @@ public class SecuredUserCourseManager {
         			if(pcc.isEmpty() || soc == null) // FIXME ook bij toets hier!
         				return Response.ok().entity("{}").build();
         			PersistentClassCourse pcc1 = pcc.get(0);
-        			if( pcc1.getViewState() != ViewState.studentsAndTeachers) {
+        			if( !pcc1.getViewState().moduleVisible()) {
         				LOG.warning("getCourseDescription "  + id + " viewstate wrong");
         				return Response.ok().entity("{}").build();
         			}
