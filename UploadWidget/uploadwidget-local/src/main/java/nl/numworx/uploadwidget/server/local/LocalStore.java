@@ -115,13 +115,13 @@ public class LocalStore extends Store {
 		if (opt.isPresent()) {
 			File f = new File(opt.get().id);
 			f.delete();
+			entries.remove(opt.get());
 		}
-		super.deleteByURL(url);
 	}
 
 	@Override
 	public Optional<AtomEntry> findByURL(String url) {
-		// TODO Auto-generated method stub
+		url = url.replace("_", ";"); // compensate decode/encode
 		return super.findByURL(url);
 	}
 

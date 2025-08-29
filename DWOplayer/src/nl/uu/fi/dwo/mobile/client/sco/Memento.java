@@ -310,6 +310,16 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		String reviewData = getValue(REVIEW_DATA);
 		if (reviewData.isEmpty()) return state;
 		JSONValue value = JSONParser.parseStrict(reviewData); // throws exception if empty argument
+		JSONValue reg = value.isObject().get(REGISTRATION);
+		if (reg != null) {
+			register = reg.isString();
+			if (state instanceof JSONObjectMapImpl) {
+				JSONObjectMapImpl impl = (JSONObjectMapImpl) state;
+				impl.unwrap().put(REGISTRATION, reg);
+			} else
+				state.put(REGISTRATION, reg.isString().stringValue());
+		}
+		
 		JSONArray review = value.isObject().get(OPDR_CONT_STATES).isArray();
 		int size = review.size();
 		if (act < size) {
@@ -1605,9 +1615,13 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
       if(statei == null) {
         statei = new JSONArray(); r.put(OPDR_CONT_STATES, statei);
       }
+      if (!r.containsKey(REGISTRATION) && register != null) {
+    	  r.put(REGISTRATION, register);
+      }
     }
     else {
       r = new JSONObject();
+      r.put(REGISTRATION, new JSONString(getRegistration()));
       statei = new JSONArray(); r.put(OPDR_CONT_STATES, statei);
     }
     JSONValue v = statei.get(currentActiviteit);
