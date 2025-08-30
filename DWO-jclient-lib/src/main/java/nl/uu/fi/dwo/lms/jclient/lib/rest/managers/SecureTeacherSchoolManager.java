@@ -7,7 +7,9 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
+import nl.uu.fi.dwo.rest.entities.RestSchoolOrganisation;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.util.PathId;
 
@@ -29,4 +31,10 @@ public class SecureTeacherSchoolManager implements SchoolManager {
     return StoredRestManager.getInstance().getContext();
   }
 
+  static public DomSchoolOrganisation getStudentsInSchool(StoredRestManager instance, DomSchoolOrganisation submit) throws Dwo2Exception {
+	  RestSchoolOrganisation rest = new RestSchoolOrganisation(instance.getContext(), submit);
+	  DomSchoolOrganisation result = instance.put("rest/sec:" + PathId.getId(rest.getRestContext()) + "/teacher/school/getStudentsInSchool", DomSchoolOrganisation.class, rest);
+	  return result;
+  }
+  
 }
