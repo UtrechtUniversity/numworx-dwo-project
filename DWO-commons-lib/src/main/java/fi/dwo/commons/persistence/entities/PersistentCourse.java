@@ -304,9 +304,11 @@ public class PersistentCourse implements Serializable {
     }
 
     /**
+     * Never null. Rest depends on that.
      * @return the lastChangeTimeStamp
      */
     public Long getLastChangeTimeStamp() {
+    	if (lastChangeTimeStamp == null) return 0L; // null means 'never changed'
         return lastChangeTimeStamp;
     }
 
