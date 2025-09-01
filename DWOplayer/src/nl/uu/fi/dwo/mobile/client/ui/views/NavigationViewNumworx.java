@@ -574,7 +574,11 @@ public class NavigationViewNumworx extends ResizeComposite implements Navigation
 		if(b1 != b2) {
 			return Boolean.compare(b1, b2);
 		}
-		
+		String tree1 = o1.getTreeIndex();
+		String tree2 = o2.getTreeIndex();
+		if (tree1 != null && tree2 != null) {
+			return tree1.compareTo(tree2);
+		}
 //		if (o1.getType()== SelectModuleItem.Type.SCO & o2.getType() == SelectModuleItem.Type.SCO)
 		return Integer.signum(o1.getSequencenr()-o2.getSequencenr());
 

@@ -125,6 +125,7 @@ public final class CoursesOfClasToSelectItems
 			}
 			boolean inExam = PARAMETERS.inKiosk(); // only secured courses
 			Map<PersistenceId, DomCourseStudent> courses = map(t.getCourses());
+			fillTree(courses);
 			Collection<DomClassCourse> classcourses = sort(t.getClassCourses(),t);
 			List<SelectModuleItem> result = new ArrayList<SelectModuleItem>(classcourses.size());
 			for (Iterator<DomClassCourse> iterator = classcourses.iterator(); iterator.hasNext();) {
@@ -151,6 +152,31 @@ public final class CoursesOfClasToSelectItems
 				result.add(item);
 			}
 			return result;
+		}
+
+		private void fillTree(Map<PersistenceId, DomCourseStudent> courses) {
+			for(DomCourseStudent item: courses.values()) {
+				createTreeIndex(item, courses);			
+			}
+			
+		}
+
+		private String createTreeIndex(DomCourseStudent item, Map<PersistenceId, DomCourseStudent> courses) {
+			if (item.getTreeIndex() != null) return item.getTreeIndex();
+			PersistenceId pid = item.getParentID();
+			DomCourseStudent parent = courses.get(pid);
+			String tree = Character.toString(treeSequence(item));
+			if (parent != null) {
+				tree = createTreeIndex(parent, courses) + tree;
+			}
+			item.setTreeIndex(tree);
+			return tree;
+		}
+
+		protected char treeSequence(DomCourseStudent item) {
+			if (item.getSequenceNr() == null) 
+				return '_';
+			return (char) (item.getSequenceNr().shortValue()+'!');
 		}
 
 		private Map<PersistenceId, DomCourseStudent> map(
