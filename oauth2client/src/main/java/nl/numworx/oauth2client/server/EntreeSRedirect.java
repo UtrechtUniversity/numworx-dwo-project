@@ -161,6 +161,7 @@ public class EntreeSRedirect extends HttpServlet {
 				} else
 				if (!user_id.contains("@"))	// in entree @realm aanwezig, laat dat zo 
 					sug += "@" + fullschool.getSchoolLogin(); // standaard realm is schoollogin = brincode of surfcode, niet als bij coornhert-gymnasium.nl
+sug = systemManager.getSuggestion(sug);
 				cookie("suggestion" , sug, resp);
 			}
 			if (true) {

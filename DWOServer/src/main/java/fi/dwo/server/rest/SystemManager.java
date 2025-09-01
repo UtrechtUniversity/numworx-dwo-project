@@ -24,6 +24,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -198,8 +199,12 @@ public class SystemManager {
     return u;
   }
   
+  private static String esc(String input) {
+	  return "\"" + JSONValue.escape(input) + "\"";
+  }
+  
   @PUT
-  @Produces({"text/plain", "application/json"})
+  @Produces({"application/json"})
   @Path("/user/suggestion")
   public String suggestion(String input) throws ParseException {
     if(input.startsWith("\"")) {
@@ -209,7 +214,7 @@ public class SystemManager {
     int cntr = 0;
     List<PersistentUser> list = UserManager.findUsersLike(input);
     if (list.isEmpty())
-      return input;
+      return esc(input);
     String base = input;
     String tail = "";
 
@@ -226,7 +231,7 @@ public class SystemManager {
     while ( names.contains(input.toLowerCase()) && cntr < 100) {
       input = base + (++cntr) + tail;      
     }
-    return input;
+    return esc(input);
   }
   @PUT
   @Path("/school/submit")
