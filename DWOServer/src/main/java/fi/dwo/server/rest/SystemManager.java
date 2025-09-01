@@ -211,12 +211,20 @@ public class SystemManager {
     if (list.isEmpty())
       return input;
     String base = input;
+    String tail = "";
+
+    int alpha = base.indexOf('@');
+    if (alpha > 0) {
+    	tail = base.substring(alpha);
+    	base = base.substring(0,alpha);
+    }
+    
     Set<String> names = list.stream()
     		.map(PersistentUser::getUsername)
     		.map(String::toLowerCase)
     		.collect(Collectors.toSet());
     while ( names.contains(input.toLowerCase()) && cntr < 100) {
-      input = base + (++cntr);      
+      input = base + (++cntr) + tail;      
     }
     return input;
   }
