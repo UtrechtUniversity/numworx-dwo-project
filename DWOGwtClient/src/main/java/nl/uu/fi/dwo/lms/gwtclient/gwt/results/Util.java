@@ -75,6 +75,13 @@ class Util {
                 JSONNumber number = orScores.get(i).isNumber();
                 LOG.log(Level.FINE, "score " + i + " = " + number);
                 scores[i] = number;
+                
+                if (number.doubleValue() == 0.0) { 
+                	if (i >= bezocht.size() || bezocht.get(i) == JSONBoolean.getInstance(false))
+                		scores[i] = null; // niet bezocht, geen score!!!
+                }
+                
+                
             } catch (Exception e) {
                 LOG.log(Level.WARNING, "score " + i, e);
                 if (i < bezocht.size() && bezocht.get(i) == JSONBoolean.getInstance(true))
