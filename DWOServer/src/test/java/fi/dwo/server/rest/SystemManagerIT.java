@@ -123,9 +123,9 @@ public class SystemManagerIT {
   public void testSuggestion() throws ParseException {
     String input = "user02";
     String suggestion = manager.suggestion(input);
-    assertEquals("suggest", input + 1, suggestion);
+    assertEquals("suggest", "\"" + input + 1 + "\"", suggestion);
     
-    input = "hoplada";
+    input = "\"hoplada\"";
     suggestion = manager.suggestion(input);
     assertEquals("notfound", input, suggestion);
   
