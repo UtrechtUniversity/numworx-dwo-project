@@ -158,6 +158,11 @@ public class ScoPageUtilManager {
 					JsonValue b = bezocht.get(index);
 					if (b == JsonValue.TRUE) score = 0;
 				}
+			} else if (score.intValue() == 0) {
+				if (bezocht != null) {
+					if (index >= bezocht.size() || JsonValue.FALSE == bezocht.get(index))
+						score = null;
+				}
 			}}
 
 			// bepaal score uit json
@@ -279,25 +284,32 @@ public class ScoPageUtilManager {
 		
 	}
 
-	private static int sumCorrectie(JsonValue value) {
-		int sum = 0;
+	private static Integer add(Integer x, Integer y) {
+		if (x == null) return y;
+		if (y == null) return x;
+		return x.intValue() + y.intValue();
+	}
+	
+	private static Integer sumCorrectie(JsonValue value) {
+		Integer sum = null;
 		if (value == null) return sum;
 		ValueType type = value.getValueType();
 		switch (type) {
 		case ARRAY:
 			JsonArray array = value.asJsonArray();
 			for (int i = 0; i < array.size(); i++) {
-				sum += sumCorrectie(array.get(i));
+				sum = add(sum, sumCorrectie(array.get(i)));
 			}
 			break;
 		case OBJECT:
 			JsonObject o = value.asJsonObject();
 			JsonValue s;
 			s = o.get("interactiePanelStates");
-			sum += sumCorrectie(s);
+			sum = add(sum, sumCorrectie(s));
 			s = o.get("reviewInteractieData");
-			sum += sumCorrectie(s);
-			sum += o.getInt("reviewScoreCorrectie",0);
+			sum = add(sum, sumCorrectie(s));
+			if (o.containsKey("reviewScoreCorrectie"))
+				sum = add(sum, o.getInt("reviewScoreCorrectie",0));
 			break;
 		default:
 			break;		
