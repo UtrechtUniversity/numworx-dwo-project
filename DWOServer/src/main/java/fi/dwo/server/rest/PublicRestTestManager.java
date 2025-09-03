@@ -59,18 +59,17 @@ public class PublicRestTestManager {
     @Produces({"application/json"})
     @Path("/test400Error/json")
     public Response test400Error(@Context SecurityContext sc) {
-        String userName = sc.getUserPrincipal().getName();
+        String userName = "anonymous";
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 400 thrown on request of user: " + userName + ".");
-        Response r = Response.status(400).entity(e.getMessage()).build();
-        return r;
+        throw e;
     }
 
     @GET
     @Produces({"application/json"})
     @Path("/test401Error/json")
     public Response test401Error(@Context SecurityContext sc) {
-        String userName = sc.getUserPrincipal().getName();
+        String userName = "anonymous";
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 401 thrown on request of user: " + userName + ".");
         Response r = Response.status(401).entity(e.getMessage()).build();
@@ -81,7 +80,7 @@ public class PublicRestTestManager {
     @Produces({"application/json"})
     @Path("/test500Error/json")
     public Response test500Error(@Context SecurityContext sc) {
-        String userName = sc.getUserPrincipal().getName();
+        String userName = "anonymous";
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 500 thrown on request of user: " + userName + ".");
         Response r = Response.status(500).entity(e.getMessage()).build();

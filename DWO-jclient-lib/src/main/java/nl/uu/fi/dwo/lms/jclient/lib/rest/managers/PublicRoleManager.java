@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author G.A.J. van der Plas
  */
 @Deprecated
-public class PublicRoleManager {
+class PublicRoleManager {
 
   private static final Logger LOG = Logger.getLogger(PublicRoleManager.class.getName());
 

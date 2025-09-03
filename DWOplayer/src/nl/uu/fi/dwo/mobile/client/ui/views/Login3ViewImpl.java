@@ -11,6 +11,7 @@ import nl.uu.fi.dwo.mobile.client.text.Text;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -61,7 +62,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 	@UiField(provided=true) String build;
 	@UiField(provided=true) String for_students;
 	
-	@UiField HTML logoPanel;
+	@UiField HTML logoPanel, exitPanel;
 	@UiField Widget loginPanel;
 	@UiField Widget linksPanel;
 	@UiField Button loginBtn;
@@ -111,6 +112,7 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		{		
 			linksPanel.removeFromParent();
 			allowGuest(false);
+			exitPanel.getElement().getStyle().setDisplay(Display.BLOCK);
 		}
 		
 	}
@@ -231,4 +233,10 @@ public class Login3ViewImpl extends Composite implements LoginView  {
 		if (allow && guestHandler != null) 
 			guestHandler.onClick(e);	
 	}
+	
+	@Override
+	public HasClickHandlers getExitPanel() {
+		return exitPanel; 
+	}
+	
 }
