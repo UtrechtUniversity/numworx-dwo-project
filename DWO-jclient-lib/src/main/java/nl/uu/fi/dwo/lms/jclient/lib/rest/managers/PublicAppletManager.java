@@ -7,7 +7,7 @@ import nl.uu.fi.dwo.rest.entities.RestAppletId;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 @Deprecated
-class PublicAppletManager {
+public class PublicAppletManager {
 
 	public static DomAppletFull getApplet(DomAppletId id) throws Dwo2Exception {
 		RestAppletId rest = new RestAppletId();
