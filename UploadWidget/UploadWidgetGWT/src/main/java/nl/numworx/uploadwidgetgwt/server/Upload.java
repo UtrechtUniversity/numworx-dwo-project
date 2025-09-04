@@ -93,7 +93,7 @@ public class Upload extends UploadAction {
 				.append(registration).append("/")
 				.append(entry.title);
 			entry.url = requestURL.toString();
-			Map<String, String> map = Collections.singletonMap("learnerid", learnerId);
+			Map<String, String> map = Collections.singletonMap("learnerid", Store.getPathId(actor.get().getHasRole()));
 			store.addEntry(entry, map, item);
 			item.delete();
 		}

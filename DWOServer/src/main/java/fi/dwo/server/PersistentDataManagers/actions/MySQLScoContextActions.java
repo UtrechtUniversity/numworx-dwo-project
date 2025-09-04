@@ -185,14 +185,15 @@ public class MySQLScoContextActions {
         }
         Long courseID = pc.getCourseID();
 // invalidate course result cache
-        List<PersistentClassCourse> ccs = ClassCourseManager.findEntities(new PersistentCourse(courseID));
-        ccs.forEach(cc -> {
-        	if (Boolean.TRUE.equals(cc.hasResults())
-//        			&& (cc.getViewState() == ViewState.students||cc.getViewState() == ViewState.studentsOrTeachers)
-        			) {
-        		ClassCourseManager.editResults(cc.getClassCourseID(), null);
-        	}
-        });
+//        List<PersistentClassCourse> ccs = ClassCourseManager.findEntities(new PersistentCourse(courseID));
+//        ccs.forEach(cc -> {
+//        	if (Boolean.TRUE.equals(cc.hasResults())
+////        			&& (cc.getViewState() == ViewState.students||cc.getViewState() == ViewState.studentsOrTeachers)
+//        			) {
+//        		ClassCourseManager.editResults(cc.getClassCourseID(), null);
+//        	}
+//        });
+        ClassCourseManager.uncacheResults(new PersistentCourse(courseID)); // XXX in bovenstaande alleen voor TRUE
     }
 
     static DomScoContextFull add(PersistentCourse c, DomScoContextFull scoContext,
@@ -316,6 +317,7 @@ public class MySQLScoContextActions {
     }
 
     private static void relocateScos(PersistentCourse c, final long seq, final long incr) {
+      ClassCourseManager.uncacheResults(c);
       List<PersistentScoContext> list = ScoContextManager.findEntities(c);
       list.forEach(item -> {
           long s = item.getSequencenr().longValue();

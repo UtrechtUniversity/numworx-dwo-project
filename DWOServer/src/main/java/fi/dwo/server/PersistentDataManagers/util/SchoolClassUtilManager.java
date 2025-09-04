@@ -77,6 +77,7 @@ public class SchoolClassUtilManager {
                 HasRoleManager.edit(phr);
             }
             StudentOfClassManager.destroy(socId);
+            ClassCourseManager.uncacheResults(schoolClass);
         } catch (PersistenceException e) {
             return false;
         }
@@ -95,9 +96,9 @@ public class SchoolClassUtilManager {
             if (phr.getClassID() == null) {
                 phr.setSchoolClass(schoolClass);
                 HasRoleCache.remove(phr);
-                HasRoleManager.edit(phr); // TODO met try/catch?
+                phr = HasRoleManager.edit(phr); // TODO met try/catch?
             }
-
+            ClassCourseManager.uncacheResults(schoolClass);
         } catch (PersistenceException e) {
             return false;
         }

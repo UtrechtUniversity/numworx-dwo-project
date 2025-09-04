@@ -433,4 +433,31 @@ public class ClassCourseManager {
             }
         }
 	}
+	
+	public static void uncacheResults(PersistentCourse course) {
+		EntityManager em = getEntityManager();
+		try {
+			em.getTransaction().begin();
+			Query q = em.createQuery("UPDATE PersistentClassCourse SET results = NULL WHERE courseID = :c AND results IS NOT NULL");
+			q.setParameter("c", course.getCourseID());
+			q.executeUpdate();
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+	}
+
+	public static void uncacheResults(PersistentSchoolClass sc) {
+		EntityManager em = getEntityManager();
+		try {
+			em.getTransaction().begin();
+			Query q = em.createQuery("UPDATE PersistentClassCourse SET results = NULL WHERE classID = :c AND results IS NOT NULL");
+			q.setParameter("c", sc.getClassID());
+			q.executeUpdate();
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
+	}
+	
 }

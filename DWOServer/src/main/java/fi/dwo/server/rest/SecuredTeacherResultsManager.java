@@ -955,6 +955,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
 		String label = page.getLabel();
 		if (label == null) label = String.valueOf(s.getSequencenr().intValue() + 1);
 		s.setLabel(label);
+		s.setMaxFactor(page.getMaxFactor());
 		PersistentHasRolePK pk = page.getId().getHasRolePK();
 		if (pk != null)
 		{

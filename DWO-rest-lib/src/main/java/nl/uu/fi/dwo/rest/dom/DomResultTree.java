@@ -374,6 +374,7 @@ public class DomResultTree {
           LOG.info("size is " + rssc.getChildren().size());
           rssc.getChildren().clear(); // invalidate pages
           rssc.setStudentSco(studentSco);
+          rssc.setStudentScoCount(1);
           return true;
         } else { 
           return false;

@@ -391,5 +391,12 @@ public class SelectModuleItem
   public void setPlace(Place place) {
     this.place = place;
   }
+
+public String getTreeIndex() {
+	if (original instanceof DomCourseStudent) {
+		return ((DomCourseStudent) original).getTreeIndex();
+	}
+	return null;
+}
 	
 }

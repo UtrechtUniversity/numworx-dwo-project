@@ -3,6 +3,7 @@
  */
 package fi.dwo.server.rest;
 
+import java.io.StringReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,12 +15,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonReader;
 import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -29,6 +34,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentSchoolData;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
@@ -43,6 +49,7 @@ import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolDataUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
@@ -55,6 +62,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.SchoolAttrType;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
 import nl.uu.fi.dwo.rest.entities.RestSamlUser;
 import nl.uu.fi.dwo.rest.entities.RestSchool;
@@ -125,6 +133,8 @@ public class SystemManager {
       return buildDomSchoolFull(school);  
   }
 
+  static final SchoolAttrType[] KEYS = { SchoolAttrType.REALM, SchoolAttrType.BRIN };
+  
   private DomSchoolFull buildDomSchoolFull(PersistentSchool school) {
 	if (school == null) return null;
     DomSchoolFull dom = school.buildDomSchoolFull();
@@ -134,6 +144,20 @@ public class SystemManager {
           .map(item -> new DomMapEntry<RoleType, String>(RoleType.values()[item.getGroupID()], item.getPasswd()))
           .collect(Collectors.toList());
     dom.setPasswords(passwords);
+    PersistentSchoolData data = SchoolDataUtilManager.find(school);
+    List<DomMapEntry<SchoolAttrType, String>> attrs = new ArrayList<>(KEYS.length);
+    if (data != null) {
+    	JsonReader reader = Json.createReader(new StringReader(data.getSchoolData()));
+    	JsonObject object = reader.readObject();
+    	reader.close();
+    	for (SchoolAttrType key : KEYS ) {
+    		String value = object.getString(key.key(), null);
+    		if (value != null) {
+    			attrs.add(new DomMapEntry<SchoolAttrType, String>(key, value));
+    		}    		
+    	}
+    }
+    dom.setAttributes(attrs);
     return dom;
   }
 
@@ -168,11 +192,19 @@ public class SystemManager {
         throw new Dwo2RestException(Dwo2ExceptionCode.Rest_InternalError, "Server error. Can't update samluser with id:" + samlUser.getId() + ".");
     }
     u.setAuthToken(samlUser.getAuthToken());
+    String unit = u.getSamlUnit();
+	if (unit != null && !unit.isEmpty()) {
+		u.setAuthToken(u.getAuthToken() + "\f" + unit);
+	}
     return u;
   }
   
+  private static String esc(String input) {
+	  return "\"" + JSONValue.escape(input) + "\"";
+  }
+  
   @PUT
-  @Produces({"text/plain", "application/json"})
+  @Produces({"application/json"})
   @Path("/user/suggestion")
   public String suggestion(String input) throws ParseException {
     if(input.startsWith("\"")) {
@@ -182,16 +214,24 @@ public class SystemManager {
     int cntr = 0;
     List<PersistentUser> list = UserManager.findUsersLike(input);
     if (list.isEmpty())
-      return input;
+      return esc(input);
     String base = input;
+    String tail = "";
+
+    int alpha = base.indexOf('@');
+    if (alpha > 0) {
+    	tail = base.substring(alpha);
+    	base = base.substring(0,alpha);
+    }
+    
     Set<String> names = list.stream()
     		.map(PersistentUser::getUsername)
     		.map(String::toLowerCase)
     		.collect(Collectors.toSet());
     while ( names.contains(input.toLowerCase()) && cntr < 100) {
-      input = base + (++cntr);      
+      input = base + (++cntr) + tail;      
     }
-    return input;
+    return esc(input);
   }
   @PUT
   @Path("/school/submit")

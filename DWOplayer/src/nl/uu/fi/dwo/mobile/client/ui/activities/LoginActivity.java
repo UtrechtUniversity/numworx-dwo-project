@@ -346,7 +346,10 @@ public class LoginActivity extends AbstractActivity
 								});
 						}
 					})),
-
+					(view.get().getExitPanel().addClickHandler( e -> logout())),
+					
+					
+					
 					// Register enter handler
 					(view.get().getMainPanel().addKeyUpHandler(new KeyUpHandler() {
 
@@ -360,6 +363,7 @@ public class LoginActivity extends AbstractActivity
 							}
 						}
 					})));
+					
 
 				}
 				Logger.getLogger("DWOplayer").log(Level.FINE, "Done with panel");

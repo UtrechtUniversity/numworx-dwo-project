@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdminAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
@@ -19,6 +20,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
@@ -44,12 +46,25 @@ public class SecuredSchoolAdminSchoolManager {
     return F(service::getSchoolAdminsInSchool,PathId.getId(context), rest);
   }
 
-  public Promise<List<DomTeacher>> getTeachersInSchool(DomContext context) {
+  public Promise<List<DomSchoolAdminAndHasRole>> getSchoolAdminsAndHasRoleInSchool(DomContext context) {
+	    RestContext rest = new RestContext();
+	    rest.setRestContext(context);
+	    return F(service::getSchoolAdminsAndHasRoleInSchool,PathId.getId(context), rest);
+	  }
+
+  public Promise<List<DomTeacherAndHasRole>> getTeachersAndHasRoleInSchool(DomContext context) {
     RestContext rest = new RestContext();
     rest.setRestContext(context);
-    return F(service::getTeachersInSchool,PathId.getId(context), rest);
+    return F(service::getTeachersAndHasRoleInSchool,PathId.getId(context), rest);
   }
 
+  public Promise<List<DomTeacher>> getTeachersInSchool(DomContext context) {
+	    RestContext rest = new RestContext();
+	    rest.setRestContext(context);
+	    return F(service::getTeachersInSchool,PathId.getId(context), rest);
+	  }
+
+  
   public Promise<List<DomStudent>> getStudentsInSchool(DomContext context) {
     RestContext rest = new RestContext();
     rest.setRestContext(context);

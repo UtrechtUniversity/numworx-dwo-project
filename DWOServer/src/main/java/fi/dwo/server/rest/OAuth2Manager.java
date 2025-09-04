@@ -28,17 +28,29 @@ import javax.ws.rs.core.Response.Status;
 import com.digitalmolehill.crypto.SymmetricCryptor;
 
 import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentLoginContext;
 import fi.dwo.commons.persistence.entities.PersistentSamlUser;
+import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
+import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.commons.util.DatatypeConverter;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import fi.dwo.server.PersistentDataManagers.cache.LoginContextCache;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.SamlUserManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
+import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
+import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import fi.dwo.server.rest.jaxrsfilters.AuthenticationRequestFilter;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -54,6 +66,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import nl.uu.fi.dwo.rest.dom.entities.DomToken;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.oauth.ErrorResponse;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.security.TOTP;
@@ -240,6 +253,26 @@ static final String AUTHORIZATION_CODE = "authorization_code";
 					} catch (Exception e) {
 						LOG.log(Level.WARNING, "samluser edit", e);
 					}
+                    try {
+						if (split.length > 4 && user.isSingleSchoolAccount()) {
+							String naam = split[4];
+							// find school of user:
+							PersistentSchool school = user.getPersistentSchoolGroup().getSchool();
+							PersistentSchoolClass sc = SchoolClassManager.findEntity(naam, school);
+							if (sc != null && AboType.premium == school.getAboType() && school.licenseIsValid()) {
+							PersistentStudentOfClassPK id = new PersistentStudentOfClassPK(user.getId(), sc.getClassID(), user.getSchoolGroupId());
+							PersistentStudentOfClass soc = StudentOfClassManager.findEntity(id);
+							if (soc == null) {			
+								PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), user.getSchoolGroupId()));
+								hr.setClassID(null); // force a switch
+								SchoolClassUtilManager.registerStudentForSchoolClass(hr, sc);
+							}}
+						}
+					} catch (Throwable e) {
+						LOG.log(Level.WARNING, "add schoolclass class failure ", e);
+					}
+                    	
+                    
                     return buildTokenResponse(user, l);
                  } catch (Exception e) {
                     LOG.log(Level.SEVERE, "logincontext", e);

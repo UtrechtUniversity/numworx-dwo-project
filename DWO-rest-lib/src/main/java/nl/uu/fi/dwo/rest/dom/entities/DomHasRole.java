@@ -4,6 +4,9 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+
+import java.util.Date;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -18,6 +21,7 @@ public class DomHasRole {
     private PersistenceId schoolGroupId;
     private PersistenceId userId;
     private String rights = "_";
+    private Date lastLogin;
 
     public DomHasRole(){
         
@@ -91,5 +95,17 @@ public class DomHasRole {
      */
     public void setRights(String rights) {
         this.rights = rights;
-    }    
+    }
+	/**
+	 * @return the lastLogin
+	 */
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+	/**
+	 * @param lastLogin the lastLogin to set
+	 */
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
+	}    
 }

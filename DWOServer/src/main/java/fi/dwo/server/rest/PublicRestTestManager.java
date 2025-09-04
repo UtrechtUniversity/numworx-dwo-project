@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Date;
+import java.util.List;
 import java.util.logging.Level;
 
 import nl.numworx.schoolyear.jclient.SchoolyearClient;
 import nl.numworx.schoolyear.jclient.dto.SignatureDTO;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import java.util.logging.Logger;
@@ -22,6 +25,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
+import fi.dwo.commons.persistence.entities.PersistentHasRole;
+import fi.dwo.commons.persistence.entities.PersistentLoginContext;
+import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
+import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
+import fi.dwo.server.PersistentDataManagers.core.UserManager;
 
 /**
  * REST functions that allows one to test the proper catching of HTML-errors.
@@ -48,18 +59,17 @@ public class PublicRestTestManager {
     @Produces({"application/json"})
     @Path("/test400Error/json")
     public Response test400Error(@Context SecurityContext sc) {
-        String userName = sc.getUserPrincipal().getName();
+        String userName = "anonymous";
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 400 thrown on request of user: " + userName + ".");
-        Response r = Response.status(400).entity(e.getMessage()).build();
-        return r;
+        throw e;
     }
 
     @GET
     @Produces({"application/json"})
     @Path("/test401Error/json")
     public Response test401Error(@Context SecurityContext sc) {
-        String userName = sc.getUserPrincipal().getName();
+        String userName = "anonymous";
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 401 thrown on request of user: " + userName + ".");
         Response r = Response.status(401).entity(e.getMessage()).build();
@@ -70,7 +80,7 @@ public class PublicRestTestManager {
     @Produces({"application/json"})
     @Path("/test500Error/json")
     public Response test500Error(@Context SecurityContext sc) {
-        String userName = sc.getUserPrincipal().getName();
+        String userName = "anonymous";
         //TODO REST update lastLogin and such.
         Dwo2RestException e = new Dwo2RestException(Dwo2ExceptionCode.User_AuthenticationError, "DwoRestException 500 thrown on request of user: " + userName + ".");
         Response r = Response.status(500).entity(e.getMessage()).build();
@@ -139,4 +149,40 @@ public class PublicRestTestManager {
 		return false;
 	}
 
+	
+	@GET
+	@Path("system/maintenance")
+	@Produces({"text/plain"})
+	public String maintenance(@QueryParam("skip") Integer start, @QueryParam("limit") Integer limit) throws Exception {
+		StringBuilder sb = new StringBuilder();
+		
+		if (start == null) start = 0;
+		if (limit == null) limit = 100;
+		
+		
+		List<PersistentHasRole> hr = HasRoleManager.findEntities(limit, start);
+		for(PersistentHasRole item: hr) {
+			start = start + 1;
+			if (item.optlock > 0) continue;
+			Long userid = item.getPersistentHasRolePK().getUserID();
+			List<PersistentLoginContext> lc = LoginContextManager.findEntities(userid);
+			if (!lc.isEmpty() && null != lc.get(0).getLastLogin()) {
+				item.setLastLogin(new Date(lc.get(0).getLastLogin()));
+			} else {
+				PersistentUser u = UserManager.findEntity(userid);
+				if (u == null) 
+				{
+					item.delState = DelState.marked;
+					userid = null;
+				}
+				else
+					item.setLastLogin(u.getLastLogin());
+			}
+			item = HasRoleManager.edit(item);
+			HasRoleCache.remove(item);
+			sb.append(start).append(" ").append(userid).append("\n");
+		}
+		sb.append(start).append(" END");
+		return sb.toString();
+	}
 }

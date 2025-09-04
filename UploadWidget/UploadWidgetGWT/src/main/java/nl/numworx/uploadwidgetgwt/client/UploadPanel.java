@@ -88,8 +88,8 @@ class UploadPanel extends Composite implements ClickHandler, OnFinishUploaderHan
 		this.lessonMode = comRoot.getLessonMode();
 		this.role = comRoot.getRole();
 		UploadSession.setComRoot(comRoot);
-		if (lessonMode == LessonMode.normal && role == Role.Learner) {
-			ObjectMap context = comRoot.getContext();
+		ObjectMap context = comRoot.getContext();
+		if (lessonMode == LessonMode.normal && role == Role.Learner || lessonMode == LessonMode.review && context.getBoolean("sealed", false)) {
 			Hidden registration = new Hidden("registration", context.getString("registration"));
 			uploader.add(registration, 0);
 			Hidden uuid = new Hidden("uuid", comRoot.getUUID());

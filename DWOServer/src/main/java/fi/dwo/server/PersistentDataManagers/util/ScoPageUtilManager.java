@@ -62,8 +62,14 @@ public class ScoPageUtilManager {
 				JsonNumber number = page.getJsonNumber("scoreMax");
 				if ( page.getBoolean("hasTitle", false)) {
 					scopage.setLabel(page.getString("titel", String.valueOf(i+1)));
+					JsonNumber maxFactor = page.getJsonNumber("maxFactor");
+					if (maxFactor != null)
+						scopage.setMaxFactor(maxFactor.numberValue());
+					else 
+						scopage.setMaxFactor(null);
 				} else {
-					//scopage.setLabel("Problem " + (i+1)); // FIXME STUB!!!
+					scopage.setLabel(null);
+					scopage.setMaxFactor(null);
 				}
 				scopage.setMaxScore(number.intValue());
 				boolean b = page.getBoolean("checkDocent", false);
@@ -128,6 +134,7 @@ public class ScoPageUtilManager {
 				dst.setOptlock(src.getOptlock());
 				dst.setCorrectie(null);
 				dst.setLabel(src.getLabel());
+				dst.setMaxFactor(src.getMaxFactor());
 				ScoPageManager.create(dst);
 				map.put(i, dst);
 			}
@@ -150,6 +157,11 @@ public class ScoPageUtilManager {
 				if (bezocht != null && index < bezocht.size()) {
 					JsonValue b = bezocht.get(index);
 					if (b == JsonValue.TRUE) score = 0;
+				}
+			} else if (score.intValue() == 0) {
+				if (bezocht != null) {
+					if (index >= bezocht.size() || JsonValue.FALSE == bezocht.get(index))
+						score = null;
 				}
 			}}
 
@@ -258,7 +270,7 @@ public class ScoPageUtilManager {
 					PersistentScoPagePK id = new PersistentScoPagePK(pssc.getScoID(), Long.valueOf(i), null);
 					PersistentScoPage org = ScoPageManager.findEntity(id);
 					if (org == null) continue;  // should not happen!
-					page.setCheckDocent(org.getCheckDocent());
+					page.setCheckDocent(org.getCheckDocent()); page.setLabel(org.getLabel()); page.setMaxFactor(org.getMaxFactor());
 					page.setCourseID(org.getCourseID());
 					page.setMaxScore(org.getMaxScore());
 					map.put(page.getId().getSequencenr(), page);
@@ -272,25 +284,32 @@ public class ScoPageUtilManager {
 		
 	}
 
-	private static int sumCorrectie(JsonValue value) {
-		int sum = 0;
+	private static Integer add(Integer x, Integer y) {
+		if (x == null) return y;
+		if (y == null) return x;
+		return x.intValue() + y.intValue();
+	}
+	
+	private static Integer sumCorrectie(JsonValue value) {
+		Integer sum = null;
 		if (value == null) return sum;
 		ValueType type = value.getValueType();
 		switch (type) {
 		case ARRAY:
 			JsonArray array = value.asJsonArray();
 			for (int i = 0; i < array.size(); i++) {
-				sum += sumCorrectie(array.get(i));
+				sum = add(sum, sumCorrectie(array.get(i)));
 			}
 			break;
 		case OBJECT:
 			JsonObject o = value.asJsonObject();
 			JsonValue s;
 			s = o.get("interactiePanelStates");
-			sum += sumCorrectie(s);
+			sum = add(sum, sumCorrectie(s));
 			s = o.get("reviewInteractieData");
-			sum += sumCorrectie(s);
-			sum += o.getInt("reviewScoreCorrectie",0);
+			sum = add(sum, sumCorrectie(s));
+			if (o.containsKey("reviewScoreCorrectie"))
+				sum = add(sum, o.getInt("reviewScoreCorrectie",0));
 			break;
 		default:
 			break;		

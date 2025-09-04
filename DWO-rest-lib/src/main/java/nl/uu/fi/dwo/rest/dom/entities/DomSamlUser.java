@@ -14,7 +14,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomSamlUser {
     private String samlUserId;
     private String samlOrgId;
-    private String authToken;    
+    private String authToken;
+    private String samlUnit;
 
     /**
      * @return the samlUserId
@@ -57,4 +58,18 @@ public class DomSamlUser {
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
+
+	/**
+	 * @return the samlUnit
+	 */
+	public String getSamlUnit() {
+		return samlUnit;
+	}
+
+	/**
+	 * @param samlUnit the samlUnit to set
+	 */
+	public void setSamlUnit(String samlUnit) {
+		this.samlUnit = samlUnit;
+	}
 }

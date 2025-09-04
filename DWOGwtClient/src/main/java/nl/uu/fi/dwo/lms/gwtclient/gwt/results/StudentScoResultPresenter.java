@@ -52,6 +52,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacherv2;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
@@ -60,6 +61,8 @@ import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.xapi.Account;
 import nl.uu.fi.dwo.rest.dom.xapi.Agent;
+import nl.uu.fi.dwo.rest.dom.xapi.Context;
+import nl.uu.fi.dwo.rest.dom.xapi.Group;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -378,9 +381,18 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
     s.actor.account = new Account();
     s.actor.name = student.getUserName();
     s.actor.account.name =  "pid:"+student.getId();
+    Group group = new Group();
+    DomSchoolClass team = parent.getSchoolClass();
+	group.account = new Account();
+	group.account.name = "pid:" +team.getId().getIdString();
+	group.name = team.getSchoolClassName();
+    if (s.context == null) s.context = new Context();
+    s.context.team = group;
     XAPIService x = xapiService.get();
 	x.getAgent().then( a -> { 
       s.actor.account.homePage = a.getValue().account.homePage;
+      s.context.team.account.homePage = a.getValue().account.homePage;
+      s.context.instructor = a.getValue();
       return x.saveStatement(s);
     });
     
@@ -402,7 +414,7 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
     }
     Map<String,String> userState = new TreeMap<> (this.userState);
     userState.keySet().retainAll(Arrays.asList("cmi.score.raw",ResultsService.REVIEW_DATA, ResultsService.REVIEW_CHECK, ResultsService.REVIEW_CORRECT));
-    boolean empty = this.userState.getOrDefault(ResultsService.SUSPEND_DATA, "").isEmpty();
+    //boolean empty = this.userState.getOrDefault(ResultsService.SUSPEND_DATA, "").isEmpty();
     LOG.info( "update Score/Review " + userState);
     
     if (dwoGlobalVars.isPremium() && sealed)
@@ -414,9 +426,6 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
     	resultService.setValues(ssc.getStudentSco(), userState)
 // haal beide op, alleen als ssc.getchildren 
     	.then( x -> {
-//    		if (ssc.getChildren().isEmpty()) { // ALWAYS EMPTY! Geen shortcut nog mogelijk.
-//    			return x.map(q -> new DomResultStudentScoContext(q, student));
-//    		}
     		Promise<DomResultsPerTeacherv2> p = resultService.selectedResultsPerStudentSco(parent.getSchoolClass(), student, ssc.getStudentSco());
  // eigenlijk return x + list of studentscopages.
     		return p.map(this::mapToResultStudentScoContext);

@@ -1,6 +1,7 @@
 package fi.dwo.gwt.lib.rest.client.RestCallers;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdminAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -20,6 +21,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
@@ -39,6 +41,14 @@ public interface SecuredSchoolAdminSchoolRestCaller extends RestService {
     @Path("/sec:{id}/schooladmin/school/getTeachersInSchoolList")
     public void getTeachersInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomTeacher>> callback);
 
+    @PUT
+    @Path("sec:{id}/schooladmin/school/getTeachersAndHasRoleInSchool")
+    public void getTeachersAndHasRoleInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomTeacherAndHasRole>> callback);
+    
+    @PUT
+    @Path("sec:{id}/schooladmin/school/getSchoolAdminsAndHasRoleInSchool")
+    public void getSchoolAdminsAndHasRoleInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomSchoolAdminAndHasRole>> callback);
+    
     @PUT
     @Path("/sec:{id}/schooladmin/school/getStudentsInSchoolList")
     public void getStudentsInSchool(@PathParam("id") String id, RestContext rest, MethodCallback<List<DomStudent>> callback);

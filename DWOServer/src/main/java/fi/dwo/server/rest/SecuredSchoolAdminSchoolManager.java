@@ -1,12 +1,15 @@
 package fi.dwo.server.rest;
 
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdminAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.dwo.server.PersistentDataManagers.util.DwoSystemParametersUtilManager;
@@ -36,6 +39,7 @@ import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -136,6 +140,59 @@ public class SecuredSchoolAdminSchoolManager {
         return domTeachers;
     }
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getTeachersAndHasRoleInSchool")
+    public List<DomTeacherAndHasRole> getTeachersAndHasRoleInSchool(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+    	final UserState_U state0 = AnonDomainAuthorizer.build().submitUser(sc)
+    			.setRealm(rest.getRestContext().getRealm());
+		final DomHasRole hasrole = rest.getRestContext().getDomHasRole();
+		UserState_HR_R_S_SG_U state = 
+				hasrole == null ? state0.setDefaultHasRole() :
+				state0.setHasRoleIfType(hasrole, RoleType.SCHOOLADMIN);
+        PersistentSchool school = state.getSchool();
+        List<PersistentHasRole> hrList;
+        List<DomTeacherAndHasRole> resultList = null;
+        hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.TEACHER);
+        resultList = new ArrayList<>(hrList.size());
+        for (PersistentHasRole hr : hrList) {
+            PersistentUser user = hr.getUser();
+            if (hr.getLastLogin() == null) hr.setLastLogin(user.getLastLogin());
+            DomTeacherAndHasRole domTAHR = new DomTeacherAndHasRole();
+            domTAHR.setTeacher(user.buildDomTeacher(state.getRealm()));
+            domTAHR.setHasRole(hr.buildDomHasRole());
+            resultList.add(domTAHR);
+        }
+        return resultList;
+    }
+
+    @PUT
+    @Produces({"application/json"})
+    @Path("/getSchoolAdminsAndHasRoleInSchool")
+    public List<DomSchoolAdminAndHasRole> getSchoolAdminsAndHasRoleInSchool(@Context SecurityContext sc, RestContext rest) throws Dwo2Exception {
+    	final UserState_U state0 = AnonDomainAuthorizer.build().submitUser(sc)
+    			.setRealm(rest.getRestContext().getRealm());
+		final DomHasRole hasrole = rest.getRestContext().getDomHasRole();
+		UserState_HR_R_S_SG_U state = 
+				hasrole == null ? state0.setDefaultHasRole() :
+				state0.setHasRoleIfType(hasrole, RoleType.SCHOOLADMIN);
+        PersistentSchool school = state.getSchool();
+        List<PersistentHasRole> hrList;
+        List<DomSchoolAdminAndHasRole> resultList = null;
+        hrList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, RoleType.SCHOOLADMIN);
+        resultList = new ArrayList<>(hrList.size());
+        for (PersistentHasRole hr : hrList) {
+            PersistentUser user = hr.getUser();
+            if (hr.getLastLogin() == null) hr.setLastLogin(user.getLastLogin());
+            DomSchoolAdminAndHasRole domTAHR = new DomSchoolAdminAndHasRole();
+            domTAHR.setSchoolAdmin(user.buildDomSchoolAdmin(state.getRealm()));
+            domTAHR.setHasRole(hr.buildDomHasRole());
+            resultList.add(domTAHR);
+        }
+        return resultList;
+    }
+   
+    
     @PUT
     @Produces({"application/json"})
     @Path("/getStudentsInSchoolList")
@@ -878,28 +935,60 @@ public class SecuredSchoolAdminSchoolManager {
          .setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
  	 DomSchoolOrganisation org = rest.getDomSchoolOrganisation();
      PersistentSchool school = state.getSchool();
-     List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
-     Collections.sort(userList, new Comparator<PersistentUser>() {
+//     List<PersistentUser> userList = UserUtilManager.getUsersInRoleInSchool(school, RoleType.STUDENT);
+//     Collections.sort(userList, new Comparator<PersistentUser>() {
+//
+//		@Override
+//		public int compare(PersistentUser o1, PersistentUser o2) {
+//			String a; String b;
+//			int result;
+//			switch(org.getSort()) {
+//			case familyName:
+//			default: 
+//				a = o1.getLastname(); b = o2.getLastname();
+//				break;
+//			}
+//			result = a.compareToIgnoreCase(b);
+//			if (org.getOrder() == OrderType.desc) result = -result;
+//			return result;
+//		}
+//     	}
+//     );
+     
+     RoleType role = org.getRole();
+     if (role == null) {
+    	 role = RoleType.STUDENT;
+     }
+	 List<PersistentHasRole> userList = HasRoleUtilManager.getHasRolesInSchoolAndRole(school, role);
+	 
+	 userList = userList.stream().filter(t -> t.getUser() != null).collect(Collectors.toList());
+	 
+     Collections.sort(userList, new Comparator<PersistentHasRole>() {
 
 		@Override
-		public int compare(PersistentUser o1, PersistentUser o2) {
-			String a; String b;
+		public int compare(PersistentHasRole o1, PersistentHasRole o2) {
+			String a=""; String b="";
 			int result;
-			switch(org.getSort()) {
+			switch (org.getSort()) {
+			case lastLogin:
+				Date da = o1.getLastLogin(); if (da == null) da = o1.getUser().getLastLogin(); if (da == null) da = new Date(0L);
+				Date db = o2.getLastLogin(); if (db == null) db = o2.getUser().getLastLogin(); if (db == null) db = new Date(0L);
+				result = da.compareTo(db);
+				if (org.getOrder() == OrderType.desc) result = -result;
+				return result;
 			case familyName:
-			default: 
-				a = o1.getLastname(); b = o2.getLastname();
-				break;
+			default:
+				try {
+					a = o1.getUser().getLastname(); b = o2.getUser().getLastname();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			result = a.compareToIgnoreCase(b);
 			if (org.getOrder() == OrderType.desc) result = -result;
 			return result;
-		}
-     	}
-     );
-     
-     
-     
+		}}); 
      
      if (org.getSkip() != null) {
     	 userList = userList.subList(org.getSkip().intValue(), userList.size());
@@ -909,11 +998,11 @@ public class SecuredSchoolAdminSchoolManager {
      if (org.getLimit() != null && org.getLimit().intValue()< userList.size()) {
     	 userList = userList.subList(0, org.getLimit().intValue());
      }
-     Stream<PersistentUser> stream = userList.stream();
+     Stream<PersistentUser> stream = userList.stream().map(PersistentHasRole::getUser);
      String realm = state.getRealm();
-     org.setRole(RoleType.STUDENT);
+     org.setRole(role);
      org.setUsers(stream.map(s -> s.buildDomStudent(realm)).collect(Collectors.toList()));
-     stream = userList.stream();
+     stream = userList.stream().map(PersistentHasRole::getUser);
      Set<Long> ids = stream.map(PersistentUser::getId).collect(Collectors.toSet());
      List<PersistentSchoolClass> scl;
      if (org.getSchoolClasses() == null) {
@@ -944,7 +1033,8 @@ public class SecuredSchoolAdminSchoolManager {
 	        			  
 	          org.setUsersOfClasses(studentOfClassList.stream().map(PersistentStudentOfClass::buildDomStudentOfClass).collect(Collectors.toList()));
 	 }
-     
+     org.setHasRoles(userList.stream().map(PersistentHasRole::buildDomHasRole).collect(Collectors.toList()));
+	 
 	 org.setSkip(org.getSkip() + userList.size());
      return org;
     }

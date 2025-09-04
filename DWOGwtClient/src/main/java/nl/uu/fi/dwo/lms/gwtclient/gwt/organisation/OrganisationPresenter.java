@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ import org.osgi.util.promise.Promises;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -47,13 +50,16 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortDeferred;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.ProgressDialogWithAbortEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdminAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolOrganisation;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomTeacherAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.OrderType;
@@ -288,12 +294,26 @@ public class OrganisationPresenter {
     
   }
 
+  
+private final static DateTimeFormat DATE = DateTimeFormat.getFormat("yyMM");
 protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
 	DomSchoolOrganisation org = p0.getValue();
 	List<DomUser> s = org.getUsers();
+	List<DomHasRole> roles = org.getHasRoles();
+	if (roles == null) roles = Collections.emptyList();
+	Map<String,Date> dates = new HashMap<>();
+	roles.forEach(item -> {
+		String key = item.getUserId().getIdString();
+		Date value = item.getLastLogin();
+		if (value != null) 	dates.put(key, value);
+	});
 	Map<String, TaggedDomUser<DomUser>> ss = s.stream().collect(Collectors.toMap(student -> student.getId().toString(), 
 			student -> {
-				return new TaggedDomUser<DomUser>(student, new ArrayList<String>());
+				String extra = "";
+				String key = student.getId().getIdString();
+				Date date = dates.get(key);
+				if (date != null) extra = DATE.format(date);
+				return new TaggedDomUser<DomUser>(student, new ArrayList<String>(), extra);
 			}, 
 			(e1 , e2) -> e1, // drop
 			LinkedHashMap::new));
@@ -313,7 +333,7 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
 	return null;
 }
   
-  private Promise<Void> getTeachers() {
+  private Promise<Void> getTeachers0() {
     view.setLoadingTableMessage();
     Promise<List<DomTeacher>> p2 = service.getTeachersInSchool();
     Promise<?> p1 = getTeachers(schoolClasses.values());
@@ -341,6 +361,42 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
    
   }
   
+  private Promise<Void> getTeachers() {
+	    view.setLoadingTableMessage();
+	    Promise<List<DomTeacherAndHasRole>> p2 = service.getTeachersAndHasRoleInSchool();
+	    Promise<?> p1 = getTeachers(schoolClasses.values());
+	    
+	    return Promises.all(p1,p2).then(
+	      x -> {
+	        List<DomTeacherAndHasRole> s = p2.getValue();
+	        teachers = s.stream().collect(Collectors.toMap(student -> student.getTeacher().
+	        				getId().toString(), 
+	                                      student -> {
+	                          				String extra = "";	                        				
+	                        				Date date = student.getHasRole().getLastLogin();
+	                        				if (date != null) extra = DATE.format(date);
+	                                        return new TaggedDomUser<DomUser>(student.getTeacher(), new ArrayList<String>(), extra);
+	                                        
+	                                   }));
+	        for(Entry<String, Promise<List<DomTeacher>>> entry : teacherMap.entrySet()) {
+	          String key = entry.getKey();
+	          // NPE if garbage: non existent user in ClassOf table
+	          entry.getValue().getValue().forEach(item -> {
+				TaggedDomUser<DomUser> u = teachers.get(item.getId().getIdString());
+				if (u != null) 
+					u.getMemberOf().add(key);
+			});
+	        }
+	        showPersonen(teachers, RoleType.TEACHER, true, true);
+	        return null;
+	      }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
+	   
+	  }
+ 
+  
+  
+  
+  
   private Promise<Void> getStudents() {
     view.setLoadingTableMessage();
     DomSchoolOrganisation org = new DomSchoolOrganisation();
@@ -359,19 +415,38 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
   
   private Promise<Void> getSchoolAdmins() {
     view.setLoadingTableMessage();
-    Promise<List<DomSchoolAdmin>> p2 = service.getSchoolAdminsInSchool();
+    Promise<List<DomSchoolAdminAndHasRole>> p2 = service.getSchoolAdminsAndHasRoleInSchool();
     return p2.then( p -> {
-      List<DomSchoolAdmin> s = p.getValue();
+      List<DomSchoolAdminAndHasRole> s = p.getValue();
       schooladmins = s.stream()
-          .filter(admin -> !dwoGlobalVars.getCurrentUser().getId().equals(admin.getId()))
-          .collect(Collectors.toMap( admin -> admin.getId().toString(), admin -> new TaggedDomUser<DomUser>(admin)));
+          .filter(admin -> !dwoGlobalVars.getCurrentUser().getId().equals(admin.getSchoolAdmin().getId()))
+          .collect(Collectors.toMap( admin -> admin.getSchoolAdmin().getId().toString(), admin -> {
+        	    String extra = "";	                        				
+				Date date = admin.getHasRole().getLastLogin();
+				if (date != null) extra = DATE.format(date);
+        	    return new TaggedDomUser<DomUser>(admin.getSchoolAdmin(), Collections.emptyList(), extra);
+          }));
       showPersonen(schooladmins, RoleType.SCHOOLADMIN, true, true);
       return null;
     }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
     
   }
+  private Promise<Void> getSchoolAdmins0() {
+	    view.setLoadingTableMessage();
+	    Promise<List<DomSchoolAdmin>> p2 = service.getSchoolAdminsInSchool();
+	    return p2.then( p -> {
+	      List<DomSchoolAdmin> s = p.getValue();
+	      schooladmins = s.stream()
+	          .filter(admin -> !dwoGlobalVars.getCurrentUser().getId().equals(admin.getId()))
+	          .collect(Collectors.toMap( admin -> admin.getId().toString(), admin -> new TaggedDomUser<DomUser>(admin)));
+	      showPersonen(schooladmins, RoleType.SCHOOLADMIN, true, true);
+	      return null;
+	    }).then( null, failed -> view.setEmptyTableMessage() ). then( null, FAILURE);
+	    
+	  }
 
-  void showPersonen(@SuppressWarnings("rawtypes") Map<String, TaggedDomUser<DomUser>> students, RoleType role, boolean first, boolean last) {
+  void showPersonen(Map<String, TaggedDomUser<DomUser>> students, RoleType role, boolean first, boolean last) {
+	  if (role != selectedRole) return;
 	  if(stub != null) {
 		  stub.setRole(role);
 		  stub.limit(students, first, last);
@@ -493,10 +568,11 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
     return next.then(p -> deleteUser(obj, i+1, role, cancel));
   }
 
+  private RoleType selectedRole = RoleType.STUDENT;
   @JsMethod void selectRole(String str) {
-    RoleType role = RoleType.valueOf(str);
+    selectedRole = RoleType.valueOf(str);
     Promise<Void> p;
-    switch(role) {
+    switch(selectedRole) {
       case STUDENT: p = getStudents(); break;
       case TEACHER: p = getTeachers(); break;
       case SCHOOLADMIN: p = getSchoolAdmins(); break;
@@ -567,6 +643,7 @@ static boolean containsIgnoreCase(String source, String regex) {
 
 @JsMethod
 void clickSortButton(String value, String order, String type) {
+	if ("extra".equals(value)) value = "lastLogin";
 	LOG.info( "value is " + value + ", order = " + order);
 	if (this.order.name().equals(order) && this.sort.name().equals(value)) return;
 	
@@ -594,7 +671,10 @@ void clickSortButton(String value, String order, String type) {
 			public int compare(TaggedDomUser<DomUser> o1, TaggedDomUser<DomUser> o2) {
 				String a, b;
 				switch(OrganisationPresenter.this.sort) {
-				
+				case lastLogin:
+						a = o1.getExtra();
+						b = o2.getExtra();
+						break;			
 				case givenName:
 						a = o1.getUser().getGivenName();
 						b = o2.getUser().getGivenName();

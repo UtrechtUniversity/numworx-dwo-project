@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Label;
 
 public interface LoginView extends IsWidget
 {
@@ -16,4 +17,5 @@ public interface LoginView extends IsWidget
 	HasKeyUpHandlers getMainPanel();
 	
 	void showError(String msg);
+	HasClickHandlers getExitPanel();
 }

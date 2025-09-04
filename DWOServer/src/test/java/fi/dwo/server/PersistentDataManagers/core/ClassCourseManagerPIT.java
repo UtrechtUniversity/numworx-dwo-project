@@ -5,6 +5,8 @@ package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -15,6 +17,7 @@ import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import static org.junit.Assert.fail;
@@ -229,4 +232,33 @@ public class ClassCourseManagerPIT {
         }
     }
 
+    @Test
+    public void testUncacheResultsFromCourse() {
+    	PersistentClassCourse cc = ClassCourseManager.findEntity(1L);
+    	cc.setResults(Boolean.TRUE);
+    	cc = ClassCourseManager.edit(cc);
+    	PersistentCourse course = CourseManager.findEntity(cc.getCourseID());
+   
+    	// uncache
+    	ClassCourseManager.uncacheResults(course);
+    	
+    	PersistentClassCourse ccc = ClassCourseManager.findEntity(1L);
+    	assertNull(ccc.hasResults());
+    }
+    
+    @Test
+    public void testUncacheResultsFromClass() {
+    	PersistentClassCourse cc = ClassCourseManager.findEntity(1L);
+    	cc.setResults(Boolean.TRUE);
+    	cc = ClassCourseManager.edit(cc);
+    	PersistentSchoolClass sc = SchoolClassManager.findEntity(cc.getClassID());
+   
+    	// uncache
+    	ClassCourseManager.uncacheResults(sc);
+    	
+    	PersistentClassCourse ccc = ClassCourseManager.findEntity(1L);
+    	assertNull(ccc.hasResults());
+    	// what about version?
+    }
+  
 }

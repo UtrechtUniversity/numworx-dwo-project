@@ -310,6 +310,16 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 		String reviewData = getValue(REVIEW_DATA);
 		if (reviewData.isEmpty()) return state;
 		JSONValue value = JSONParser.parseStrict(reviewData); // throws exception if empty argument
+		JSONValue reg = value.isObject().get(REGISTRATION);
+		if (reg != null) {
+			register = reg.isString();
+			if (state instanceof JSONObjectMapImpl) {
+				JSONObjectMapImpl impl = (JSONObjectMapImpl) state;
+				impl.unwrap().put(REGISTRATION, reg);
+			} else
+				state.put(REGISTRATION, reg.isString().stringValue());
+		}
+		
 		JSONArray review = value.isObject().get(OPDR_CONT_STATES).isArray();
 		int size = review.size();
 		if (act < size) {
@@ -1534,6 +1544,7 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
 
   private static String REVIEW_CORRECTIE_SCORE = CorrectieView.REVIEW_SCORE_CORRECTIE;
 
+  @Deprecated
   public int getReviewScore() {
 	  if (isReview()||isBrowse()) {
 		  String reviewData = api.GetValue(REVIEW_DATA);
@@ -1604,9 +1615,13 @@ public class Memento implements ClosingHandler, CloseHandler<Window>, CBookEvent
       if(statei == null) {
         statei = new JSONArray(); r.put(OPDR_CONT_STATES, statei);
       }
+      if (!r.containsKey(REGISTRATION) && register != null) {
+    	  r.put(REGISTRATION, register);
+      }
     }
     else {
       r = new JSONObject();
+      r.put(REGISTRATION, new JSONString(getRegistration()));
       statei = new JSONArray(); r.put(OPDR_CONT_STATES, statei);
     }
     JSONValue v = statei.get(currentActiviteit);
@@ -1721,6 +1736,33 @@ public JSONObject getShareMap() {
 	
 	public VariableCollection get(int opdrachtnr, Supplier<VariableCollection> f) {
 		return collection.computeIfAbsent(opdrachtnr, x -> f.get());		
+	}
+
+	public double getReviewScore_factor(float[] maxFactor) {
+		// TODO Auto-generated method stub
+		if (isReview()||isBrowse()) {
+			  String reviewData = api.GetValue(REVIEW_DATA);
+			  if (reviewData.startsWith("{")) {
+				JSONValue data = JSONParser.parseStrict(reviewData);
+				if (data == null) return 0;
+				final JSONObject object = data.isObject();
+				if (object == null) return 0;
+				data = object.get("opdrContStates");
+				if (data == null) return 0;
+				JSONArray array = data.isArray();
+				if (array == null || array.size() == 0) return 0;
+				data = array.get(0);
+				if (data == null) return 0;
+				array = data.isArray();
+				if (array == null) return 0;
+				double sum = 0;
+				for (int i = 0; i < array.size(); i++) {
+					sum += getReviewScore(array.get(i)) * maxFactor[i];
+				}
+				return sum;			  
+			  }
+		  }
+		  return 0;
 	}
 	
 	

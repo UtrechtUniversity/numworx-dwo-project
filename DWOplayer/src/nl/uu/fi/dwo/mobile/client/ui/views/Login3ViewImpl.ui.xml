@@ -58,7 +58,8 @@
 	.loginError .warning, 
 	.loginError .guestButton, 	
 	.noGuestAllowed .warning, 
-	.noGuestAllows .guestButton
+	.noGuestAllows .guestButton,
+	.exit
 	{ 
 		display: none;
 	}
@@ -227,6 +228,14 @@
 			left: 0px;
 			right: 0px;
 	}
+	
+	.exit {
+		right: 1em;
+		top: 1em;
+		position: absolute;
+		color: darkgray;
+	}
+	
 	</ui:style>
 	<g:FlowPanel styleName='{style.outer}'>
 	<g:FlowPanel styleName='{style.screen}' addStyleNames='profile-login'>
@@ -252,5 +261,8 @@
 		</g:HTML>
 		</g:FlowPanel>
 	</g:FlowPanel>
+	<g:HTML ui:field='exitPanel' styleName='{style.exit}' addStyleNames='profile-loginExit'>
+		<i class="fa fa-2x fa-power-off"></i>
+	</g:HTML>
 	</g:FlowPanel>
 </ui:UiBinder> 

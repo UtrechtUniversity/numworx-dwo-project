@@ -21,6 +21,8 @@ import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
     @NamedQuery(name="PersistentScoPage.byStudentSco", query="SELECT p FROM PersistentScoPage p WHERE p.id.scoID = :scoID and p.id.userID = :userID and p.id.schoolGroupID = :schoolGroupID ORDER BY p.id.sequencenr ASC"),
 })
 public class PersistentScoPage {
+  private static final Float FACTOR_1 = Float.valueOf(1.000f);	
+	
   @EmbeddedId
   private PersistentScoPagePK id;
 
@@ -36,6 +38,7 @@ public class PersistentScoPage {
   @PreUpdate
   void changeTimestamp() {
       lastChangeTimeStamp = System.currentTimeMillis();
+      if (maxFactor == null) maxFactor = FACTOR_1;
   }
 
   @Column(name = "courseID") // optional, foreign key to tblcourse.courseID
@@ -58,6 +61,8 @@ public class PersistentScoPage {
   Boolean visited;
   @Column(name = "label")
   String label;
+  @Column(name = "maxFactor")
+  Float maxFactor = FACTOR_1;
   
 /**
  * @return the id
@@ -197,6 +202,30 @@ public String getLabel() {
 }
 public void setLabel(String label) {
 	this.label = label;
+}
+/**
+ * @return the maxFactor
+ */
+public Float getMaxFactor() {
+	return maxFactor;
+}
+/**
+ * @param maxFactor the maxFactor to set
+ */
+public void setMaxFactor(Float maxFactor) {
+	if (maxFactor == null) 
+		this.maxFactor = FACTOR_1;
+	else
+		this.maxFactor = maxFactor;
+}
+
+public void setMaxFactor(Number factor) {
+	if (factor instanceof Float) 
+		maxFactor = (Float) factor;
+	else if (factor != null) 
+		maxFactor = factor.floatValue();
+	else
+		maxFactor = FACTOR_1;
 }
   
 }

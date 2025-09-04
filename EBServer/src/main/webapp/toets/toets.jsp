@@ -56,6 +56,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link type="text/css" rel="stylesheet" href="<%=cdn %>/apps/DWOplayer.css">
+    <link type="text/css" rel="stylesheet" href="<%=cdn %>/apps/images/font-awesome-4.1.0/css/font-awesome.css">
     <meta name="gwt:property" content="locale=nl" >
     <script>
     	DWO_PROFILE_ID = 77
