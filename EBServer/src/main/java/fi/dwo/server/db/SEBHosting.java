@@ -73,6 +73,10 @@ public class SEBHosting extends HttpServlet {
 			String content = sb.toString().replace(HTTPS_APP_DWO_NL, replacement);
 			if (classcourse != null)
 				content = content.replace("toets.jsp", "toets.jsp?id="+classcourse + code);
+			Object template = req.getAttribute("template.prefix");
+			if (template != null) {
+				content = content.replace("/template/", template.toString());
+			}
 			resp.getWriter().write(content);
 		} finally {
 			reader.close();
