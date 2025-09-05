@@ -1,29 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="java.util.Base64"%>
+<%@page import="java.net.URLEncoder"%>
 <%@ page import="fi.dwo.server.db.TStamp" %>   
 <%@ page import='java.util.regex.*' %>
 <%@ page import="fi.dwo.server.db.Util" %>
-<%@ include file="/dwo/saml_util.jsp" %>
 <%! String base, locale, profile; %>
 <%
 	String query ;
 	long tstamp = TStamp.BOOT;
 	query = "?base=" + base + "&locale=" + locale + "&profile=" + profile + "&t=" + tstamp;
-	
-// 	Cookie[] cookies = wrap.getCookies();
-// 	String u = null, o = null, t = null;
-// 	for(Cookie c : cookies) {
-// 		if (DWO_SAML_ORGANIZATION_ID.equals(c.getName())) o = c.getValue();
-// 		else if (DWO_SAML_USER_ID.equals(c.getName())) u = c.getValue();
-// 		else if (DWO_SAML_AUTH_TOKEN.equals(c.getName())) t = c.getValue();
-// 		//c.setHttpOnly(true);
-// 	}
-// 	if (o != null && u != null && t != null) {
-// 	      t = "3\f" + u + '\f' + o + '\f' + t;
-// 	      query += "&a=" + Base64.getEncoder().encodeToString(t.getBytes());
-// 	}
-	
+	String a = request.getParameter("a");
+	if (a != null) {
+		query += "&a=" + URLEncoder.encode(a);
+	}
+		
 	String hash = request.getParameter("hash");
 	String player = "/gwtclient/index.html";
 
