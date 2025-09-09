@@ -518,7 +518,9 @@ public class TekstBuffer
 		case 70:
 			StubView sqlite = new StubView(activity, "SQLiteGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			return x(map,sqlite);
-		
+		case 71:
+			StubView stream = new StubView(activity, "StreamGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return x(map, stream);
 		}
 
 		if (soortVak == 0)
