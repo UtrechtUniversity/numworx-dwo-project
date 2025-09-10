@@ -118,14 +118,29 @@ public class TemplateFilter implements Filter {
 				if (prefix.endsWith("/exam/")) {
 					suffix = "exam/" + suffix;
 					prefix = prefix.substring(0, prefix.length()-5);
+				} else if ("exam".equals(suffix)) {
+					wrap.sendRedirect(prefix + suffix + "/");
+					return;
 				}
 				
 				try {
-					DomDwoProfileFull profile = PublicProfileCache.get(77); // bij voorbeeld....
+					DomDwoProfileFull profile = PublicProfileCache.get(prefix.substring(0, prefix.length()-1)); // bij voorbeeld....
+					if (profile == null) {
+						profile = PublicProfileCache.get(prefix + suffix);
+						if (profile != null) {
+							wrap.sendRedirect(prefix + suffix + "/");
+						} else {
+							((HttpServletResponse) wrap.getResponse()).sendError(HttpServletResponse.SC_NOT_FOUND);						
+						}
+						return;
+					}
 					req.setAttribute("template.profile", profile);
 					req.setAttribute("template.profile.id", MySQLPersistenceId.getNativeId(profile));
 					req.setAttribute("template.url", url);
 					req.setAttribute("template.prefix", prefix);
+					req.setAttribute("template.locale", profile.getLanguage());
+					req.setAttribute("template.title", profile.getTitle());
+							
 				} catch (Dwo2Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomDwoProfileFull extends DomDwoProfile implements Cloneable {
     private String dwoProfileText;
     private String dwoProfileDescription;
+    private String base, language, title;
     
     public DomDwoProfileFull() {}
     
@@ -38,6 +39,30 @@ public class DomDwoProfileFull extends DomDwoProfile implements Cloneable {
 
 	public void setDwoProfileDescription(String dwoProfileDescription) {
 		this.dwoProfileDescription = dwoProfileDescription;
+	}
+
+	public String getBase() {
+		return base;
+	}
+
+	public void setBase(String base) {
+		this.base = base;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
     
 }

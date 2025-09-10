@@ -32,6 +32,13 @@ public class PublicProfileManager {
 	private static final Logger LOG = Logger.getLogger(PublicProfileManager.class.getName());
 
 	@GET
+	@Path("")
+	public Response getquery(@QueryParam("id") String id) {
+		return get(id);
+	}
+	
+	
+	@GET
 	@Path("/{id}")
 	@Produces({"application/json"})
 	public Response get( @PathParam("id") String id ) {

@@ -12,6 +12,7 @@
 <h1>Starten</h1>
 <p>
 <%
+	String toets = (String) request.getAttribute("template.prefix");
 	if ( ! Subnet.netMatchRange(IPRANGE, host) ) {
 %>
 	Het apparaat op dit adres <%=host %> is niet toegestaan voor toetsen. Gebruik een beveiligd apparaat.
@@ -19,15 +20,15 @@
 	}
 	else if ( needSEB ) {
 %>
-<a href='<%=seb%>://<%=server %>/toets/<%=leerling %>.seb<%=code%>'>Start de beveiligde <strong>toets</strong> omgeving</a>
+<a href='<%=seb%>://<%=server + toets %>exam/<%=leerling %>.seb<%=code%>'>Start de beveiligde <strong>toets</strong> omgeving</a>
 <%    if (System.getProperty("DWO_ENV", "").contains("test")) { %>
 <br>SEB QR Code: <img 
 	style='vertical-align: middle'
-	src='/dwo/qrcode.png?qr=<%=seb%>://<%=server %>/toets/<%=leerling %>.seb' >
+	src='/dwo/qrcode.png?qr=<%=seb%>://<%=server + toets %>exam/<%=leerling %>.seb' >
 <%    }
 	} else {
 %>
-	  <a target='_top' href='/toets/toets.jsp<%=id%><%=code%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
+	  <a target='_top' href='<%=toets %>exam/toets.jsp<%=id%><%=code%>'>Start de beveiligde <strong>exam</strong> omgeving</a>
 <%	  
 	}
 

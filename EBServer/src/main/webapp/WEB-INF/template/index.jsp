@@ -11,8 +11,8 @@
 <% 
 	int profile = id.intValue();
     String base = url;
-    String locale = "nl" /*profileFull.getLocale()*/;
-    String title = profileFull.getDwoProfileDescription(); // moet een aparte tekst worden
+    String locale = (String) request.getAttribute("template.locale");
+    String title = (String) request.getAttribute("template.title");
     boolean responsive = rights.contains("w"); // of zo iets. Width
 %>
 <%@ include file="/dwo/index_util.jsp" %>

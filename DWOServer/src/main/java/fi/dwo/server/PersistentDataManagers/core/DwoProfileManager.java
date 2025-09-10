@@ -181,8 +181,14 @@ public class DwoProfileManager {
 	public static PersistentDwoProfile findEntity(String id) {
 		EntityManager em = getEntityManager();
 		try {
-			TypedQuery<PersistentDwoProfile> q = em.createNamedQuery("PersistentDwoProfile.findByDwoProfileName", PersistentDwoProfile.class);
-			q.setParameter("dwoProfileName", id);
+			TypedQuery<PersistentDwoProfile> q;
+			if (id.startsWith("/")) {
+				q = em.createNamedQuery("PersistentDwoProfile.findByDwoProfileBase", PersistentDwoProfile.class);
+				q.setParameter("base", id);
+			} else {
+				q = em.createNamedQuery("PersistentDwoProfile.findByDwoProfileName", PersistentDwoProfile.class);
+				q.setParameter("dwoProfileName", id);
+			}
 			return q.getSingleResult();
 		} catch ( NoResultException nores) {
 			return null;
