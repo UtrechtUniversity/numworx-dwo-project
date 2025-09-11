@@ -19,6 +19,9 @@ public class DomDwoProfileFull extends DomDwoProfile implements Cloneable {
         super(p);
     	dwoProfileText = p.dwoProfileText;
     	dwoProfileDescription = p.dwoProfileDescription;
+    	base = p.base;
+    	title = p.title;
+    	language = p.language;
     }
 
     public DomDwoProfileFull duplicate() {
