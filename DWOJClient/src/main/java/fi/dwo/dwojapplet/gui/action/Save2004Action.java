@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui.action;
 
 import fi.beans.appletutil.AppletUtil;
 import fi.beans.css.StateToCss;
+import fi.beans.mainframe.JApplet;
 import fi.beans.private_base64code.StringCodeObject;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.CourseMap;
@@ -358,7 +359,7 @@ public class Save2004Action extends GuiAction {
         if (launchData == null) {
             launchData = sco.getLaunchdata();
         }
-        Class<? extends Applet> applet = sco.getApplet().getClass();
+        Class<?> applet = sco.getApplet().getClass();
         String className = applet.getName();
         String jarName = className.substring(3, className.indexOf(".", 3));
         String scoName = sco.getScoName();

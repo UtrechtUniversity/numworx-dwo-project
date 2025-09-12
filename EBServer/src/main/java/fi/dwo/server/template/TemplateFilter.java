@@ -5,6 +5,7 @@ package fi.dwo.server.template;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
@@ -148,6 +149,11 @@ public class TemplateFilter implements Filter {
 				String forward = "/WEB-INF/template/" + suffix;
 				RequestDispatcher dispatch = req.getRequestDispatcher(forward);
 				dispatch.forward(req, response);
+				
+				HttpServletResponse hs = (HttpServletResponse) response;
+				if (hs.getStatus() == HttpServletResponse.SC_OK) {
+					hs.setDateHeader("Expires", (System.currentTimeMillis() + 3600 * 60 * 1000L));
+				}
 			}
 			
 		}

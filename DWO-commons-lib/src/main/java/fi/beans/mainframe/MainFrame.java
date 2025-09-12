@@ -36,14 +36,14 @@ public class MainFrame extends Frame implements WindowListener, AppletStub, Appl
     	quit();
     }
     
-    private Applet applet;
+    private JApplet applet;
 
-    public MainFrame(JApplet japplet, int width, int height) {
-      this( (Applet)japplet, width, height);
-    }
+//    @Deprecated
+//    public MainFrame(Applet applet, int width, int height) {
+//      this( (JApplet)applet, width, height);
+//    }
     
-    @Deprecated
-    public MainFrame(Applet applet, int width, int height) {
+    public MainFrame(JApplet applet, int width, int height) {
         this.applet = applet;
 
         registerForMacOSXEvents();

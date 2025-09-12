@@ -45,7 +45,7 @@ public class WiskOpdrPanel extends JPanel implements InvocationHandler, AppletSt
 		try {
 			Class<?> wiskopdr = WiskOpdrCache.getInstance();
 			try {
-              Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class, Locale.class, java.applet.AppletStub.class);
+              Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class, Locale.class, fi.beans.mainframe.AppletStub.class);
               component = (JComponent) m.invoke(null, s, locale, this);
             } catch (Exception e) {
                 Method m = wiskopdr.getMethod("getWiskOpdrPanel", String.class, Locale.class);

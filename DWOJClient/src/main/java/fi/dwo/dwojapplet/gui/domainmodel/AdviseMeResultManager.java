@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +49,10 @@ public class AdviseMeResultManager {
   String locale;
   
   AdviseMeResultManager() {
-    ideas = new IdeasClient(DwoHelper.getApplet(), IdeasClient.IDEAS); //
+    try {
+		ideas = new IdeasClient(DwoHelper.getApplet().getCodeBase(), IdeasClient.IDEAS);
+	} catch (MalformedURLException e) {
+	} 
     locale = JComponent.getDefaultLocale().getLanguage();
     context.put("language", locale);
   }

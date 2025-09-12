@@ -1,8 +1,8 @@
 package fi.beans.scorm;
 
-import java.applet.Applet;
-import java.applet.AppletContext;
-import java.applet.AppletStub;
+//import java.applet.Applet;
+//import java.applet.AppletContext;
+//import java.applet.AppletStub;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -12,11 +12,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 
+import fi.beans.mainframe.AppletContext;
+import fi.beans.mainframe.AppletStub;
 import fi.beans.mainframe.JApplet;
 
 public class ScormDecorator extends JApplet implements SCORM12APIInterface {
 
-    private final Applet applet;
+    private final JApplet applet;
     private final String lineSeparator = System.getProperty("line.separator", "\n");
 
     private class Stub implements AppletStub {
@@ -168,7 +170,7 @@ public class ScormDecorator extends JApplet implements SCORM12APIInterface {
     /**
      * @param applet
      */
-    public ScormDecorator(Applet applet) {
+    public ScormDecorator(JApplet applet) {
         setLayout(null);
         this.applet = applet;
         applet.setStub(new Stub());

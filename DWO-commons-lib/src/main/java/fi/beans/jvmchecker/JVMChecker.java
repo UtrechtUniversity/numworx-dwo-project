@@ -7,15 +7,16 @@ import java.net.*;
 
 import javax.swing.JOptionPane;
 
+import fi.beans.mainframe.JApplet;
 import fi.beans.stringutils.StringUtils;
 
 public class JVMChecker extends Dialog implements WindowListener, ActionListener {
 
     private TekstPanel tp;
     private Button downloadKnop;
-    private Applet applet;
+    private JApplet applet;
 
-    public JVMChecker(Applet ap) {
+    public JVMChecker(JApplet ap) {
     	super(JOptionPane.getFrameForComponent(ap), true);
         applet = ap;
         setBounds(300, 200, 300, 300);

@@ -1,15 +1,15 @@
 package fi.beans.scorm;
 
-import java.applet.*;
+
 import java.io.*;
 import fi.beans.mainframe.*;
 
 public class ScormMainFrame extends MainFrame implements SCORM12APIInterface {
 
-    @Deprecated
-    public ScormMainFrame(Applet applet, int width, int height) {
-        super(applet, width, height);
-    }
+//    @Deprecated
+//    public ScormMainFrame(Applet applet, int width, int height) {
+//        super(applet, width, height);
+//    }
 
     public ScormMainFrame(JApplet applet, int width, int height) {
       super(applet, width, height);

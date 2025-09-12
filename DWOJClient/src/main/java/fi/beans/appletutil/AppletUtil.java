@@ -4,7 +4,6 @@
  */
 package fi.beans.appletutil;
 
-import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Image;
 import java.io.ByteArrayOutputStream;
@@ -20,6 +19,8 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 
+import fi.beans.mainframe.JApplet;
+
 /**
  * Standaard Fi Utilities voor applets. Gebruik voor resourceBundles, Images en
  * AudioClips
@@ -30,17 +31,22 @@ public class AppletUtil {
 
     private static final Logger LOG = Logger.getLogger(AppletUtil.class.getName());
 
-    private Applet applet;
+    private JApplet applet;
     private String packageName, language;
     private Locale locale;
     private Hashtable images = new Hashtable();
 
+    @Deprecated
+    public AppletUtil(java.applet.Applet old) {
+    	this( (JApplet) old);
+    }
+    
     /**
      * Geef een Applet een standaard gelocaliseerde omgeving
      *
      * @param applet
      */
-    public AppletUtil(Applet applet) {
+    public AppletUtil(JApplet applet) {
         this.applet = applet;
         language = applet.getParameter("language");
         if (language == null) {
@@ -151,6 +157,8 @@ public class AppletUtil {
      *
      * @param resourceName
      * @return
+     * @deprecated may not be used
+     * @see java.applet.AudioClip
      */
     public AudioClip getAudioClip(String resourceName) {
         AudioClip audio = null;

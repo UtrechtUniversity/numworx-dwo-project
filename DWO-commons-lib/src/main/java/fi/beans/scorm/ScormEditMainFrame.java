@@ -1,6 +1,5 @@
 package fi.beans.scorm;
 
-import java.applet.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
@@ -14,7 +13,7 @@ public class ScormEditMainFrame extends MainFrame implements ActionListener {
     ScormEditComponentIF scormEditComponent;
     String className, jarName;
 
-    public ScormEditMainFrame(Applet applet, int width, int height) {
+    public ScormEditMainFrame(JApplet applet, int width, int height) {
         super(applet, width, height);
         setTitle("ScormEditor");
 
