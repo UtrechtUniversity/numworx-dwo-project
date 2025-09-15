@@ -87,7 +87,7 @@ public class WiskOpdrEditPanel extends JPanel implements Scrollable, AppletStub 
 	  this.text = text;
 	  try {
 	      Class<?> wiskopdr = WiskOpdrCache.getInstance();
-	      Method m = wiskopdr.getMethod("getWiskOpdrEditPanel", String.class, Locale.class, java.applet.AppletStub.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE);
+	      Method m = wiskopdr.getMethod("getWiskOpdrEditPanel", String.class, Locale.class, AppletStub.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE);
 	      component = (Component) m.invoke(null, text, locale, this, editorWidth, editorHeight, documentWidth, documentHeight);
 	      add(component, BorderLayout.CENTER);
 	      return;

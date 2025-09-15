@@ -1,6 +1,5 @@
 package fi.beans.jvmchecker;
 
-import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.*;
@@ -10,6 +9,7 @@ import javax.swing.JOptionPane;
 import fi.beans.mainframe.JApplet;
 import fi.beans.stringutils.StringUtils;
 
+@SuppressWarnings("serial")
 public class JVMChecker extends Dialog implements WindowListener, ActionListener {
 
     private TekstPanel tp;

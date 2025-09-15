@@ -14,7 +14,6 @@ import fi.dwo.dwojapplet.gui.GuiCreator;
 import fi.dwo.dwojapplet.gui.ScormChooser;
 import fi.dwo.dwojapplet.gui.ScormParameters;
 
-import java.applet.Applet;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;

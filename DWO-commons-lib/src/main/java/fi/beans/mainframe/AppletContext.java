@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+@SuppressWarnings("deprecation")
 public interface AppletContext extends java.applet.AppletContext {
 
   @Override @Deprecated

@@ -2,6 +2,7 @@
 // N:\\transferzone\\intern\\Afstudeerders_basw_thijsk\\April\\Implementatie\\fi\\dwo\\client\\gui\\CourseChoisePanel.java
 package fi.dwo.dwojapplet.gui;
 
+import fi.beans.mainframe.AppletContext;
 import fi.beans.mathkit.JMathPane;
 import fi.beans.numworxlf.Constants;
 import fi.dwo.commons.system.TextMapper;
@@ -13,7 +14,6 @@ import fi.dwo.dwojapplet.gui.action.TeacherStrategy;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 import fi.dwo.dwojapplet.gui.wiskopdr.LinkIF;
-import java.applet.AppletContext;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;

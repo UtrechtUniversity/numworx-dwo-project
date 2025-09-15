@@ -1,6 +1,6 @@
 package fi.dwo.dwojapplet.gui.wiskopdr;
 
-import java.applet.AppletContext;
+import fi.beans.mainframe.AppletContext;
 
 public interface LinkIF {
 

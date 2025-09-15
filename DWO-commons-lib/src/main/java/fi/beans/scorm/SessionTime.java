@@ -20,8 +20,8 @@ import java.util.TimeZone;
  *
  * @author wim
  * @version $Rev$
- * @see java.applet.Applet#start()
- * @see java.applet.Appelt#stop()
+ * @see fi.beans.mainframe.JApplet#start()
+ * @see fi.beans.mainframe.JAppelt#stop()
  */
 public class SessionTime {
 

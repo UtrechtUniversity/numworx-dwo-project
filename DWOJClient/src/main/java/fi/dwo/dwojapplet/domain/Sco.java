@@ -478,7 +478,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      *
      * @return <code>true</code> if the applet is active; <code>false</code>
      * otherwise.
-     * @see java.applet.AppletStub#isActive()
+     * @see fi.beans.mainframe.AppletStub#isActive()
      */
     @Override
     public boolean isActive() {
@@ -490,7 +490,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      *
      * @param width the new requested width for the applet.
      * @param height the new requested height for the applet.
-     * @see java.applet.AppletStub#appletResize(int, int)
+     * @see fi.beans.mainframe.AppletStub#appletResize(int, int)
      */
     @Override
     public void appletResize(int width, int height) {
@@ -500,7 +500,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      * Gets a handler to the applet's context.
      *
      * @return the applet's context.
-     * @see java.applet.AppletStub#getAppletContext()
+     * @see fi.beans.mainframe.AppletStub#getAppletContext()
      */
     @Override
     public AppletContext getAppletContext() {
@@ -513,7 +513,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      *
      * @return the base {@link java.net.URL}of the directory which contains the
      * applet.
-     * @see java.applet.AppletStub#getCodeBase()
+     * @see fi.beans.mainframe.AppletStub#getCodeBase()
      */
     @Override
     public URL getCodeBase() {
@@ -545,7 +545,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      * </blockquote>
      *
      * @return the {@link java.net.URL}of the document that contains the applet.
-     * @see java.applet.AppletStub#getDocumentBase()
+     * @see fi.beans.mainframe.AppletStub#getDocumentBase()
      */
     @Override
     public URL getDocumentBase() {
@@ -573,7 +573,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
      *
      * @param name a parameter name.
      * @return the value of the named parameter, or <tt>null</tt> if not set.
-     * @see java.applet.AppletStub#getParameter(java.lang.String)
+     * @see fi.beans.mainframe.AppletStub#getParameter(java.lang.String)
      */
     @Override
     public String getParameter(String name) {
