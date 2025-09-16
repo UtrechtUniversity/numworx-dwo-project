@@ -552,12 +552,6 @@
 				</configuration>
 	<dependencies>
 		<dependency>
-			<groupId>de.javakaffee.msm</groupId>
-			<artifactId>memcached-session-manager-tc7</artifactId>
-			<version>2.3.2</version>
-		</dependency>
-
-		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
 			<version>${tomcat7.version}</version>
@@ -999,6 +993,23 @@
 			</dependencies>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.apache.tomcat.maven</groupId>
+						<artifactId>tomcat7-maven-plugin</artifactId>
+						<version>2.2</version>
+						<dependencies>
+								<dependency>
+									<groupId>org.redisson</groupId>
+									<artifactId>redisson-all</artifactId>
+									<version>3.22.1</version>
+								</dependency>							
+							<dependency>
+			    				<groupId>nl.uu.fi.dwo.rest</groupId>
+								<artifactId>redis-config</artifactId>
+								<version>2.5.37</version>
+							</dependency>
+						</dependencies>
+					</plugin>
 					<plugin>
 						<artifactId>maven-war-plugin</artifactId>
 						<configuration>

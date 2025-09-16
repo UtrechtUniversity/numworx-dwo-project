@@ -6,6 +6,7 @@ package fi.dwo.server.template;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -91,10 +92,14 @@ public class TemplateFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		// TODO Auto-generated method stub
+		String pattern = filterConfig.getInitParameter("legal");
+		if (pattern == null) pattern = "/([a-z]+\\/)*";
+		legal = Pattern.compile(pattern);
 
 	}
 
+	Pattern legal;
+	
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -109,7 +114,7 @@ public class TemplateFilter implements Filter {
 		chain.doFilter(request, wrap);
 		if (wrap.notfound) {
 			if (wrap.output) {
-				((HttpServletResponse) wrap.getResponse()).sendError(HttpServletResponse.SC_NOT_FOUND);
+				notfound(wrap);
 			} else {
 				int index = url.lastIndexOf('/')+1;
 				String prefix = url.substring(0, index);
@@ -122,15 +127,27 @@ public class TemplateFilter implements Filter {
 					wrap.sendRedirect(prefix + suffix + "/");
 					return;
 				}
+				if (!legal.matcher(prefix).matches())
+				{
+					LOG.info("Not found " + prefix);
+					notfound(wrap);
+					return;
+				}
+				
 				
 				try {
 					DomDwoProfileFull profile = PublicProfileCache.get(prefix.substring(0, prefix.length()-1)); // bij voorbeeld....
 					if (profile == null) {
+						if (!legal.matcher(prefix + suffix + "/").matches())
+						{
+							notfound(wrap);
+							return;
+						}
 						profile = PublicProfileCache.get(prefix + suffix);
 						if (profile != null) {
 							wrap.sendRedirect(prefix + suffix + "/");
 						} else {
-							((HttpServletResponse) wrap.getResponse()).sendError(HttpServletResponse.SC_NOT_FOUND);						
+							notfound(wrap);						
 						}
 						return;
 					}
@@ -153,6 +170,10 @@ public class TemplateFilter implements Filter {
 		}
 		
 		
+	}
+
+	protected void notfound(ResponseWrap wrap) throws IOException {
+		((HttpServletResponse) wrap.getResponse()).sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	@Override
