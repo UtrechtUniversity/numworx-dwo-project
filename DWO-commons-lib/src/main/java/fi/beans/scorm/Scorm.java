@@ -3,6 +3,8 @@ package fi.beans.scorm;
 import java.applet.Applet;
 import java.lang.reflect.Constructor;
 
+import fi.beans.mainframe.JApplet;
+
 public abstract class Scorm {
 
     /**
@@ -13,6 +15,7 @@ public abstract class Scorm {
      * SCORM12APIInterface determined by using Applet.getParameter( "API" ).
      * @throws java.lang.Exception
      */
+	@Deprecated
     public static SCORM12APIInterface findAPI(Applet applet) throws Exception {
         if (applet.getParent() instanceof SCORM12APIInterface) {
             return (SCORM12APIInterface) applet.getParent();
@@ -27,5 +30,9 @@ public abstract class Scorm {
         }
         //Hier komt de default Scorm.findAPI(applet)....
             return null;
+    }
+    
+    public static SCORM12APIInterface findAPI(JApplet applet) throws Exception {
+    	return findAPI((Applet) applet);
     }
 }
