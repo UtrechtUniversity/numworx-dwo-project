@@ -81,9 +81,9 @@ class AddProfileDwoAdminJPanel extends JPanel {
 		profile.setDwoProfileName(nameField.getText());
 		profile.setDwoProfileRights(rightsField.getText());
 		profile.setDwoProfileText(textField.getText());
-		profile.setLanguage(languageField.getText().strip());
+		profile.setLanguage(languageField.getText().trim());
 		profile.setBase(baseField.getText().trim());
-		profile.setTitle(titleField.getText().strip());
+		profile.setTitle(titleField.getText().trim());
 		return profile;
 	}
 	
