@@ -22,7 +22,7 @@
     <ul>
 	<li><a href="/dwo/rest/public/user/requestNewPassword?language=nl&back=/">Wachtwoord vergeten</a></li>
 	<li><a href="/dwo/rest/public/user/requestNewPassword?language=en&back=/">Forgotten password</a></li>
-	<li>De auteursomgeving als <a href='https://www.numworx.nl/help/downloads/'>applicatie</a> downloaden</li>
+	<li>De auteursomgeving als <a href='/downloads/'>applicatie</a> downloaden</li>
     </ul>
     <iframe src="https://cdn.dwo.nl/resources/alert_nl.html" width="500" height="150" style='border:0'>
     </iframe>
