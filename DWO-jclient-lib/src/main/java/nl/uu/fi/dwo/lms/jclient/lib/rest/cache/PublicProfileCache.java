@@ -1,23 +1,16 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.cache;
 
-import java.util.Properties;
-
 import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.Configuration;
-import javax.cache.configuration.MutableConfiguration;
-import javax.cache.expiry.CreatedExpiryPolicy;
-import javax.cache.expiry.Duration;
-import javax.cache.spi.CachingProvider;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
 public class PublicProfileCache {
 	
 	static final String NAME = "DomDwoProfileFull";
+	static final DomDwoProfileFull NULL = new DomDwoProfileFull(); // no == only equals
 
 	private PublicProfileCache() {
 	}
@@ -38,9 +31,13 @@ public class PublicProfileCache {
 			try {
 				result = PublicProfileManager.get(name);
 				putInCache(name, result);
+			} catch(Dwo2Exception ex) {
+				if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_ResourceNotFound)
+					putInCache(name, NULL);				
 			} catch (Exception e) {
 			}
-		}
+		} else if (result.getId() == null)
+			return null;		
 		return result;
 	}
 
@@ -53,6 +50,14 @@ public class PublicProfileCache {
 		}
 	}
 
+	public static boolean containsKey(String name) {
+		try {
+			return cache().containsKey(name);
+		} catch(Throwable oops) {
+			return false;
+		}
+	}
+	
 	public static DomDwoProfileFull getFromCache(String name) {
 		DomDwoProfileFull result = null;
 		try {

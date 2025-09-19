@@ -165,6 +165,9 @@ public RestAuthenticator getAuthenticator() {
         LOG.log(Level.WARNING, "Code: {0}. Reason: {1}",
             new Object[] {conn.getResponseCode(), conn.getResponseMessage()});
         Dwo2Exception e;
+        if (conn.getResponseCode() == 404) {
+        	throw new Dwo2Exception(Dwo2ExceptionCode.Rest_ResourceNotFound, path);
+        }
         if (conn.getResponseCode() == 400) {// Dwo2Exception
           BufferedReader br = new BufferedReader(
               new InputStreamReader((conn.getErrorStream()), StandardCharsets.UTF_8));

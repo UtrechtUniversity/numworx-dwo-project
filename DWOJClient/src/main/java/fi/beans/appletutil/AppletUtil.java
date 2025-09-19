@@ -63,6 +63,10 @@ public class AppletUtil {
         JComponent.setDefaultLocale(locale);
     }
 
+    public AppletUtil(JApplet applet) {
+    	this( (Applet) applet);
+    }
+    
     /**
      * het l10n deel van een applet.
      *

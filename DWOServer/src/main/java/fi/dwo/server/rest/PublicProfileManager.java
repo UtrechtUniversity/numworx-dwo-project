@@ -55,7 +55,7 @@ public class PublicProfileManager {
 		try {
 			profile = DwoProfileManager.findEntity(Long.valueOf(id));
 		} catch(NumberFormatException e) {
-			LOG.log(Level.WARNING, "parse " + id + ": " + e);
+			LOG.log(Level.INFO, "parse " + id + ": " + e);
 		}
 		if (profile != null) 
 			return Response.ok(profile.buildDomDwoProfileFull())
