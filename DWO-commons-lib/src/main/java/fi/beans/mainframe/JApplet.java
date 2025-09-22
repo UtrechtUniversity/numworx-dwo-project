@@ -8,10 +8,23 @@ import java.awt.Image;
 import java.awt.LayoutManager;
 import java.net.URL;
 
+import javax.swing.JLayeredPane;
 import javax.swing.JRootPane;
+import javax.swing.RootPaneContainer;
 
 @SuppressWarnings("serial")
-public abstract class JApplet extends java.applet.Applet {
+public abstract class JApplet extends java.applet.Applet implements RootPaneContainer {
+
+	@Override
+	public void setLayeredPane(JLayeredPane layeredPane) {
+		root.setLayeredPane(layeredPane);		
+	}
+
+	@Override
+	public JLayeredPane getLayeredPane() {
+		return root.getLayeredPane();
+	}
+
   private AppletStub stub;
   private final JRootPane root;
 
@@ -88,5 +101,12 @@ public abstract class JApplet extends java.applet.Applet {
 
   public JRootPane getRootPane() {
 	  return root;
+  }
+  
+  public LayoutManager getLayout() {
+	  if (root == null) {
+		  return super.getLayout();
+	  } else
+		  return getContentPane().getLayout();
   }
 }

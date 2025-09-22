@@ -116,7 +116,7 @@ public class ScoPanel extends JPanel implements CenterSubPanel,
     private void addApplet() {
         applet.setVisible(true);
         if (applet instanceof JApplet) {
-            JApplet japplet = (JApplet) applet;
+            JApplet japplet = applet;
             JRootPane root = japplet.getRootPane();
             root.setBounds(japplet.getBounds());
             this.add(root, "rootpane");
