@@ -33,6 +33,7 @@ public class ReviewActivity implements ActivityInterface, CBookEventListener {
 		getEventBus().addHandlerToSource(CBookEvent.TYPE, source, this);
 		int scoreMax = launchdata.getInt("scoreMax");
 		cesuur = (scoreMax+1)/2;
+		if (cesuur == 0) this.checkDocent = false; // zonder cesuur geen docent nodig
 	}
 
 	public LogBuilder logBuilder() {
@@ -104,6 +105,8 @@ public class ReviewActivity implements ActivityInterface, CBookEventListener {
 		ArrayList<Object> states = (ArrayList<Object>) h.get(INTERACTIE_PANEL_STATES);
 		if (states == null|| states.isEmpty()) return;
 		
+		if (cesuur == 0) checkDocent = false; // zonder cesuur geen docent nodig
+		
 		HashMap<String,Object> o = new HashMap<>();
 		if (correctie != 0) {
 			checkDocent = false;
@@ -117,7 +120,7 @@ public class ReviewActivity implements ActivityInterface, CBookEventListener {
 	public ObjectMap setState(ObjectMap h) {
 		if (h.containsKey(CorrectieView.REVIEW_INTERACTIE_DATA)) {
 			ReviewObjectMap map = new ReviewObjectMap(h);
-			checkDocent = map.review.getBoolean(CHECK_DOCENT, checkDocent);
+			checkDocent = cesuur != 0 && map.review.getBoolean(CHECK_DOCENT, checkDocent) ;
 			return map;
 		}
 		return h;
