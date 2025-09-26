@@ -164,7 +164,7 @@
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>ideas-servlet</artifactId>
-			<version>0.0.16-SNAPSHOT</version>
+			<version>0.0.16</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.tue.win.riaca.openmath</groupId>
@@ -179,7 +179,7 @@
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>openmath</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>fi.mpreduce</groupId>
