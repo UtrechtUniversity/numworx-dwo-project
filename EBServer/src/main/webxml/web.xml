@@ -30,6 +30,11 @@
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>
     </resource-ref>
+
+	<filter>
+		<filter-name>template</filter-name>
+		<filter-class>fi.dwo.server.template.TemplateFilter</filter-class>
+	</filter>
     <filter>
         <filter-name>xss</filter-name>
         <filter-class>fi.dwo.server.xss.XSSFilter</filter-class>
@@ -42,6 +47,11 @@
     	<filter-name>gwtclientwrap</filter-name>
     	<filter-class>fi.dwo.server.db.GwtClientWrap</filter-class>
     </filter>
+    <filter-mapping>
+    	<filter-name>template</filter-name>
+    	<url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
     <filter-mapping>
         <filter-name>xss</filter-name>
         <url-pattern>/dwo/*</url-pattern>

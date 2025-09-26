@@ -2734,6 +2734,9 @@ LOG.info("time results = " + (-t) + " ms");
         if ("serverUrlPath".equals(name)) {
         	return StoredRestManager.getInstance().getAuthenticator().getServerUrlPath().toExternalForm();
         }
+        if ("appUrlPath".equals(name)) {
+        	return DwoHelper.getAppURLPath().toString();
+        }
         return super.getParameter(name);
     }
 

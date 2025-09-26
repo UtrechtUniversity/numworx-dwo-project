@@ -58,6 +58,9 @@ public class PublicProfileManagerIT {
 		assertNull(r.getEntity());
 		r = manager.get("122132312313");
 		assertNull(r.getEntity());
+		r = manager.get("/test");
+		p = (DomDwoProfileFull) r.getEntity();
+		assertEquals(p.getDwoProfileName(), q.getDwoProfileName());
 	}
 
 }

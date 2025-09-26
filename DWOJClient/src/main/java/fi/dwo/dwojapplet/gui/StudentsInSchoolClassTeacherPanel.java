@@ -19,7 +19,9 @@ import fi.dwo.commons.exceptions.LoginException;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.LoginManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureTeacherSchoolClassManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureUserAccountManager;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import fi.dwo.dwojapplet.gui.domutils.DomSchoolClassListCellRenderer;
 import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -209,20 +211,25 @@ public class StudentsInSchoolClassTeacherPanel extends JPanel implements CenterS
                             return;
                         };
                     }
-                    SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
+                    //SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
 //                    GuiCreator.instance().loginWithMd5(user.getUserName(), user.getPassword(), realm);
-                    DomUserFullwLoginContext usercontext = LoginManager.basicLogin(user.getUserName(), user.getPassword(), realm); // Create login context
-
+                    //DomUserFullwLoginContext usercontext = LoginManager.basicLogin(user.getUserName(), user.getPassword(), realm); // Create login context
+                    //StoredRestManager.getInstance().getContext().getDomHasRole().setId(usercontext.getDomLoginContext().getHasRoleId());
 // HTML5
                     String student_player = GuiConstants.STUDENT_PLAYER;
                     if(student_player != null) {
                     	URL url = DwoHelper.getServerUrlPath();
                     	try {
 // Hoe zit dit met de security? FIXME Gert?
-                    		String a = "1\f" + System.currentTimeMillis() + "\f" + user.getUserName() +"\f"+ user.getPassword();
-                    	    a = Base64.getUrlEncoder().encodeToString(a.getBytes(StandardCharsets.UTF_8));
-                    		student_player = student_player + "?a=" + a; 
+                    		String a; // a = "1\f" + System.currentTimeMillis() + "\f" + user.getUserName() +"\f"+ user.getPassword();
+                    	    //a = Base64.getUrlEncoder().encodeToString(a.getBytes(StandardCharsets.UTF_8));
+                    	    //StoredRestManager.getInstance().setBasicAuthString(user.getUserName(), user.getPassword(), realm);
+                    	    //a = SecureUserAccountManager.getBearerToken();
+                    	    a = SecureTeacherSchoolClassManager.getBearerToken(student, StoredRestManager.getInstance());
+                    	    
+                    	    student_player = student_player + "?a=" + a; 
 							url = new URL(url, student_player);
+		                    SecureUserAccountManager.logoutUser(DwoHelper.getCurrentLoginContext());
 							if(DwoHelper.isApplication())
 							{
 								Desktop.getDesktop().browse(url.toURI());

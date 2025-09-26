@@ -329,6 +329,8 @@ CREATE TABLE `tbldwoprofile` (
   `lastChangeTimeStamp` bigint(20) DEFAULT '0',
   `del` tinyint(4) NOT NULL DEFAULT '0',
   `language` varchar(5) DEFAULT NULL,
+  `title` varchar(45) DEFAULT NULL,
+  `base` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`dwoProfileID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -339,7 +341,7 @@ CREATE TABLE `tbldwoprofile` (
 
 LOCK TABLES `tbldwoprofile` WRITE;
 /*!40000 ALTER TABLE `tbldwoprofile` DISABLE KEYS */;
-INSERT INTO `tbldwoprofile` VALUES (1,'testprofile01','Test dwoProfileText01','_','Test dwoProfileDescription02',0,0,0,'nl'),(2,'testprofile02','Test dwoProfileText02','r','Test dwoProfileDescription02',0,0,0,'nl'),(3,'testprofile03','Test dwoProfileText03','rl','Test dwoProfileDescription03',0,0,0,'nl');
+INSERT INTO `tbldwoprofile` VALUES (1,'testprofile01','Test dwoProfileText01','_','Test dwoProfileDescription02',0,0,0,'nl', '1', '/test'),(2,'testprofile02','Test dwoProfileText02','r','Test dwoProfileDescription02',0,0,0,'nl','2','/twee'),(3,'testprofile03','Test dwoProfileText03','rl','Test dwoProfileDescription03',0,0,0,'nl', 'title', '/test3');
 /*!40000 ALTER TABLE `tbldwoprofile` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -32,6 +32,13 @@ public class PublicProfileManager {
 	private static final Logger LOG = Logger.getLogger(PublicProfileManager.class.getName());
 
 	@GET
+	@Path("")
+	public Response getquery(@QueryParam("id") String id) {
+		return get(id);
+	}
+	
+	
+	@GET
 	@Path("/{id}")
 	@Produces({"application/json"})
 	public Response get( @PathParam("id") String id ) {
@@ -48,7 +55,7 @@ public class PublicProfileManager {
 		try {
 			profile = DwoProfileManager.findEntity(Long.valueOf(id));
 		} catch(NumberFormatException e) {
-			LOG.log(Level.WARNING, "parse " + id, e);
+			LOG.log(Level.INFO, "parse " + id + " " + e);
 		}
 		if (profile != null) 
 			return Response.ok(profile.buildDomDwoProfileFull())

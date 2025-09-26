@@ -3,19 +3,23 @@ package fi.dwo.dwojapplet.gui;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.User;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.JComponent;
 
 /**
  * Some constants used in the GUI.
@@ -348,9 +352,19 @@ public abstract class GuiConstants {
             testExtension = "";
         }
         Properties result = new Properties();
+        ResourceBundle rb = ResourceBundle.getBundle("fi.dwo.dwojapplet.gui.resources.default", JComponent.getDefaultLocale());
         InputStream in = GuiConstants.class.getResourceAsStream("resources/default.properties");
         try {
             result.load(in);
+ // convert resourcebundle to (locallized) properties 
+            for(String key: rb.keySet()) {
+            	result.put(key, rb.getObject(key));
+            }
+            DomDwoProfileFull domProfile = DWO.getDwoProfile();
+            if (domProfile.getBase() != null) {
+            	result.put("student_player", domProfile.getBase() + "/");
+            }
+            result.put("player_base", DwoHelper.getAppURLPath().toString());
             
             if ( !testExtension.isEmpty()) {
               String r = "resources/profile-" + profile  + ".properties";

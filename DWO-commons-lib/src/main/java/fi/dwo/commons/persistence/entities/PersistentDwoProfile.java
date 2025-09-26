@@ -43,6 +43,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileID", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileID = :dwoProfileID"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileID", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileID = :dwoProfileID"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileName", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileName = :dwoProfileName"),
+    @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileBase", query = "SELECT p FROM PersistentDwoProfile p WHERE p.base = :base"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileRights", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileRights = :dwoProfileRights"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileDescription", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileDescription = :dwoProfileDescription")})
 public class PersistentDwoProfile implements Serializable {
@@ -85,6 +86,13 @@ public class PersistentDwoProfile implements Serializable {
     @Size(max = 5)
     @Column(name = "language", length = 5)
     private String language;
+    @Size(max = 45)
+    @Column(name = "title", length = 5)
+    private String title;
+    @Size(max = 45)
+    @Column(name = "base", length = 5)
+    private String base;
+    
     
     
     @ManyToMany(mappedBy = "profiles")
@@ -223,6 +231,9 @@ public class PersistentDwoProfile implements Serializable {
         fillDomDwoProfile(profile);
         profile.setDwoProfileDescription(getDwoProfileDescription());
         profile.setDwoProfileText(getDwoProfileText());
+        profile.setBase(base);
+        profile.setTitle(title);
+        profile.setLanguage(language);
     }
 
     /**
@@ -264,4 +275,32 @@ public class PersistentDwoProfile implements Serializable {
     public boolean isLimited() {
       return dwoProfileRights.contains(LIMITED);
     }
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * @return the base
+	 */
+	public String getBase() {
+		return base;
+	}
+
+	/**
+	 * @param base the base to set
+	 */
+	public void setBase(String base) {
+		this.base = base;
+	}
 }

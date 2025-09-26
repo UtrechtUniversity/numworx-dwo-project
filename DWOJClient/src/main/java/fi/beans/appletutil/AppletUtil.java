@@ -20,6 +20,8 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 
+import fi.beans.mainframe.JApplet;
+
 /**
  * Standaard Fi Utilities voor applets. Gebruik voor resourceBundles, Images en
  * AudioClips
@@ -57,6 +59,10 @@ public class AppletUtil {
         JComponent.setDefaultLocale(locale);
     }
 
+    public AppletUtil(JApplet applet) {
+    	this( (Applet) applet);
+    }
+    
     /**
      * het l10n deel van een applet.
      *

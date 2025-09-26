@@ -1,12 +1,15 @@
 package fi.dwo.dwojapplet.gui;
 
 import java.awt.Component;
+import java.text.ParseException;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
+import javax.swing.text.MaskFormatter;
 
+import fi.beans.numworxlf.JFormattedTextField;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JScrollPane;
 import fi.beans.numworxlf.JTextField;
@@ -22,6 +25,9 @@ class AddProfileDwoAdminJPanel extends JPanel {
 	private JTextField descField;
 	private JLabel idField;
 	private JTextField rightsField;
+	private JFormattedTextField languageField;
+	private JTextField titleField;
+	private JFormattedTextField baseField;
 		
 	private AddProfileDwoAdminJPanel(DomDwoProfileFull profile) {
 		super(new SpringLayout());
@@ -30,6 +36,22 @@ class AddProfileDwoAdminJPanel extends JPanel {
 		nameField = new JTextField(profile.getDwoProfileName());
 		textField = new JTextArea(profile.getDwoProfileText(), 5, 30);
 		descField = new JTextField(profile.getDwoProfileDescription());
+		MaskFormatter format;
+		try {
+			format = new MaskFormatter("LL");
+		} catch (ParseException e1) {
+			throw new RuntimeException(e1);
+		}
+		languageField = new JFormattedTextField(format);
+		languageField.setValue(profile.getLanguage());
+		titleField = new JTextField(profile.getTitle());
+		try {
+			format = new MaskFormatter("'/L***************************");
+		} catch (ParseException e1) {
+			throw new RuntimeException(e1);
+		}
+		baseField = new JFormattedTextField(format);
+		baseField.setValue(profile.getBase());
 		String id = "-"; 
 		try {
 			id = String.valueOf(MySQLPersistenceId.getNativeId(profile));
@@ -43,6 +65,9 @@ class AddProfileDwoAdminJPanel extends JPanel {
 		add( new JLabel("titel")); add(descField);
 		add( new JLabel("rechten")); add(rightsField);
 		add( new JLabel("beschrijving")); add(new JScrollPane(textField));
+		add( new JLabel("locale")); add(languageField);
+		add( new JLabel("paginatitel")); add(titleField);
+		add( new JLabel("URL")); add(baseField);
 		
         AddSchoolDialog.makeCompactGrid(this, //parent
                 getComponentCount() / 2, 2,
@@ -55,7 +80,10 @@ class AddProfileDwoAdminJPanel extends JPanel {
 		profile.setDwoProfileDescription(descField.getText());
 		profile.setDwoProfileName(nameField.getText());
 		profile.setDwoProfileRights(rightsField.getText());
-		profile.setDwoProfileText(textField.getText());	
+		profile.setDwoProfileText(textField.getText());
+		profile.setLanguage(languageField.getText().trim());
+		profile.setBase(baseField.getText().trim());
+		profile.setTitle(titleField.getText().trim());
 		return profile;
 	}
 	

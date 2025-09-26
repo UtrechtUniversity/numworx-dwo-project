@@ -78,7 +78,18 @@ public class SecuredDwoAdminProfileManager {
             p.setDwoProfileName(profile.getDwoProfileName());
             p.setDwoProfileRights(profile.getDwoProfileRights());
             p.setDwoProfileText(profile.getDwoProfileText());
-            
+            String base = profile.getBase();
+         // base is /[a-z/]+
+            if (base != null && base.startsWith("/") && base.length() > 2) {
+            	p.setBase(base);
+            }
+            if (profile.getLanguage() != null) {
+            	p.setLanguage(profile.getLanguage());
+            }
+            if (profile.getTitle() != null) {
+            	p.setTitle(profile.getTitle());
+            }
+           
             try {
                 DwoProfileManager.create(p);
                 return Boolean.TRUE;
@@ -124,15 +135,31 @@ public class SecuredDwoAdminProfileManager {
                 editProfile.setDwoProfileName(profile.getDwoProfileName());
                 editProfile.setDwoProfileRights(profile.getDwoProfileRights());
                 editProfile.setDwoProfileText(profile.getDwoProfileText());
+                String base = profile.getBase();
+// base is /[a-z/]+
+                if (base != null && base.startsWith("/")) {
+                	if ("/".equals(base)) base = null;
+                	editProfile.setBase(base);
+                }
+                if (profile.getLanguage() != null) {
+                	editProfile.setLanguage(profile.getLanguage());
+                }
+                if (profile.getTitle() != null) {
+                	editProfile.setTitle(profile.getTitle());
+                }
                 if (profile.getOptLock() != null) 
                 	editProfile.setOptlock(profile.getOptLock());
                 editProfile = DwoProfileManager.edit(editProfile);
-                PublicProfileCache.putInCache(
+                DomDwoProfileFull cache = editProfile.buildDomDwoProfileFull();
+				PublicProfileCache.putInCache(
                 		editProfile.getDwoProfileName(),
-                		editProfile.buildDomDwoProfileFull());
+                		cache);
                 PublicProfileCache.putInCache(
                 		Long.toString(id),
-                		editProfile.buildDomDwoProfileFull());
+                		cache);
+                base = editProfile.getBase();
+                if (base != null && base.startsWith("/") && base.length() >2 )
+                	PublicProfileCache.putInCache(base, cache);
                return Boolean.TRUE;
             }
             catch (OptimisticLockException e) {

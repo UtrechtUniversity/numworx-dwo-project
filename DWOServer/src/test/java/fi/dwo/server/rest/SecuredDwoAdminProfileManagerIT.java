@@ -165,6 +165,7 @@ public class SecuredDwoAdminProfileManagerIT {
 		profile.setDwoProfileName("other name");
 		profile.setDwoProfileRights("other rights");
 		profile.setDwoProfileText("other text");
+		profile.setBase("/base");
 		profile.setOptLock(0L);
         int size = manager.getProfiles(sc, rest).size();
 		restDwoProfile = new RestDwoProfileFull();
@@ -176,6 +177,7 @@ public class SecuredDwoAdminProfileManagerIT {
 		assertEquals("getProfiles listsize", size, list.size());
 		DomDwoProfileFull other = list.get(0);
 		assertEquals("get from database", profile.getDwoProfileDescription(), other.getDwoProfileDescription());
+		assertEquals("get from database", profile.getBase(), other.getBase());
 		assertEquals("get from database", profile.getDwoProfileName(), other.getDwoProfileName());
 		assertEquals("get from database", profile.getDwoProfileRights(), other.getDwoProfileRights());
 		assertEquals("get from database", profile.getDwoProfileText(), other.getDwoProfileText());

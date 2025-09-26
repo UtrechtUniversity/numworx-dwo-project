@@ -11,10 +11,10 @@
 %>
 #Property file. It should be located in the working directory of the DWO application.
 #resourceURLPath should point to a webserver supplying the applet jar files loaded by WiskOpdr.
-#serverUrlPath=https://app.dwo.nl/servlet/dwodsaccess
 serverUrlPath=<%=origin %>/dwo/
 resourceUrlPath=<%=cdn %>/resources
 jarUrlPath=<%=cdn %>/jars/
+appUrlPath=<%=cdn %>/apps/
 httpAuthentication=<%=auth%>
 dwo_env=<%=dwo_env%>
 profileExtension=<%=profileExtension%>
