@@ -399,7 +399,9 @@ private Response refresh(MultivaluedMap<String, String> params) throws NullPoint
 	          servletRequest.getSession().invalidate();
 	      }
 		}
-	} catch (JwtException | IllegalArgumentException | PersistenceException | NullPointerException e) {
+	} catch (JwtException e) {
+		LOG.log(Level.INFO, e.toString()); // zonder stacktrace
+	} catch (IllegalArgumentException | PersistenceException | NullPointerException e) {
 		LOG.log(Level.WARNING, e.toString(), e);
 	}
     
