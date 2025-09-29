@@ -121,7 +121,7 @@ public class PasteAction extends GuiAction
 			String name = config.getName();
 			name = CourseManagementPanel.replaceDuplicate(name, course.getScoNames());
 			AbstractScoContextManager manager = instance().getScoContextManager();
-            Sco s = instance().getDWO().addSco(course, config, name, sco.getDescription(), sco.isShowScore(), sco.getImageData(),manager);
+            Sco s = instance().getDWO().addSco(course, config, name, sco.getDescription(), sco.isShowScore(),sco.isShowDocent(), sco.getImageData(),manager);
 // FIXME DIT IS NIET GOED, MOET NAAR addSco van de DWO
 // is een kopie van ScoMananagementPanel
 			if(s == null) return;

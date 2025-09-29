@@ -42,7 +42,7 @@ public class ScoNameDialog extends JDialog
 
 {
     private boolean confirmed;
-    private JCheckBox showScore;
+    private JCheckBox showScore, showDocent;
     private JTextField nameField;
     private JTextArea textarea;
     private JButton logoBtn;
@@ -104,7 +104,10 @@ public class ScoNameDialog extends JDialog
       
       showScore = new JCheckBox(TextMapper.getText(TextMapper.GUIS_SHOW_SCORE));
       showScore.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-      vb.add(showScore); 
+      vb.add(showScore);
+      showDocent = new JCheckBox("Docent ziet score");
+      showDocent.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+      vb.add(showDocent);
       
       if (id > 0) {
         vb.add(Box.createVerticalStrut(5));
@@ -178,6 +181,7 @@ public class ScoNameDialog extends JDialog
         ScoNameDialog cnd = new ScoNameDialog(owner, TextMapper
                 .getText(TextMapper.GUISDLG_TTL_ADD_SCO), 0, appletConfig.getName(), "", TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION, true);
         cnd.setShowScore(true);
+        cnd.setShowDocent(true);
         JButton logobtn = cnd.addLogoBtn();
         LogoIconAction logoAction = new LogoIconAction();
 		logobtn.setAction(logoAction);
@@ -192,7 +196,7 @@ public class ScoNameDialog extends JDialog
 
 			//System.out.println("voor hij wordt aangemaakt: " + appletConfig.getLaunchdata() + "; " + appletConfig.getAppletID());
             Sco s = GuiCreator.instance().addSco(course, appletConfig, cnd.getScoName(),
-                    cnd.getScoDescription(), cnd.isShowScore(), imageData);
+                    cnd.getScoDescription(), cnd.isShowScore(), cnd.isShowDocent(), imageData);
             if (s == null) { //something went wrong, reshow the dialog
                 s = addSco(owner, course, appletConfig);
             }
@@ -213,8 +217,10 @@ public class ScoNameDialog extends JDialog
     }
 
     private void setShowScore(boolean b) {
-      showScore.setSelected(b);
-      
+      showScore.setSelected(b);      
+    }
+    private void setShowDocent(boolean b) {
+    	showDocent.setSelected(b);
     }
 
     private String getScoName() {
@@ -227,6 +233,10 @@ public class ScoNameDialog extends JDialog
 
     private boolean isShowScore() {
       return showScore.isSelected();
+    }
+    
+    private boolean isShowDocent() {
+    	return showDocent.isSelected();
     }
 
     public static boolean editSco(Sco sco) {
@@ -243,6 +253,7 @@ public class ScoNameDialog extends JDialog
                 .getText(TextMapper.GUISDLG_TTL_EDIT_SCO), sco.getScoID(), sco.getScoName(),
                 sco.getDescription(), TextMapper.GUISDLG_SCO_NAME, TextMapper.GUISDLG_SCO_DESCRIPTION, true);
         cnd.setShowScore(sco.isShowScore());
+        cnd.setShowDocent(sco.isShowDocent());
         JButton logobtn = cnd.addLogoBtn();
         LogoIconAction logoAction = new LogoIconAction(sco);
 		logobtn.setAction(logoAction);
@@ -262,6 +273,14 @@ public class ScoNameDialog extends JDialog
             } else {
                 sco.setShowScore(Boolean.FALSE);
             }
+            if (cnd.isShowDocent()) {
+                if (sco.getShowDocent() != null) {
+                    sco.setShowScore(Boolean.TRUE);
+                }
+            } else {
+                sco.setShowDocent(Boolean.FALSE);
+            }
+
 // pass ImageData to updateSco in persistenceFacade.
             if(logoAction.isUpdate())
             {

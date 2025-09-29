@@ -2178,9 +2178,9 @@ LOG.info("time results = " + (-t) + " ms");
      * (non-Javadoc)
      * 
      */
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, byte[] imageData, AbstractScoContextManager manager) {
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean showScore, boolean showDocent, byte[] imageData, AbstractScoContextManager manager) {
 		try {
-    		return addScoWithExceptions(course, appletConfig, name, description, showScore, imageData, manager);
+    		return addScoWithExceptions(course, appletConfig, name, description, showScore, showDocent, imageData, manager);
 		} catch (Dwo2Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getLocalizedCodeExplanation(DwoHelper.getLocale()), null, JOptionPane.ERROR_MESSAGE);
             return null;
@@ -2192,13 +2192,14 @@ LOG.info("time results = " + (-t) + " ms");
     }
 
 	public Sco addScoWithExceptions(Course course, AppletConfig appletConfig, String name, String description,
-			boolean showScore, byte[] imageData, AbstractScoContextManager manager) throws Dwo2Exception, PersistenceException {
+			boolean showScore, boolean showDocent, byte[] imageData, AbstractScoContextManager manager) throws Dwo2Exception, PersistenceException {
 		DomScoContextFull scoContext = new DomScoContextFull();
 		DomScoData scoData = new DomScoData();
 		scoContext.setImageData(imageData);
 		scoContext.setScoName(name);
 		scoContext.setDescription(description);
 		scoContext.setShowScore(!showScore); // reverse logic hier, of in de server?
+		scoContext.setShowDocent(showDocent);
 		scoContext.setAppletId(PersistentApplet.buildPersistenceId((long)appletConfig.getAppletID()));
 		scoContext.setCourseId(PersistentCourse.buildPersistenceId((long)course.getID()));
 		scoContext.setSequencenr((long)course.getScoList().length+1); // vanaf 1, niet vanaf 0
@@ -2253,6 +2254,7 @@ LOG.info("time results = " + (-t) + " ms");
     	}
     	scoContext.setScoName(sco.getScoName());
     	scoContext.setShowScore(!sco.isShowScore()); // reverse logic
+    	scoContext.setShowDocent(sco.getShowDocent());
     	scoContext.setDescription(sco.getDescription());
     	if (sco.isCourseChanged()) {
     		scoContext.setCourseId(PersistentCourse.buildPersistenceId((long)sco.getCourse().getID()));

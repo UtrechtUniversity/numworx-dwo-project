@@ -91,7 +91,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
     private String description;
 
     private JApplet applet;
-    private Boolean showScore;
+    private Boolean showScore, showDocent;
     private byte[] imageData; // part of DomScoContextFull
     private long sequencenr;
 
@@ -909,6 +909,18 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 	 */
 	public void setImageData(byte[] imageData) {
 		this.imageData = imageData;
+	}
+
+	public boolean isShowDocent() {
+		return !Boolean.FALSE.equals(showDocent);
+	}
+
+	public Boolean getShowDocent() {
+		return showDocent;
+	}
+
+	public void setShowDocent(Boolean showDocent) {
+		this.showDocent = showDocent;
 	}
 
 }

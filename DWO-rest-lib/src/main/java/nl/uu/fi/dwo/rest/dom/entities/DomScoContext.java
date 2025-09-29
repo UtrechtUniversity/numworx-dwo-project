@@ -14,7 +14,7 @@ public class DomScoContext extends DomScoContextId {
     private PersistenceId courseId;
     private PersistenceId appletId;
     private String scoName;
-    private Boolean showScore;
+    private Boolean showScore, showDocent;
     private Long sequencenr;
     private String image; // zie DomCourseStudent
     private ScoType scoType;
@@ -135,5 +135,13 @@ public class DomScoContext extends DomScoContextId {
 	 */
 	public void setStudentModelContext(PersistenceId persistenceId) {
 		this.studentModelContext = persistenceId;
+	}
+
+	public Boolean getShowDocent() {
+		return showDocent;
+	}
+
+	public void setShowDocent(Boolean showDocent) {
+		this.showDocent = showDocent;
 	}
 }

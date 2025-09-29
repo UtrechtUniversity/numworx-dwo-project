@@ -59,6 +59,9 @@ public class MySQLScoContextActions {
             if (scoContext.getShowScore() != null) {
                 pc.setShowscore(scoContext.getShowScore());
             }
+            if (scoContext.getShowDocent() != null) {
+            	pc.setShowdocent(scoContext.getShowDocent());
+            }
             if (scoContext.getImageData() != null) {
                 byte[] data = (scoContext.getImageData());
                 PersistentImage image = ImageManager.findEntity(scoID);
@@ -226,6 +229,12 @@ public class MySQLScoContextActions {
                 showscore = Boolean.TRUE; // notnull?
             }
             pc.setShowscore(showscore);
+            Boolean showdocent = scoContext.getShowDocent();
+            if (showdocent == null) {
+            	showdocent = Boolean.TRUE;
+            }
+            pc.setShowdocent(showdocent);
+            
             pc.setUrnID(null); // XXX als images in UrnResource staan.
             // fill schoolid and profile id
             pc.setSchoolID(c.getSchoolID());
