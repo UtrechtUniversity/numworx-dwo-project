@@ -24,7 +24,7 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.test.skip>true</maven.test.skip>
         <!-- Convenience property to set the GWT version -->
-        <gwt.version>2.9.0</gwt.version>
+        <gwt.version>2.10.0</gwt.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <daggerVersion>2.42</daggerVersion>

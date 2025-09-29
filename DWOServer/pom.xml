@@ -376,7 +376,7 @@
                          <webapp>
 						    <groupId>nl.numworx.uploadwidget</groupId>
 						    <artifactId>uploadwidget-local</artifactId>
-						    <version>2.5.42-SNAPSHOT</version>
+						    <version>2.5.42</version>
                             <type>war</type>
                             <contextPath>/dwo/dav/upload</contextPath>
                             <asWebapp>true</asWebapp>
