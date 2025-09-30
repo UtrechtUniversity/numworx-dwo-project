@@ -487,28 +487,16 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
 			  }
 		  }
 		  
-		  stub.setFilter(and(f));
+		  stub.setFilter(f);
 		  stub.setVisibleRange(stub.getVisibleRange());
 	  }
   }
   
   
   
-  private Predicate<Entry<String, TaggedDomUser<DomUser>>> and(List<Predicate<Entry<String, TaggedDomUser<DomUser>>>> f) {
-	if (f.isEmpty()) return stub.NULL;
-	if (f.size() == 1) return f.get(0);
-	return (t) -> {
-		for( Predicate<Entry<String, TaggedDomUser<DomUser>>> x : f) {
-			if (!x.test(t)) return false;
-		}
-		return true;
-		
-	};
-}
 
 static boolean containsIgnoreCase(String source, String regex) {
-	  RegExp r = RegExp.compile(regex, "i");
-	  return null !=  r.exec(source);	  
+	  return Stub.containsIgnoreCase(source, regex);	  
   }
 
 @JsMethod

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 
@@ -166,4 +168,30 @@ public void setView(Display view) {
     super.importPersons(file);
   }
 
+  @Override @JsMethod
+  public void filterPersons(String username, String givenName, String insertion, String familyName) {
+	  super.filterPersons(username, givenName, insertion, familyName);
+	  if (stub != null) {
+		  List <Predicate<Entry<String, DomUser>>> f = new ArrayList<>();
+		  if (username != null && !username.isEmpty())
+		  {		  
+			  f.add( t -> Stub.containsIgnoreCase(t.getValue().getUserName(), username));
+		  }
+		  if (givenName != null && !givenName.isEmpty())
+		  {
+			  f.add(t -> Stub.containsIgnoreCase(t.getValue().getGivenName(), givenName));
+		  }
+		  if (familyName != null && !familyName.isEmpty())
+		  {
+			  f.add(t -> Stub.containsIgnoreCase(t.getValue().getFamilyName(), familyName));
+		  }
+		  if (insertion != null && !insertion.isEmpty())
+		  {
+			  f.add(t -> Stub.containsIgnoreCase(t.getValue().getInsertion(), insertion));
+		  }
+		  
+		  stub.setFilter(f);
+	  }
+ }
+  
 }

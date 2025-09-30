@@ -191,4 +191,9 @@ public class PersonsPresenter {
     public void importPersons(JavaScriptObject file) {
         eventBus.fireEvent(new SwitchViewEvent(SwitchViewEvent.SelectedView.IMPORTPERSONS, file));
     }
+    
+    @JsMethod
+    public void filterPersons(String username, String givenname, String insertion, String familyname) {
+    	LOG.info("filter Persons: " + username + "," + givenname + "," + insertion + "," + familyname);
+    }
 }

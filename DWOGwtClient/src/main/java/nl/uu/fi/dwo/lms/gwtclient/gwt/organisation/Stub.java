@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.organisation;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -10,6 +11,7 @@ import java.util.stream.Stream;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.view.client.HasRows;
 import com.google.gwt.view.client.Range;
@@ -155,5 +157,26 @@ public class Stub<T> implements HasRows {
 	public int getPageSize() {
 		return pagesize;
 	}
-	  
+
+	public static boolean containsIgnoreCase(String source, String regex) {
+		  RegExp r = RegExp.compile(regex, "i");
+		  return null !=  r.exec(source);	  
+	}
+	
+	public Predicate<Entry<String, T>> and(List<Predicate<Entry<String, T>>> f) {
+			if (f.isEmpty()) return NULL;
+			if (f.size() == 1) return f.get(0);
+			return (t) -> {
+				for( Predicate<Entry<String, T>> x : f) {
+					if (!x.test(t)) return false;
+				}
+				return true;
+				
+			};
+		}
+
+	public void setFilter(List<Predicate<Entry<String, T>>> f) {
+		setFilter(and(f));
+	}
+
   }
