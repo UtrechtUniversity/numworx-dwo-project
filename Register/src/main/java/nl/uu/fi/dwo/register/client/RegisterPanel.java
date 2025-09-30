@@ -76,7 +76,7 @@ public class RegisterPanel extends ResizeComposite {
 
 	static String getCookieOnce(String key) {
 	  String r = getCookie(key);
-	  Cookies.removeCookie(key);
+	  Cookies.removeCookie(key, "/"); // ons kent ons.
 	  return r;
 	}
 		
