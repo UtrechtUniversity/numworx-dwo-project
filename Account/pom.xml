@@ -21,7 +21,7 @@
         <maven.test.skip>true</maven.test.skip>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <gwtVersion>2.9.0</gwtVersion>
+        <gwtVersion>2.10.0</gwtVersion>
         <gwt.compiler.skip>true</gwt.compiler.skip>
     </properties>
     <build>

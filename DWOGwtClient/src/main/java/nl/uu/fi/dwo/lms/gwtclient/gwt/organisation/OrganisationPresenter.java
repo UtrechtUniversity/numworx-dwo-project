@@ -10,13 +10,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -25,17 +23,10 @@ import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 import com.google.gwt.core.client.JsArrayString;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.cellview.client.SimplePager;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.view.client.HasRows;
-import com.google.gwt.view.client.Range;
-import com.google.gwt.view.client.RangeChangeEvent;
-import com.google.gwt.view.client.RangeChangeEvent.Handler;
-import com.google.gwt.view.client.RowCountChangeEvent;
 import com.google.web.bindery.event.shared.EventBus;
 
 import fi.dwo.gwt.lib.rest.util.StringFormatter;
@@ -73,13 +64,12 @@ public class OrganisationPresenter {
 		     	return source.localeCompare( target );
 		   }-*/;
 
-  public interface Display extends BasicDisplay {
+  public interface Display extends BasicDisplay, PagingView<TaggedDomUser<DomUser>> {
     
   void setEmptyTableMessage();
 
   void setLoadingTableMessage();
 
-  void showPersonen(Map<String, ?> personen, RoleType role);
 
   void initEditModules(boolean flag);
 
@@ -106,129 +96,11 @@ public class OrganisationPresenter {
   //private Map<String, Promise<List<DomStudent>>> studentMap;
   private Map<String, Promise<List<DomTeacher>>> teacherMap;
   
-  int pagesize = 50;
   long restsize = 100;
   SimplePager pager;
-  Stub stub;
+  Stub<TaggedDomUser<DomUser>> stub;
   OrderType order = OrderType.asc;
   SortType  sort  = SortType.familyName;
-  
-  static final Predicate<Entry<String, TaggedDomUser<DomUser>>> NULL =  t -> true;
-  
-  class Stub implements HasRows {
-	  
-	boolean rowCountExact = false;
-	int rowCount = 0;
-	Range visibleRange = new Range(0,pagesize);
-	private RoleType role;
-	private Map<String, TaggedDomUser<DomUser>> personen = Collections.emptyMap(); 
-	private Predicate<Entry<String, TaggedDomUser<DomUser>>> filter = NULL;
-
-	@Override
-	public void fireEvent(GwtEvent<?> event) {
-		eventBus.fireEventFromSource(event, this);
-	}
-
-	@Override
-	public HandlerRegistration addRangeChangeHandler(Handler handler) {
-		com.google.web.bindery.event.shared.HandlerRegistration r = eventBus.addHandlerToSource(RangeChangeEvent.getType(), this, handler);
-		return r::removeHandler;
-	}
-
-	@Override
-	public HandlerRegistration addRowCountChangeHandler(
-			com.google.gwt.view.client.RowCountChangeEvent.Handler handler) {
-		com.google.web.bindery.event.shared.HandlerRegistration r = eventBus.addHandlerToSource(RowCountChangeEvent.getType(), this, handler);
-		return r::removeHandler;
-	}
-
-	@Override
-	public int getRowCount() {
-		return rowCount;
-	}
-
-	@Override
-	public Range getVisibleRange() {
-		return visibleRange;
-	}
-
-	@Override
-	public boolean isRowCountExact() {
-		return rowCountExact;
-	}
-
-	@Override
-	public void setRowCount(int count) {
-		setRowCount(count, true);		
-	}
-
-	@Override
-	public void setRowCount(int count, boolean isExact) {
-		rowCount = count;
-		rowCountExact = isExact;
-		RowCountChangeEvent.fire(this, count, isExact);
-	}
-
-	@Override
-	public void setVisibleRange(int start, int length) {
-		setVisibleRange(new Range(start, length));
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void setVisibleRange(Range range) {
-		visibleRange = range;
-		Set<Entry<String,TaggedDomUser<DomUser>>> entrySet = personen.entrySet();
-		Stream<Entry<String, TaggedDomUser<DomUser>>> stream = entrySet.stream();
-		view.showPersonen(
-				stream
-				.filter(filter)
-				.skip(range.getStart())
-				.limit(range.getLength())
-				.collect(Collectors.toMap(Entry::getKey, Entry::getValue)), 
-				role);
-		RangeChangeEvent.fire(this, range);
-	}
-
-	protected void countPersons(boolean last) {
-		int count;
-		if (filter == NULL) count = personen.size();
-		else count = (int) personen.entrySet().stream().filter(filter).count();
-		if (count != rowCount || last != isRowCountExact()) setRowCount(count, last);
-	}
-
-	public void setRole(RoleType role) {
-		this.role = role;		
-	}
-
-	public void limit(Map<String, TaggedDomUser<DomUser>> students, boolean first, boolean last) {
-		first |= rowCount < pager.getPageSize();
-		add(students, last);
-		if(first) setVisibleRange(0, pager.getPageSize()); // to front
-	}
-	
-	public void add(Map<String, TaggedDomUser<DomUser>> students, boolean last) {
-		this.personen = students;
-		countPersons(last);
-		//pager.setPageSize(Math.min(pagesize, rowCount));
-	}
-
-	public void setFilter(Predicate filter) {
-		if (filter == null) filter = NULL;
-		this.filter = filter;	
-		countPersons(isRowCountExact());
-	}
-
-	public void init() {
-		filter = NULL;
-		personen = Collections.emptyMap();
-		rowCountExact = false;
-		rowCount = 0;
-		visibleRange = new Range(0,pagesize);
-		role = null;
-	}
-	  
-  }
   
   
   @Inject OrganisationPresenter(DwoGlobalVars vars, EventBus bus, PersonsServiceSchoolAdmin service) {
@@ -236,24 +108,6 @@ public class OrganisationPresenter {
     this.eventBus = bus;
     this.service = service;
     this.FAILURE = new LoggingFailure(LOG, bus);
-
-    if (vars.isTest()||vars.isSaml()) { // isSaml voor gebruik in numworx.uu.nl
-    
-	    RootPanel root = RootPanel.get("organisationpager");
-		root.clear();
-	    pager = new SimplePager();
-	    pager.setPageSize(pagesize);
-	    root.add(pager);
-	    pager.setDisplay(stub = new Stub());
-	    
-	    stub.addRangeChangeHandler(ev -> { 
-	    	LOG.info("range update:" + ev.getNewRange() );    	
-	    } );
-	    stub.addRowCountChangeHandler(ev -> {
-	    	LOG.info("count is = " + ev.getNewRowCount());
-	    });
-    
-    }
   }
   
   public void init() {
@@ -586,6 +440,22 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
   @Inject void setView (Display view) {
     this.view = view;
     view.setHelp(dwoGlobalVars.buildHelpUrl("#organisation"));
+
+    if (dwoGlobalVars.isTest()||dwoGlobalVars.isSaml()) { // isSaml voor gebruik in numworx.uu.nl
+        
+	    RootPanel root = RootPanel.get("organisationpager");
+		root.clear();    
+		stub = new Stub(eventBus, view);
+		pager = stub.getPager();
+		root.add(pager);
+    
+	    stub.addRangeChangeHandler(ev -> { 
+	    	LOG.info("range update:" + ev.getNewRange() );    	
+	    } );
+	    stub.addRowCountChangeHandler(ev -> {
+	    	LOG.info("count is = " + ev.getNewRowCount());
+	    });
+    }
   }
 
   @JsMethod
@@ -625,7 +495,7 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
   
   
   private Predicate<Entry<String, TaggedDomUser<DomUser>>> and(List<Predicate<Entry<String, TaggedDomUser<DomUser>>>> f) {
-	if (f.isEmpty()) return NULL;
+	if (f.isEmpty()) return stub.NULL;
 	if (f.size() == 1) return f.get(0);
 	return (t) -> {
 		for( Predicate<Entry<String, TaggedDomUser<DomUser>>> x : f) {
@@ -649,7 +519,7 @@ void clickSortButton(String value, String order, String type) {
 	
 	this.order = OrderType.valueOf(order);
 	this.sort = SortType.valueOf(value);
-	if (stub != null && stub.role == RoleType.STUDENT && students.size() > pagesize) {
+	if (stub != null && stub.role == RoleType.STUDENT && students.size() > stub.getPageSize()) {
 		students = students.values().stream().sorted(new Comparator<TaggedDomUser<DomUser>>() {
 
 			private String toString(List<String> memberof) {

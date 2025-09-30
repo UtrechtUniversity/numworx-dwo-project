@@ -124,7 +124,7 @@ public class PersistentScoContext implements Serializable {
     /**
      * @since .1.5.6
      */
-    @Column(name='showdocent')
+    @Column(name="showdocent")
     private Boolean showdocent;
     
     @PrePersist

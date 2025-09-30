@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.web.bindery.event.shared.EventBus;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
 import java.util.HashMap;
@@ -56,6 +57,8 @@ public class PersonsPresenter {
      */
     public void setView(Display view) {
         this.view = view;
+        RootPanel root = RootPanel.get("personpager");
+        root.clear();
     }
 
     public void setStage(int aStage) {
