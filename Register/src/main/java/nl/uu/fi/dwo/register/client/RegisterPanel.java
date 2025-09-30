@@ -116,7 +116,7 @@ public class RegisterPanel extends ResizeComposite {
 		String schoolCode = getCookie("schoolCode");
 		if (schoolCode != null) {
 		  this.schoolCode.setText(schoolCode);
-		  Cookies.removeCookie("schoolCode");
+		  Cookies.removeCookie("schoolCode", "/");
 		}
 		String schoolClass = getCookieOnce("className");
 		if (schoolClass != null && !schoolClass.isEmpty() && "STUDENT".equals(schoolGroup)) {
@@ -129,7 +129,7 @@ public class RegisterPanel extends ResizeComposite {
 		
 		String putRequest = getCookie("putRequest");
 		if (putRequest != null) {
-		  Cookies.removeCookie("putRequest");
+		  Cookies.removeCookie("putRequest", "/");
 		  controller.setPutRequest(putRequest);
 		}
 		
