@@ -196,4 +196,10 @@ public class PersonsPresenter {
     public void filterPersons(String username, String givenname, String insertion, String familyname) {
     	LOG.info("filter Persons: " + username + "," + givenname + "," + insertion + "," + familyname);
     }
+
+    @JsMethod
+    public void clickSortButton(String sortValue, String order, String type) {
+    	LOG.info("sort Persons: " + sortValue + "," + order + "," + type);
+    	
+    }
 }
