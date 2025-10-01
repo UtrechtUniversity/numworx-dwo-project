@@ -22,6 +22,7 @@ import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
+import nl.uu.fi.dwo.mobile.client.ui.Completer;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItem;
 import nl.uu.fi.dwo.mobile.client.ui.SelectModuleItemHolder;
 import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
@@ -53,6 +54,7 @@ import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import dagger.Lazy;
 import dagger.MembersInjector;
 import dagger.Reusable;
 import fi.dwo.gwt.lib.rest.util.PersistenceIdDecoderInterface;
@@ -82,6 +84,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 	private SelectModuleItem item;
 	private DwoGlobalVars vars;
 	private boolean withUser;
+	@Inject Lazy<Completer>  completer;
 
 	private ScoActivity(s where) {
 	    this.where = where.getID();
@@ -257,7 +260,14 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 	                    view.setAnchorContext(ScoActivity.this);
 						return p; // true is fout
 					}
-				}, failure);
+				}, failure)
+		.onResolve(() -> {
+			if (started) {
+				completer.get().start(eventBus, sco, view.getOpdrNav());
+			}
+		})
+
+		;
 		
 	}
 

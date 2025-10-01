@@ -21,6 +21,7 @@ import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.SMLogger.LogStrategy;
 import nl.uu.fi.dwo.mobile.client.ui.views.XapiWrapper;
 import nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.CheckButton;
+import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.xapi.Account;
@@ -50,19 +51,22 @@ public class Completer implements CBookEventListener {
 		this.vars = vars;
 	}
 
-	
 	public HandlerRegistration start(EventBus eventbus, SelectModuleItem sco, OpdrNavIF comRoot) {
 		if (vars.getRoleType() == RoleType.STUDENT && vars.isPremium()) {
-			activity = new Activity();
-			activity.id = "pid:" + sco.original().getId();
-			activity.definition = new ActivityDefinition();
-			activity.definition.name = Collections.singletonMap("unk", sco.getName());
-			activity.definition.type = "http://www.dwo.nl/type/" + sco.original().getId().getType();
-			memento = comRoot;
-			return eventbus.addHandler(CBookEvent.TYPE, this);
-		} else {
-			return NULL;
+			DomSchool school = vars.getSchool();
+			String rights = school.getSchoolRights();
+			if (rights.contains("t")) {	
+				activity = new Activity();
+				activity.id = "pid:" + sco.original().getId();
+				activity.definition = new ActivityDefinition();
+				activity.definition.name = Collections.singletonMap("unk", sco.getName());
+				activity.definition.type = "http://www.dwo.nl/type/" + sco.original().getId().getType();
+				memento = comRoot;
+				return eventbus.addHandler(CBookEvent.TYPE, this);
+			}
 		}
+		return NULL;
+		
 	}
 	
 	Promise<String> send (Promise<XapiManager> p) {
