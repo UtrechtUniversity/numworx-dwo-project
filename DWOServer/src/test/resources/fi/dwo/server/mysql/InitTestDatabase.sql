@@ -650,6 +650,7 @@ CREATE TABLE `tblscocontext` (
   `scoType` tinyint(4) NOT NULL DEFAULT '0',
   `schoolID` int(11) DEFAULT NULL,
   `modelID` int(11) DEFAULT NULL,
+  `showdocent` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`scoID`),
   UNIQUE KEY `AK_IDENTIFIER_1` (`sconame`,`courseID`,`trashID`),
   KEY `SCO_APPLET_FK` (`appletID`),
@@ -664,10 +665,10 @@ CREATE TABLE `tblscocontext` (
 LOCK TABLES `tblscocontext` WRITE;
 /*!40000 ALTER TABLE `tblscocontext` DISABLE KEYS */;
 INSERT INTO `tblscocontext` VALUES 
-(1, 5,1,17,'Optellen en aftrekken'               ,0,1,0,0,0,0,NULL,NULL,0,1,NULL,1,NULL,NULL),
-(2, 6,1,17,'Drie getallen optellen en aftrekken' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,NULL,NULL,NULL),
-(3,14,1,17,'Drie getallen optellen en aftrekken' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,3,   NULL,1),
-(4,13333,1,17,'Drie getallen bij school' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,3,   3,NULL);
+(1, 5,1,17,'Optellen en aftrekken'               ,0,1,0,0,0,0,NULL,NULL,0,1,NULL,1,NULL,NULL, NULL),
+(2, 6,1,17,'Drie getallen optellen en aftrekken' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,NULL,NULL,NULL, NULL),
+(3,14,1,17,'Drie getallen optellen en aftrekken' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,3,   NULL,1,NULL),
+(4,13333,1,17,'Drie getallen bij school' ,0,2,0,0,0,0,NULL,NULL,0,1,NULL,3,   3,NULL,NULL);
 /*!40000 ALTER TABLE `tblscocontext` ENABLE KEYS */;
 UNLOCK TABLES;
 
