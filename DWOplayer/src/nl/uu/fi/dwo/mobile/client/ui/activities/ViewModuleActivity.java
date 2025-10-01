@@ -24,6 +24,7 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
+import nl.uu.fi.dwo.mobile.client.ui.Completer;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEvent;
 import nl.uu.fi.dwo.mobile.client.ui.MessageEventHandler;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
@@ -95,6 +96,7 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 	@Inject @Named("profile") int profile;
 	@Inject Lazy<LastExamActivity> lastExam;
 	@Inject PageTracker tracker;
+	@Inject Lazy<Completer>  completer;
 
 	private DWOplayerParameters PARAMETERS;
 	@Inject void setParameters(DWOplayerParameters p) {
@@ -339,6 +341,9 @@ public class ViewModuleActivity extends AbstractActivity implements AnchorContex
 						return null;
 					}, p -> { started = false; if (!oops.needed(p))tracker.back(); })
 					.onResolve(() -> {
+						if (started) {
+							completer.get().start(eventBus, sco, view.getOpdrNav());
+						}
 						if (started && hash != null) {
 							gotoElement(hash);
 						}
