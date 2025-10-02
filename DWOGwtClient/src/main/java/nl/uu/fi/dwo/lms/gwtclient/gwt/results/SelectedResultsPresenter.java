@@ -268,8 +268,8 @@ public class SelectedResultsPresenter implements ResultEventHandler {
     private Promise<StatementsResult> completedQuery(PersistenceId schoolclass, PersistenceId sid) {
 		DomSchoolClass sc = new DomSchoolClass();
 		sc.setId(schoolclass);
-		sc.setSchoolClassName("unknown");
-		DomScoContextId sco = new DomScoContextId(); sc.setId(sid);
+		sc.setSchoolClassName(null);
+		DomScoContextId sco = new DomScoContextId(); sco.setId(sid);
 		
 		Promise<StatementsResult> query = xapiService.get().query(sc, sco);
 		query.onResolve(() -> { 
