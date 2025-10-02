@@ -684,7 +684,8 @@
     		<properties>
     			<gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclientDebug</gwtModule>
         		<gwt.style>PRETTY</gwt.style>
-    		</properties>
+  				<gwt.compiler.localWorkers>3</gwt.compiler.localWorkers>
+  		</properties>
     	</profile>
     	    <profile>
 		        <id>aarch64-macos-users</id>
