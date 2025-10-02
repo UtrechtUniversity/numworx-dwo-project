@@ -3,7 +3,8 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.persons;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.web.bindery.event.shared.EventBus;
-import fi.dwo.gwt.lib.rest.CallManagers.SecuredTeacherSchoolClassManager;
+
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +18,14 @@ import jsinterop.annotations.JsMethod;
 
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.organisation.OrganisationPresenter;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
+import nl.uu.fi.dwo.rest.dom.entities.util.OrderType;
+import nl.uu.fi.dwo.rest.dom.entities.util.SortType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 
@@ -44,7 +48,29 @@ public class PersonsPresenter {
     final PersonsService manager;
     Map<String, DomUser> personen;
     int stage=0;
+    
+    protected OrderType order = OrderType.asc;
+    protected SortType  sort  = SortType.familyName;
 
+    public class PersonComparator implements Comparator<DomUser> {
+
+		@Override
+		public int compare(DomUser o1, DomUser o2) {
+			String s1, s2;
+			switch(sort) {
+			default:
+			case familyName: s1 = o1.getFamilyName(); s2 = o2.getFamilyName(); break;
+			case givenName:  s1 = o1.getGivenName(); s2 = o2.getGivenName(); break;
+			case userName:   s1 = o1.getUserName(); s2 = o2.getUserName(); break;
+			}
+			int result = OrganisationPresenter.localCompare(s1, s2);
+			if (order == OrderType.desc) result = -result;
+			return result;
+		}
+    	
+    }
+    protected final PersonComparator PERSON_COMPARATOR = new PersonComparator();
+ 
     /**
      * @return the view
      */
@@ -87,6 +113,8 @@ public class PersonsPresenter {
         view.init();
         view.setHelp(dwoGlobalVars.buildHelpUrl("#persons"));
         view.setEmptyTableMessage();
+        order = OrderType.asc;
+        sort  = SortType.familyName;
         showStudentList();
     }
 
@@ -198,8 +226,9 @@ public class PersonsPresenter {
     }
 
     @JsMethod
-    public void clickSortButton(String sortValue, String order, String type) {
-    	LOG.info("sort Persons: " + sortValue + "," + order + "," + type);
-    	
+    public void clickSortButton(String value, String order, String type) {
+    	LOG.info("sort Persons: " + value + "," + order + "," + type);
+    	this.order = OrderType.valueOf(order);
+    	this.sort = SortType.valueOf(value);
     }
 }

@@ -7,8 +7,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import javax.inject.Inject;
 
 import org.osgi.util.promise.Promise;
@@ -69,8 +72,6 @@ public void setView(Display view) {
 	}
 }
   
-  OrderType order = OrderType.asc;
-  SortType  sort  = SortType.familyName;
   long restsize = 100;
 
 
@@ -193,5 +194,17 @@ public void setView(Display view) {
 		  stub.setFilter(f);
 	  }
  }
+
+@Override @JsMethod
+public void clickSortButton(String value, String order, String type) {
+	super.clickSortButton(value, order, type);
+	if (stub != null && stub.personen.size() > stub.getPageSize()) {
+		stub.personen = stub.personen.values().stream().sorted(PERSON_COMPARATOR)
+				.collect(Collectors.toMap(t -> t.getId().getIdString(), Function.identity()
+						, (a,b) -> a, LinkedHashMap::new));
+		stub.setVisibleRange(stub.getVisibleRange());
+
+	}
+}
   
 }

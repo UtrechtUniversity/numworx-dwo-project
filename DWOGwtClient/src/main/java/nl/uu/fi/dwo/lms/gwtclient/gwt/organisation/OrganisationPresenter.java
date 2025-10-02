@@ -60,7 +60,7 @@ import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 public class OrganisationPresenter {
 
 // same as in Helpers.sort
-		   private static native int localCompare( String source, String target ) /*-{
+		   public static native int localCompare( String source, String target ) /*-{
 		     	return source.localeCompare( target );
 		   }-*/;
 
