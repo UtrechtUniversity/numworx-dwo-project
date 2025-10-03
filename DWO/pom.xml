@@ -17,6 +17,7 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.26</chatGWTVersion>
+        <tomcat7.version>7.0.108</tomcat7.version>
     </properties>
  	<repositories>	<!-- als de mirror uit staat -->
 		<repository>

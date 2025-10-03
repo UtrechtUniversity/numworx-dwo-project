@@ -31,7 +31,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gwt.style>OBFUSCATED</gwt.style>
         <maven.test.skip>true</maven.test.skip>
-        <tomcat7.version>7.0.108</tomcat7.version>
         <context.xml>context-dwo_devel.xml</context.xml>
         <copy.ui.skip>true</copy.ui.skip>
         <registerVersion>2.5.2</registerVersion>

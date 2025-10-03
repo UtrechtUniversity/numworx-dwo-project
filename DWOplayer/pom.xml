@@ -451,7 +451,6 @@
 				<gwt.style>PRETTY</gwt.style>
 				<gwt.compiler.force>false</gwt.compiler.force>
  				<warClassifier>debug</warClassifier>
-        		<tomcat7.version>7.0.76</tomcat7.version>
 				<maven.war.webxml>war/WEB-INF/web.xml</maven.war.webxml>
 			</properties>
 			<build>
