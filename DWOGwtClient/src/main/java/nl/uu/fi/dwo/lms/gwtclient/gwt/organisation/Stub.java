@@ -47,7 +47,7 @@ public class Stub<T> implements HasRows {
 	int rowCount = 0;
 	Range visibleRange = new Range(0,pagesize);
 	public RoleType role;
-	Map<String, T> personen = Collections.emptyMap(); 
+	public Map<String, T> personen = Collections.emptyMap(); 
 	private Predicate<Entry<String,T>> filter = NULL;
 
 	@Override

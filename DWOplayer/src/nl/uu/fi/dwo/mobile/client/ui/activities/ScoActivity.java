@@ -263,7 +263,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 				}, failure)
 		.onResolve(() -> {
 			if (started) {
-				completer.get().start(eventBus, sco, view.getOpdrNav());
+				completer.get().start(eventBus, item, view.getOpdrNav());
 			}
 		})
 

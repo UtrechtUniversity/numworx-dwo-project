@@ -58,8 +58,10 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -240,6 +242,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         LOG.log(Level.FINE, "scoid = " + scoid + " classid = " + classid);
         PersistenceId sco = new PersistenceId(scoid);
         PersistenceId schoolclass = new PersistenceId(classid);
+        Promise <?> aanHetEind = completedQuery(schoolclass, sco);
         Promise<?> result = preparePages(schoolclass, sco);
         result = result.then(p -> {
         	if (prepareStart < Long.MAX_VALUE)
@@ -260,7 +263,32 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 		return result;
 	}
 
-    @JsMethod
+	@Inject Lazy<XAPIService> xapiService;
+
+    private Promise<StatementsResult> completedQuery(PersistenceId schoolclass, PersistenceId sid) {
+		DomSchoolClass sc = new DomSchoolClass();
+		sc.setId(schoolclass);
+		sc.setSchoolClassName(null);
+		DomScoContextId sco = new DomScoContextId(); sco.setId(sid);
+		
+		Promise<StatementsResult> query = xapiService.get().query(sc, sco);
+		query.onResolve(() -> { 
+			LOG.severe("DEBUG HIER" + query);
+			Throwable failure = query.getFailure();
+			if (failure != null) {
+				LOG.log(Level.SEVERE, "Error in query", failure);
+			} else {
+				StatementsResult value = query.getValue();
+				LOG.info("result query " + value);
+			}			
+		});
+		
+		
+		
+		return query;
+	}
+
+	@JsMethod
     public void showLogResults(JavaScriptObject context, String scoid, String classid) {
       LOG.fine("entering showLogResults " + context + ", " + scoid);
       PersistenceId schoolclass = new PersistenceId(classid);
