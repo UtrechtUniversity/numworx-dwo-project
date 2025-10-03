@@ -8,9 +8,11 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -61,6 +63,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -242,9 +245,39 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         LOG.log(Level.FINE, "scoid = " + scoid + " classid = " + classid);
         PersistenceId sco = new PersistenceId(scoid);
         PersistenceId schoolclass = new PersistenceId(classid);
-        Promise <?> aanHetEind = completedQuery(schoolclass, sco);
-        Promise<?> result = preparePages(schoolclass, sco);
-        result = result.then(p -> {
+        final Promise <StatementsResult> aanHetEind = completedQuery(schoolclass, sco);
+        final Promise<Void> result0 = preparePages(schoolclass, sco);
+        final Promise<?> result = 
+        Promises.all(aanHetEind, result0)
+        .then(x -> {
+        	List<Statement> statements = aanHetEind.getValue().statements;
+        	LOG.severe("DEBUG HIER" + statements.size());
+        	if (statements.isEmpty())       		
+        		return result0;
+        	
+        	Map<String, String> map = new HashMap<>();
+        	for (Statement s: statements) {
+        		String time = s.timestamp;
+        		String key  = s.actor.account.name.substring(4); // starts with pid:
+        		map.put(key, time);
+        	}
+            // loop over studensco van deze klas en sco
+        	DomResultSchoolClass<DomResultCourseInClass> rsc = resultTree.getResultTree().getChildren().get(schoolclass);
+        	Collection<DomResultCourseInClass> list = rsc.getChildren().values();
+        	Optional<DomResultScoContext> opt = list.stream().flatMap(item -> item.getChildren().values().stream())
+        			.filter(t -> t.getId().equals(scoid))
+        			.findAny();
+        	if (opt.isPresent()) {
+        		Collection<DomResultStudentScoContext> sscs = opt.get().getChildren().values();
+        		for( DomResultStudentScoContext ssc: sscs) {
+        			String u = ssc.getStudentSco().getUserID().getIdString();
+        			ssc.setCompletionTime(map.get(u));
+        		}
+        	}
+        	return result0;
+        })
+        
+        .then(p -> {
         	if (prepareStart < Long.MAX_VALUE)
         	{
         		resultTree.insertStudentCourses();
@@ -264,6 +297,14 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 	}
 
 	@Inject Lazy<XAPIService> xapiService;
+	
+	private final Promise<StatementsResult> EMPTY; 
+	{ 
+		StatementsResult empty = new StatementsResult();
+		empty.more = "";
+		empty.statements = Collections.emptyList();
+		EMPTY = Promises.resolved(empty);
+	}
 
     private Promise<StatementsResult> completedQuery(PersistenceId schoolclass, PersistenceId sid) {
 		DomSchoolClass sc = new DomSchoolClass();
@@ -283,10 +324,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 				LOG.info("statements " + value.statements);
 			}			
 		});
-		
-		
-		
-		return query;
+		return query.fallbackTo(EMPTY);
 	}
 
 	@JsMethod

@@ -12,6 +12,7 @@ public class DomResultStudentScoContext extends DomResultScore<DomResultStudentS
     private DomStudentScoContext studentSco;
     private Double maxScore;
 	private ScoType scoType;
+	private String completionTime;
 
     public DomResultStudentScoContext(DomStudentScoContext aSco, DomStudent student){
         studentSco = aSco;
@@ -62,5 +63,14 @@ public class DomResultStudentScoContext extends DomResultScore<DomResultStudentS
 	public void setScoType(ScoType scoType) {
 		this.scoType = scoType;	
 	}
+
+	public String getCompletionTime() {
+		return completionTime;
+	}
+
+	public void setCompletionTime(String completionTime) {
+		this.completionTime = completionTime;
+	}
+
         
 }
