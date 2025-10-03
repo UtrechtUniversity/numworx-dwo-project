@@ -200,6 +200,7 @@ public class XapiManager {
       r = r.addQueryParam("agent", encode(getAgent()));
     }
     if (q.relatedActivities != null) r =  r.addQueryParam("related_activities", q.relatedActivities.toString());
+    if (q.relatedAgents != null) r =  r.addQueryParam("related_agents", q.relatedAgents.toString());
     if (q.activityID != null) r = r.addQueryParam("activity", q.activityID);
     if (q.until != null) r = r.addQueryParam("until", q.until);
     if (q.limit != null) r = r.addQueryParam("limit", q.limit.toString());

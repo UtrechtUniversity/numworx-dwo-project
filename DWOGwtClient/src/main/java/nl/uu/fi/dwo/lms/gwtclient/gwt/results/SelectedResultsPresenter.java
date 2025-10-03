@@ -268,7 +268,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
     private Promise<StatementsResult> completedQuery(PersistenceId schoolclass, PersistenceId sid) {
 		DomSchoolClass sc = new DomSchoolClass();
 		sc.setId(schoolclass);
-		sc.setSchoolClassName(null);
+		sc.setSchoolClassName(resultTree.getResultTree().getChildren().get(schoolclass).getLabel());
 		DomScoContextId sco = new DomScoContextId(); sco.setId(sid);
 		
 		Promise<StatementsResult> query = xapiService.get().query(sc, sco);
@@ -280,6 +280,7 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 			} else {
 				StatementsResult value = query.getValue();
 				LOG.info("result query " + value);
+				LOG.info("statements " + value.statements);
 			}			
 		});
 		
