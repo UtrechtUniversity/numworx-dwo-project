@@ -8,6 +8,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +28,8 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
@@ -67,6 +70,7 @@ import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
 
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
@@ -258,6 +262,11 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         	Map<String, String> map = new HashMap<>();
         	for (Statement s: statements) {
         		String time = s.timestamp;
+        		DateTimeFormat utc = DateTimeFormat.getFormat(RestyDateTimeFormat.RESTY_DATETIME_FORMAT);
+        	    Date date = utc.parse(time.substring(0,RestyDateTimeFormat.RESTY_DATETIME_FORMAT.length()-1 ) + "+00:00");
+        		DateTimeFormat local = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
+        		time = local.format(date);
+        		
         		String key  = s.actor.account.name.substring(4); // starts with pid:
         		map.put(key, time);
         	}
