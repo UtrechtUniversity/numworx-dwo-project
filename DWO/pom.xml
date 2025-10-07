@@ -48,7 +48,7 @@
      	<module>../UploadWidget</module>
 <!--      	<module>../WriteMathGWT</module> -->
 <!--		<module>../osiris-import</module>-->
-<!-- 		<module>../notebook</module> -->
+ 		<module>../notebook</module>
         <module>../oauth2client</module>
         <module>../EBServer</module>
 <!--        <module>../schoolyear-jclient-lib</module>-->
