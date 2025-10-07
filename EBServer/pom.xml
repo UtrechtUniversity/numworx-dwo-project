@@ -528,7 +528,7 @@
                             <SEB_TOETS_MAC>3dce4166740c27af1284d6f268bf601e58ea0668ae967947776c1246611a56f2,9153c48c6111d2733add6e1d596db4059c302cf736dcb18ca498288e21404507,c5d129e27f57b1970d2ffda2ed745a20f7d8e12ed9bfbfb168e83f75f9f870cf</SEB_TOETS_MAC>
   							<ALLOW_ORIGIN>http://localhost:${http.port}</ALLOW_ORIGIN>
  							<UU_INDEX />
- 							<ENV_NOSEB>false</ENV_NOSEB>
+ 							<ENV_NOSEB>true</ENV_NOSEB>
  							<ENV_IPRANGE>127.0.0.1,::1</ENV_IPRANGE>
                     		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>
                     		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>
