@@ -19,7 +19,7 @@ import nl.uu.fi.dwo.mobile.client.ui.places.LoginPlace;
   @Provides @Named("defaultPlace") static Place defaultPlace(PlaceHistoryMapper mapper) {
 	  try { 
 		  String token = getDefaultPlace();
-		  if (!token.isEmpty()) {
+		  if (token != null && !token.isEmpty()) {
 			  Place p = mapper.getPlace(token);
 			  if (p != null) return p;
 		  }
