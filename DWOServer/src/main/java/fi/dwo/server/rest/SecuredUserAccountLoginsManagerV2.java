@@ -60,6 +60,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
+import javax.persistence.OptimisticLockException;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -149,8 +150,13 @@ protected PersistentHasRole stampHasRole(PersistentHasRole role) {
 	if(!contexts.isEmpty()) {
 		PersistentLoginContext context = contexts.get(0); // From Cache?????
 		if (context.getLastLogin() != null) {
-		role.setLastLogin(new java.sql.Date(context.getLastLogin()));
-		role = HasRoleManager.edit(role);
+		try {	
+			role.setLastLogin(new java.sql.Date(context.getLastLogin())); // Gezien optimistic lock exception
+			role = HasRoleManager.edit(role);
+		} catch(OptimisticLockException e) {
+			LOG.log(Level.WARNING, "stampHasRole failed, nonfatal", e);
+			return stampHasRole(HasRoleManager.findEntity(role.getPersistentHasRolePK()));
+		}
 	}}
 	return role;
 }

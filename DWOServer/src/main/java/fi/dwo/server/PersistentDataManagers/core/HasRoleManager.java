@@ -48,7 +48,7 @@ public class HasRoleManager {
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentHasRole.", e);
-            throw new PersistenceException(e);
+            throw newPersistenceException(e);
         }
         finally {
             if (em != null) {
@@ -78,10 +78,10 @@ public class HasRoleManager {
                 PersistentHasRolePK id = hasRole.getPersistentHasRolePK();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.", e);
-                    throw new PersistenceException(e);
+                    throw newPersistenceException(e);
                 }
             }
-            throw new PersistenceException(e);
+            throw newPersistenceException(e);
         }
         finally {
             if (em != null) {
@@ -89,6 +89,11 @@ public class HasRoleManager {
             }
         }
     }
+
+	private static PersistenceException newPersistenceException(Exception e) {
+		if (e instanceof PersistenceException) return (PersistenceException) e;
+		return new PersistenceException(e);
+	}
 
     public static void editRights(PersistentHasRole hasRole) throws PersistenceException {
         EntityManager em = null;
@@ -111,10 +116,10 @@ public class HasRoleManager {
                 PersistentHasRolePK id = hasRole.getPersistentHasRolePK();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.", e);
-                    throw new PersistenceException(e);
+                    throw newPersistenceException(e);
                 }
             }
-            throw new PersistenceException(e);
+            throw newPersistenceException(e);
         }
         finally {
             if (em != null) {
@@ -187,7 +192,7 @@ public class HasRoleManager {
             return rl;
         }
         catch (Exception e) {
-            throw new PersistenceException(e);
+            throw newPersistenceException(e);
         }
         finally {
             em.close();
@@ -204,7 +209,7 @@ public class HasRoleManager {
             return rl;
         }
         catch (Exception e) {
-            throw new PersistenceException(e);
+            throw newPersistenceException(e);
         }
         finally {
             em.close();
