@@ -19,10 +19,12 @@ import nl.uu.fi.dwo.rest.entities.RestNewSchoolLogin;
 import nl.uu.fi.dwo.rest.entities.RestSchoolRoleAndClassV2;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
 import fi.dwo.server.PersistentDataManagers.core.RoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
+import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.logging.Level;
@@ -208,5 +210,20 @@ public class SecuredUserAccountLoginsManagerV2IT {
         assertEquals(expResult, result);
         PersistentHasRole hr = HasRoleManager.findEntity(new PersistentHasRolePK(user.getId(), 5L));
         assertEquals("HasRole was not removed.", hr, null);
+    }
+    
+    @Test
+    public void testStampHasRole() throws Exception {
+    	PersistentUser user = UserManager.findByUserName("user03");
+    	LoginContextUtilManager.forceNewLoginContextSession(user, true);
+    	java.util.List<PersistentHasRole> roles = HasRoleManager.findEntities(user);
+    	PersistentHasRole role = roles.get(0);
+    	SecuredUserAccountLoginsManagerV2 manager = new SecuredUserAccountLoginsManagerV2();
+    	int optlock = role.optlock.intValue();
+    	role = manager.stampHasRole(role);
+    	assertEquals("optlock+1", optlock+1, role.optlock.intValue());
+    	role.optlock = Long.valueOf(optlock);
+    	role = manager.stampHasRole(role);
+    	assertEquals("optlock+2", optlock+2, role.optlock.intValue());
     }
 }
