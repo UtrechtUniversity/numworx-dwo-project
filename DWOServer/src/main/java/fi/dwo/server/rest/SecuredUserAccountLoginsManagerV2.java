@@ -154,14 +154,14 @@ protected PersistentHasRole stampHasRole(PersistentHasRole role) {
 			final java.sql.Date lastLogin = new java.sql.Date(context.getLastLogin());
 		try {	
 			role.setLastLogin(lastLogin); // Gezien optimistic lock exception
-			role = HasRoleManager.edit(role);
+			role = HasRoleManager.editLastLogin(role);
 		} catch(OptimisticLockException e) {
 			LOG.log(Level.WARNING, "stampHasRole failed, nonfatal lock=" + role.optlock, e);
 			role = HasRoleManager.findEntity(role.getPersistentHasRolePK());
 			LOG.log(Level.WARNING, "refresh lock " + role.optlock);
 			role.setLastLogin(lastLogin);
 			try {
-				return HasRoleManager.edit(role);
+				return HasRoleManager.editLastLogin(role);
 			} catch (PersistenceException e1) {
 				LOG.log(Level.SEVERE, "stampHasRole fatal failed 2nd " + e1.getClass(), e1);
 			}

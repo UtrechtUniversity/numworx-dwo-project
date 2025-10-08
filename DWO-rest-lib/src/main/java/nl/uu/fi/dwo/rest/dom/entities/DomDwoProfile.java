@@ -17,6 +17,7 @@ public class DomDwoProfile extends DomDwoProfileId implements Cloneable {
      * <ul>
      * <li>a
      * <li>c - css styling. <i>name</i>.css in apps/css/ folder
+     * <li>I - Inf: Met de berichten applicatie 
      * <li>l - limited profile, no guest, restricties aan scholen
      * <li>n - navigatie kolom altijd zichtbaar
      * <li>O - met OAuth2 (entree of conext of .... )

@@ -242,4 +242,29 @@ public class HasRoleManager {
             em.close();
         }
     }
+
+	public static PersistentHasRole editLastLogin(PersistentHasRole role) {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            PersistentHasRolePK id = role.getPersistentHasRolePK();
+            PersistentHasRole hr = findEntity(id);
+            if (hr == null) {
+                throw new PersistenceException("The PersistentHasRole with " + id + " no longer exists.");
+            }
+            hr.setLastLogin(role.getLastLogin());
+            hr = em.merge(hr);
+            em.getTransaction().commit();
+            return hr;
+        }
+        catch (Exception e) {
+            throw newPersistenceException(e);
+        }
+        finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+	}
 }
