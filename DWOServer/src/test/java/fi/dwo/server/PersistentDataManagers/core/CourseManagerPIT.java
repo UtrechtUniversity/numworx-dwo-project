@@ -16,6 +16,7 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 public class CourseManagerPIT {
@@ -53,6 +54,16 @@ public class CourseManagerPIT {
 		assertEquals(1, list.size());
 		assertEquals(13333L, list.get(0).longValue());
 		
+	}
+	
+	@Test public void testFindDelState() {
+		List<PersistentCourse> list = CourseManager.findEntities(1L, school.getSchoolID());
+		int n = list.size();
+		PersistentCourse item = list.get(0);
+		item.delState = DelState.deleted;
+		CourseManager.edit(item);
+		list = CourseManager.findEntities(1L, school.getSchoolID());
+		assertEquals("delstate in effect", n-1, list.size());
 	}
 	
 	@Test
