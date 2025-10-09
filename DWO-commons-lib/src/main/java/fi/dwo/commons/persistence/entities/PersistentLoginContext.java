@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -70,6 +72,15 @@ public class PersistentLoginContext implements Serializable {
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
     private Long version;
+ 
+    @Basic(optional = false)
+    @Column(name = "lastChangeTimeStamp", nullable = true)
+    private Long lastChangeTimeStamp;
+    @PrePersist
+    @PreUpdate
+    private void now() {
+      lastChangeTimeStamp = System.currentTimeMillis();
+    }
 
     /**
      * @return the id

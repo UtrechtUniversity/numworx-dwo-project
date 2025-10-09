@@ -9,7 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
@@ -112,4 +115,20 @@ public class PersistentImage implements Serializable {
                 PersistenceClassType.PersistentImage.name(), aCourseId));
         return id;
     }
+    
+    
+    @Basic(optional = false)
+    @Column(name = "lastChangeTimeStamp", nullable = true)
+    private Long lastChangeTimeStamp;
+
+    @Column(name = "optlock")
+    @Version 
+    private Long optlock;
+
+    @PrePersist
+    @PreUpdate
+    private void now() {
+      lastChangeTimeStamp = System.currentTimeMillis();
+    }
+
 }
