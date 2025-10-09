@@ -151,7 +151,10 @@ protected PersistentHasRole stampHasRole(PersistentHasRole role) {
 	if(!contexts.isEmpty()) {
 		PersistentLoginContext context = contexts.get(0); // From Cache?????
 		if (context.getLastLogin() != null) {
-			final java.sql.Date lastLogin = new java.sql.Date(context.getLastLogin());
+			java.util.Date lastLogin = new Date(context.getLastLogin()/1000L * 1000L); // Simulate java.sql.Date, lastLogin = TemporalType.DATE
+			lastLogin.setHours(0);
+			lastLogin.setMinutes(0);
+			lastLogin.setSeconds(0);
 		try {	
 			role.setLastLogin(lastLogin); // Gezien optimistic lock exception
 			role = HasRoleManager.editLastLogin(role);
