@@ -223,7 +223,7 @@ public class SecuredUserAccountLoginsManagerV2IT {
     	role = manager.stampHasRole(role);
     	assertEquals("optlock+1", optlock+1, role.optlock.intValue());
     	role.optlock = Long.valueOf(optlock);
-    	role = manager.stampHasRole(role);
-    	assertEquals("optlock+2", optlock+2, role.optlock.intValue());
+    	role = manager.stampHasRole(role); // no update, keep optlock+1
+    	assertEquals("optlock+2", optlock+1, role.optlock.intValue());
     }
 }

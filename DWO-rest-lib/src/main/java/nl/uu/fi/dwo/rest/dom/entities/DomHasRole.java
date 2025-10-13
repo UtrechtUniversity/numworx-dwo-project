@@ -15,9 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author G.A.J. van der Plas
  */
 @XmlRootElement
-public class DomHasRole {
-    private PersistenceId id;
-//    private DomSchoolClass schoolClass;
+public class DomHasRole extends DomId {
     private PersistenceId schoolGroupId;
     private PersistenceId userId;
     private String rights = "_";
@@ -26,33 +24,6 @@ public class DomHasRole {
     public DomHasRole(){
         
     }
-    /**
-     * @return the id
-     */
-    public PersistenceId getId() {
-        return id;
-    }
-
-    /**
-     * @param schoolId the id to set
-     */
-    public void setId(PersistenceId schoolId) {
-        this.id = schoolId;
-    }
-
-//    /**
-//     * @return the schoolClass
-//     */
-//    public DomSchoolClass getSchoolClass() {
-//        return schoolClass;
-//    }
-//
-//    /**
-//     * @param schoolClass the schoolClass to set
-//     */
-//    public void setSchoolClass(DomSchoolClass schoolClass) {
-//        this.schoolClass = schoolClass;
-//    }
 
     /**
      * @return the schoolGroupId

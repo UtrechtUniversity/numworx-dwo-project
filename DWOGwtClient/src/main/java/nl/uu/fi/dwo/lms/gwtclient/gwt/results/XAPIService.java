@@ -23,7 +23,7 @@ import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
 @RoleScope
 class XAPIService {
   
-  private static final String COMPLETED = "http://adlnet.gov/expapi/verbs/completed";
+  public static final String COMPLETED = "http://adlnet.gov/expapi/verbs/completed";
 
 private Promise<XapiManager> man;
 

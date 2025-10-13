@@ -22,7 +22,7 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 public class SEBHosting extends HttpServlet {
 
 	
-	private static final String HTTPS_APP_DWO_NL = "https://app.dwo.nl";
+	public static final String HTTPS_APP_DWO_NL = "https://app.dwo.nl";
 	String replacement = HTTPS_APP_DWO_NL;
 	/* (non-Javadoc)
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
