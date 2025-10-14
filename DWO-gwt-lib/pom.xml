@@ -38,7 +38,7 @@
     
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <gwtVersion>2.8.2</gwtVersion>
+        <gwtVersion>2.10.0</gwtVersion>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <restyVersion>2.2.0</restyVersion>
