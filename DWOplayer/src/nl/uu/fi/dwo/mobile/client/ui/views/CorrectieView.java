@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.mobile.client.ui.views;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import javax.inject.Provider;
@@ -125,7 +126,7 @@ private boolean checkDocent;
       view.setObject(map);      
       Object correctie = map.getOrDefault(REVIEW_SCORE_CORRECTIE,"0");
       Object comment   = map.getOrDefault(REVIEW_SCORE_COMMENT, "");
-      Object studentmodelSet = map.getOrDefault(REVIEW_STUDENTMODELSET, "[]");
+      Object studentmodelSet = map.get(REVIEW_STUDENTMODELSET);
       view.maxCor = scoreMax - score;
       view.minCor = -score;
       view.correctie.setText(correctie.toString());
@@ -133,7 +134,7 @@ private boolean checkDocent;
       view.score.setText(Integer.toString(score));
       view.area.setText(String.valueOf(comment));
       view.checkDocent = checkDocent;
-      view.studentmodelSet = String.valueOf(studentmodelSet);
+      view.studentmodelSet = Objects.toString(studentmodelSet,"");
       DWOPopupPanel panel = new DWOPopupPanel(Text.constants.docentCorrectieTitle(), view);
       panel.addContent(view);
       view.setPopup(panel);
@@ -169,7 +170,7 @@ private boolean checkDocent;
   private final OpdrNavIF comroot;
   private final Scorm2004IF api;
   private String[] smObjectives;
-  private String studentmodelSet = "[]";
+  private String studentmodelSet = ""; // never null, "" means NULL
   
   private native static void closeWindow(CorrectieView view) /*-{
   	$wnd.closeWindow = function() {
@@ -212,7 +213,10 @@ private boolean checkDocent;
     if(parent != null) {
       parent.setStyleName(CORRECTED, n!=0);
     }
-    object.put(REVIEW_STUDENTMODELSET, studentmodelSet);
+    if (studentmodelSet.isEmpty())
+    	object.remove(REVIEW_STUDENTMODELSET);
+    else
+    	object.put(REVIEW_STUDENTMODELSET, studentmodelSet);
     hide();
     comroot.setChanged(false); // checkpoint???????
   }
@@ -223,7 +227,7 @@ private boolean checkDocent;
     correctie.setText(n.toString());
     Object comment = object.getOrDefault(REVIEW_SCORE_COMMENT, "");
     area.setText(comment.toString());
-    studentmodelSet = object.getOrDefault(REVIEW_STUDENTMODELSET, "[]").toString();
+    studentmodelSet = Objects.toString(object.get(REVIEW_STUDENTMODELSET), "");
     
     hide();
   }

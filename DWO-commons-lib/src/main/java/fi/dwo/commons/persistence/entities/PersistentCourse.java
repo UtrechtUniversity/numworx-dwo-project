@@ -129,6 +129,7 @@ public class PersistentCourse implements Serializable {
 //and c.schoolID=s.schoolID and c.parentID=s.parent and c.dwoProfileID=s.profileID)
 //SET c.sequencenr = s.sequencenr    
     @Column(name = "sequencenr", nullable = false)
+    @NotNull
     private Long sequenceNr;
     @Size(max = 250)
     @Column(name = "treeIndex", length = 250)
@@ -140,7 +141,7 @@ public class PersistentCourse implements Serializable {
 //    For future use in case of optimistic locking.    
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
-    private Long version;
+    public Long version;
 
     @NotNull
     @Column(name= "del")
@@ -150,6 +151,7 @@ public class PersistentCourse implements Serializable {
 		return version;
 	}
 
+    @Column(name= "trashID")
 	private long trashID;
     
     public PersistentCourse() {
@@ -412,9 +414,7 @@ public class PersistentCourse implements Serializable {
 		this.notVisible = notVisible;
 	}
 
-	@PrePersist
-    @PreUpdate
-	  private void now() {
+    public void changeTimeStamp() {
 	    lastChangeTimeStamp = System.currentTimeMillis();
 	  }
 

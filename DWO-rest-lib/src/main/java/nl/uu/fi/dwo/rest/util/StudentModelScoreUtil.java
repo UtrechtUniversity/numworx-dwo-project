@@ -230,9 +230,9 @@ public abstract class StudentModelScoreUtil {
 	        
 	        if (Boolean.FALSE.equals(success))
 	        {
-	          if (statement.result.extensions != null && statement.result.extensions.objectives != null) {
-	            ids.removeAll(statement.result.extensions.objectives);
-	          }
+//	          if (statement.result.extensions != null && statement.result.extensions.objectives != null) {
+//	            ids.removeAll(statement.result.extensions.objectives);
+//	          }
 	          
 	          
 	          //Calculate prodCorrect based on current scores
