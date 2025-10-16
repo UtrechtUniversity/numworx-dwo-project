@@ -486,7 +486,7 @@ public class SecuredUserCourseManager {
     			if(pcc.isEmpty() ) 
     				throwLoginNeeded();
     			PersistentClassCourse pcc1 = pcc.get(0);
-    			if(pcc1.getType().intValue() == 1 || pcc1.getViewState() != ViewState.studentsAndTeachers) {
+    			if(pcc1.getType().intValue() == 1 || pcc1.getViewState() == ViewState.invisible) {
     				throwLoginNeeded();
     			}
     			java.util.Date now = new java.util.Date();
