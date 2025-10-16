@@ -129,6 +129,7 @@
 					<artifactId>cache-ri-impl</artifactId>
 				</exclusion>
 			</exclusions>
+			<version>2.5.44p1</version>
 		</dependency>
         <dependency>
             <groupId>com.mysql</groupId>
@@ -1041,4 +1042,5 @@
 			</build>		
 		</profile>
 	</profiles>
+	<version>2.5.44p1</version>
 </project>

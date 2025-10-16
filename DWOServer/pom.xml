@@ -710,4 +710,5 @@
 			</dependencies>		
 		</profile>
     </profiles> 
+    <version>2.5.44p1</version>
 </project>
