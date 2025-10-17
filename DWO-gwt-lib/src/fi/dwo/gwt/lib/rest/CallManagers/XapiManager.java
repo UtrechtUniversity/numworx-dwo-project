@@ -37,7 +37,7 @@ public class XapiManager {
   private Map<String,String> headers = new HashMap<>();
   
   public XapiManager() {
-    headers.put("X-Experience-API-Version", "1.0.1");
+    headers.put("X-Experience-API-Version", "1.0.3");
   }
   
   public Promise<String> saveStatement(Statement statement) {
