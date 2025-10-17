@@ -72,6 +72,9 @@ public class CourseDataManagerPIT {
 				CourseDataManager.create(data);
 				course.setDescription(null);
 				course.setImageData(null);
+				if (course.getSequencenr() == null) {
+					course.setSequencenr(Long.valueOf(Integer.MAX_VALUE));
+				}
 				course = CourseManager.edit(course);
 			}
 		}
