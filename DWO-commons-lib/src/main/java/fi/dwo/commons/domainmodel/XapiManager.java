@@ -53,7 +53,8 @@ public class XapiManager {
   
   class XapiImpl implements XapiService {
 
-    Genson genson;
+    public static final String XAPI_VERSION = "1.0.1";
+	Genson genson;
     
     private XapiImpl() {
       genson = new GensonBuilder()
@@ -75,7 +76,7 @@ public class XapiManager {
       conn.setRequestProperty("Content-Type", "application/json");
       conn.setRequestProperty("Authorization", authentication);
       conn.setRequestProperty("Accept-Charset", "UTF-8");
-      conn.setRequestProperty("X-Experience-API-Version", "1.0.1");
+      conn.setRequestProperty("X-Experience-API-Version", XAPI_VERSION);
       // conn.setDoInput(true);
       conn.setDoOutput(true);
       conn.setUseCaches(false);
@@ -124,7 +125,7 @@ public class XapiManager {
 		  conn.setRequestProperty("Accept-Encoding", "application/json");
 		  conn.setRequestProperty("Authorization", authentication);
 		  conn.setRequestProperty("Accept-Charset", "UTF-8");
-		  conn.setRequestProperty("X-Experience-API-Version", "1.0.1");
+		  conn.setRequestProperty("X-Experience-API-Version", XAPI_VERSION);
 		  StatementsResult result = genson.deserialize(conn.getInputStream(), StatementsResult.class);
 		  conn.disconnect();
 		  return result;
@@ -153,7 +154,7 @@ public class XapiManager {
       URL url = new URL(endpoint, sb.toString());
       
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestProperty("X-Experience-API-Version", "1.0.1");
+      conn.setRequestProperty("X-Experience-API-Version", XAPI_VERSION);
       conn.setRequestProperty("Authorization", authentication);
       int code = conn.getResponseCode();
       if (code != 200) {
@@ -207,7 +208,7 @@ public class XapiManager {
       conn.setRequestMethod(method);
       conn.setDoOutput(true);
       conn.setRequestProperty("Content-Type", state.contentType);
-      conn.setRequestProperty("X-Experience-API-Version", "1.0.1");
+      conn.setRequestProperty("X-Experience-API-Version", XAPI_VERSION);
       if (state.etag != null) {     
         conn.setRequestProperty("If-Match", state.etag);
       } else {

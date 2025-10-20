@@ -561,7 +561,7 @@ public class WrapSco extends Sco {
             @SuppressWarnings("deprecation")
             String env = URLEncoder.encode(super.getParameter(DWO.DWO_ENV));
             String responsive = "";
-            if (DwoHelper.isTest())
+            if (DwoHelper.isTest()|| DwoHelper.getProfileRights().contains("w"))
               responsive = "&responsive=true";
             language = "?locale=" + language + "&env=" + env + responsive;
             URL path = DwoHelper.getServerUrlPath();

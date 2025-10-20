@@ -5,7 +5,10 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -242,4 +245,33 @@ public class HasRoleManager {
             em.close();
         }
     }
+
+	public static PersistentHasRole editLastLogin(PersistentHasRole role) {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            PersistentHasRolePK id = role.getPersistentHasRolePK();
+            PersistentHasRole hr = findEntity(id);
+            if (hr == null) {
+                throw new PersistenceException("The PersistentHasRole with " + id + " no longer exists.");
+            }
+            Date lastLogin = role.getLastLogin();
+			if (!Objects.equals(hr.getLastLogin(), lastLogin))
+            {
+            	hr.setLastLogin(lastLogin);
+            	hr = em.merge(hr);
+            }
+            em.getTransaction().commit();
+            return hr;
+        }
+        catch (Exception e) {
+            throw newPersistenceException(e);
+        }
+        finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+	}
 }

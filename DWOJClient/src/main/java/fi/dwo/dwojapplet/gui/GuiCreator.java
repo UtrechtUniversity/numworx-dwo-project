@@ -1088,7 +1088,7 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
      * @param b
      * @return fi.dwo.client.domain.Sco
      */
-    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean b, byte[] imageData) {
+    public Sco addSco(Course course, AppletConfig appletConfig, String name, String description, boolean b, boolean d, byte[] imageData) {
         return null;
     }
 

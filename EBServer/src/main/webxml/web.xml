@@ -197,6 +197,11 @@
 
     
     <!-- Servlets -->
+    
+  <servlet>
+  	<servlet-name>logouthtml</servlet-name>
+  	<servlet-class>fi.dwo.server.template.LogoutHtml</servlet-class>
+  </servlet>
   <servlet>
   	<servlet-name>get_input</servlet-name>
   	<servlet-class>fi.dwo.server.apps.GetInput</servlet-class>
@@ -501,6 +506,10 @@ ${upload.servlet.mapping}
     <!--
     servlet mappings 
     -->
+  <servlet-mapping>
+  	<servlet-name>logouthtml</servlet-name>
+  	<url-pattern>/WEB-INF/template/exam/logout.html</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
   	<servlet-name>get_input</servlet-name>
   	<url-pattern>/dwo/apps/get_input/*</url-pattern>

@@ -327,7 +327,7 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 					smForeknowledge = launchStateMap.getStringArray("smForeknowledge");
 				builder.setSmObjectives(smObjectives).setSmForeknowledge(smForeknowledge);
 				builder.setTeltMee(teltMee);
-				dwologger = builder.build();
+				dwologger = buildLogger(builder);
 			}
 			
 			rmknop = !isVergelijkingVak && launchStateMap.getBoolean("rmKnop", false);
@@ -661,6 +661,10 @@ public class FormuleEditorWithSteps implements InteractionViewWithMisconceptions
 		for(int i=0 ; i<100 ; i++) {
 			scoreContainer[i] = -1;
 		}
+	}
+
+	protected Logging buildLogger(LogBuilder builder) {
+		return builder.build();
 	}
 	
 	private FEWSButton makeFEWSButton(String code, boolean alignRight, String tooltipText) 

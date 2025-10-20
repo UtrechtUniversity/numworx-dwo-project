@@ -15,3 +15,7 @@ UploadWidgetGWT/
 UploadWidgetGWT.*
 WebLogoGWT.*
 weblogogwt/
+streamgwt/
+Stream.css
+StreamGWT.html
+main.js

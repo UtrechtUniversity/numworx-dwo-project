@@ -1,5 +1,6 @@
 package fi.dwo.server.persistence;
 
+import java.util.Properties;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -28,7 +29,21 @@ public class DwoEmfFactory {
 //    <shared-cache-mode>NONE</shared-cache-mode>
 //  </persistence-unit>
 
-    public static EntityManagerFactory instance() {
+    /**
+	 * @return the _instance
+	 */
+	public static EntityManagerFactory get_instance() {
+		return _instance;
+	}
+
+	/**
+	 * @param _instance the _instance to set
+	 */
+	public static void set_instance(EntityManagerFactory _instance) {
+		DwoEmfFactory._instance = _instance;
+	}
+
+	public static EntityManagerFactory instance() {
         if (_instance == null) {
             synchronized (DwoEmfFactory.class) {
                 if (_instance == null) {
@@ -51,11 +66,17 @@ public class DwoEmfFactory {
         return _instance.createEntityManager();
     }
 
-    public static void setEntityManagerFactory(String persistenceUnit) {
+    public static EntityManagerFactory setEntityManagerFactory(String persistenceUnit) {
              synchronized (DwoEmfFactory.class) {
-                   _instance = Persistence.createEntityManagerFactory(persistenceUnit);
+                return _instance = Persistence.createEntityManagerFactory(persistenceUnit);
                }
     }
+
+    public static EntityManagerFactory setEntityManagerFactory(String persistenceUnit, Properties prop) {
+        synchronized (DwoEmfFactory.class) {
+           return _instance = Persistence.createEntityManagerFactory(persistenceUnit, prop);
+          }
+}
 
     public static void setDefaultEntityManagerFactory() {
              synchronized (DwoEmfFactory.class) {

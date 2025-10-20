@@ -8,9 +8,12 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -25,6 +28,8 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
@@ -58,10 +63,14 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.xapi.Statement;
+import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
 
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
@@ -240,8 +249,44 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         LOG.log(Level.FINE, "scoid = " + scoid + " classid = " + classid);
         PersistenceId sco = new PersistenceId(scoid);
         PersistenceId schoolclass = new PersistenceId(classid);
-        Promise<?> result = preparePages(schoolclass, sco);
-        result = result.then(p -> {
+        final Promise <StatementsResult> aanHetEind = completedQuery(schoolclass, sco);
+        final Promise<Void> result0 = preparePages(schoolclass, sco);
+        final Promise<?> result = 
+        Promises.all(aanHetEind, result0)
+        .then(x -> {
+        	List<Statement> statements = aanHetEind.getValue().statements;
+        	LOG.severe("DEBUG HIER" + statements.size());
+        	if (statements.isEmpty())       		
+        		return result0;
+        	
+        	Map<String, String> map = new HashMap<>();
+        	for (Statement s: statements) {
+        		String time = s.timestamp;
+        		DateTimeFormat utc = DateTimeFormat.getFormat(RestyDateTimeFormat.RESTY_DATETIME_FORMAT);
+        	    Date date = utc.parse(time.substring(0,RestyDateTimeFormat.RESTY_DATETIME_FORMAT.length()-1 ) + "+00:00");
+        		DateTimeFormat local = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
+        		time = local.format(date);
+        		
+        		String key  = s.actor.account.name.substring(4); // starts with pid:
+        		map.put(key, time);
+        	}
+            // loop over studensco van deze klas en sco
+        	DomResultSchoolClass<DomResultCourseInClass> rsc = resultTree.getResultTree().getChildren().get(schoolclass);
+        	Collection<DomResultCourseInClass> list = rsc.getChildren().values();
+        	Optional<DomResultScoContext> opt = list.stream().flatMap(item -> item.getChildren().values().stream())
+        			.filter(t -> t.getId().equals(scoid))
+        			.findAny();
+        	if (opt.isPresent()) {
+        		Collection<DomResultStudentScoContext> sscs = opt.get().getChildren().values();
+        		for( DomResultStudentScoContext ssc: sscs) {
+        			String u = ssc.getStudentSco().getUserID().getIdString();
+        			ssc.setCompletionTime(map.get(u));
+        		}
+        	}
+        	return result0;
+        })
+        
+        .then(p -> {
         	if (prepareStart < Long.MAX_VALUE)
         	{
         		resultTree.insertStudentCourses();
@@ -260,7 +305,38 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 		return result;
 	}
 
-    @JsMethod
+	@Inject Lazy<XAPIService> xapiService;
+	
+	private final Promise<StatementsResult> EMPTY; 
+	{ 
+		StatementsResult empty = new StatementsResult();
+		empty.more = "";
+		empty.statements = Collections.emptyList();
+		EMPTY = Promises.resolved(empty);
+	}
+
+    private Promise<StatementsResult> completedQuery(PersistenceId schoolclass, PersistenceId sid) {
+		DomSchoolClass sc = new DomSchoolClass();
+		sc.setId(schoolclass);
+		sc.setSchoolClassName(resultTree.getResultTree().getChildren().get(schoolclass).getLabel());
+		DomScoContextId sco = new DomScoContextId(); sco.setId(sid);
+		
+		Promise<StatementsResult> query = xapiService.get().query(sc, sco);
+		query.onResolve(() -> { 
+			LOG.severe("DEBUG HIER" + query);
+			Throwable failure = query.getFailure();
+			if (failure != null) {
+				LOG.log(Level.SEVERE, "Error in query", failure);
+			} else {
+				StatementsResult value = query.getValue();
+				LOG.info("result query " + value);
+				LOG.info("statements " + value.statements);
+			}			
+		});
+		return query.fallbackTo(EMPTY);
+	}
+
+	@JsMethod
     public void showLogResults(JavaScriptObject context, String scoid, String classid) {
       LOG.fine("entering showLogResults " + context + ", " + scoid);
       PersistenceId schoolclass = new PersistenceId(classid);

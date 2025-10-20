@@ -69,6 +69,7 @@ public class FormuleRegel extends FormuleElement
 	private int nonNumberChildern;
 
 	private boolean smalltext;
+	private boolean gap;
 
 //	private int[] selectioncords =
 //	{ 0, 0, 0, 0 };
@@ -114,16 +115,7 @@ public class FormuleRegel extends FormuleElement
 		if (e.isNumber() == false)
 			addNonNumberChild();
 		//this should be done in the new child, but just to make sure the changed value is set to true.
-		this.setChanged(true);
-		
-		//holder.paint();
-		
-		//resizeEditorWithAnswer();
-		
-		//int asHoogte = holder.getMainRegel().getAsHoogte();
-		//int hoogte = holder.getMainRegel().getHeight();
-		//((Panel)(holder.getMainRegel().getParent())).getElement().getStyle().setProperty("top", (hoogte-asHoogte-Math.rint(font_size*0.33)-2)+"px");
-		
+		this.setChanged(true);		
 	}
 
 	public void setSmallText(boolean val)
@@ -255,6 +247,7 @@ public class FormuleRegel extends FormuleElement
 		this.height = defaultheight;
 		this.width = 0;
 		this.nextx = 0;
+		gap = false;
 		//painting coordinates
 		int paintabove = fm.getAscent();
 		int paintbelow = height - fm.getAscent();
@@ -264,6 +257,17 @@ public class FormuleRegel extends FormuleElement
 
 		int eldrawheight = 0;
 		//we first have to find the right size
+
+		if (!children.isEmpty()) {
+			FormuleElement e = children.elementAt(0);
+			if (e instanceof Machtvak || e instanceof SubscriptVak) {
+				// make room
+				width = defaultwidth;
+				nextx = defaultwidth;
+				gap = true;
+			}
+		}
+				
 		for (int i = 0; i < this.children.size(); i++)
 		{
 			FormuleElement e = this.children.get(i);
@@ -379,11 +383,12 @@ public class FormuleRegel extends FormuleElement
 						ctx.fillRect(0, 0, width, height);
 					}
 		
-				if (this.children.isEmpty() && holder.isInputNeeded())
+				if ((children.isEmpty()||gap) && holder.isInputNeeded())
 				{
+					int as = getAsHoogte() - fm.getAscent();
 					//draw square if line is empty
 					ctx.setStrokeStyle("#888");
-					ctx.strokeRect(0, 0, width, height);
+					ctx.strokeRect(0, as, defaultwidth, defaultheight);
 				}
 	}
 
@@ -1178,23 +1183,9 @@ public class FormuleRegel extends FormuleElement
 				this.insert(t);
 				s = s.substring(1);
 			}}
-		}
-		//resizeEditorWithAnswer();
-		
+		}		
 	}
-	
-	/*
-	public void resizeEditorWithAnswer()
-	{
-		if(editorParent != null)
-			editorParent.resize();
 		
-		holder.setCurrentRegel(this);
-	
-		//probleem: nu is de focus weg uit de editor...
-	}
-	*/
-	
 	public int getAsHoogte()
 	{
 		//ashoogtes children bepalen en het maximum daarvan teruggeven.
@@ -1749,10 +1740,12 @@ public class FormuleRegel extends FormuleElement
 				selectionRect = rect;
 			}
 
-		if (this.children.isEmpty() && holder.isInputNeeded())
+		if ((children.isEmpty()||gap) && holder.isInputNeeded())
 		{
+			// assert width = defaultwidth if children isempty
 			//draw square if line is empty
-			OMSVGRectElement rect = new OMSVGRectElement(x+0.5f,y+0.5f,width-1,height-1,0, 0);
+			int as = getAsHoogte() - fm.getAscent();
+			OMSVGRectElement rect = new OMSVGRectElement(x+0.5f,y+as+0.5f,defaultwidth-1,defaultheight-1,0, 0);
 			OMSVGStyle style = rect.getStyle();
 			style.setSVGProperty(SVGConstants.CSS_STROKE_PROPERTY, "#888888");
 			style.setSVGProperty(SVGConstants.CSS_STROKE_WIDTH_PROPERTY, "1");

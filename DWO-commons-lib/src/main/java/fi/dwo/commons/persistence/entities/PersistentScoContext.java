@@ -121,7 +121,12 @@ public class PersistentScoContext implements Serializable {
 //     */
 //    @Column(name="classID")
 //    private Long classID; 
-     
+    /**
+     * @since .1.5.6
+     */
+    @Column(name="showdocent")
+    private Boolean showdocent;
+    
     @PrePersist
     @PreUpdate
     void changeTimestamp() {
@@ -260,6 +265,7 @@ public class PersistentScoContext implements Serializable {
         scoContext.setScoName(sconame);
         scoContext.setSequencenr(sequencenr);
         scoContext.setShowScore(showscore);
+        scoContext.setShowDocent(showdocent);
         scoContext.setScoType(scoType);
     }
 
@@ -329,5 +335,19 @@ public Long getOptlock() {
  */
 public void setOptlock(Long optlock) {
 	this.optlock = optlock;
+}
+
+/**
+ * @return the showdocent
+ */
+public Boolean getShowdocent() {
+	return showdocent;
+}
+
+/**
+ * @param showdocent the showdocent to set
+ */
+public void setShowdocent(Boolean showdocent) {
+	this.showdocent = showdocent;
 }
 }

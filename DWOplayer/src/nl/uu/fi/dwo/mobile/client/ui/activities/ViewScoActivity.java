@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.mobile.client.DWOplayerParameters;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.mobile.client.ui.Actions;
+import nl.uu.fi.dwo.mobile.client.ui.Completer;
 import nl.uu.fi.dwo.mobile.client.ui.NeedLogin;
 import nl.uu.fi.dwo.mobile.client.ui.PageTracker;
 import nl.uu.fi.dwo.mobile.client.ui.RPCHandler;
@@ -52,7 +53,6 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
-import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 public class ViewScoActivity extends AbstractActivity implements Presenter, AnchorContext {
@@ -79,6 +79,7 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 	@Inject NeedLogin oops;
 	@Inject PlaceController controller;
 	@Inject PageTracker tracker;
+	@Inject Lazy<Completer> completer;
 	
 	private AnchorContext defaultContext;
 	private DWOplayerParameters PARAMETERS;
@@ -146,7 +147,17 @@ public class ViewScoActivity extends AbstractActivity implements Presenter, Anch
 		}, p -> { 
 			started = false;
 			if (!oops.needed(oops.apply(p))) tracker.back();
-		});
+		})
+		.onResolve(() -> {
+			if (started) {
+				completer.get().start(eventBus, sco, view.getOpdrNav());
+			}
+		})
+
+		
+		
+		
+		;
 		
 		
 	}

@@ -151,17 +151,20 @@ protected PersistentHasRole stampHasRole(PersistentHasRole role) {
 	if(!contexts.isEmpty()) {
 		PersistentLoginContext context = contexts.get(0); // From Cache?????
 		if (context.getLastLogin() != null) {
-			final java.sql.Date lastLogin = new java.sql.Date(context.getLastLogin());
+			java.util.Date lastLogin = new Date(context.getLastLogin()/1000L * 1000L); // Simulate java.sql.Date, lastLogin = TemporalType.DATE
+			lastLogin.setHours(0);
+			lastLogin.setMinutes(0);
+			lastLogin.setSeconds(0);
 		try {	
 			role.setLastLogin(lastLogin); // Gezien optimistic lock exception
-			role = HasRoleManager.edit(role);
+			role = HasRoleManager.editLastLogin(role);
 		} catch(OptimisticLockException e) {
 			LOG.log(Level.WARNING, "stampHasRole failed, nonfatal lock=" + role.optlock, e);
 			role = HasRoleManager.findEntity(role.getPersistentHasRolePK());
 			LOG.log(Level.WARNING, "refresh lock " + role.optlock);
 			role.setLastLogin(lastLogin);
 			try {
-				return HasRoleManager.edit(role);
+				return HasRoleManager.editLastLogin(role);
 			} catch (PersistenceException e1) {
 				LOG.log(Level.SEVERE, "stampHasRole fatal failed 2nd " + e1.getClass(), e1);
 			}

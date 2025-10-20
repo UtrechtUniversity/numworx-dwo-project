@@ -163,7 +163,7 @@ public class SecuredTeacherCourseManagerIT {
     domCourse.setNotVisible(false);
     domCourse.setParentID(PersistentCourse.buildPersistenceId(0L));
     domCourse.setSchoolId(pSchool.buildPersistenceId());
-    domCourse.setSequenceNr(null);
+    domCourse.setSequenceNr(0L);
     domCourse.setWithChildren(Boolean.FALSE);
     rest.setDomCourse(domCourse);
     DomContext restContext = new DomContext(); restContext.setDomHasRole(pHasRole.buildDomHasRole());
@@ -199,7 +199,7 @@ public class SecuredTeacherCourseManagerIT {
     domCourse.setNotVisible(false);
     domCourse.setParentID(PersistentCourse.buildPersistenceId(0L));
     domCourse.setSchoolId(pSchool.buildPersistenceId());
-    domCourse.setSequenceNr(null);
+    domCourse.setSequenceNr(0L);
     domCourse.setWithChildren(Boolean.FALSE);
     rest.setDomCourse(domCourse);
     DomContext restContext = new DomContext(); restContext.setDomHasRole(pHasRole.buildDomHasRole());

@@ -131,13 +131,13 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			super(a, h, isVergelijkingVak, randomVarNamen, randomVarWaarden, avChecker);
 		}
 
-//		@Override
-//		public void kijkNa() {
-//			super.kijkNa();
-//			String string = getEditor().toString();
-//			transfer(string);
-//		}
-
+		@Override
+		protected Logging buildLogger(LogBuilder builder) {
+			// return  super.buildLogger(builder); Use our logging
+			return logging;
+		}
+		
+		
 		void transfer(String string)
 		{
 			logger.fine("userstring = " + string);
@@ -147,18 +147,6 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 			other.setChanged(false); // zet changed weer false om problemen met verhogen errorCount en cross widget communicatie te voorkomen
 			other.processAntwoord();
 		}
-
-//		@Override
-//		public void lastStep(String useranswer) {
-//			super.lastStep(useranswer);
-//			//transfer(useranswer);
-//		}
-
-//		@Override
-//		public void addStep(String useranswer) {
-//			super.addStep(useranswer);
-//			//transfer(useranswer);
-//		}
 
 		@Override
 		FormuleEditorWithAnswer editorInstance() {
@@ -1055,7 +1043,7 @@ public class FormuleEditorWithAnswer extends FormuleEditor implements Interactio
 	
 	public void logAttempt()
 	{
-		if (logging != null)
+		if (logging != null && !vakUitwerking)
 		{
 			Map<String, Object> map = buildLoggingMap();
 			logging.log(map);
