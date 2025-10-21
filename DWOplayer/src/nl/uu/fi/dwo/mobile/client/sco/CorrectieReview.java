@@ -86,7 +86,7 @@ public class CorrectieReview extends CorrectieFacade {
 	    parameters.put("score", Collections.singletonMap("raw", raw));
 	    if (raw == maxScore) 
 	      parameters.put("success", Boolean.TRUE);
-	    else if (corr < 0) 
+	    else if (corr < 0||raw == 0) 
 	      parameters.put("success", Boolean.FALSE);
 	    parameters.put("verb", SMLogger.CORRECTED);
 	    if (set != null) {
