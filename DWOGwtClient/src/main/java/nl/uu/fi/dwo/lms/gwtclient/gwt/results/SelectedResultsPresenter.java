@@ -66,8 +66,15 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.xapi.Account;
+import nl.uu.fi.dwo.rest.dom.xapi.Activity;
+import nl.uu.fi.dwo.rest.dom.xapi.ActivityDefinition;
+import nl.uu.fi.dwo.rest.dom.xapi.Agent;
+import nl.uu.fi.dwo.rest.dom.xapi.Context;
+import nl.uu.fi.dwo.rest.dom.xapi.Group;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
 import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
+import nl.uu.fi.dwo.rest.dom.xapi.Verb;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
@@ -182,6 +189,59 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 
     private static final String WAIT = DwoLocalesForGWT.instance.NUM_DLG_SELECTEDRESULTS_PAGES();
     
+    class SendCompleted implements Success<List<DomStudentScoContext>,List<DomStudentScoContext>> {
+    	final Verb COMPLETED = StudentScoResultPresenter.COMPLETED;
+    	Group team;
+    	Activity activity;
+    	Promise<Context> context;
+    	XAPIService service;
+    	Map<String,String> students;
+    	
+		SendCompleted(DomSchoolClass schoolClass, List<DomStudent> students, DomScoContext sco) {
+			team = new Group();
+			team.name = schoolClass.getSchoolClassName();
+			team.account = new Account();
+			team.account.name = "pid:" + schoolClass.getId().getIdString();
+			activity = new Activity();
+			activity.id = "pid:" + sco.getId();
+			activity.definition = new ActivityDefinition();
+			activity.definition.type = "http://www.dwo.nl/type/" +sco.getId().getType();
+			service = xapiService.get();
+			context = service.getAgent().map(instructor -> { Context c = new Context();
+					c.instructor = instructor;
+					team.account.homePage = instructor.account.homePage;
+					c.team = team;
+					return c; });
+			this.students = students.stream().collect(Collectors.toMap(s -> s.getId().getIdString(), s -> s.getUserName()));
+			
+		}
+
+		public Promise<List<DomStudentScoContext>> call(Promise<Context> context, Promise<List<DomStudentScoContext>> resolved) throws Exception {
+			List<DomStudentScoContext> list = resolved.getValue();
+			List<Statement> statements = new ArrayList<>();
+			for(DomStudentScoContext item: list) {
+				Agent actor = new Agent();
+				String uid = item.getUserID().getIdString();
+				String name = students.get(uid);
+				actor.account = new Account();
+				actor.name = name;
+				actor.account.name = "pid:"+ uid;
+				actor.account.homePage = context.getValue().instructor.account.homePage;
+				Statement s = new Statement();
+				s.actor = actor;
+				s.object = activity;
+				s.verb = COMPLETED;
+				s.context = context.getValue();
+				statements.add(s);
+			}
+			return service.saveStatement(statements).then(x -> resolved);
+		}
+		@Override 
+		public Promise<List<DomStudentScoContext>> call(Promise<List<DomStudentScoContext>> resolved) throws Exception {
+			return context.then(p -> call(p, resolved));
+    }
+    
+    
     @JsMethod
     public void sealSingleActivity(String scoId, String classid) {
         PersistenceId schoolclass = new PersistenceId(classid);
@@ -195,6 +255,9 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
                 .map(dom -> dom.getStudentScoContexts())
                 .flatMap(resultService::sealList)
+ // optional if 't' + premium
+                .then(new SendCompleted(domschoolclass.getSchoolClass(), students, sco))
+                
                 .then(p -> { 
                 	resultTree.updateResultStudentSco(p.getValue());
                 	progress = new Deferred<Boolean>().getPromise();

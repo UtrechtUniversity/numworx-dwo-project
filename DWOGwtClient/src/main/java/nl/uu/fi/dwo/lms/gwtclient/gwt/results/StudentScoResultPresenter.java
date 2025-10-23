@@ -382,7 +382,7 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
     createStatement(s);
   }
 
-	private static final Verb COMPLETED = new Verb();
+    static final Verb COMPLETED = new Verb();
 	static {
 		COMPLETED.id = XAPIService.COMPLETED;
 		COMPLETED.display = Collections.singletonMap("en-US", "completed");
