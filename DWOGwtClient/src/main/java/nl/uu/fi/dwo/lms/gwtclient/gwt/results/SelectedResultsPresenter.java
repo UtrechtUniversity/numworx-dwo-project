@@ -182,7 +182,8 @@ public class SelectedResultsPresenter implements ResultEventHandler {
             promises.add(resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
                     .map(dom -> dom.getStudentScoContexts())
                     .flatMap(resultService::sealList)
-                    .then(this::updateResultTree));
+                    .then(this::updateResultTree)
+                    );
         }
         Promises.all(promises).then(null, FAILURE);
     }
@@ -234,11 +235,12 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 				s.context = context.getValue();
 				statements.add(s);
 			}
-			return service.saveStatement(statements).then(x -> resolved);
+			return service.saveStatements(statements).then(x -> resolved);
 		}
 		@Override 
 		public Promise<List<DomStudentScoContext>> call(Promise<List<DomStudentScoContext>> resolved) throws Exception {
 			return context.then(p -> call(p, resolved));
+		}
     }
     
     
@@ -252,13 +254,14 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         PersistenceId scoid = new PersistenceId(scoId);
         DomScoContext sco = new DomScoContext();
         sco.setId(scoid);
-        resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
+        Promise<List<DomStudentScoContext>> seals = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
                 .map(dom -> dom.getStudentScoContexts())
-                .flatMap(resultService::sealList)
+                .flatMap(resultService::sealList);
  // optional if 't' + premium
-                .then(new SendCompleted(domschoolclass.getSchoolClass(), students, sco))
-                
-                .then(p -> { 
+        if (dwoGlobalVars.isTrace()) {
+        	seals = seals.then(new SendCompleted(domschoolclass.getSchoolClass(), students, sco));
+        }
+        seals.then(p -> { 
                 	resultTree.updateResultStudentSco(p.getValue());
                 	progress = new Deferred<Boolean>().getPromise();
                 	Promise<?> s = preparePages0(scoId, classid);

@@ -86,7 +86,7 @@ private Promise<XapiManager> man;
 	  });
   }
 
-  public Promise<List<String>> saveStatement(List<Statement> statements) {
+  public Promise<List<String>> saveStatements(List<Statement> statements) {
     return man.then(xapi -> {
         try {
           Defaults.ignoreJsonNulls();

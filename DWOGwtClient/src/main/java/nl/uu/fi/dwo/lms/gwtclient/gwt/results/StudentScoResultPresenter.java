@@ -528,7 +528,7 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
       
     } else
       seal = seal(value, dssc);
-    if (value && dwoGlobalVars.isPremium() && dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolRights().contains("t")) {
+    if (value && dwoGlobalVars.isTrace()) {
     	createCompletedStatement();
     }
     seal
