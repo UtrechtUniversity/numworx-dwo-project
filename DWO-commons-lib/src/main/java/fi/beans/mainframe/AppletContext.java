@@ -1,7 +1,6 @@
 package fi.beans.mainframe;
 
 import java.applet.Applet;
-import java.applet.AudioClip;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -20,7 +19,7 @@ public interface AppletContext extends java.applet.AppletContext {
 
   @Override @Deprecated
   default AudioClip getAudioClip(URL url) {
-      return java.applet.Applet.newAudioClip(url);
+      return new AudioClip.Bridge(java.applet.Applet.newAudioClip(url));
   }
 
 }
