@@ -56,7 +56,7 @@ public class RegisterPanel extends ResizeComposite {
 		schoolGroup.addItem(rb.STUDENT(), RoleType.STUDENT.name());
 		schoolGroup.addItem(rb.TEACHER(), RoleType.TEACHER.name());
 		schoolGroup.addItem(rb.SCHOOLADMIN(), RoleType.SCHOOLADMIN.name());
-		controller = new RegisterController();
+		controller = new RegisterController(this);
 		nav_title.setText(isfree  && !demo ? bundle.REGISTER_FREE() : bundle.REGISTER());
 //		register.addTapHandler(this::onRegister);
 //		cancel.addTapHandler(this::onCancel);
@@ -76,7 +76,7 @@ public class RegisterPanel extends ResizeComposite {
 
 	static String getCookieOnce(String key) {
 	  String r = getCookie(key);
-	  Cookies.removeCookie(key);
+	  Cookies.removeCookie(key, "/"); // ons kent ons.
 	  return r;
 	}
 		
@@ -116,7 +116,7 @@ public class RegisterPanel extends ResizeComposite {
 		String schoolCode = getCookie("schoolCode");
 		if (schoolCode != null) {
 		  this.schoolCode.setText(schoolCode);
-		  Cookies.removeCookie("schoolCode");
+		  Cookies.removeCookie("schoolCode", "/");
 		}
 		String schoolClass = getCookieOnce("className");
 		if (schoolClass != null && !schoolClass.isEmpty() && "STUDENT".equals(schoolGroup)) {
@@ -129,7 +129,7 @@ public class RegisterPanel extends ResizeComposite {
 		
 		String putRequest = getCookie("putRequest");
 		if (putRequest != null) {
-		  Cookies.removeCookie("putRequest");
+		  Cookies.removeCookie("putRequest", "/");
 		  controller.setPutRequest(putRequest);
 		}
 		

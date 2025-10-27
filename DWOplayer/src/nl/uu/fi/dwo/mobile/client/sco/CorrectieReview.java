@@ -67,26 +67,28 @@ public class CorrectieReview extends CorrectieFacade {
 	
 	private OpdrNavIF comRoot;
 	private InteractionView iv;
-	private int maxScore, lastcorr;
+	private int maxScore;
+	private Integer lastcorr;
 	private String lastSet;
 	private Logging logging;
 	
 	// send een correctie logentry naar de logger
 	private void sendCorrectieStatement(Object o) {
 	    ObjectMap map = JSONUtilities.wrapMap( (Map) o);
-	    int corr = map.containsKey(CorrectieView.REVIEW_SCORE_CORRECTIE) ?
+	    Integer corr = map.containsKey(CorrectieView.REVIEW_SCORE_CORRECTIE) ?
 	    			map.getInt(CorrectieView.REVIEW_SCORE_CORRECTIE) :
-	    			0;
+	    			null;
 	    String set = map.getString(CorrectieView.REVIEW_STUDENTMODELSET);
-	    if(corr == lastcorr && Objects.equals(set, lastSet)|| logging == null) return;
+	    if(Objects.equals(corr, lastcorr) && Objects.equals(set, lastSet)|| logging == null) return;
 	    lastcorr = corr;
 	    lastSet  = set;
-        int raw = iv.getScore() + corr;
+        int raw = iv.getScore();
+        if (corr != null) raw += corr.intValue();
 	    Map<String,Object> parameters = new HashMap<>();
 	    parameters.put("score", Collections.singletonMap("raw", raw));
 	    if (raw == maxScore) 
 	      parameters.put("success", Boolean.TRUE);
-	    else if (corr < 0) 
+	    else if (raw == 0) 
 	      parameters.put("success", Boolean.FALSE);
 	    parameters.put("verb", SMLogger.CORRECTED);
 	    if (set != null) {

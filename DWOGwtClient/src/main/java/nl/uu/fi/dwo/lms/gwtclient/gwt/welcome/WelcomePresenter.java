@@ -63,7 +63,6 @@ public class WelcomePresenter {
         this.rb = rb;
     }
 
-//    @JsMethod not required unless testing stuff.
     public void init() {
         view.clear();
         view.init();

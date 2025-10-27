@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import fi.dwo.commons.persistence.MySQLPersistenceId;
+import fi.dwo.server.db.SEBHosting;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -31,6 +32,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
  */
 public class TemplateFilter implements Filter {
     final private Logger LOG = Logger.getLogger(getClass().getName());
+    private String replacement = SEBHosting.HTTPS_APP_DWO_NL;
 
     class ResponseWrap extends HttpServletResponseWrapper {
     	
@@ -96,6 +98,9 @@ public class TemplateFilter implements Filter {
 		String pattern = filterConfig.getInitParameter("legal");
 		if (pattern == null) pattern = "/([a-z]+\\/)*";
 		legal = Pattern.compile(pattern);
+		replacement = System.getProperty("ALLOW_ORIGIN", replacement);
+		replacement = replacement.split("\\s+")[0];
+		if ("*".equals(replacement)) replacement = SEBHosting.HTTPS_APP_DWO_NL;
 
 	}
 
@@ -158,6 +163,7 @@ public class TemplateFilter implements Filter {
 					req.setAttribute("template.prefix", prefix);
 					req.setAttribute("template.locale", profile.getLanguage());
 					req.setAttribute("template.title", profile.getTitle());
+					req.setAttribute("template.server", replacement);
 							
 				} catch (Dwo2Exception e) {
 					// TODO Auto-generated catch block

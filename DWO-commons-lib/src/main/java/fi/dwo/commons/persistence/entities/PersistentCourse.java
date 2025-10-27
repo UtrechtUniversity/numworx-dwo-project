@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomCourseStudent;
+import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -50,25 +51,25 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @UniqueConstraint(columnNames = {"name", "schoolID", "dwoProfileID", "parentID", "trashID"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PersistentCourse.findBySchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID and p.trashID = 0"),
-    @NamedQuery(name = "PersistentCourse.findBySchoolAndProfileIDTrash", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID and p.trashID != 0"),
-    @NamedQuery(name = "PersistentCourse.findByNullSchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL AND p.trashID = 0"),
-    @NamedQuery(name = "PersistentCourse.findByNullSchoolAndProfileIDTrash", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL and p.trashID != 0"),
-    @NamedQuery(name = "PersistentCourse.findAllByNullSchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = FALSE AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL and p.trashID = 0"),
+    @NamedQuery(name = "PersistentCourse.findBySchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID and p.trashID = 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
+    @NamedQuery(name = "PersistentCourse.findBySchoolAndProfileIDTrash", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID = :schoolID and p.trashID != 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
+    @NamedQuery(name = "PersistentCourse.findByNullSchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL AND p.trashID = 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
+    @NamedQuery(name = "PersistentCourse.findByNullSchoolAndProfileIDTrash", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = 0 AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL and p.trashID != 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
+    @NamedQuery(name = "PersistentCourse.findAllByNullSchoolAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = FALSE AND p.dwoProfileID = :dwoProfileID AND p.schoolID IS NULL and p.trashID = 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
     @NamedQuery(name = "PersistentCourse.findAll", query = "SELECT p FROM PersistentCourse p"),
     @NamedQuery(name = "PersistentCourse.findByCourseID", query = "SELECT p FROM PersistentCourse p WHERE p.courseID = :courseID"),
-    @NamedQuery(name = "PersistentCourse.findBySchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.schoolID = :schoolID"),
-    @NamedQuery(name = "PersistentCourse.findByProfileAndSchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND (p.schoolID = :schoolID or p.schoolID is null) and p.trashID = 0"),
-    @NamedQuery(name = "PersistentCourse.findByProfileAndCourseID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND (p.courseID = :courseID or p.courseID is null)"),
+    @NamedQuery(name = "PersistentCourse.findBySchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.schoolID = :schoolID and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
+    @NamedQuery(name = "PersistentCourse.findByProfileAndSchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND (p.schoolID = :schoolID or p.schoolID is null) and p.trashID = 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
+    @NamedQuery(name = "PersistentCourse.findByProfileAndCourseID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND (p.courseID = :courseID or p.courseID is null) and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
     @NamedQuery(name = "PersistentCourse.findByName", query = "SELECT p FROM PersistentCourse p WHERE p.name = :name"),
     @NamedQuery(name = "PersistentCourse.findByImage", query = "SELECT p FROM PersistentCourse p WHERE p.image = :image"),
     @NamedQuery(name = "PersistentCourse.findByDwoProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID"),
     @NamedQuery(name = "PersistentCourse.findByExport", query = "SELECT p FROM PersistentCourse p WHERE p.export = :export"),
-    @NamedQuery(name = "PersistentCourse.findByExportOfSchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.export = 1 AND p.schoolID = :schoolID AND p.dwoProfileID = :dwoProfileID"),
+    @NamedQuery(name = "PersistentCourse.findByExportOfSchoolID", query = "SELECT p FROM PersistentCourse p WHERE p.export = 1 AND p.schoolID = :schoolID AND p.dwoProfileID = :dwoProfileID and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
     @NamedQuery(name = "PersistentCourse.findByWithChildren", query = "SELECT p FROM PersistentCourse p WHERE p.withChildren = :withChildren"),
-    @NamedQuery(name = "PersistentCourse.findByParentIDAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND p.parentID = :parentID and p.trashID = 0"),
-    @NamedQuery(name = "PersistentCourse.findByParentIDTrash", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID and p.trashID != 0"),
-    @NamedQuery(name = "PersistentCourse.findByParentID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID and p.trashID = 0")})
+    @NamedQuery(name = "PersistentCourse.findByParentIDAndProfileID", query = "SELECT p FROM PersistentCourse p WHERE p.dwoProfileID = :dwoProfileID AND p.parentID = :parentID and p.trashID = 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
+    @NamedQuery(name = "PersistentCourse.findByParentIDTrash", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID and p.trashID != 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
+    @NamedQuery(name = "PersistentCourse.findByParentID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID and p.trashID = 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not")})
 //    @NamedQuery(name = "PersistentCourse.findByNotVisible", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = :notVisible")})
 public class PersistentCourse implements Serializable {
 
@@ -128,6 +129,7 @@ public class PersistentCourse implements Serializable {
 //and c.schoolID=s.schoolID and c.parentID=s.parent and c.dwoProfileID=s.profileID)
 //SET c.sequencenr = s.sequencenr    
     @Column(name = "sequencenr", nullable = false)
+    @NotNull
     private Long sequenceNr;
     @Size(max = 250)
     @Column(name = "treeIndex", length = 250)
@@ -139,12 +141,17 @@ public class PersistentCourse implements Serializable {
 //    For future use in case of optimistic locking.    
     @Version
     @Column(name = "optlock", columnDefinition = "integer DEFAULT 0", nullable = false)
-    private Long version;
-    
+    public Long version;
+
+    @NotNull
+    @Column(name= "del")
+    public DelState delState = DelState.not;
+
     public Long getVersion() {
 		return version;
 	}
 
+    @Column(name= "trashID")
 	private long trashID;
     
     public PersistentCourse() {
@@ -407,9 +414,7 @@ public class PersistentCourse implements Serializable {
 		this.notVisible = notVisible;
 	}
 
-	@PrePersist
-    @PreUpdate
-	  private void now() {
+    public void changeTimeStamp() {
 	    lastChangeTimeStamp = System.currentTimeMillis();
 	  }
 

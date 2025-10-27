@@ -402,7 +402,7 @@ abstract class SecuredCommonScoDataManager {
             PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
             List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
             PersistentClassCourse pcc = pccList.get(0);
-            boolean ok = pcc.getViewState() == ViewState.studentsAndTeachers;
+            boolean ok = pcc.getViewState() != ViewState.invisible;
             ok &= isSoC(phr, schoolClass);
             if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
             if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());
@@ -539,7 +539,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
             PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
             List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
             PersistentClassCourse pcc = pccList.get(0);
-            boolean ok = pcc.getViewState() == ViewState.studentsAndTeachers;
+            boolean ok = pcc.getViewState() != ViewState.invisible;
             ok &= isSoC(phr, schoolClass);
             if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
             if (pcc.getNotBefore() != null) ok &= pcc.getNotBefore().before(new java.util.Date());

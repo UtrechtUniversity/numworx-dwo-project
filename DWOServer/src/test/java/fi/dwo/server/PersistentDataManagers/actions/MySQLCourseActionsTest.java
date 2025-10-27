@@ -59,6 +59,7 @@ public class MySQLCourseActionsTest {
     full.setDwoProfileId(PersistentDwoProfile.buildPersistenceId(1L));
     full.setDescription("no description");
     full.setNotVisible(false);
+    full.setSequenceNr(0L);
     
     DomCourseFull result = MySQLCourseActions.add(full);
     assertEquals(full.getName(), result.getName());

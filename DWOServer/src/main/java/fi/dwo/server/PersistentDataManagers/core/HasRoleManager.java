@@ -5,7 +5,10 @@ import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.persistence.DwoEmfFactory;
+
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -48,7 +51,7 @@ public class HasRoleManager {
         }
         catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentHasRole.", e);
-            throw new PersistenceException(e);
+            throw newPersistenceException(e);
         }
         finally {
             if (em != null) {
@@ -78,10 +81,10 @@ public class HasRoleManager {
                 PersistentHasRolePK id = hasRole.getPersistentHasRolePK();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.", e);
-                    throw new PersistenceException(e);
+                    throw newPersistenceException(e);
                 }
             }
-            throw new PersistenceException(e);
+            throw newPersistenceException(e);
         }
         finally {
             if (em != null) {
@@ -89,6 +92,11 @@ public class HasRoleManager {
             }
         }
     }
+
+	private static PersistenceException newPersistenceException(Exception e) {
+		if (e instanceof PersistenceException) return (PersistenceException) e;
+		return new PersistenceException(e);
+	}
 
     public static void editRights(PersistentHasRole hasRole) throws PersistenceException {
         EntityManager em = null;
@@ -111,10 +119,10 @@ public class HasRoleManager {
                 PersistentHasRolePK id = hasRole.getPersistentHasRolePK();
                 if (findEntity(id) == null) {
                     LOG.log(Level.FINE, "The PersistentHasRole with " + id + " no longer exists.", e);
-                    throw new PersistenceException(e);
+                    throw newPersistenceException(e);
                 }
             }
-            throw new PersistenceException(e);
+            throw newPersistenceException(e);
         }
         finally {
             if (em != null) {
@@ -187,7 +195,7 @@ public class HasRoleManager {
             return rl;
         }
         catch (Exception e) {
-            throw new PersistenceException(e);
+            throw newPersistenceException(e);
         }
         finally {
             em.close();
@@ -204,7 +212,7 @@ public class HasRoleManager {
             return rl;
         }
         catch (Exception e) {
-            throw new PersistenceException(e);
+            throw newPersistenceException(e);
         }
         finally {
             em.close();
@@ -237,4 +245,33 @@ public class HasRoleManager {
             em.close();
         }
     }
+
+	public static PersistentHasRole editLastLogin(PersistentHasRole role) {
+        EntityManager em = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            PersistentHasRolePK id = role.getPersistentHasRolePK();
+            PersistentHasRole hr = findEntity(id);
+            if (hr == null) {
+                throw new PersistenceException("The PersistentHasRole with " + id + " no longer exists.");
+            }
+            Date lastLogin = role.getLastLogin();
+			if (!Objects.equals(hr.getLastLogin(), lastLogin))
+            {
+            	hr.setLastLogin(lastLogin);
+            	hr = em.merge(hr);
+            }
+            em.getTransaction().commit();
+            return hr;
+        }
+        catch (Exception e) {
+            throw newPersistenceException(e);
+        }
+        finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+	}
 }

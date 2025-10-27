@@ -205,6 +205,7 @@ public class PersistentHasRole implements Serializable {
         }
         hr.setRights(getRights());
         hr.setLastLogin(getLastLogin());
+        hr.setOptLock(optlock);
         return hr;
     }
 

@@ -1615,7 +1615,7 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     @Produces({"application/json"})
     @Path("/detachCourseFromClass")
     public Boolean detachCourseFromClass(@Context SecurityContext sc, RestSchoolClassCourseAndProfile rest) throws Dwo2Exception {
-        try {
+        {
             TeacherDomainAuthorizer.TeacherState_C_CC_HR_P_R_S_SC_SG_U build = AnonDomainAuthorizer.build().submitUser(sc)
                     .setHasRole(rest.getRestContext().getDomHasRole())
                     .buildSchoolAdminTeacher()
@@ -1624,8 +1624,6 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     .addSchoolClass(rest.getDomSchoolClassCourseAndProfile().getDomSchoolClass())
                     .addCourse(rest.getDomSchoolClassCourseAndProfile().getCourse());
             return build.detachCourseFromClass();
-        } catch (Dwo2Exception e) {
-            throw new Dwo2RestException(e);
         }
     }
 

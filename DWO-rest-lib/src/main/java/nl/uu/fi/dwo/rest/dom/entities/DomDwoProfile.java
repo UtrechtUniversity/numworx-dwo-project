@@ -11,7 +11,25 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class DomDwoProfile extends DomDwoProfileId implements Cloneable {
 
     private String dwoProfileName;
-    private String dwoProfileRights;
+    
+    /**
+     * Opties van het profiel. 
+     * <ul>
+     * <li>a
+     * <li>c - css styling. <i>name</i>.css in apps/css/ folder
+     * <li>I - Inf: Met de berichten applicatie 
+     * <li>l - limited profile, no guest, restricties aan scholen
+     * <li>n - navigatie kolom altijd zichtbaar
+     * <li>O - met OAuth2 (entree of conext of .... )
+	 * <li>o
+     * <li>p
+     * <li>R - Remedial standaard modules
+     * <li>r
+     * <li>w - profile is responsive
+     * <li>4 - geen open/close alleen <b>modules</> kolom.
+     * </ul>
+     */
+     private String dwoProfileRights;
     
     public DomDwoProfile() {}
     

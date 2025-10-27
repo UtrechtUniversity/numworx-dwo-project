@@ -230,9 +230,9 @@ public abstract class StudentModelScoreUtil {
 	        
 	        if (Boolean.FALSE.equals(success))
 	        {
-	          if (statement.result.extensions != null && statement.result.extensions.objectives != null) {
-	            ids.removeAll(statement.result.extensions.objectives);
-	          }
+//	          if (statement.result.extensions != null && statement.result.extensions.objectives != null) {
+//	            ids.removeAll(statement.result.extensions.objectives);
+//	          }
 	          
 	          
 	          //Calculate prodCorrect based on current scores
@@ -265,18 +265,18 @@ public abstract class StudentModelScoreUtil {
 	          Collection<String> voorkennis = extensions.foreknowledge;
 	          if (voorkennis != null) {
 	            voorkennis = new TreeSet<>(voorkennis);
-	            if (statement.result.extensions != null && statement.result.extensions.objectives != null) {
-	              ids = new ArrayList<>(statement.result.extensions.objectives);
-	              ids = strip(ids);
-	              voorkennis.retainAll(metVoorkennis(ids, infos));
-	            }
+//	            if (false & statement.result.extensions != null && statement.result.extensions.objectives != null) {
+//	              ids = new ArrayList<>(statement.result.extensions.objectives);
+//	              ids = strip(ids);
+//	              voorkennis.retainAll(metVoorkennis(ids, infos));
+//	            }
 	            voorkennis.addAll(ids);
 	            ids = new ArrayList<>(voorkennis);
 	          } else 
 	          {
-	            if (statement.result.extensions != null && statement.result.extensions.objectives != null) {
-	              ids = new ArrayList<>(statement.result.extensions.objectives);
-	            }
+//	            if (false && statement.result.extensions != null && statement.result.extensions.objectives != null) {
+//	              ids = new ArrayList<>(statement.result.extensions.objectives);
+//	            }
 	            ids = metVoorkennis(ids, infos);          
 	          }
 	          

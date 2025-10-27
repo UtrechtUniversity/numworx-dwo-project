@@ -89,7 +89,6 @@ public class DataSourceAccessServlet extends HttpServlet {
         String timeStamp = BUILD.timeStamp;
         out.println();
         out.println("Software version, buildnumber: " + softwareVersion + ", " + buildNumber + ", timestamp "+timeStamp);
-        LOG.log(Level.INFO,"Software version {0}, buildnumber {1}, timestamp {2}", new Object[]{softwareVersion, buildNumber, timeStamp});
         out.println();
 
         //check for proper DB version

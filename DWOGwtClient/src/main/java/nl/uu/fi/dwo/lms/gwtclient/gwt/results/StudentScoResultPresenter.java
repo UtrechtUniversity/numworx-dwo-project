@@ -60,10 +60,13 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomUser;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.xapi.Account;
+import nl.uu.fi.dwo.rest.dom.xapi.Activity;
+import nl.uu.fi.dwo.rest.dom.xapi.ActivityDefinition;
 import nl.uu.fi.dwo.rest.dom.xapi.Agent;
 import nl.uu.fi.dwo.rest.dom.xapi.Context;
 import nl.uu.fi.dwo.rest.dom.xapi.Group;
 import nl.uu.fi.dwo.rest.dom.xapi.Statement;
+import nl.uu.fi.dwo.rest.dom.xapi.Verb;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
@@ -370,14 +373,35 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
     return "true";
   }
 
-  
   public interface StatementCodec extends JsonEncoderDecoder<Statement> {
     StatementCodec CODEC = GWT.create(StatementCodec.class);
   }
 
   private void createStatement(String value) {
     final Statement s = StatementCodec.CODEC.decode(value);
-    s.actor = new Agent();
+    createStatement(s);
+  }
+
+    static final Verb COMPLETED = new Verb();
+	static {
+		COMPLETED.id = XAPIService.COMPLETED;
+		COMPLETED.display = Collections.singletonMap("en-US", "completed");
+	}
+
+  private void createCompletedStatement() {
+	Statement s = new Statement();
+	s.verb = COMPLETED;
+	Activity activity = new Activity();
+	activity.id = "pid:" + ssc.getStudentSco().getScoID();
+	activity.definition = new ActivityDefinition();
+	activity.definition.type = "http://www.dwo.nl/type/" +ssc.getStudentSco().getScoID().getType();
+	//activity.definition.name = Collections.singletonMap("unk", ?????);
+	s.object = activity;
+    createStatement(s);
+  }
+  
+private void createStatement(final Statement s) {
+	s.actor = new Agent();
     s.actor.account = new Account();
     s.actor.name = student.getUserName();
     s.actor.account.name =  "pid:"+student.getId();
@@ -395,9 +419,7 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
       s.context.instructor = a.getValue();
       return x.saveStatement(s);
     });
-    
-    
-  }
+}
 
   private String Commit(String dummy) {
     LOG.info("Commit " + dummy);
@@ -506,6 +528,9 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
       
     } else
       seal = seal(value, dssc);
+    if (value && dwoGlobalVars.isTrace()) {
+    	createCompletedStatement();
+    }
     seal
     .map(this::updateResultTree)
     .then( p-> {

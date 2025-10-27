@@ -8,9 +8,12 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
@@ -25,6 +28,8 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
@@ -58,10 +63,21 @@ import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoPage;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultTeacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
+import nl.uu.fi.dwo.rest.dom.xapi.Account;
+import nl.uu.fi.dwo.rest.dom.xapi.Activity;
+import nl.uu.fi.dwo.rest.dom.xapi.ActivityDefinition;
+import nl.uu.fi.dwo.rest.dom.xapi.Agent;
+import nl.uu.fi.dwo.rest.dom.xapi.Context;
+import nl.uu.fi.dwo.rest.dom.xapi.Group;
+import nl.uu.fi.dwo.rest.dom.xapi.Statement;
+import nl.uu.fi.dwo.rest.dom.xapi.StatementsResult;
+import nl.uu.fi.dwo.rest.dom.xapi.Verb;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
 
 import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
@@ -166,12 +182,67 @@ public class SelectedResultsPresenter implements ResultEventHandler {
             promises.add(resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
                     .map(dom -> dom.getStudentScoContexts())
                     .flatMap(resultService::sealList)
-                    .then(this::updateResultTree));
+                    .then(this::updateResultTree)
+                    );
         }
         Promises.all(promises).then(null, FAILURE);
     }
 
     private static final String WAIT = DwoLocalesForGWT.instance.NUM_DLG_SELECTEDRESULTS_PAGES();
+    
+    class SendCompleted implements Success<List<DomStudentScoContext>,List<DomStudentScoContext>> {
+    	final Verb COMPLETED = StudentScoResultPresenter.COMPLETED;
+    	Group team;
+    	Activity activity;
+    	Promise<Context> context;
+    	XAPIService service;
+    	Map<String,String> students;
+    	
+		SendCompleted(DomSchoolClass schoolClass, List<DomStudent> students, DomScoContext sco) {
+			team = new Group();
+			team.name = schoolClass.getSchoolClassName();
+			team.account = new Account();
+			team.account.name = "pid:" + schoolClass.getId().getIdString();
+			activity = new Activity();
+			activity.id = "pid:" + sco.getId();
+			activity.definition = new ActivityDefinition();
+			activity.definition.type = "http://www.dwo.nl/type/" +sco.getId().getType();
+			service = xapiService.get();
+			context = service.getAgent().map(instructor -> { Context c = new Context();
+					c.instructor = instructor;
+					team.account.homePage = instructor.account.homePage;
+					c.team = team;
+					return c; });
+			this.students = students.stream().collect(Collectors.toMap(s -> s.getId().getIdString(), s -> s.getUserName()));
+			
+		}
+
+		public Promise<List<DomStudentScoContext>> call(Promise<Context> context, Promise<List<DomStudentScoContext>> resolved) throws Exception {
+			List<DomStudentScoContext> list = resolved.getValue();
+			List<Statement> statements = new ArrayList<>();
+			for(DomStudentScoContext item: list) {
+				Agent actor = new Agent();
+				String uid = item.getUserID().getIdString();
+				String name = students.get(uid);
+				actor.account = new Account();
+				actor.name = name;
+				actor.account.name = "pid:"+ uid;
+				actor.account.homePage = context.getValue().instructor.account.homePage;
+				Statement s = new Statement();
+				s.actor = actor;
+				s.object = activity;
+				s.verb = COMPLETED;
+				s.context = context.getValue();
+				statements.add(s);
+			}
+			return service.saveStatements(statements).then(x -> resolved);
+		}
+		@Override 
+		public Promise<List<DomStudentScoContext>> call(Promise<List<DomStudentScoContext>> resolved) throws Exception {
+			return context.then(p -> call(p, resolved));
+		}
+    }
+    
     
     @JsMethod
     public void sealSingleActivity(String scoId, String classid) {
@@ -183,10 +254,14 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         PersistenceId scoid = new PersistenceId(scoId);
         DomScoContext sco = new DomScoContext();
         sco.setId(scoid);
-        resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
+        Promise<List<DomStudentScoContext>> seals = resultService.createStudentResults(sco, domschoolclass.getSchoolClass(), students)
                 .map(dom -> dom.getStudentScoContexts())
-                .flatMap(resultService::sealList)
-                .then(p -> { 
+                .flatMap(resultService::sealList);
+ // optional if 't' + premium
+        if (dwoGlobalVars.isTrace()) {
+        	seals = seals.then(new SendCompleted(domschoolclass.getSchoolClass(), students, sco));
+        }
+        seals.then(p -> { 
                 	resultTree.updateResultStudentSco(p.getValue());
                 	progress = new Deferred<Boolean>().getPromise();
                 	Promise<?> s = preparePages0(scoId, classid);
@@ -240,8 +315,44 @@ public class SelectedResultsPresenter implements ResultEventHandler {
         LOG.log(Level.FINE, "scoid = " + scoid + " classid = " + classid);
         PersistenceId sco = new PersistenceId(scoid);
         PersistenceId schoolclass = new PersistenceId(classid);
-        Promise<?> result = preparePages(schoolclass, sco);
-        result = result.then(p -> {
+        final Promise <StatementsResult> aanHetEind = completedQuery(schoolclass, sco);
+        final Promise<Void> result0 = preparePages(schoolclass, sco);
+        final Promise<?> result = 
+        Promises.all(aanHetEind, result0)
+        .then(x -> {
+        	List<Statement> statements = aanHetEind.getValue().statements;
+        	LOG.severe("DEBUG HIER" + statements.size());
+        	if (statements.isEmpty())       		
+        		return result0;
+        	
+        	Map<String, String> map = new HashMap<>();
+        	for (Statement s: statements) {
+        		String time = s.timestamp;
+        		DateTimeFormat utc = DateTimeFormat.getFormat(RestyDateTimeFormat.RESTY_DATETIME_FORMAT);
+        	    Date date = utc.parse(time.substring(0,RestyDateTimeFormat.RESTY_DATETIME_FORMAT.length()-1 ) + "+00:00");
+        		DateTimeFormat local = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
+        		time = local.format(date);
+        		
+        		String key  = s.actor.account.name.substring(4); // starts with pid:
+        		map.put(key, time);
+        	}
+            // loop over studensco van deze klas en sco
+        	DomResultSchoolClass<DomResultCourseInClass> rsc = resultTree.getResultTree().getChildren().get(schoolclass);
+        	Collection<DomResultCourseInClass> list = rsc.getChildren().values();
+        	Optional<DomResultScoContext> opt = list.stream().flatMap(item -> item.getChildren().values().stream())
+        			.filter(t -> t.getId().equals(scoid))
+        			.findAny();
+        	if (opt.isPresent()) {
+        		Collection<DomResultStudentScoContext> sscs = opt.get().getChildren().values();
+        		for( DomResultStudentScoContext ssc: sscs) {
+        			String u = ssc.getStudentSco().getUserID().getIdString();
+        			ssc.setCompletionTime(map.get(u));
+        		}
+        	}
+        	return result0;
+        })
+        
+        .then(p -> {
         	if (prepareStart < Long.MAX_VALUE)
         	{
         		resultTree.insertStudentCourses();
@@ -260,7 +371,38 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 		return result;
 	}
 
-    @JsMethod
+	@Inject Lazy<XAPIService> xapiService;
+	
+	private final Promise<StatementsResult> EMPTY; 
+	{ 
+		StatementsResult empty = new StatementsResult();
+		empty.more = "";
+		empty.statements = Collections.emptyList();
+		EMPTY = Promises.resolved(empty);
+	}
+
+    private Promise<StatementsResult> completedQuery(PersistenceId schoolclass, PersistenceId sid) {
+		DomSchoolClass sc = new DomSchoolClass();
+		sc.setId(schoolclass);
+		sc.setSchoolClassName(resultTree.getResultTree().getChildren().get(schoolclass).getLabel());
+		DomScoContextId sco = new DomScoContextId(); sco.setId(sid);
+		
+		Promise<StatementsResult> query = xapiService.get().query(sc, sco);
+		query.onResolve(() -> { 
+			LOG.severe("DEBUG HIER" + query);
+			Throwable failure = query.getFailure();
+			if (failure != null) {
+				LOG.log(Level.SEVERE, "Error in query", failure);
+			} else {
+				StatementsResult value = query.getValue();
+				LOG.info("result query " + value);
+				LOG.info("statements " + value.statements);
+			}			
+		});
+		return query.fallbackTo(EMPTY);
+	}
+
+	@JsMethod
     public void showLogResults(JavaScriptObject context, String scoid, String classid) {
       LOG.fine("entering showLogResults " + context + ", " + scoid);
       PersistenceId schoolclass = new PersistenceId(classid);

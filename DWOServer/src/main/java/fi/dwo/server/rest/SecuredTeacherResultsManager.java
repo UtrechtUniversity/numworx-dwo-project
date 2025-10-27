@@ -235,6 +235,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
         if (dom.getScoContexts() == null) {
         	scos = courses.stream().flatMap(
     			item -> ScoContextManager.findEntities(item).stream()
+    			.filter(s -> !Boolean.FALSE.equals(s.getShowdocent()))
     			)
     			.collect(Collectors.toList());
         } else {
@@ -422,6 +423,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
       Collection<PersistentScoContext> scos = new ArrayList<>();
       dom.setScoContexts(
           courseMap.values().stream().flatMap((PersistentCourse c) -> ScoContextManager.findEntities(c).stream()
+      	    .filter(s -> !Boolean.FALSE.equals(s.getShowdocent()))
             .map(sco -> {
               scos.add(sco);
               return new DomMapEntry<>(sco.buildPersistenceId(), sco.buildDomScoContext());

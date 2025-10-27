@@ -758,7 +758,7 @@ public class SecuredTeacherSchoolClassManagerIT {
     }
 
     @Test
-    public void testDetachCourseFromClass() {
+    public void testDetachCourseFromClass() throws Exception {
         PersistentSchool school = SchoolManager.findEntity(03L);
         PersistentUser user = UserManager.findByUserName("user03");
         SecurityContext sc = new TestSecurityContext(user.getUsername(), RoleType.TEACHER);//school01
@@ -767,7 +767,7 @@ public class SecuredTeacherSchoolClassManagerIT {
         DomContext context = new DomContext();
         DomSchoolClassCourseAndProfile data = new DomSchoolClassCourseAndProfile();
 
-        try {
+        {
             DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.TEACHER, school).buildDomHasRole();
             context.setDomHasRole(hr);
             submit.setRestContext(context);
@@ -775,13 +775,10 @@ public class SecuredTeacherSchoolClassManagerIT {
             data.setDomDwoProfile(DwoProfileManager.findEntity(1L).buildDomDwoProfile());
             data.setDomSchoolClass(SchoolClassManager.findEntity(2L).buildDomSchoolClass());
             submit.setDomSchoolClassCourseAndProfile(data);
-        } catch (Dwo2Exception e) {
-            LOG.log(Level.SEVERE, "Internal error", e);
-            fail("internal error");
-        }
+        } 
         SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
 
-        try {
+        {
             instance.detachCourseFromClass(sc, submit);
             List<PersistentClassCourse> cc = ClassCourseManager.findEntities(SchoolClassManager.findEntity(2L), CourseManager.findEntity(6L));
             if (cc.size() != 1) {
@@ -794,12 +791,9 @@ public class SecuredTeacherSchoolClassManagerIT {
             if (cc.size() != 1) {
                 fail("Parent classcourse should remain as sibling exists."); //unless nosql
             }
-        } catch (Exception e) {
-            fail("Internal error"); //unless nosql
-            //success
-        }
+        } 
 
-        try {
+        {
             DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.TEACHER, school).buildDomHasRole();
             context.setDomHasRole(hr);
             submit.setRestContext(context);
@@ -807,10 +801,7 @@ public class SecuredTeacherSchoolClassManagerIT {
             data.setDomDwoProfile(DwoProfileManager.findEntity(1L).buildDomDwoProfile());
             data.setDomSchoolClass(SchoolClassManager.findEntity(2L).buildDomSchoolClass());
             submit.setDomSchoolClassCourseAndProfile(data);
-        } catch (Dwo2Exception e) {
-            LOG.log(Level.SEVERE, "Internal error", e);
-            fail("internal error");
-        }
+        } 
 
         try {
             instance.detachCourseFromClass(sc, submit);

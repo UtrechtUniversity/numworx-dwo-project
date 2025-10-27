@@ -225,7 +225,7 @@ public class ExportImportDialog extends JDialog implements ActionListener, Cours
                 config.setImageSource(PersistentScoContext.buildPersistenceId((long)sco.getID()));
                 AbstractScoContextManager manager = GuiCreator.instance().getScoContextManager();
                 // we willen exceptions, geen user dialogs here.
-                Sco news = GuiCreator.instance().dwo.addScoWithExceptions(course, config, name, description, sco.isShowScore(), sco.getImageData(),manager);
+                Sco news = GuiCreator.instance().dwo.addScoWithExceptions(course, config, name, description, sco.isShowScore(), sco.isShowDocent(), sco.getImageData(),manager);
 // TODO common code?		
                 news.setSequencenr(sco.getSequencenr()); // TODO noop?
                 Sco[] oldsa = course.getScoList();

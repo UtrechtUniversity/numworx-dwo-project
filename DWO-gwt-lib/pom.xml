@@ -5,7 +5,7 @@
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
-  		<version>2.5.45-SNAPSHOT</version>
+  		<version>2.5.47-SNAPSHOT</version>
     </parent>
 
     <!--<groupId>nl.uu.fi.dwo.gwt</groupId>-->
@@ -38,7 +38,7 @@
     
     <properties>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <gwtVersion>2.8.2</gwtVersion>
+        <gwtVersion>2.10.0</gwtVersion>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <restyVersion>2.2.0</restyVersion>

@@ -4,7 +4,7 @@
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>DWO</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
-        <version>2.5.45-SNAPSHOT</version>
+        <version>2.5.47-SNAPSHOT</version>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>nl.uu.fi.dwo.lms</groupId>
@@ -24,14 +24,13 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <maven.test.skip>true</maven.test.skip>
         <!-- Convenience property to set the GWT version -->
-        <gwt.version>2.9.0</gwt.version>
+        <gwt.version>2.10.0</gwt.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <daggerVersion>2.42</daggerVersion>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gwt.style>OBFUSCATED</gwt.style>
         <maven.test.skip>true</maven.test.skip>
-        <tomcat7.version>7.0.108</tomcat7.version>
         <context.xml>context-dwo_devel.xml</context.xml>
         <copy.ui.skip>true</copy.ui.skip>
         <registerVersion>2.5.2</registerVersion>
@@ -150,7 +149,7 @@
         <dependency>
         	<groupId>nl.uu.fi.dwo.lms</groupId>
         	<artifactId>DwoGwtClientHtmlUi</artifactId>
-        	<version>2.5.44</version>
+        	<version>2.5.46</version>
         	<scope>runtime</scope>
         	<type>war</type>
         </dependency>
@@ -684,7 +683,8 @@
     		<properties>
     			<gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclientDebug</gwtModule>
         		<gwt.style>PRETTY</gwt.style>
-    		</properties>
+  				<gwt.compiler.localWorkers>3</gwt.compiler.localWorkers>
+  		</properties>
     	</profile>
     	    <profile>
 		        <id>aarch64-macos-users</id>

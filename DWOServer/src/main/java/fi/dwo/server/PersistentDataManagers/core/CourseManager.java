@@ -47,6 +47,7 @@ public class CourseManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            course.changeTimeStamp();
             em.persist(course);
             em.getTransaction().commit();
         }
@@ -80,6 +81,7 @@ public class CourseManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            course.changeTimeStamp();
             course = em.merge(course);
             em.getTransaction().commit();
         } 
@@ -107,6 +109,7 @@ public class CourseManager {
     	EntityManager em = getEntityManager();
     	try {
     		em.getTransaction().begin();
+    		course.changeTimeStamp();
     		course = em.merge(course);
     		updateDescendants(course, em);
     		em.getTransaction().commit();

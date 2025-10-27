@@ -3,6 +3,8 @@
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
 <%@ page import="java.util.*" %>
+<%@ page import="nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile" %>
+<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache" %>
 <%@ include file="/dwo/saml_util.jsp" %>
 <%@ include file='/dwo/toets_util.jsp' %>
 <!doctype html>
@@ -14,7 +16,12 @@
 	String requestHash = request.getHeader("X-SafeExamBrowser-RequestHash");
 	String configHash  = request.getHeader("X-SafeExamBrowser-ConfigKeyHash");
 	String host = request.getRemoteAddr();
-	String server = request.getHeader("host");
+	String server;
+	server = (String) request.getAttribute("template.server");
+	if (server == null)
+		server = "https://"+ request.getHeader("host");
+	String url = (String) request.getAttribute("template.prefix");
+	String locale = (String) request.getAttribute("template.locale");
 
 	if(requestHash == null && needSEB ||  !Subnet.netMatchRange(IPRANGE, host) )
 	{
@@ -36,6 +43,7 @@
 			if(hash.equals(requestHash)|| hash.equals(configHash)) failed = false;
 		}
 	}
+	String profile_id = Objects.toString( request.getAttribute("template.profile.id"), "77");
 	String id = request.getParameter("id");
 	if(failed && needSEB && id == null)
 	{
@@ -50,21 +58,33 @@
 			defaultPlace = "cc:" + Long.valueOf(id);
 		} catch(Exception e) {}
 	}
+	String name = "";
+	boolean responsive = false;
 	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
+	try {
+		DomDwoProfile dom = (DomDwoProfile)request.getAttribute("template.profile");
+		responsive = dom.getDwoProfileRights().contains("w");
+		if (dom.getDwoProfileRights().contains("c"))
+			name = dom.getDwoProfileName();
+	} catch(Exception e) {
+		log("get profile failed", e);
+	}
 %>
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link type="text/css" rel="stylesheet" href="<%=cdn %>/apps/DWOplayer.css">
-    <meta name="gwt:property" content="locale=nl" >
+<% if (!name.isEmpty()) {%><link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/css/<%=name %>.css" ><%}%>    
+    <meta name="gwt:property" content="locale=<%=locale%>" >
     <script>
-    	DWO_PROFILE_ID = 77
+    	DWO_PROFILE_ID = <%=profile_id%>
     	formfactor = "<%=formfactor%>"
    		SECURE_MODE="SEB" // possibly others
         dwo_env = "<%=dwo_env%>"
         defaultPlace = "<%= defaultPlace %>"
+        RESPONSIVE=<%=responsive%>
     	function logout() {
-    		window.location = "https://<%=server%>/vo/exam/logout.html"
+    		window.location = "<%=server%><%=url%>exam/logout.html"
     	}
     </script>
     <title>Safe Exam Browser</title>
@@ -76,7 +96,7 @@
     <script type="text/javascript" language="javascript" src="/dwo/tablet/DWOplayer/DWOplayer.nocache.js"></script>
   </head>
   <body id="main">
-  	<a href='https://<%=server%>/vo/exam/logout.html' >Logout</a>
+  	<a href='<%=server%><%=url%>exam/logout.html' >Logout</a>
     <!-- OPTIONAL: include this if you want history support -->
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     

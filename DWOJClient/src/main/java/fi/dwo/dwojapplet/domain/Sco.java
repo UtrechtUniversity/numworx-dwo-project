@@ -29,6 +29,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.PublishState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -44,6 +45,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
 import com.owlike.genson.GenericType;
@@ -91,7 +93,7 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
     private String description;
 
     private JApplet applet;
-    private Boolean showScore;
+    private Boolean showScore, showDocent;
     private byte[] imageData; // part of DomScoContextFull
     private long sequencenr;
 
@@ -161,6 +163,62 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
       if (applet instanceof JApplet)
         applet.firePropertyChange("saved", 0L, 1L);
     }
+ 
+    
+    @Deprecated // Legacy java.applet.Applet of javax.swing.JApplet
+    static class JAppletWrapper extends JApplet {
+    	final Class<?> cls;
+    	Object instance;
+    	JAppletWrapper(Class<?> cls) {
+    		this.cls = cls;
+     		try {
+				this.instance = cls.newInstance();
+				if (instance instanceof Container)
+					super.getRootPane().setContentPane((Container) instance);			
+			} catch (InstantiationException | IllegalAccessException e) {
+				this.instance = null;
+			}
+    	}
+		@Override
+		public void setStub(AppletStub stub) {
+			super.setStub(stub);
+			if (instance instanceof java.applet.Applet) {
+				((java.applet.Applet) instance).setStub(stub);
+			}
+		}
+		@Override
+		public JRootPane getRootPane() {
+			if (instance instanceof javax.swing.JApplet) {
+				return ((javax.swing.JApplet) instance).getRootPane();
+			}
+			return super.getRootPane();
+		}
+		@Override
+		public void init() {
+			if (instance instanceof java.applet.Applet) {
+				((java.applet.Applet) instance).init();
+			}
+		}
+		@Override
+		public void start() {
+			if (instance instanceof java.applet.Applet) {
+				((java.applet.Applet) instance).start();
+			}
+		}
+		@Override
+		public void stop() {
+			if (instance instanceof java.applet.Applet) {
+				((java.applet.Applet) instance).stop();
+			}
+		}
+		@Override
+		public void destroy() {
+			if (instance instanceof java.applet.Applet) {
+				((java.applet.Applet) instance).destroy();
+			}
+		}
+    	
+    }
     
     
     /**
@@ -172,14 +230,17 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
             JApplet lastApplet = applet;
             //lessonLocation = null;
             if (applet == null) {
-                Class<JApplet> o = PersistenceFacade.instance().getAppletClass(appletID);
-                Class<JApplet> clazz = (Class<JApplet>) o;
+                Class<?> o = PersistenceFacade.instance().getAppletClass(appletID);
+                if (JApplet.class.isAssignableFrom(o))
+                { Class<JApplet> clazz = (Class<JApplet>) o;
                 try {
                     applet = clazz.newInstance();
                 } catch (InstantiationException e) {
                     throw new PersistenceException(PersistenceException.EX_UNKNOWN_ERROR, e);
                 } catch (IllegalAccessException e) {
                     throw new PersistenceException(PersistenceException.EX_UNKNOWN_ERROR, e);
+                }} else {
+                	applet = new JAppletWrapper(o);
                 }
             }
 
@@ -909,6 +970,18 @@ public class Sco extends ScoBase implements LessonGroup, SCORM12APIInterface, Ap
 	 */
 	public void setImageData(byte[] imageData) {
 		this.imageData = imageData;
+	}
+
+	public boolean isShowDocent() {
+		return !Boolean.FALSE.equals(showDocent);
+	}
+
+	public Boolean getShowDocent() {
+		return showDocent;
+	}
+
+	public void setShowDocent(Boolean showDocent) {
+		this.showDocent = showDocent;
 	}
 
 }

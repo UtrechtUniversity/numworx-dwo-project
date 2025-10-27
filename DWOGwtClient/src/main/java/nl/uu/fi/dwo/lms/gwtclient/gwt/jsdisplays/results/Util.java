@@ -60,6 +60,11 @@ class Util {
   			String totalTime = studentSco.getTotalTime();
   			if (totalTime == null) totalTime = "00:00:00";
   			json.put("totalTime", buildTime(totalTime));
+// Add completion time
+  			String completionTime = dssc.getCompletionTime();
+  			if (completionTime == null) completionTime = "unknown"; // FIXME moet leeg zijn!!!!!
+  			json.put("completionTime", new JSONString(completionTime));  			
+  			
          } else if (node instanceof DomResultCourseInClass){
              DomResultCourseInClass resultCourse = (DomResultCourseInClass) node;
              String viewState = resultCourse.getViewState().name();

@@ -18,6 +18,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomNewUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.locale.DwoLocalesForGWT;
 import org.osgi.util.function.*;
 import org.osgi.util.promise.*;
@@ -80,15 +81,16 @@ public class RegisterController {
 		if (schoolClass != null && domNewUser.getRole() == RoleType.STUDENT) {
 			DomNewStudent student = new DomNewStudent(domNewUser, schoolClass);
 			student.setSamlUser(samlUser);
-			samlUser = null;
+			//samlUser = null;
 			p = pum.RegisterNewStudent(student);
 		} else {
 			DomNewStudent student = new DomNewStudent(domNewUser, null); // not really a student.
 			student.setSamlUser(samlUser);
-			samlUser = null;
+			//samlUser = null;
 			p = pum.RegisterNewStudent(student);
 			///p = pum.RegisterNewUser(domNewUser);
 		}
+		p = p.then( x -> { clearSAML(); return x; });
 
 //		if (samlUser != null) {
 //			Success<Boolean, Boolean> link = (promise) -> {
@@ -111,11 +113,25 @@ public class RegisterController {
 	}
 
 
+	protected void clearSAML() {
+		samlUser = null;
+		parent.account.setVisible(false);
+		parent.account.setValue(false);
+	}
+
+
 	void link(DomNewUser u) {
 		SecuredUserAccountManager manager = new SecuredUserAccountManager();
 		GwtRestVars.instance().setCredentials(u.getUsername(), u.getPassword(), null);
 		
-		manager.linkSaml(new DomContext(), samlUser).then(succes,failure);
+		final Promise<Boolean> p;
+		if (samlUser == null) {
+			p = Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_School_authentication_failed, "null user"));
+		} else 
+		{
+			p = manager.linkSaml(new DomContext(), samlUser).then(x -> { clearSAML(); return x;});
+		}
+		p.then(succes,failure);
 	}
 	
 	
@@ -176,6 +192,12 @@ public class RegisterController {
     }
 	  
 	  return defer.getPromise();
+	}
+	
+	RegisterPanel parent;
+
+	RegisterController(RegisterPanel parent) {
+		this.parent = parent;
 	}
 	
 }

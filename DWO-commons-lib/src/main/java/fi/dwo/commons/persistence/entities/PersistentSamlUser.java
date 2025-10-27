@@ -16,6 +16,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -70,6 +71,9 @@ public class PersistentSamlUser implements Serializable {
     @Basic(optional = false)
     @Column(name = "lastChangeTimeStamp", nullable = true)
     private long lastChangeTimeStamp;
+    @Column(name = "optlock")
+    @Version 
+    private Long optlock;
 
     public PersistentSamlUser() {
     }
