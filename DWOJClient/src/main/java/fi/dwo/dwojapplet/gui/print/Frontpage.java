@@ -75,12 +75,12 @@ public class Frontpage extends JPanel implements Printable {
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)
 			throws PrinterException {
 		if(pageIndex == 0) {
-			String id = api.LMSGetValue("cmi.learner_id");
+			//String id = api.LMSGetValue("cmi.learner_id");
 			String name = api.LMSGetValue("cmi.learner_name");
 			String klas = api.LMSGetValue("dme.team");
 			String score = api.LMSGetValue("cmi.score.raw");
 			String time  = api.LMSGetValue("cmi.total_time");
-			setPerson(id + " - " + name + "; " + klas);
+			setPerson(name + "; " + klas);
  // FIXME I18N
 			setScore(MessageFormat.format("Score: {0}, tijd: {1}",  score , time)); 
 			

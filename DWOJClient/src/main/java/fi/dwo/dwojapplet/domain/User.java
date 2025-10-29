@@ -609,4 +609,19 @@ public class User implements UserGroup, Comparable {
     public void setSchoolGroupID(PersistenceId schoolGroupID) {
         this.schoolGroupID = schoolGroupID;
     }
+    
+    
+    public String getUniqueDisplayName() {
+        StringBuilder result = new StringBuilder();
+        result.append(this.username)
+        	.append(" - ")
+        	.append(this.firstname)
+        	.append(" ")
+        	.append((this.middleName == null) ? "" : this.middleName)
+        	.append(" ")
+        	.append(this.lastName);
+
+        return result.toString();
+    }
+    
 }
