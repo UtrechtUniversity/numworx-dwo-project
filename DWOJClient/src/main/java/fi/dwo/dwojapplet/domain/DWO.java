@@ -1817,7 +1817,7 @@ LOG.info("time results = " + (-t) + " ms");
             if (user == null) {
                 return Guest.instance().getUsername();
             }
-            return user.getUsername();
+            return user.getUniqueDisplayName();
         }
 
         if (iDataModelElement.equals(SCORM12APIInterface.USER_GROUP)) {

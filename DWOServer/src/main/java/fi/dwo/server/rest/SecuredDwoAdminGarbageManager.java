@@ -100,13 +100,14 @@ public class SecuredDwoAdminGarbageManager {
   @GET
   @Produces({"application/json"})
   @Path("/user/get") 
-  public List<DomUserFullwLoginContext> getUsers(@Context SecurityContext sc, @QueryParam("before") Long before, @QueryParam("limit") Integer limit) throws Dwo2Exception {
+  public List<DomUserFullwLoginContext> getUsers(@Context SecurityContext sc, @QueryParam("before") Long before, @QueryParam("limit") Integer limit, @QueryParam("single") Boolean single) throws Dwo2Exception {
     DwoAdminState_HR_R_S_SG_U admin = AnonDomainAuthorizer.build()
         .submitUser(sc)
         .setDefaultHasRole().buildDwoAdmin();
     Date when = new Date(System.currentTimeMillis() - 3L*365*24*3600*1000); // sensible defaults
     if (before != null) when.setTime(before.longValue());
     if (limit == null) limit = 100;
+    if (single == null) single = Boolean.FALSE;
     EntityManager em = DwoEmfFactory.getEntityManager();
     try {
       em.getTransaction().begin();
@@ -128,10 +129,14 @@ public class SecuredDwoAdminGarbageManager {
       Root<PersistentLoginContext> context = sub.from(PersistentLoginContext.class);
       sub = sub.select(context.get("userID"));
       Predicate in = userid.in(sub);
-      Predicate and = builder.and(isNull, lt, isFalse, in.not());
+      Predicate and = builder.and(isNull, lt, in.not());
+      if (!single.booleanValue())
+    	  and = builder.and(and, isFalse); // exclude single school students, the default
       
       lt = builder.lessThan(lastLogin, p);
-      Predicate and2 = builder.and(lt, isFalse, in.not());
+      Predicate and2 = builder.and(lt, in.not());
+      if (!single.booleanValue())
+    	  and2 = builder.and(and2, isFalse); // exclude single school students, the default
       
       q = q.select(u).where(builder.or(and, and2));
    
@@ -151,7 +156,10 @@ public class SecuredDwoAdminGarbageManager {
         isFalse = builder.isFalse(singleschool);
         ParameterExpression<Long> l = builder.parameter(Long.class);
         Predicate ltt = builder.lessThan(lasttimestamp, l);
-        q1 = q1.select(user).where(ltt,eq, isFalse);
+        if (single)
+        	q1 = q1.select(user).where(ltt, eq); // include single school students
+        else
+        	q1 = q1.select(user).where(ltt,eq, isFalse);
         TypedQuery<PersistentUser> query1 = em.createQuery(q1);
         query1.setParameter(l, Long.valueOf(when.getTime()));
         query1.setMaxResults(limit-list.size());
@@ -256,7 +264,7 @@ public class SecuredDwoAdminGarbageManager {
       .setHasRole(rest.getRestContext().getDomHasRole()).buildDwoAdmin();
     Long id = MySQLPersistenceId.getNativeId(rest.getDomUser());
     PersistentUser user = UserManager.findEntity(id);
-    if (user.isSingleSchoolAccount())
+    if (user.isSingleSchoolAccount() && rest.getDomUser().getSingleSchool().booleanValue())
       return Boolean.FALSE;
     UserUtilManager.deleteUser(user);
     return Boolean.TRUE;

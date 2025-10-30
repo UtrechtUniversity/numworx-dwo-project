@@ -266,5 +266,24 @@
     	<profile>
     		<id>test</id>
     	</profile>
+	<profile>
+		<id>github</id>
+		<repositories>
+        	  <repository>
+          	     <id>numworx-vendor-geogebra</id>
+          	     <snapshots>
+              		<enabled>true</enabled>
+          	     </snapshots>
+          	     <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-geogebra</url>
+        	  </repository>
+                    <repository>
+                     <id>numworx-dwo-openmath</id>
+                     <snapshots>
+                        <enabled>true</enabled>
+                     </snapshots>
+                     <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-openmath</url>
+                  </repository>
+		</repositories>
+	</profile>
     </profiles>
 </project>
