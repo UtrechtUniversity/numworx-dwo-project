@@ -3,13 +3,15 @@ package fi.beans.mainframe;
 public interface AudioClip extends java.applet.AudioClip {
 
 	@Deprecated
-	public class Bridge implements AudioClip {
+	public static AudioClip adapt(java.applet.AudioClip old) {
+		if (old instanceof AudioClip || old == null) return (AudioClip) old;
+		return new Bridge(old);
+	}
+
+	@Deprecated
+	class Bridge implements AudioClip {
 		final private java.applet.AudioClip delegate;
 
-		public static AudioClip adapt(java.applet.AudioClip old) {
-			if (old instanceof AudioClip || old == null) return (AudioClip) old;
-			return new Bridge(old);
-		}
 				
 		public Bridge(java.applet.AudioClip delegate) {
 			this.delegate = delegate;
