@@ -32,6 +32,6 @@ jobs:
             }]
       - run: cat /home/runner/.m2/settings.xml
       - name: Publish package
-        run: mvn -f DWO/pom.xml --batch-mode --fail-at-end install -Pgithub
+        run: mvn --batch-mode --fail-at-end install -Pgithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
