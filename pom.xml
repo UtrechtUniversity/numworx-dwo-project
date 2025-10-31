@@ -19,6 +19,8 @@
     </organization>
     <modules>
 		<module>DWO</module>
+		<module>async-lib</module>
+		<module>promise-api</module>
 	</modules>    
 
     <!-- automagically use snapshot/release -->
