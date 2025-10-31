@@ -16,7 +16,10 @@
     <organization>
         <name>Freudenthal Institute</name>
         <url>http://www.uu.nl/onderzoek/freudenthal-instituut</url>
-    </organization>    
+    </organization>
+    <modules>
+		<module>DWO</module>
+	</modules>    
 
     <!-- automagically use snapshot/release -->
     <distributionManagement>
@@ -32,47 +35,6 @@
         </repository>
     </distributionManagement>    
             
-    <!--<reporting>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.6</version>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.6</version>
-            <reportSets>
-              <reportSet>
-                <reports> select reports 
-                  <report>index</report>
-                </reports>
-              </reportSet>
-            </reportSets>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9</version>
-            <reportSets>
-              <reportSet> by default, id = "default" 
-                <reports> select non-aggregate reports 
-                  <report>javadoc</report>
-                  <report>test-javadoc</report>
-                </reports>
-              </reportSet>
-              <reportSet> aggregate reportSet, to define in poms having modules 
-                <id>aggregate</id>
-                <inherited>false</inherited> don't run aggregate in child modules 
-                <reports>
-                  <report>aggregate</report>
-                </reports>
-              </reportSet>
-            </reportSets>
-          </plugin>
-        </plugins>
-    </reporting> -->
     <repositories>
     </repositories>
     <pluginRepositories>
