@@ -27,7 +27,7 @@
        <module>../DWO-gwt-lib</module>
   	   <module>../Account</module>
  	   <module>../DWOformule</module>
-<!-- 	 	<module>../DWOmAccess</module> -->
+ 	 	<module>../DWOmAccess</module>
        <module>../DWO-commons-lib</module>
         <module>../DWO-jclient-lib</module>
   	 	<module>../DWO-apps</module>
@@ -40,7 +40,7 @@
 <!--	    <module>../edexml</module>-->
         <module>../KeyboardGWT</module>
      	<module>../UploadWidget</module>
-<!--      	<module>../WriteMathGWT</module> -->
+      	<module>../WriteMathGWT</module>
 <!--		<module>../osiris-import</module>-->
  		<module>../notebook</module>
         <module>../oauth2client</module>
@@ -278,6 +278,10 @@
                      </snapshots>
                      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-openmath</url>
                   </repository>
+                  <repository>
+					  <id>vaadin</id>
+					  <url>https://maven.vaadin.com/vaadin-addons/</url>
+				  </repository>
 		</repositories>
 	</profile>
 	<profile>
