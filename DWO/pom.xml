@@ -45,10 +45,11 @@
  		<module>../notebook</module>
         <module>../oauth2client</module>
         <module>../EBServer</module>
-<!--        <module>../schoolyear-jclient-lib</module>-->
-<!--        <module>../schoolyear-war</module>-->
+        <module>../schoolyear-jclient-lib</module>
+       <module>../schoolyear-war</module>
 	    <module>../redis-config</module>
 	    <module>../WiskOpdrGWT</module>
+	    <module>../gwtpatch</module>
     </modules>
     
     <name>${project.build.finalName}</name>

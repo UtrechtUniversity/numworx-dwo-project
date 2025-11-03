@@ -175,12 +175,12 @@
     	<dependency>
     		<groupId>nl.uu.fi.dwo</groupId>
     		<artifactId>async-lib</artifactId>
-    		<version>0.0.3</version>
+    		<version>0.0.4-SNAPSHOT</version>
     	</dependency>
     	<dependency>
     		<groupId>fi.beans</groupId>
     		<artifactId>ideas</artifactId>
-    		<version>1.2.6</version>
+    		<version>1.2.8-SNAPSHOT</version>
     	</dependency>
     	<dependency>
     		<groupId>nl.numworx.swingbrowser</groupId>
@@ -194,7 +194,7 @@
     	<dependency>
     		<groupId>nl.numworx.gwtpatch</groupId>
     		<artifactId>gwtpatch</artifactId>
-    		<version>0.0.5</version>
+    		<version>0.0.6-SNAPSHOT</version>
     	</dependency>
     	<dependency>
     		<groupId>nl.uu.fi.dwo.mobile</groupId>
