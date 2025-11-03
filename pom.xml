@@ -20,6 +20,7 @@
     <modules>
 		<module>DWO</module>
 		<module>async-lib</module>
+		<module>eawt</module>
 		<module>promise-api</module>
 		<module>numworxlf</module>
 		<module>beans_lineairealgebra</module>
