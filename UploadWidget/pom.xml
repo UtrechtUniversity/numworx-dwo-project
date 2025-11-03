@@ -12,9 +12,9 @@
   <name>UploadWidget parent</name>
   <modules>
   	<module>uploadwidget-common</module>
-  	<module>uploadwidget</module>
+<!--  	<module>uploadwidget</module>-->
   	<module>UploadWidgetGWT</module>
-  	<module>UploadWidgetRM</module>
+<!--  	<module>UploadWidgetRM</module>-->
   	<module>uploadwidget-az</module>
   	<module>uploadwidget-s3</module>
   	<module>uploadwidget-local</module>
