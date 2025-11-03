@@ -21,6 +21,7 @@
 		<module>DWO</module>
 		<module>async-lib</module>
 		<module>promise-api</module>
+		<module>beans_lineairealgebra</module>
 	</modules>    
 
     <!-- automagically use snapshot/release -->
