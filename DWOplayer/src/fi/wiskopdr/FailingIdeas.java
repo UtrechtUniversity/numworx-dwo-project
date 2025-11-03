@@ -87,5 +87,8 @@ public class FailingIdeas extends AbstractIdeas implements IdeasIF {
 public void adviseMeUsermodel(RuleIF[] inputs, String exercise, AsyncCallback<Usermodel[]> callback) {
     callback.onFailure(NOT_IMPLEMENTED);    
 }
+public void  aiModel(RuleIF[] input, String strategy, AsyncCallback<RuleIF[]> callback) {
+    callback.onFailure(NOT_IMPLEMENTED);    		
+}
 
 }
