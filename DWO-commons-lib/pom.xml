@@ -199,7 +199,7 @@
  		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>async-lib</artifactId>
-			<version>0.0.3</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
         <!-- bad media type json support
            <dependency>

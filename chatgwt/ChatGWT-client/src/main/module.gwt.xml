@@ -7,7 +7,6 @@
   <inherits name="com.google.gwt.json.JSON" />
   <inherits name="com.stanziq.strophe.Strophe" />
   
-  <inherits name="com.googlecode.mgwt.MGWTMin" />
   <inherits name="fi.wiskopdr.WiskOpdr" />
   <inherits name="nl.uu.fi.dwo.keyboard.KeyboardGWT-DWO" />
   
