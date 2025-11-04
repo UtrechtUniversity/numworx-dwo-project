@@ -15,7 +15,6 @@
         <ideas>/ideas/IdeasServlet</ideas>
         <comment>amazon, *.dwo.nl</comment>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-        <dwoVersion>2.2.11-SNAPSHOT</dwoVersion>
     </properties>
     <dependencies>
        <dependency>
@@ -51,11 +50,6 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-<!--         <dependency> -->
-<!--         	<groupId>nl.uu.fi.dwo</groupId> -->
-<!--         	<artifactId>DWOJClient</artifactId> -->
-<!--         	<version>${dwoVersion}</version> -->
-<!--         </dependency> -->
         <dependency>
         	<groupId>nl.uu.fi.dwo.rest</groupId>
         	<artifactId>DWO-jclient-lib</artifactId>
@@ -127,34 +121,6 @@
 		</resources>
         <testSourceDirectory>test</testSourceDirectory>
         <plugins>
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.10</version>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                                <artifactItem>
-                                  <groupId>org.c-book</groupId>
-                                                  <artifactId>CBookInstance</artifactId>
-                                                  <version>0.0.1-SNAPSHOT</version>
-                                                  <classifier>jar-with-dependencies</classifier>
-                                  <outputDirectory>${project.build.directory}/${project.build.finalName}/lti</outputDirectory>
-                                  <destFileName>cbookinstance.jar</destFileName>
-                                </artifactItem>
-                            </artifactItems>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
@@ -196,36 +162,16 @@
                         <include>**/*IT.java</include>
                     </includes>
                     <skipTests>true</skipTests> 
-                    <!--                   <systemProperties>
-                        <property>
-                            <name>jersey.config.test.container.factory</name>
-                            <value>org.glassfish.jersey.test.framework.spi.container.external.ExternalTestContainerFactory</value>
-                        </property>
-                        <property>
-                            <name>jersey.test.host</name>
-                            <value>localhost</value>
-                        </property>
-                        <property>
-                            <name>jersey.config.test.container.port</name>
-                            <value>8080</value>
-                        </property>
-                    </systemProperties>  -->
                 </configuration>
             </plugin>                       
         </plugins>
     </build>
-    <distributionManagement>
-        <repository>
-            <id>release</id>
-            <name>libs-release-local</name>
-            <url>https://repos.dwo.nl/artifactory/libs-release-local</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>libs-snapshot-local</name>
-            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <repositories>
+		<repository>
+			<id>numworx-vendor-oauth</id>
+			<url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-oauth</url>
+		</repository>
+	</repositories>
     <profiles>
         <profile>
             <id>ws</id>
@@ -265,9 +211,6 @@
             </properties>
         </profile>
     </profiles>
-    <scm>
-        <developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOmAccess/trunk</developerConnection>
-    </scm>
     <parent>
     	<groupId>nl.uu.fi.dwo</groupId>
     	<artifactId>DWO</artifactId>
