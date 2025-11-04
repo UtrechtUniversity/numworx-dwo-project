@@ -3,6 +3,12 @@
   <groupId>fi.beans</groupId>
   <artifactId>lineairealgebra</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+    <parent>
+        <groupId>nl.uu.fi.dwo</groupId>
+        <artifactId>DWO.master.pom</artifactId>
+        <version>1.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
   <name>lineaire algebra</name>
   <description>General package for LA tools for i.e. vectors and matrices</description>
   <dependencies>
