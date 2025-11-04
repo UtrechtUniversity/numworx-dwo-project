@@ -35,6 +35,7 @@
 <%@ page import="edu.uoc.elc.lti.platform.ags.*" %>
 <%@ page import="edu.uoc.elc.lti.platform.*" %>
 <%@ page import="edu.uoc.lti.deeplink.content.*" %>
+<%@ page import="edu.uoc.elc.lti.tool.deeplinking.*" %>
 <%! 
 	private DbAccess instance;
 	
@@ -75,8 +76,8 @@
 	   response.sendError(400, tool.getReason());
 	   return;
   }
-  Presentation presentation = tool.getPresentation();
-  String return_url = presentation.getReturnUrl();
+  Settings presentation = tool.getDeepLinkingSettings();
+  String return_url = presentation.getDeep_link_return_url();
   String language = presentation.getLocale(); if (language == null) language = "nl";
   int width = presentation.getWidth();
   int height = presentation.getHeight();

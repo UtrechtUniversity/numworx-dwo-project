@@ -84,4 +84,29 @@ public class HttpSessionOIDCLaunchSession implements OIDCLaunchSession {
 	public void setIssuer(String iss) {
 		setAttribute(ISSUER, iss);
 	}
+
+	private String clientId, deploymentId;
+	@Override
+	public String getClientId() {
+		// TODO Auto-generated method stub
+		return clientId;
+	}
+
+	@Override
+	public String getDeploymentId() {
+		// TODO Auto-generated method stub
+		return deploymentId;
+	}
+
+	@Override
+	public void setClientId(String arg0) {
+		// TODO Auto-generated method stub
+		clientId = arg0;
+	}
+
+	@Override
+	public void setDeploymentId(String arg0) {
+		// TODO Auto-generated method stub
+		deploymentId = arg0;
+	}
 }

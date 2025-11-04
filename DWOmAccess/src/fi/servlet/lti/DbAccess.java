@@ -223,7 +223,7 @@ public class DbAccess {
 		       LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
 		       try {
 		         response.sendRedirect("/dwo/register/Register.html?cancel="
-		        	    + URLEncoder.encode(tool.getPresentation().getReturnUrl(), "UTF-8")
+		        	    + URLEncoder.encode(tool.getDeepLinkingSettings().getDeep_link_return_url(), "UTF-8")
 		         		+ "&next=" + 
 		         		  URLEncoder.encode(request.getRequestURL().toString(), "UTF-8")
 		         );
