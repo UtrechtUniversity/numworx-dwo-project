@@ -363,7 +363,9 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
     String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
     LOG.info("SetValue " + key + ", " + shortValue);
 
-    if ( ResultsService.SUSPEND_DATA.equals(key)) return "false"; // never writable
+    if ( ResultsService.SUSPEND_DATA.equals(key)
+    	|| ResultsService.COMPLETION_TIMESTAMP.equals(key)	
+       ) return "false"; // never writable
     if ( "dme.statement".equals(key)) {
       createStatement(value);
       return "true";

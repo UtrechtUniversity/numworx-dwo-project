@@ -71,6 +71,7 @@ public class ResultsService implements SwitchViewEventHandler {
 
     static final String SUSPEND_DATA = "cmi.suspend_data";
     static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
+    static final String COMPLETION_TIMESTAMP = "cmi.comments_from_lms.0.timestamp";
     static final String REVIEW_CHECK = "cmi.comments_from_lms.1.comment";
     static final String REVIEW_CORRECT = "cmi.comments_from_lms.2.comment";
 
@@ -95,7 +96,8 @@ public class ResultsService implements SwitchViewEventHandler {
             "cmi.location",
             REVIEW_DATA,
             REVIEW_CHECK,
-            REVIEW_CORRECT
+            REVIEW_CORRECT,
+            COMPLETION_TIMESTAMP
     );
 
     @Inject
