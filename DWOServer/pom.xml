@@ -75,7 +75,6 @@
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
             <version>140</version>
-            <!--  <scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
@@ -153,11 +152,6 @@
             <artifactId>urlrewritefilter</artifactId>
             <version>4.0.3</version>
         </dependency>
-<!--        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-security-cors</artifactId>
-            <version>2.6.1</version>
-        </dependency>-->
     	<dependency>
     		<groupId>nl.uu.fi.dwo.rest</groupId>
     		<artifactId>DWO-rest-lib</artifactId>
@@ -220,15 +214,7 @@
 			  <version>1.7.1</version>
 			</dependency>
     	</dependencies>
-    
-<!--    <distributionManagement>
-        <repository>
-            <id>snapshots</id>
-            <name>libs-snapshot</name>
-            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
-        </repository>
-    </distributionManagement>    -->
-    
+        
     <build>
 	  <testResources>
 		<testResource>
@@ -320,7 +306,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <warSourceDirectory>src/main/webapp</warSourceDirectory>
-<!--                    <contextFile>${basedir}/config/tomcat/context.xml</contextFile>                    -->
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
   					<attachClasses>true</attachClasses>
@@ -353,9 +338,6 @@
                 <version>2.2</version>
                     <configuration>
                         <server>TomcatServer</server>
-<!--                        <username>${tomcat.local.deploy.username}</username>
-                        <password>${tomcat.local.deploy.password}</password>
-                        <url>${tomcat.local.deploy.url}</url>-->
                         <path>/dwo</path>
                         <systemProperties>
                             <java.util.secureRandomSeed>true</java.util.secureRandomSeed>
@@ -521,20 +503,6 @@
 				    <jdkToolchain>
 				        <version>11</version>
 				    </jdkToolchain>
-                    <!--                   <systemProperties>
-                        <property>
-                            <name>jersey.config.test.container.factory</name>
-                            <value>org.glassfish.jersey.test.framework.spi.container.external.ExternalTestContainerFactory</value>
-                        </property>
-                        <property>
-                            <name>jersey.test.host</name>
-                            <value>localhost</value>
-                        </property>
-                        <property>
-                            <name>jersey.config.test.container.port</name>
-                            <value>8080</value>
-                        </property>
-                    </systemProperties>  -->
                 </configuration>
             </plugin>                    
         </plugins>

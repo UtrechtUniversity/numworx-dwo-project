@@ -26,12 +26,33 @@ jobs:
                 "username": "${{ secrets.USER_PACKAGE_READ }}",
                 "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
             },
+	    {
+                "id": "numworx-vendor-oauth",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
+                "id": "github-uoc-lti-core",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
+                "id": "github-uoc-lti-jwt",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
+                "id": "github-uoc-lti",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+
             {    "id": "numworx-dwo-openmath",
                  "username":"${{ secrets.USER_PACKAGE_READ }}",
                  "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
             }]
       - run: cat /home/runner/.m2/settings.xml
       - name: Publish package
-        run: mvn --batch-mode --fail-at-end install -Pgithub -Pnojunittests
+        run: mvn --batch-mode --fail-at-end install -Pgithub -Pnojunittests -Djunit.test=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
