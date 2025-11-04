@@ -46,7 +46,6 @@ jobs:
                 "username": "${{ secrets.USER_PACKAGE_READ }}",
                 "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
             },
-
             {    "id": "numworx-dwo-openmath",
                  "username":"${{ secrets.USER_PACKAGE_READ }}",
                  "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
