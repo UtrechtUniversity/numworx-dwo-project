@@ -7,7 +7,6 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 
-import javax.swing.JComponent;
 import javax.swing.RootPaneContainer;
 
 import fi.dwo.dwojapplet.domain.Sco;

@@ -4,8 +4,12 @@ import java.awt.Graphics;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -16,6 +20,7 @@ import javax.swing.JTextArea;
 
 import fi.beans.scorm.SCORM12APIInterface;
 import fi.dwo.dwojapplet.domain.Sco;
+import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
 
 public class Frontpage extends JPanel implements Printable {
 
@@ -25,6 +30,7 @@ public class Frontpage extends JPanel implements Printable {
 	private JLabel results;
 	private JLabel date;
 	private SCORM12APIInterface api;
+	private final String NOW = new Date().toString();
 		
 	public Frontpage(Sco sco) {
 		super(null);
@@ -32,7 +38,7 @@ public class Frontpage extends JPanel implements Printable {
 		BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
 		setLayout(layout);
 		this.title = new JLabel(sco.getScoName());
-		this.date  = new JLabel(new Date().toString());
+		this.date  = new JLabel(NOW);
 		this.results = new JLabel("Score:");
 		this.person  = new JLabel("anoniem");
 		JTextArea ta;
@@ -55,6 +61,13 @@ public class Frontpage extends JPanel implements Printable {
 	public void setScore(String score) 
 	{
 		this.results.setText(score); // I18N
+	}
+	
+	private void setDate(Date date) {
+		if (date != null) {
+			this.date.setText(DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, getLocale()).format(date));
+		} else
+			this.date.setText(NOW);
 	}
 	
 	public void setDescription(String description) {
@@ -80,6 +93,16 @@ public class Frontpage extends JPanel implements Printable {
 			String klas = api.LMSGetValue("dme.team");
 			String score = api.LMSGetValue("cmi.score.raw");
 			String time  = api.LMSGetValue("cmi.total_time");
+			String timestamp = api.LMSGetValue("cmi.comments_from_lms.0.timestamp");
+			Date stamp = null;
+				try {
+					SimpleDateFormat f = new SimpleDateFormat(RestyDateTimeFormat.RESTY_DATETIME_FORMAT);
+					stamp = f.parse(timestamp);
+				} catch(Exception oops) {
+					oops.printStackTrace();
+					stamp = null;
+				}
+			setDate(stamp);
 			setPerson(name + "; " + klas);
  // FIXME I18N
 			setScore(MessageFormat.format("Score: {0}, tijd: {1}",  score , time)); 

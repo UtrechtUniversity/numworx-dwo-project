@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
 
 public class HeaderPrint extends Composite {
 
@@ -33,9 +34,22 @@ public class HeaderPrint extends Composite {
 		name.setText(memento.getLearnerName());
 		double score = memento.getScore();
 		String duration = memento.getValue(Memento.TOTAL_TIME);
-		Date now = new Date();
+		String timestamp = memento.getValue("cmi.comments_from_lms.0.timestamp");
+		String nowstr;
+		Date now;
 		DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_LONG);
-		String nowstr = formatter.format(now);
+		if (timestamp.isEmpty()) {
+			now = new Date();
+			nowstr = formatter.format(now);
+		} else {
+			try {
+				DateTimeFormat scanner = DateTimeFormat.getFormat(RestyDateTimeFormat.RESTY_DATETIME_FORMAT);
+				now = scanner.parse(timestamp);
+				nowstr = formatter.format(now);
+			} catch (IllegalArgumentException e) {
+				nowstr = timestamp;
+			}
+		}
 		description.setText("Score: " + score + " in " + duration + ". " + nowstr);
 		String sconame = memento.getValue("dme.sco_name");
 		String team  = memento.getValue("dme.team");

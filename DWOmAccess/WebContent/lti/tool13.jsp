@@ -78,7 +78,8 @@
   }
   Settings presentation = tool.getDeepLinkingSettings();
   String return_url = presentation.getDeep_link_return_url();
-  String language = null; /*presentation.getLocale();*/ if (language == null) language = "nl";
+  String language = tool.getLocale(); if (language == null) language = "nl";
+  // FIXME width and height from claimsaccessor enum/class Presentation
   int width = 0 /*presentation.getWidth()*/;
   int height = 0  /*presentation.getHeight()*/;
 // fullscreen
