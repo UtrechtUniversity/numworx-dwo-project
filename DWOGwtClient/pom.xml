@@ -114,7 +114,6 @@
             <groupId>com.owlike</groupId>
             <artifactId>genson</artifactId>
             <version>1.6</version>
-            <!--<scope>provided</scope>-->
         </dependency> 
         <dependency>
             <groupId>com.github.nmorel.gwtjackson</groupId>
@@ -148,8 +147,8 @@
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo.lms</groupId>
-        	<artifactId>DwoGwtClientHtmlUi</artifactId>
-        	<version>2.5.46</version>
+        	<artifactId>dwogwtclienthtmlui</artifactId>
+        	<version>2.5.47-SNAPSHOT</version>
         	<scope>runtime</scope>
         	<type>war</type>
         </dependency>
@@ -441,20 +440,11 @@
                          <webapp>
 						    <groupId>nl.numworx.uploadwidget</groupId>
 						    <artifactId>uploadwidget-local</artifactId>
-						    <version>2.5.44-SNAPSHOT</version>
+						    <version>2.5.47-SNAPSHOT</version>
                             <type>war</type>
                             <contextPath>/dwo/dav/upload</contextPath>
                             <asWebapp>true</asWebapp>
                          </webapp>
-
-<!--                          <webapp>-->
-<!--                              <groupId>nl.uu.fi.dwo.lms</groupId>-->
-<!--                              <artifactId>ChatGWT-server</artifactId>-->
-<!--                          	  <version>${chatGWTVersion}</version>-->
-<!--                              <type>war</type>-->
-<!--                              <contextPath>/chatbox</contextPath>-->
-<!--                              <asWebapp>true</asWebapp>-->
-<!--                          </webapp>-->
                     </webapps>                         
                 </configuration> 
                 <dependencies>
@@ -622,41 +612,6 @@
                     </execution>
                 </executions>
             </plugin>            
-            <!-- sample version for with mysql building -->
-            <!--                        <plugin>  docker test configuration om gwtclient in een docker image te starten 
-                <groupId>io.fabric8</groupId>
-                <artifactId>fabric8-maven-plugin</artifactId> 
-                <version>3.2.28</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>resource</goal>
-                            <goal>build</goal>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <images>  
-                        <image>
-                            <name>${project.build.finalName}</name>
-                             "alias" is used to correlate to the containers in the pod spec 
-                            <alias>GwtClientDocky</alias>
-                            <build>
-                                <from>tomcat:8.0</from>
-                                <assembly>
-                                    <basedir>/deployments</basedir>
-                                    <descriptorRef>artifact-with-dependencies</descriptorRef>
-                                </assembly>
-                                <env>
-                                    <JAVA_LIB_DIR>/deployments</JAVA_LIB_DIR>
-                                    <JAVA_MAIN_CLASS>org.apache.camel.cdi.Main</JAVA_MAIN_CLASS>
-                                </env>
-                            </build>
-                        </image>
-                    </images> 
-                </configuration>
-            </plugin>-->
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
@@ -724,5 +679,17 @@
 		            </dependency>
 		        </dependencies>
 		    </profile>
+		    <profile>
+				<id>github</id>
+				<repositories>
+					<repository>
+						<id>numworx-dwo-gwtclienthtmlui</id>
+						<url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-gwtclienthtmlui</url>
+						<snapshots>
+							<enabled>true</enabled>
+						</snapshots>
+					</repository>			
+				</repositories>
+			</profile>
     </profiles>
 </project>

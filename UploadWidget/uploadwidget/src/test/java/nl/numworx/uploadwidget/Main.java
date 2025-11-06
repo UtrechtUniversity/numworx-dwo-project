@@ -12,7 +12,6 @@ import java.util.Properties;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.cbook.cbookif.CBookContext;
@@ -22,13 +21,11 @@ import org.cbook.cbookif.CBookService;
 import org.cbook.cbookif.CBookWidgetIF;
 import org.cbook.cbookif.Constants;
 import org.cbook.cbookif.ServiceImpl;
-import org.cbook.cbookif.rm.ResourceManager;
 import org.json.simple.parser.ParseException;
 
 import cbookeditor.CBookEditor;
 import fi.beans.wiskopdrbeans.ResourceManagerClient.ResourceManagerFactory;
 import fi.wiskopdr.WiskOpdr;
-import fi.wiskopdr.formuleobjects.FormuleParser;
 
 public class Main {
 

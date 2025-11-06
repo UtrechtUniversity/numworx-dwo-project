@@ -32,6 +32,11 @@ jobs:
                 "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
             },
             {
+                "id": "numworx-dwo-gwtclienthtmlui",
+                "username": "${{ secrets.USER_PACKAGE_READ }}",
+                "password": "${{ secrets.TOKEN_PACKAGE_READ }}"
+            },
+            {
                 "id": "github-uoc-lti-core",
                 "username": "${{ secrets.USER_PACKAGE_READ }}",
                 "password": "${{ secrets.TOKEN_PACKAGE_READ }}"

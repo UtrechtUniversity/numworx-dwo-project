@@ -12,12 +12,6 @@
 		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
 	</properties>
   <dependencies>
-  	<dependency>
-  		<groupId>fi.wiskopdr</groupId>
-  		<artifactId>wiskopdr</artifactId>
-  		<version>0.3.0</version>
-  		<scope>provided</scope>
-  	</dependency>
 		<dependency>
     		<groupId>javax.activation</groupId>
     		<artifactId>activation</artifactId>
@@ -25,7 +19,30 @@
     		<optional>true</optional>
     		<scope>provided</scope>
 		</dependency>
-  </dependencies>
+  	<dependency>
+  		<groupId>org.c-book</groupId>
+  		<artifactId>cbookif</artifactId>
+  		<version>1.0.2</version>
+  		<scope>provided</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.13.1</version>
+  		<scope>test</scope>
+  	</dependency>
+		<dependency>
+			<groupId>nl.uu.fi.dwo</groupId>
+			<artifactId>DWO-commons-lib</artifactId>
+			<scope>provided</scope>
+		</dependency>
+  	<dependency>
+		<groupId>fi.wiskopdr.beans</groupId>
+		<artifactId>wiskopdrbeans</artifactId>
+		<version>1.0.3-SNAPSHOT</version>
+		<scope>provided</scope>
+  	</dependency>
+  	  </dependencies>
   <build>
   	<finalName>${project.artifactId}</finalName>
 		<plugins>
