@@ -97,9 +97,11 @@ public class Frontpage extends JPanel implements Printable {
 			Date stamp = null;
 				try {
 					SimpleDateFormat f = new SimpleDateFormat(RestyDateTimeFormat.RESTY_DATETIME_FORMAT);
-					stamp = f.parse(timestamp);
+					if (!timestamp.isEmpty())
+						stamp = f.parse(timestamp);
 				} catch(Exception oops) {
-					oops.printStackTrace();
+					//oops.printStackTrace();
+					System.err.println(oops);
 					stamp = null;
 				}
 			setDate(stamp);
