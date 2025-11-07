@@ -541,6 +541,7 @@ public class ScoDialog extends JDialog implements ActionListener, WindowListener
 				case ItemEvent.SELECTED:
 						sp.getSco().setUser(u,s);
 						userLabel.setText(u.getName());
+						System.out.println(u.getName());
 						//list.setSelectedValue(u, false);
 						int i = combo.getSelectedIndex()+1;
 						table.setRowSelectionInterval(i, i);
