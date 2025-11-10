@@ -106,7 +106,7 @@ public class CorrectieReview extends CorrectieFacade {
 	@Override
 	public Boolean isCorrect(Boolean correct) {
 		int score = iv.getScore();
-		int corr = lastcorr;
+		int corr = lastcorr == null ? 0 : lastcorr.intValue();  // can be null, not the same as nul
 		if (correctie != null) {
 			Object o = correctie.get();
 			if (o != null) {
