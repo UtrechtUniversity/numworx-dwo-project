@@ -18,6 +18,7 @@
         <url>http://www.uu.nl/onderzoek/freudenthal-instituut</url>
     </organization>
     <modules>
+		<module>MicroIndex</module>
 		<module>DWO</module>
 		<module>async-lib</module>
 		<module>eawt</module>

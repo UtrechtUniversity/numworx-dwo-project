@@ -774,7 +774,7 @@
 					<dependency>
 						<groupId>fi.microserver</groupId>
 						<artifactId>MicroIndex</artifactId>
-						<version>0.1.1</version>
+						<version>0.1.2-SNAPSHOT</version>
 					</dependency>
 				</dependencies>
 				<configuration>
@@ -822,7 +822,7 @@
         <http.port>80</http.port>
         <upload.servlet />
         <upload.servlet.mapping />
-        <OAuth2ClientVersion>2.5.44-SNAPSHOT</OAuth2ClientVersion>
+        <OAuth2ClientVersion>2.5.47-SNAPSHOT</OAuth2ClientVersion>
     	<aws.java.sdk.version>2.31.40</aws.java.sdk.version>
 	</properties>
 	<profiles>
@@ -906,7 +906,7 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>UploadWidgetGWT</artifactId>
-					<version>2.5.44</version>
+					<version>2.5.47-SNAPSHOT</version>
 					<classifier>classes</classifier>
 					</dependency>			
 				<dependency>
