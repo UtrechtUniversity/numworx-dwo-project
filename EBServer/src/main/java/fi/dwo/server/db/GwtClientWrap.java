@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
@@ -24,10 +22,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.tuckey.web.filters.urlrewrite.gzip.FilterServletOutputStream;
 
-import com.google.common.base.Charsets;
-
 import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
-import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
@@ -194,7 +189,7 @@ public class GwtClientWrap implements Filter {
 			
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.setCharacterEncoding("UTF-8");
-			byte[] utf8 = content.getBytes(Charsets.UTF_8);
+			byte[] utf8 = content.getBytes(StandardCharsets.UTF_8);
 			resp.setContentLength(utf8.length);
 			resp.getOutputStream().write(utf8);
 		}
