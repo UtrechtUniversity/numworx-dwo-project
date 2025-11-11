@@ -62,6 +62,6 @@ jobs:
             }]
       - run: cat /home/runner/.m2/settings.xml
       - name: Publish package
-        run: mvn --batch-mode --fail-at-end install -Pgithub -Pnojunittests -Djunit.test=true
+        run: mvn --batch-mode --fail-at-end install -Pgithub -Pnojunittests -Djunit.test=true -PDWO2player
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
