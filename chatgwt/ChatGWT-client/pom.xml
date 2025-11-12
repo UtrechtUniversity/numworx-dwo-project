@@ -90,7 +90,7 @@
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
-        	<artifactId>DWO-gwt-lib</artifactId>
+        	<artifactId>dwo-gwt-lib</artifactId>
         </dependency>
   </dependencies>
 
