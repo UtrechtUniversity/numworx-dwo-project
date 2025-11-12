@@ -3,13 +3,13 @@
 
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO</artifactId>
+        <artifactId>dwo</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
   		<version>2.5.47-SNAPSHOT</version>
     </parent>
 
     <!--<groupId>nl.uu.fi.dwo.gwt</groupId>-->
-    <artifactId>DWO-gwt-lib</artifactId>
+    <artifactId>dwo-gwt-lib</artifactId>
     <name>DWO gwt lib</name>
     
     <packaging>jar</packaging>
@@ -98,7 +98,7 @@
                     <runTarget>${project.artifactId}.html</runTarget>
                     <!--                    <warSourceDirectory>war</warSourceDirectory>        -->
                     <compileSourcesArtifacts> 
-                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:DWO-rest-lib</compileSourcesArtifact> 
+                        <compileSourcesArtifact>nl.uu.fi.dwo.rest:dwo-rest-lib</compileSourcesArtifact> 
                     </compileSourcesArtifacts> 
 
                     <i18nConstantsWithLookupBundles>
@@ -122,11 +122,11 @@
     <dependencies>
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
-            <artifactId>DWO-rest-lib</artifactId>
+            <artifactId>dwo-rest-lib</artifactId>
         </dependency>      
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
-            <artifactId>DWO-rest-lib</artifactId>
+            <artifactId>dwo-rest-lib</artifactId>
             <classifier>sources</classifier>
         </dependency>
         <dependency>

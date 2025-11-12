@@ -7,7 +7,7 @@
         <version>1.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>DWO</artifactId>
+    <artifactId>dwo</artifactId>
     <version>2.5.47-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
@@ -57,52 +57,52 @@
     <dependencyManagement>
     	<dependencies>
     		<dependency>
-    			<artifactId>DWO-rest-lib</artifactId>
+    			<artifactId>dwo-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
     			<version>2.5.47-SNAPSHOT</version>
     		</dependency>
     		<dependency>
-    			<artifactId>DWO-rest-lib</artifactId>
+    			<artifactId>dwo-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
     			<version>2.5.47-SNAPSHOT</version>
 			<classifier>sources</classifier>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo</groupId>
-    			<artifactId>DWO-commons-lib</artifactId>
+    			<artifactId>dwo-commons-lib</artifactId>
     			<version>2.5.47-SNAPSHOT</version>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<artifactId>DWO-jclient-lib</artifactId>
+    			<artifactId>dwo-jclient-lib</artifactId>
     			<version>2.5.47-SNAPSHOT</version>
     		</dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
-            <artifactId>DWO-gwt-lib</artifactId>
+            <artifactId>dwo-gwt-lib</artifactId>
             <version>2.5.47-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
-            <artifactId>DWO-gwt-lib</artifactId>
+            <artifactId>dwo-gwt-lib</artifactId>
             <version>2.5.47-SNAPSHOT</version>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
-        	<artifactId>DWOServer</artifactId>
+        	<artifactId>dwoserver</artifactId>
         	<version>2.5.47-SNAPSHOT</version>
         	<type>war</type>
         </dependency>
          <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
-        	<artifactId>DWOServer</artifactId>
+        	<artifactId>dwoserver</artifactId>
         	<version>2.5.47-SNAPSHOT</version>
         	<classifier>classes</classifier>
         </dependency>
          <dependency>
          	<groupId>nl.uu.fi.dwo</groupId>
-         	<artifactId>DWOJClient</artifactId>
+         	<artifactId>dwojclient</artifactId>
          	<version>2.5.47-SNAPSHOT</version>
          </dependency>
          <dependency>
@@ -122,19 +122,19 @@
 		</dependency>
 		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
-	  		<artifactId>DWOplayer</artifactId>
+	  		<artifactId>dwoplayer</artifactId>
 	  		<version>2.5.47-SNAPSHOT</version>
 	  		<classifier>classes</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
-	  		<artifactId>DWOplayer</artifactId>
+	  		<artifactId>dwoplayer</artifactId>
 	  		<version>2.5.47-SNAPSHOT</version>
 	  		<classifier>sources</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
-	  		<artifactId>DWOplayer</artifactId>
+	  		<artifactId>dwoplayer</artifactId>
 	  		<version>2.5.47-SNAPSHOT</version>
   			<type>war</type>
 		</dependency>

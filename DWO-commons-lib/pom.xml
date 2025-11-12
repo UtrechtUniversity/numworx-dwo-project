@@ -4,11 +4,11 @@
     <!-- Adjust artifact, name and description for new projects -->
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO</artifactId>
+        <artifactId>dwo</artifactId>
         <version>2.5.47-SNAPSHOT</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
-    <artifactId>DWO-commons-lib</artifactId>
+    <artifactId>dwo-commons-lib</artifactId>
     <packaging>jar</packaging>
     <name>${project.build.finalName}</name>
     <description>This is a java library of common classes between the DwoJAppplet and the DwoServer applications.</description>
@@ -113,15 +113,6 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
-                <configuration>
-                    <preparationGoals>clean verify install</preparationGoals>
-                    <tagBase>https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/DWO-LMS/DWO-commons-lib/tags/</tagBase>
-                </configuration>            
-            </plugin>            
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
@@ -133,7 +124,7 @@
     <dependencies>
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
-            <artifactId>DWO-rest-lib</artifactId>
+            <artifactId>dwo-rest-lib</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -220,7 +211,7 @@
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo.rest</groupId>
-        	<artifactId>DWO-jclient-lib</artifactId>
+        	<artifactId>dwo-jclient-lib</artifactId>
         	<scope>test</scope>
         </dependency>
         <dependency>

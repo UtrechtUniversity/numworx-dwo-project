@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
-		<artifactId>DWO</artifactId>
+		<artifactId>dwo</artifactId>
 		<version>2.5.47-SNAPSHOT</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
@@ -75,7 +75,7 @@
 					</dependency>
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
-    				<artifactId>DWOGwtClient</artifactId>
+    				<artifactId>dwogwtclient</artifactId>
 					<version>2.5.47-SNAPSHOT</version>
 					<classifier>classes</classifier>
 					<exclusions>
@@ -85,7 +85,7 @@
 						</exclusion>
 						<exclusion>
 							<groupId>nl.uu.fi.dwo</groupId>
-							<artifactId>DWO-gwt-lib</artifactId>
+							<artifactId>dwo-gwt-lib</artifactId>
 						</exclusion>
 						<exclusion>
 							<groupId>com.google.dagger</groupId>
@@ -113,7 +113,7 @@
 						</exclusion>
 						<exclusion>
 						    <groupId>nl.uu.fi.dwo.rest</groupId>
-    						<artifactId>DWO-rest-lib</artifactId>
+    						<artifactId>dwo-rest-lib</artifactId>
 						</exclusion>
 					</exclusions>
 				</dependency>
@@ -132,7 +132,7 @@
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
-			<artifactId>DWOServer</artifactId>
+			<artifactId>dwoServer</artifactId>
 			<classifier>classes</classifier>
 			<exclusions>
 				<exclusion>
@@ -170,7 +170,7 @@
 		</dependency>
 		<dependency>
 			<groupId>fi.servlet</groupId>
-			<artifactId>DWOmAccess</artifactId>
+			<artifactId>dwomaccess</artifactId>
 			<version>2.5.47-SNAPSHOT</version>
 			<classifier>classes</classifier>
 			<exclusions>
@@ -242,18 +242,18 @@
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
-			<artifactId>DWOJClient</artifactId>
+			<artifactId>dwojclient</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
-			<artifactId>DWO-apps</artifactId>
+			<artifactId>dwo-apps</artifactId>
 			<version>2.5.47-SNAPSHOT</version>
 			<scope>runtime</scope>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
-			<artifactId>DWO-apps</artifactId>
+			<artifactId>dwo-apps</artifactId>
 			<version>2.5.47-SNAPSHOT</version>
 			<classifier>classes</classifier>
 		</dependency>
@@ -266,13 +266,13 @@
 		</dependency>
 	<dependency>
 		<groupId>nl.uu.fi.dwo.mobile</groupId>
-		<artifactId>DWOplayer</artifactId>
+		<artifactId>dwoplayer</artifactId>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
-		<artifactId>DWOGwtClient</artifactId>
+		<artifactId>dwoGwtClient</artifactId>
 		<version>2.5.47-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
@@ -312,7 +312,7 @@
 	</dependency>
 	<dependency>
 		<groupId>fi.servlet</groupId>
-		<artifactId>DWOmAccess</artifactId>
+		<artifactId>dwomaccess</artifactId>
 		<version>2.5.47-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
@@ -438,14 +438,14 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
-									<artifactId>DWOJClient</artifactId>
+									<artifactId>dwojclient</artifactId>
 									<classifier>jar-with-dependencies</classifier>
 									<overWrite>true</overWrite>
 									<destFileName>dwo/DWOJApplet.jar</destFileName>
 								</artifactItem>
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
-									<artifactId>DWOJClient</artifactId>
+									<artifactId>dwojclient</artifactId>
 									<classifier>jar-with-dependencies</classifier>
 									<type>jar.pack.gz</type>
 									<overWrite>true</overWrite>
@@ -682,7 +682,7 @@
 					<overlays>
 						<overlay>
 							<groupId>fi.dwo</groupId>
-							<artifactId>DWO-apps</artifactId>
+							<artifactId>dwo-apps</artifactId>
 							<targetPath>/dwo/apps</targetPath>
 							<excludes>
 								<exclude>WEB-INF/**</exclude>
@@ -691,7 +691,7 @@
 						</overlay>
 						<overlay>
 							<groupId>nl.uu.fi.dwo.mobile</groupId>
-							<artifactId>DWOplayer</artifactId>
+							<artifactId>dwoplayer</artifactId>
 							<targetPath>/dwo/tablet</targetPath>		
 							<excludes>
 								<exclude>WEB-INF/**</exclude>
@@ -700,7 +700,7 @@
 						</overlay>
 						<overlay>
 							<groupId>nl.uu.fi.dwo.lms</groupId>
-							<artifactId>DWOGwtClient</artifactId>
+							<artifactId>dwogwtclient</artifactId>
 							<excludes>
 								<exclude>WEB-INF/**</exclude>
 								<exclude>META-INF/**</exclude>
@@ -729,7 +729,7 @@
 						</overlay>
 						<overlay>
 							<groupId>fi.servlet</groupId>
-							<artifactId>DWOmAccess</artifactId>
+							<artifactId>dwomaccess</artifactId>
 							<targetPath>/DWOmAccess</targetPath>
 							<excludes>
 								<exclude>WEB-INF/**</exclude>
