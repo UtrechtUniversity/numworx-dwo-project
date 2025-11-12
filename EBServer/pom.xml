@@ -7,7 +7,7 @@
 		<version>2.5.47-SNAPSHOT</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
-	<artifactId>EBServer</artifactId>
+	<artifactId>ebserver</artifactId>
 	<packaging>war</packaging>
 	<name>${project.build.finalName}</name>
 	<repositories>	
