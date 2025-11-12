@@ -132,7 +132,7 @@
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
-			<artifactId>dwoServer</artifactId>
+			<artifactId>dwoserver</artifactId>
 			<classifier>classes</classifier>
 			<exclusions>
 				<exclusion>
