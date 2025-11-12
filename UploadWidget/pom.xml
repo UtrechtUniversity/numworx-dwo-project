@@ -7,7 +7,7 @@
         <relativePath>../DWO</relativePath>
     </parent>
   <groupId>nl.numworx.uploadwidget</groupId>
-  <artifactId>UploadWidget-parent</artifactId>
+  <artifactId>uploadwidget-parent</artifactId>
   <packaging>pom</packaging>
   <name>UploadWidget parent</name>
   <modules>
@@ -26,19 +26,6 @@
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<maven.test.skip>true</maven.test.skip>
   </properties>
-	<distributionManagement>
-		<repository>
-			<id>release</id>
-			<url>https://repos.dwo.nl/artifactory/libs-release-local</url>
-		</repository>
-
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>libs-snapshot</name>
-			<url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

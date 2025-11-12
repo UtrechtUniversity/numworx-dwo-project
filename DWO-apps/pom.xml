@@ -61,19 +61,6 @@
 			</plugin>
 		</plugins>
 	</build>
-    <distributionManagement>
-	<repository>
-	   <id>release</id>
-	   <name>libs-release-local</name>
-	   <url>https://repos.dwo.nl/artifactory/libs-release-local</url>
-	</repository>
-	<snapshotRepository>
-	   <id>snapshots</id>
-	   <name>libs-snapshot-local</name>
-	   <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
-	</snapshotRepository>
-  </distributionManagement>
-
     <properties>
     	<maven.compiler.source>1.8</maven.compiler.source>
     	<maven.compiler.target>1.8</maven.compiler.target>

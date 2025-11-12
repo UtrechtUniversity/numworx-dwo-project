@@ -45,18 +45,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<distributionManagement>
-		<repository>
-			<id>release</id>
-			<url>https://repos.dwo.nl/artifactory/libs-release-local</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>libs-snapshot</name>
-			<url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-	</distributionManagement>
-	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/sci.velth101.numworx/async-lib/trunk</developerConnection>
-	</scm>
 </project>

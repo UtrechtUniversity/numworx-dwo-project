@@ -7,7 +7,7 @@
         <version>2.5.47-SNAPSHOT</version>
 	</parent>
 	<groupId>fi.writemathgwt</groupId>
-	<artifactId>WriteMathGWT</artifactId>
+	<artifactId>writemathgwt</artifactId>
 	<name>DWO WriteMath GWT</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,7 +16,7 @@
         <maven.test.skip>true</maven.test.skip>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <gwtVersion>2.9.0</gwtVersion>
+        <gwtVersion>2.10.0</gwtVersion>
         <gwt.compiler.skip>true</gwt.compiler.skip>
     </properties>
 	<dependencies>
