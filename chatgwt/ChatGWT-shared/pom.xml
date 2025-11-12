@@ -13,11 +13,11 @@
   <dependencies>
      <dependency>
         <groupId>nl.uu.fi.dwo.rest</groupId>    
-        <artifactId>DWO-rest-lib</artifactId>
+        <artifactId>dwo-rest-lib</artifactId>
      </dependency>
      <dependency>
         <groupId>nl.uu.fi.dwo.rest</groupId>    
-        <artifactId>DWO-rest-lib</artifactId>
+        <artifactId>dwo-rest-lib</artifactId>
         <classifier>sources</classifier>
      </dependency>
  </dependencies>

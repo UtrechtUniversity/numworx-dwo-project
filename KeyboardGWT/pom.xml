@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO</artifactId>
+        <artifactId>dwo</artifactId>
         <relativePath>../DWO</relativePath>
         <version>2.5.47-SNAPSHOT</version>
     </parent>

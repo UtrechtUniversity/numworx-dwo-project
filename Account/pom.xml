@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO</artifactId>
+        <artifactId>dwo</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
         <version>2.5.47-SNAPSHOT</version>
     </parent>
@@ -94,7 +94,7 @@
 <!--                    <webapps> 
                         <webapp> 
                             <groupId>nl.uu.fi.dwo</groupId>
-                            <artifactId>DWOServer</artifactId>
+                            <artifactId>dwoserver</artifactId>
                             <version>2.1.9</version>
                             <type>war</type>
                             <asWebapp>true</asWebapp> 
@@ -119,11 +119,11 @@
     <dependencies>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
-            <artifactId>DWO-gwt-lib</artifactId>
+            <artifactId>dwo-gwt-lib</artifactId>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
-            <artifactId>DWO-gwt-lib</artifactId>
+            <artifactId>dwo-gwt-lib</artifactId>
             <classifier>sources</classifier>
         </dependency>         
 

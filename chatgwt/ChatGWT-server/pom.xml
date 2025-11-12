@@ -35,7 +35,7 @@
 </dependency>
   	<dependency>
   		<groupId>nl.uu.fi.dwo.rest</groupId>
-  		<artifactId>DWO-jclient-lib</artifactId>
+  		<artifactId>dwo-jclient-lib</artifactId>
   		<scope>runtime</scope>
   	</dependency>
   </dependencies>

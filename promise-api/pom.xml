@@ -6,7 +6,7 @@
 	<version>0.0.2</version>
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO.master.pom</artifactId>
+        <artifactId>dwo.master.pom</artifactId>
         <version>1.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>

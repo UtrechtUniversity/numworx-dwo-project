@@ -9,7 +9,7 @@
   <name>nl.numworx.oauth2client.OAuth2Client</name>
   <parent>
 		<groupId>nl.uu.fi.dwo</groupId>
-		<artifactId>DWO</artifactId>
+		<artifactId>dwo</artifactId>
 		<relativePath>../DWO</relativePath>
 		<version>2.5.47-SNAPSHOT</version>
   </parent>
@@ -67,11 +67,11 @@
     </dependency>
       <dependency>
         <groupId>nl.uu.fi.dwo.rest</groupId>
-        <artifactId>DWO-jclient-lib</artifactId>
+        <artifactId>dwo-jclient-lib</artifactId>
       </dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
-			<artifactId>DWO-commons-lib</artifactId>
+			<artifactId>dwo-commons-lib</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.ws.xmlrpc</groupId>
@@ -85,7 +85,7 @@
 		</dependency>
 	<dependency>
 	    <groupId>fi.servlet</groupId>
-	    <artifactId>DWOmAccess</artifactId>
+	    <artifactId>dwomaccess</artifactId>
 	    <version>2.5.47-SNAPSHOT</version>
 	    <classifier>classes</classifier>	
 	</dependency>

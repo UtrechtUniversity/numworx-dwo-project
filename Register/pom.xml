@@ -32,12 +32,12 @@
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
-			<artifactId>DWO-gwt-lib</artifactId>
+			<artifactId>dwo-gwt-lib</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
-			<artifactId>DWO-gwt-lib</artifactId>
+			<artifactId>dwo-gwt-lib</artifactId>
 			<classifier>sources</classifier>
 			<scope>provided</scope>
 		</dependency>
@@ -62,7 +62,7 @@
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.rest</groupId>
-			<artifactId>DWO-jclient-lib</artifactId>
+			<artifactId>dwo-jclient-lib</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
@@ -86,7 +86,7 @@
 		</dependency>
          <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
-            <artifactId>DWO-commons-lib</artifactId>
+            <artifactId>dwo-commons-lib</artifactId>
             <exclusions>
             	<exclusion>
             		<groupId>javax.servlet</groupId>
@@ -257,7 +257,7 @@
 	</build>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
-		<artifactId>DWO</artifactId>
+		<artifactId>dwo</artifactId>
 		<relativePath>../DWO</relativePath>
 		<version>2.5.47-SNAPSHOT</version>
 	</parent>

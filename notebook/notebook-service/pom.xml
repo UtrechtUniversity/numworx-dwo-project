@@ -36,7 +36,7 @@
 
     <dependency>
     	<groupId>nl.uu.fi.dwo.rest</groupId>
-    	<artifactId>DWO-jclient-lib</artifactId>
+    	<artifactId>dwo-jclient-lib</artifactId>
     </dependency>
     <dependency>
     	<groupId>nl.numworx.notebook</groupId>
