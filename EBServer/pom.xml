@@ -109,7 +109,7 @@
 						</exclusion>
 						<exclusion>
 				        	<groupId>nl.uu.fi.dwo.lms</groupId>
-				        	<artifactId>DwoGwtClientHtmlUi</artifactId>							
+				        	<artifactId>dwogwtclienthtmlui</artifactId>							
 						</exclusion>
 						<exclusion>
 						    <groupId>nl.uu.fi.dwo.rest</groupId>
@@ -272,7 +272,7 @@
 	</dependency>
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
-		<artifactId>dwoGwtClient</artifactId>
+		<artifactId>dwogwtclient</artifactId>
 		<version>2.5.47-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
