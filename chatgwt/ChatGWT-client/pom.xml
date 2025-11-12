@@ -57,7 +57,7 @@
 	</dependency>
 	<dependency>
 		<groupId>nl.uu.fi.dwo.keyboard</groupId>
-		<artifactId>KeyboardGWT</artifactId>
+		<artifactId>keyboardgwt</artifactId>
 		<version>2.5.47-SNAPSHOT</version>	
 	</dependency>
         <dependency>

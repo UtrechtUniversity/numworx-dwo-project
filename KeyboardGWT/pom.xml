@@ -7,7 +7,7 @@
         <version>2.5.47-SNAPSHOT</version>
     </parent>
 	<groupId>nl.uu.fi.dwo.keyboard</groupId>
-	<artifactId>KeyboardGWT</artifactId>
+	<artifactId>keyboardgwt</artifactId>
 	<name>Keyboard</name>
 	<dependencies>
 		<dependency>
