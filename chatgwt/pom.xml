@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>nl.uu.fi.dwo.lms</groupId>
-  <artifactId>ChatGWT</artifactId>
+  <artifactId>chatgwt</artifactId>
   <packaging>pom</packaging>
 
   <properties>

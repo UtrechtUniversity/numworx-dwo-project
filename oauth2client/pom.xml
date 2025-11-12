@@ -4,7 +4,7 @@
   <!-- POM file generated with GWT webAppCreator -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.numworx.oauth2</groupId>
-  <artifactId>OAuth2Client</artifactId>
+  <artifactId>oauth2client</artifactId>
   <packaging>war</packaging>
   <name>nl.numworx.oauth2client.OAuth2Client</name>
   <parent>

@@ -61,7 +61,7 @@
        </dependency>
        <dependency>
        	<groupId>nl.numworx.oauth2</groupId>
-       	<artifactId>OAuth2Client</artifactId>
+       	<artifactId>oauth2client</artifactId>
        	<version>1.0.13</version>
        	<classifier>classes</classifier>
        </dependency>

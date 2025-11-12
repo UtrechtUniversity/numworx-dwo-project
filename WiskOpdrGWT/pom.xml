@@ -7,7 +7,7 @@
         <relativePath>../DWO/pom.xml</relativePath>
   </parent>
   <groupId>fi.wiskopdrgwt</groupId>
-  <artifactId>WiskOpdrGWT</artifactId>
+  <artifactId>wiskopdrgwt</artifactId>
   <name>WiskOpdrGWT</name>
   <properties>
   	<gwtVersion>2.8.2</gwtVersion>

@@ -101,7 +101,7 @@
 						</exclusion>
 						<exclusion>
 							<groupId>nl.uu.fi.dwo.lms</groupId>
-							<artifactId>ChatGWT-shared</artifactId>
+							<artifactId>chatgwt-shared</artifactId>
 						</exclusion>
 						<exclusion>
 							<groupId>nl.uu.fi.dwo.mobile</groupId>
@@ -259,7 +259,7 @@
 		</dependency>
 		<dependency>
 		     <groupId>nl.uu.fi.dwo.lms</groupId>
-             <artifactId>ChatGWT-server</artifactId>
+             <artifactId>chatgwt-server</artifactId>
              <version>2.5.27-SNAPSHOT</version>
              <type>war</type>
 			 <scope>runtime</scope>
@@ -279,7 +279,7 @@
 	</dependency>
 	<dependency>
 		<groupId>nl.uu.fi.dwo.register</groupId>
-		<artifactId>Register</artifactId>
+		<artifactId>register</artifactId>
 		<version>2.5.47-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
@@ -296,7 +296,7 @@
 	</dependency>
 	<dependency>
 		<groupId>nl.uu.fi.dwo.register</groupId>
-		<artifactId>Register</artifactId>
+		<artifactId>register</artifactId>
 		<version>2.5.47-SNAPSHOT</version>
 		<classifier>classes</classifier>
 		<exclusions>
@@ -325,7 +325,7 @@
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
-		<artifactId>OAuth2Client</artifactId>
+		<artifactId>oauth2client</artifactId>
 		<version>2.5.47-SNAPSHOT</version>
 		<classifier>classes</classifier>
 		<exclusions>
@@ -337,7 +337,7 @@
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
-		<artifactId>OAuth2Client</artifactId>
+		<artifactId>oauth2client</artifactId>
 		<version>2.5.47-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
@@ -720,7 +720,7 @@
 						</overlay>
 						<overlay>
 							<groupId>nl.uu.fi.dwo.register</groupId>
-							<artifactId>Register</artifactId>
+							<artifactId>register</artifactId>
 							<targetPath>/dwo/register</targetPath>
 							<excludes>
 								<exclude>WEB-INF/**</exclude>
@@ -738,7 +738,7 @@
 						</overlay>
 						<overlay>
 							<groupId>nl.numworx.oauth2</groupId>
-							<artifactId>OAuth2Client</artifactId>
+							<artifactId>oauth2client</artifactId>
 							<targetPath>/dwo/oauth2client</targetPath>
 							<excludes>
 								<exclude>WEB-INF/**</exclude>
@@ -747,7 +747,7 @@
 						</overlay>
 						<overlay>
 						     <groupId>nl.uu.fi.dwo.lms</groupId>
-             				 <artifactId>ChatGWT-server</artifactId>
+             				 <artifactId>chatgwt-server</artifactId>
 							<targetPath>/gwtclient/chatbox</targetPath>
 							<excludes>
 								<exclude>WEB-INF/**</exclude>

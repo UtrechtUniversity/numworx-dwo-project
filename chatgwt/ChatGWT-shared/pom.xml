@@ -4,11 +4,11 @@
 
   <parent>
     <groupId>nl.uu.fi.dwo.lms</groupId>
-    <artifactId>ChatGWT</artifactId>
+    <artifactId>chatgwt</artifactId>
     <version>2.5.27-SNAPSHOT</version>
   </parent>
 
-  <artifactId>ChatGWT-shared</artifactId>
+  <artifactId>chatgwt-shared</artifactId>
 
   <dependencies>
      <dependency>

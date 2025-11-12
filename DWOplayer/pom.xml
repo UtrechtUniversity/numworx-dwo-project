@@ -194,7 +194,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>fi.wiskopdrgwt</groupId>
-					<artifactId>WiskOpdrGWT</artifactId>
+					<artifactId>wiskopdrgwt</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -219,7 +219,7 @@
 
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
-			<artifactId>Account</artifactId>
+			<artifactId>account</artifactId>
 			<version>2.5.47-SNAPSHOT</version>
 			<classifier>classes</classifier>
 			<exclusions>
@@ -231,7 +231,7 @@
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.account</groupId>
-			<artifactId>Account</artifactId>
+			<artifactId>account</artifactId>
 			<version>2.5.47-SNAPSHOT</version>
 			<classifier>sources</classifier>
 		</dependency>
@@ -609,13 +609,13 @@
 			<dependencies>
 				<dependency>
 				    <groupId>nl.numworx.notebook</groupId>
-		    		<artifactId>NotebookGWT</artifactId>
+		    		<artifactId>notebookgwt</artifactId>
 		    		<version>0.0.1</version>
 		    		<classifier>classes</classifier>		
 				</dependency>
 				<dependency>
 				    <groupId>nl.numworx.notebook</groupId>
-		    		<artifactId>NotebookGWT</artifactId>
+		    		<artifactId>notebookgwt</artifactId>
 		    		<version>0.0.1</version>
 		    		<classifier>sources</classifier>		
 				</dependency>

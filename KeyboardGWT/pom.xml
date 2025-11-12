@@ -38,7 +38,7 @@
 		</dependency>
 		<dependency>
 			<groupId>fi.wiskopdrgwt</groupId>
-			<artifactId>WiskOpdrGWT</artifactId>
+			<artifactId>wiskopdrgwt</artifactId>
 			<version>0.0.8-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
