@@ -29,17 +29,17 @@
 
     <!-- automagically use snapshot/release -->
     <distributionManagement>
+	    <repository>
+	      <id>github</id>
+	      <name>GitHub Packages</name>
+	      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-project</url>
+	    </repository>
         <snapshotRepository>
-            <id>snapshots</id>
-            <name>libs-snapshot</name>
-            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
+          <id>github</id>
+          <name>GitHub Packages</name>
+          <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-project</url>
         </snapshotRepository>
-        <repository>
-            <id>release</id>
-            <name>libs-release</name>
-            <url>https://repos.dwo.nl/artifactory/libs-release-local</url>    
-        </repository>
-    </distributionManagement>    
+    </distributionManagement>
             
     <repositories>
     </repositories>
