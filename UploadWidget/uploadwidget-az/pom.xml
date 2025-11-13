@@ -47,7 +47,7 @@
 	</dependency>
 	<dependency>
 		<groupId>nl.numworx.uploadwidget</groupId>
-		<artifactId>UploadWidgetGWT</artifactId>
+		<artifactId>uploadwidgetgwt</artifactId>
 		<version>${project.version}</version>
 		<classifier>classes</classifier>
 		<exclusions>

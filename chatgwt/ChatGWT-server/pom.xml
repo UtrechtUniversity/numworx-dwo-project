@@ -83,7 +83,7 @@
       <dependencies>
         <dependency>
           <groupId>${project.groupId}</groupId>
-          <artifactId>ChatGWT-client</artifactId>
+          <artifactId>chatgwt-client</artifactId>
           <version>${project.version}</version>
           <type>war</type>
           <scope>runtime</scope>
