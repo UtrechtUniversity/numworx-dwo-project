@@ -773,7 +773,7 @@
 				<dependencies>
 					<dependency>
 						<groupId>fi.microserver</groupId>
-						<artifactId>MicroIndex</artifactId>
+						<artifactId>microindex</artifactId>
 						<version>0.1.2-SNAPSHOT</version>
 					</dependency>
 				</dependencies>
@@ -905,7 +905,7 @@
 			<dependencies>
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
-					<artifactId>UploadWidgetGWT</artifactId>
+					<artifactId>uploadwidgetgwt</artifactId>
 					<version>2.5.47-SNAPSHOT</version>
 					<classifier>classes</classifier>
 					</dependency>			
@@ -978,8 +978,7 @@
 				<dependency>
     				<groupId>nl.uu.fi.dwo.rest</groupId>
 					<artifactId>redis-config</artifactId>
-					<version>2.5.37</version>
-					<scope>test</scope>
+					<version>2.5.47-SNAPSHOT</version>
 				</dependency>
 				<dependency>
 					<groupId>org.redisson</groupId>
@@ -1009,7 +1008,7 @@
 							<dependency>
 			    				<groupId>nl.uu.fi.dwo.rest</groupId>
 								<artifactId>redis-config</artifactId>
-								<version>2.5.37</version>
+								<version>2.5.47-SNAPSHOT</version>
 							</dependency>
 						</dependencies>
 					</plugin>

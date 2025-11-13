@@ -18,6 +18,7 @@ Apart from many libraries from the maven java repository. The following github p
  * numworx-vendor-geogebra
  * numworx-vendor-cbook
  * numworx-vendor-jxbrowser
+ * numworx-vendor-oauth
  * numworx-dwo-openmath
  * numworx-dwo-gwtclienthtmlui
  
