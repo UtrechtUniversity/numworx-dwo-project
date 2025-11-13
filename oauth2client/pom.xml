@@ -312,11 +312,4 @@
             </plugin>            
     </plugins>
   </build>
-   	<repositories>	<!-- als de mirror uit staat -->
-		<repository>
-		  <id>repos</id>
-		  <url>https://repos.dwo.nl/artifactory/repos</url>
-		</repository>
-	</repositories>
-
 </project>
