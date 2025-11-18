@@ -39,9 +39,16 @@
           <name>GitHub Packages</name>
           <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-project</url>
         </snapshotRepository>
-    </distributionManagement>
-            
+    </distributionManagement>           
     <repositories>
+ 	    <repository>
+	      <id>numworx-dwo-project</id>
+	      <name>GitHub Packages</name>
+	      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-project</url>
+	      <snapshots>
+			  <enabled>true</enabled>
+		  </snapshots>
+	    </repository>		
     </repositories>
     <pluginRepositories>
     </pluginRepositories>    
