@@ -41,6 +41,13 @@
 			  <enabled>true</enabled>
 		  </snapshots>
 	    </repository>		
+ 	    <repository>
+	      <id>numworx-dwo-openmath</id>
+	      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-openmath</url>
+	      <snapshots>
+			  <enabled>true</enabled>
+		  </snapshots>
+	    </repository>		
 	</repositories>
   <dependencyManagement>
     <dependencies>
@@ -375,6 +382,13 @@
 			<version>2.5.47-SNAPSHOT</version>
 			<classifier>classes</classifier>
 		</dependency>
+		<dependency>
+			<groupId>nl.numworx.xapi</groupId>
+			<artifactId>xapiserver</artifactId>
+  			<version>0.0.1-SNAPSHOT</version>
+			<scope>runtime</scope>
+			<type>war</type>
+		</dependency>
 <!-- AWS SDK same version -->
 <dependency>
     <groupId>software.amazon.awssdk</groupId>
@@ -541,7 +555,7 @@
  							<UU_INDEX />
  							<ENV_NOSEB>true</ENV_NOSEB>
  							<ENV_IPRANGE>127.0.0.1,::1</ENV_IPRANGE>
-                    		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>
+<!--                    		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>-->
                     		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>
                     		<DWO_REDIRECT>false</DWO_REDIRECT>               
                         </systemProperties>

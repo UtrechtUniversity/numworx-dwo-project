@@ -387,7 +387,7 @@
 						<CDNURL>http://localhost:8082</CDNURL>
                     	<DWO_ENV>testkiosk</DWO_ENV>
                     	<ALLOW_ORIGIN>http://localhost:8080</ALLOW_ORIGIN>
-                    	<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>
+<!--                    	<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>-->
                     	<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>               
                     	<AZ_ENDPOINT>http://127.0.0.1:10000/devstoreaccount1/</AZ_ENDPOINT>
                     	<AZ_SHAREDKEY>Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==</AZ_SHAREDKEY>
@@ -408,7 +408,7 @@
                         <webapp>
                             <groupId>fi.dwo</groupId>
                             <artifactId>dwo-apps</artifactId> 
-                            <version>2.5.36</version> 
+                            <version>${project.version}</version> 
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>/dwo/apps</contextPath>
@@ -440,11 +440,18 @@
                          <webapp>
 						    <groupId>nl.numworx.uploadwidget</groupId>
 						    <artifactId>uploadwidget-local</artifactId>
-						    <version>2.5.47-SNAPSHOT</version>
+						    <version>${project.version}</version>
                             <type>war</type>
                             <contextPath>/dwo/dav/upload</contextPath>
                             <asWebapp>true</asWebapp>
                          </webapp>
+                         <webapp>
+						    <groupId>nl.numworx.xapi</groupId>
+						    <artifactId>xapiserver</artifactId>
+  							<version>0.0.1-SNAPSHOT</version>
+							<contextPath>/data/xAPI</contextPath>
+							<asWebapp>true</asWebapp>
+						 </webapp>
                     </webapps>                         
                 </configuration> 
                 <dependencies>
