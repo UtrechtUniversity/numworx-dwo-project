@@ -19,6 +19,7 @@
     </organization>
     <modules>
 		<module>MicroIndex</module>
+		<module>xapiserver</module>
 		<module>DWO</module>
 		<module>async-lib</module>
 		<module>eawt</module>
