@@ -280,7 +280,7 @@
                      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-openmath</url>
                   </repository>
                   <repository>
-					  <id>vaadin</id>
+					  <id>vaadin-addons</id>
 					  <url>https://maven.vaadin.com/vaadin-addons/</url>
 				  </repository>
 		</repositories>
@@ -288,14 +288,10 @@
 	<profile>
 		<id>repos</id>
 		<repositories>	<!-- als de mirror uit staat -->
-			<repository>
-			  <id>repos</id>
-			  <url>https://repos.dwo.nl/artifactory/repos</url>
-			</repository>
-                        <repository>
-                           <id>vaadin</id>
-                           <url>https://maven.vaadin.com/vaadin-addons/</url>
-                         </repository>
+           <repository>
+             <id>vaadin-addons</id>
+             <url>https://maven.vaadin.com/vaadin-addons/</url>
+           </repository>
         <repository>
           <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-vendor-jxbrowser</url>
           <id>numworx-vendor-jxbrowser</id>

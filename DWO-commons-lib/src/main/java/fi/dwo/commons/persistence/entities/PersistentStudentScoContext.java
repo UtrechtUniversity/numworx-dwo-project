@@ -70,15 +70,6 @@ public class PersistentStudentScoContext implements Serializable {
     @Column(name = "scoID", nullable = false)
     private Long scoID;
     protected PersistentHasRolePK persistentHasRolePK;
-//   @Basic(optional = false)
-//    @NotNull
-//    @Column(name = "userID", nullable = false)
-//    private Long userID;
-//    @Basic(optional = false)
-//    @NotNull
-//    @Column(name = "schoolGroupID", nullable = false)
-//    private Long schoolGroupID;
-//    @Basic(optional = false)
     @NotNull
     @Column(name = "createDate", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -109,9 +100,7 @@ public class PersistentStudentScoContext implements Serializable {
     private DelState delState = DelState.not;
     
     
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public void changeTimestamp() {
     	lastChangeTimeStamp = System.currentTimeMillis();
     }
 
@@ -121,15 +110,6 @@ public class PersistentStudentScoContext implements Serializable {
     public PersistentStudentScoContext(Long studentSco) {
         this.studentSco = studentSco;
     }
-
-//    incomplete    
-//    public PersistentStudentScoContext(Long studentSco, Long scoID, PersistentHasRolePK hasRoleKey, Date createDate, float score) {
-//        this.studentSco = studentSco;
-//        this.scoID = scoID;
-//        this.persistentHasRolePK = hasRoleKey;
-//        this.createDate = createDate;
-//        this.score = score;
-//    }
 
     public String getTotalTime() {
         return totalTime;

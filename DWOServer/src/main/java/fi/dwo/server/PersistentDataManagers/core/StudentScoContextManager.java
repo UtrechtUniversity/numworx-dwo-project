@@ -50,7 +50,30 @@ public class StudentScoContextManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            em.persist(studentOf);
+            // uniqueness constraint: scoid + userid + sgid, not in database!      
+            PersistentHasRolePK userkey = studentOf.getPersistentHasRolePK();
+            Long scokey = studentOf.getScoID();
+            TypedQuery<PersistentStudentScoContext> q = em.createNamedQuery("PersistentStudentScoContext.findByScoIDandHasRolePK", PersistentStudentScoContext.class);
+            q.setParameter("scoID", scokey);
+            q.setParameter("keyID", userkey);
+            List<PersistentStudentScoContext> list = q.getResultList();
+            if (list.isEmpty()) {
+            	studentOf.changeTimestamp();
+            	em.persist(studentOf);
+        	} else {
+        		PersistentStudentScoContext i = list.get(0);
+        		studentOf.setClassID(i.getClassID());
+        		studentOf.setCompletionStatus(i.getCompletionStatus());
+        		studentOf.setCreateDate(i.getCreateDate());
+        		studentOf.setCreateTime(i.getCreateTime());
+        		studentOf.setLastChangeTimeStamp(i.getLastChangeTimeStamp());
+        		studentOf.setLocation(i.getLocation());
+        		studentOf.setOptlock(i.getOptlock());
+        		studentOf.setScore(i.getScore());
+        		studentOf.setSessionTime(i.getSessionTime());
+        		studentOf.setStudentSco(i.getStudentSco());
+        		studentOf.setTotalTime(i.getTotalTime());
+        	}
             em.getTransaction().commit();
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentStudentScoContext.", e);
@@ -74,6 +97,7 @@ public class StudentScoContextManager {
             em = getEntityManager();
             em.getTransaction().begin();
             studentOf = em.merge(studentOf);
+            studentOf.changeTimestamp();
             em.getTransaction().commit();
             return studentOf;
         } catch(PersistenceException e) { 
