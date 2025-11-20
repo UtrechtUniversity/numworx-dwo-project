@@ -662,7 +662,7 @@ class TeacherBuilder implements TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U
 	  PersistentSchoolGroup studentgroup = SchoolGroupManager.findBySchoolAndRole(school, RoleType.STUDENT);
 	  URL url = null;
     try {
-      url = new URL("https://repos.dwo.nl/");
+      url = info.getBaseUri().toURL();
     } catch (MalformedURLException e1) {
     }
     XapiResultsManager xapi = new XapiResultsManager(getLRS(info), url);
