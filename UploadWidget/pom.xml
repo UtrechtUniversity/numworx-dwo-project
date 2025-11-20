@@ -12,9 +12,7 @@
   <name>UploadWidget parent</name>
   <modules>
   	<module>uploadwidget-common</module>
-<!--  	<module>uploadwidget</module>-->
   	<module>UploadWidgetGWT</module>
-<!--  	<module>UploadWidgetRM</module>-->
   	<module>uploadwidget-az</module>
   	<module>uploadwidget-s3</module>
   	<module>uploadwidget-local</module>
@@ -33,17 +31,12 @@
 				<artifactId>uploadwidget-common</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-                        <dependency>
-                                <groupId>nl.numworx.uploadwidget</groupId>
-                                <artifactId>uploadwidget-common</artifactId>
+            <dependency>
+                <groupId>nl.numworx.uploadwidget</groupId>
+                <artifactId>uploadwidget-common</artifactId>
 				<classifier>sources</classifier>
-                                <version>${project.version}</version>
-                        </dependency>
-			<dependency>
-				<groupId>nl.numworx.uploadwidget</groupId>
-				<artifactId>uploadwidgetrm</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+                <version>${project.version}</version>
+            </dependency>
 			<dependency>
 				<groupId>nl.numworx.uploadwidget</groupId>
 				<artifactId>uploadwidget-s3</artifactId>
