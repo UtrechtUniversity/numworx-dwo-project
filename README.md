@@ -14,7 +14,7 @@ context.
 
 ## Prerequisites
 
-Apart from many libraries from the maven java repository. The following github projects deliver imported artifacts
+Apart from many libraries from the maven java central repository, the following github projects deliver imported artifacts
  * numworx-vendor-geogebra
  * numworx-vendor-cbook
  * numworx-vendor-jxbrowser
@@ -39,10 +39,22 @@ required to open them.
 
 ## Usage
 
-Provide clear and concise instructions on how to use your code.
-Include examples of how to execute the code and describe the expected
-output. If your work consists of multiple execution steps, provide
-detailed step-by-step instructions. 
+The main artifact of this project is the EBServer war which can run in a Servlet/JSP container like Tomcat 9.0.
+Several external services are needed.
+* a MySQL database server, version 8.0 or compatible. Postgres is also possible.
+* a redis compatible server. Used for session caching. Maven profile `-Predis-jcache`
+* a xmpp chat server, like prosody, configured with the EBServer as the oidc provider.
+* a JupiterHub server to run notebooks inside the web application, e.g. the TLJH, also with EBServer as oidc provider
+* a content delivery server, like the one that is build in the numworx-dwo-resources project.
+* a SMTP server to send 'password forgotten' mails to.
+* an AWS S3, or compatible, or an Azure file store. Maven profile `-Pupload`
+
+### Configuration
+The EBServer war can be configured with lots of properties:
+* `ALLOW_ORIGIN` the url of the Servlet/JSP container, like https://app.dwo.nl
+* `DWO_ELB` IPv4 prefix for a Loadbalancer. e.g. 172.31.
+* `DWO_ENV` app or test?
+* `DWO_REDIRECT` should http redirect to https? Some loadbalancers do that already.
 
 ## License
 
