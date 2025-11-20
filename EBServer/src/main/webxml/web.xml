@@ -421,19 +421,6 @@
  		<param-value>noreply@numworx.nl</param-value>
   	</init-param>
 	</servlet>
-
-<!--   <servlet> -->
-<!--     <servlet-name>xapi</servlet-name> -->
-<!--     <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class> -->
-<!--     <init-param> -->
-<!--       <param-name>targetUri</param-name> -->
-<!--       <param-value>https://repos.dwo.nl/data/xAPI</param-value> -->
-<!--     </init-param> -->
-<!--     <init-param> -->
-<!--       <param-name>log</param-name> -->
-<!--       <param-value>true</param-value> -->
-<!--     </init-param> -->
-<!-- </servlet> -->
   <servlet>
     <servlet-name>oauth2</servlet-name>
     <servlet-class>nl.numworx.oauth2client.server.OAuth2Server</servlet-class>
@@ -607,10 +594,6 @@ ${upload.servlet.mapping}
 		<servlet-name>update-contact</servlet-name>
 		<url-pattern>/dwo/register/update-contact</url-pattern>
 	</servlet-mapping>
-<!--    <servlet-mapping>-->
-<!--   	  <servlet-name>xapi</servlet-name>-->
-<!--   	  <url-pattern>/data/xAPI/*</url-pattern>-->
-<!--   </servlet-mapping>-->
   <servlet-mapping>
     <servlet-name>oauth2</servlet-name>
     <url-pattern>/dwo/saml/login</url-pattern>
