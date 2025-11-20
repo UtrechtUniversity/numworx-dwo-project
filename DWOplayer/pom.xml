@@ -238,7 +238,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo.ideas</groupId>
 			<artifactId>ideasgwt</artifactId>
-			<version>0.1.9-SNAPSHOT</version>
+			<version>0.1.9</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
