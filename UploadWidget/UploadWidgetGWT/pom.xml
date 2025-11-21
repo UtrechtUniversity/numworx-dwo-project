@@ -163,6 +163,8 @@
 				<configuration>
 					<attachClasses>true</attachClasses>
                     <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+        			<packagingIncludes>*.css,*GWT/**,WEB-INF/**</packagingIncludes>
+        			<packagingExcludes>*.html</packagingExcludes>
 				</configuration>
 			</plugin>
     </plugins>
