@@ -33,7 +33,7 @@
         <maven.test.skip>true</maven.test.skip>
         <context.xml>context-dwo_devel.xml</context.xml>
         <copy.ui.skip>true</copy.ui.skip>
-        <registerVersion>2.5.2</registerVersion>
+        <registerVersion>2.5.47-SNAPSHOT</registerVersion>
         <gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclient</gwtModule>
         <smModule>nl.uu.fi.dwo.lms.gwtclient.smclient</smModule>
         <local.dwo>/dwo</local.dwo>
@@ -148,7 +148,7 @@
         <dependency>
         	<groupId>nl.uu.fi.dwo.lms</groupId>
         	<artifactId>dwogwtclienthtmlui</artifactId>
-        	<version>2.5.47</version>
+        	<version>2.5.47p1-SNAPSHOT</version>
         	<scope>runtime</scope>
         	<type>war</type>
         </dependency>
@@ -431,8 +431,8 @@
                         </webapp>
                         <webapp>
                           <groupId>fi.servlet</groupId>
-  						  <artifactId>ideas</artifactId>
- 						  <version>0.0.12</version>
+  						  <artifactId>ideas-war</artifactId>
+ 						  <version>0.0.16</version>
                           <type>war</type>
                           <contextPath>/ideas</contextPath>
                           <asWebapp>true</asWebapp>              
@@ -582,7 +582,7 @@
 				<dependency>
     				<groupId>nl.uu.fi.dwo.rest</groupId>
 					<artifactId>redis-config</artifactId>
-					<version>2.5.37</version>
+					<version>2.5.47-SNAPSHOT</version>
 				</dependency>
                 </dependencies>
             </plugin>            

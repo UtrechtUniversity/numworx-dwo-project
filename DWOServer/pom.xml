@@ -345,8 +345,8 @@
                     		<DWO_REDIRECT>false</DWO_REDIRECT>
                     		<ALLOW_ORIGIN>http://localhost:8080</ALLOW_ORIGIN>
                     		<ENV_NOSEB>true</ENV_NOSEB>                   
-                    		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>
-                    		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>
+<!--                    		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>-->
+<!--                    		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>-->
                     		<AZ_ENDPOINT>http://127.0.0.1:10000/devstoreaccount1/</AZ_ENDPOINT>
                     		<AZ_SHAREDKEY>Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==</AZ_SHAREDKEY>
                     		<S3_BUCKET>devstoreaccount1</S3_BUCKET>      
@@ -358,7 +358,7 @@
                          <webapp>
 						    <groupId>nl.numworx.uploadwidget</groupId>
 						    <artifactId>uploadwidget-local</artifactId>
-						    <version>2.5.42</version>
+						    <version>2.5.47-SNAPSHOT</version>
                             <type>war</type>
                             <contextPath>/dwo/dav/upload</contextPath>
                             <asWebapp>true</asWebapp>

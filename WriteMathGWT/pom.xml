@@ -68,10 +68,4 @@
 		<sourceDirectory>src</sourceDirectory>
 	</build>
 	<description>Recognize handwritten mathematics.</description>
-	<repositories>
-		<repository>
-			<id>vaadin-addons</id>
-			<url>http://vaadin.com/nexus/content/repositories/vaadin-addons/</url>
-		</repository>
-	</repositories>
 </project>
