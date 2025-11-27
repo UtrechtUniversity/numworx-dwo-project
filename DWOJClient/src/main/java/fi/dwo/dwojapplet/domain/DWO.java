@@ -161,6 +161,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     private static DomDwoProfileFull dwoProfile;
 
     private static int dwoProfileID;
+    private static String dwoProfileKey;
 
     private String userName;
 
@@ -422,7 +423,8 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      */
     public DWO() {
         nestedWait = 0;
-        dwoProfileID = 1;
+        dwoProfileID = -1;
+        dwoProfileKey = "VO";
     }
 
     /**
@@ -440,35 +442,13 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
      * @param args
      */
     public DWO(String[] args) {
-
-        nestedWait = 0;
-        dwoProfileID = 1;
+        this();
         int o = 0;
 
         while (args != null && args.length > 1 + o
                 && args[0].length() > 1
                 && '-' == args[o].charAt(0)
                 && "rlsxtbR".indexOf(args[0].charAt(1)) >= 0) {
-//            if ("-b".equals(args[o])) {
-//                Sco.setDefaultLessonMode(Sco.BROWSE);
-//                o += 1;
-//            }
-//
-//            // allow update van SERVLET
-//            if ("-s".equals(args[o])) {
-//                DwoHelper.setServerUrlPath(args[1 + o]);
-//                o += 2;
-//            }
-//            // initialize applicationBase
-//            if (args.length > 1 + o && "-r".equals(args[o])) {
-//                try {
-//                    DwoHelper.applicationBase = new URL(args[o + 1]);
-//                }
-//                catch (MalformedURLException e) {
-//                    System.err.println("-r option: " + e);
-//                }
-//                o += 2;
-//            }
             // allow definitie van Locale.
             if (args.length > 1 + o && "-l".equals(args[o])) {
                 languageOveride = args[o + 1];
@@ -489,20 +469,10 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         }
         if (args != null && args.length > o && args[o] != null) {
             try {
+            	dwoProfileKey = args[0];
                 dwoProfileID = Integer.parseInt(args[o]);
             } catch (NumberFormatException e) {
             }
-//            if (args.length > 2 + o && args[1 + o] != null && args[2 + o] != null) {
-//                limitedSchoolAccessString = args[1 + o];
-//                schoolAccessPropertiesString = args[2 + o];
-//                o += 2;
-//            }
-//            if (args.length > 2 + o && args[1 + o] != null && args[2 + o] != null) {
-//                userName = args[1 + o];
-//                passWord = args[2 + o];
-//                o += 2;
-//            }
-
         }
     }
 
@@ -900,23 +870,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
     public User getUser() {
         return DwoHelper.getCurrentFacadeUser();
     }
-
-//    private Course[] selectDwoProfileCourses(Course[] completeList) {
-//        if (completeList == null) {
-//            return null;
-//        }
-//        Vector v = new Vector();
-//        for (Course completeList1 : completeList) {
-//            if (completeList1.getDwoProfile() == dwoProfileID) {
-//                v.addElement(completeList1);
-//            }
-//        }
-//        Course[] selectedCourses = new Course[v.size()];
-//        for (int i = 0; i < selectedCourses.length; i++) {
-//            selectedCourses[i] = (Course) v.elementAt(i);
-//        }
-//        return selectedCourses;
-//    }
 
     /**
      * Returns all the courses available for the user. If some courses are
@@ -1581,7 +1534,16 @@ LOG.info("time results = " + (-t) + " ms");
         
         try {
             if (dwoProfile==null)
-            	dwoProfile = PublicProfileManager.get(dwoProfileID);
+            {
+            	if (dwoProfileID > 0)
+            		dwoProfile = PublicProfileManager.get(dwoProfileID);
+            	else
+            		dwoProfile = PublicProfileManager.get(dwoProfileKey);
+            }
+            dwoProfileID = MySQLPersistenceId.getNativeId(dwoProfile).intValue();
+            dwoProfileKey = dwoProfile.getDwoProfileName();
+            if (languageOveride == null) 
+            	languageOveride = dwoProfile.getLanguage();
     		DwoHelper.setProfileRights(dwoProfile.getDwoProfileRights());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, TextMapper.getText(TextMapper.DLG_SERVER_OUT), e.getMessage(), JOptionPane.ERROR_MESSAGE);
@@ -2880,6 +2842,7 @@ LOG.info("time results = " + (-t) + " ms");
         String old = dwoProfile.getDwoProfileName();
         dwoProfile = PublicProfileManager.get(p);
         dwoProfileID = p;
+        dwoProfileKey = dwoProfile.getDwoProfileName();
         firePropertyChange("profile", old, dwoProfile.getDwoProfileName());
         old = getLocale().getLanguage();
         Locale locale = Locale.forLanguageTag(lang);

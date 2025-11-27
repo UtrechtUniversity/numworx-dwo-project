@@ -192,21 +192,24 @@ public class NumworxInfo extends JLabel implements ActionListener {
     toLanguage(item);
   }
 
+  private boolean toLanguage(DomDwoProfileFull profile) {
+	  String lang = profile.getLanguage();
+	  if (lang != null) this.lang.setSelectedItem(lang);
+	  return lang != null;
+  }
+  
   private void toLanguage(String item) {
+	    try {
+	        DomDwoProfileFull dwo = PublicProfileManager.get(item);
+	        if (toLanguage(dwo))
+	        	return;
+	      } catch (Dwo2Exception e) {
+	      }
+// oldschool
     if("99".equals(item))    lang.setSelectedItem("nl");
     else if("77".equals(item)) lang.setSelectedItem("nl");
     else if("92".equals(item)) lang.setSelectedItem("en");
     else if("100".equals(item)) lang.setSelectedItem("en");
-// fetch from server.
-//    else try {
-//              DomDwoProfileFull dwo = PublicProfileManager.get(item);
-//
-//      Object o = u.openConnection().getContent(new Class[] { String.class } );
-//      System.out.println(o);
-//      String s = o.toString();
-//    } catch(Exception e) {
-//      
-//    }
   }
 
   public String getDwoProfile() {
