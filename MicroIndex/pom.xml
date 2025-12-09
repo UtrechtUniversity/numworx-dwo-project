@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fi.microserver</groupId>
   <artifactId>microindex</artifactId>
-  <version>0.1.2-SNAPSHOT</version>
+  <version>2.5.47-SNAPSHOT</version>
   <dependencies>
 		<dependency>
     		<groupId>biz.aQute.bnd</groupId>

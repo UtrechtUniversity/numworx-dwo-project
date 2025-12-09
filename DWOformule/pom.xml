@@ -73,7 +73,7 @@
 		<dependency>
 			<groupId>fi.wiskopdrgwt</groupId>
 			<artifactId>wiskopdrgwt</artifactId>
-			<version>0.0.8-SNAPSHOT</version>
+			<version>2.5.47-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>IdeasGWT</artifactId>
