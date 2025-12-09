@@ -8,6 +8,7 @@ enum ScormKey {
 	SCORE,
 	LOCATION,
 	COMPLETION_STATUS,
+	COMPLETION_TIMESTAMP,
 	TOTAL_TIME,
 	TOTAL_TIME2004,
 	SCORE_WIDGET,
@@ -37,6 +38,7 @@ enum ScormKey {
     	keys.put("cmi.suspend_digest", SUSPEND_DIGEST);
     	keys.put("cocd", XML);
     	keys.put("dme.student_model", STUDENT_MODEL);
+    	keys.put("cmi.comments_from_lms.0.timestamp", COMPLETION_TIMESTAMP);
 // MORE to go    	
     }
     

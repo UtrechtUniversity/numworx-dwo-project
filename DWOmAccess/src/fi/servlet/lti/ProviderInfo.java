@@ -2,14 +2,18 @@ package fi.servlet.lti;
 
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import edu.uoc.elc.lti.tool.Deployment;
+import edu.uoc.elc.lti.tool.Key;
+import edu.uoc.elc.lti.tool.KeySet;
+import edu.uoc.elc.lti.tool.Registration;
 import edu.uoc.elc.lti.tool.Tool;
 import edu.uoc.elc.lti.tool.ToolBuilders;
-import edu.uoc.elc.lti.tool.ToolDefinition;
 import edu.uoc.elc.lti.tool.oidc.InMemoryOIDCLaunchSession;
 import edu.uoc.elc.lti.tool.oidc.LoginRequest;
 import edu.uoc.elc.lti.tool.oidc.LoginRequest.LoginRequestBuilder;
@@ -54,7 +58,7 @@ public class ProviderInfo {
         auth_token_url = "http://localhost:9001/platform/token.php",
         key_set_url = "http://localhost:9001/platform/jwks.php",
         kid = "58f36e10-c1c1-4df0-af8b-85c857d1634f",   
-		deployment = "8c49a5fa-f955-405e-865f-3d7e959e809f";	
+		deploymentId = "8c49a5fa-f955-405e-865f-3d7e959e809f";	
 /* Moodle
 Platform ID: http://localhost
 Client ID: Fyod8LYgnpG084A
@@ -67,7 +71,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 	{
 		platform = "http://localhost";
 		client_id = "EY04ivgJDZcxcGE";
-		deployment = "1";	
+		deploymentId = "1";	
         key_set_url = "http://localhost/mod/lti/certs.php";
         auth_token_url = "http://localhost/mod/lti/token.php";
         auth_login_url = "http://localhost/mod/lti/auth.php";
@@ -78,23 +82,42 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 	private final static long _5_MINUTES = 5 * 60 * 1000;
 	private final static String AUTHORIZED_PART = "azp";
 	
-    ToolDefinition toolDefinition = ToolDefinition.builder()
-	      .accessTokenUrl(auth_token_url)
-	      .oidcAuthUrl(auth_login_url)
-	      .clientId(client_id)
-	      .deploymentId(deployment)
-	      .keySetUrl(key_set_url)
-	      .platform(platform)
-	      .name("DWOmAccess")
-	      .publicKey(publicKey)
-	      .privateKey(privateKey)
-	      .build();
+//    ToolDefinition toolDefinition = ToolDefinition.builder()
+//	      .accessTokenUrl(auth_token_url)
+//	      .oidcAuthUrl(auth_login_url)
+//	      .clientId(client_id)
+//	      .deploymentId(deployment)
+//	      .keySetUrl(key_set_url)
+//	      .platform(platform)
+//	      .name("DWOmAccess")
+//	      .publicKey(publicKey)
+//	      .privateKey(privateKey)
+//	      .build();
+	Deployment deployment = Deployment.builder()
+			.deploymentId(deploymentId)			
+			.build();
+	Key key = Key.builder().algorithm("RSA").privateKey(privateKey).publicKey(publicKey).build();
+	KeySet keyset = KeySet.builder().keys(Collections.singletonList(key)).build();
+	
+	Registration toolDefinition = Registration.builder()
+			.accessTokenUrl(auth_token_url)
+			.oidcAuthUrl(auth_login_url)
+			.clientId(client_id)
+			.deployments(Collections.singletonList(deployment))
+			.keySetUrl(key_set_url)
+			.keySet(keyset)
+			.platform(platform)
+			.name("DWOmAccess")
+			.build();
+			
+			
+			
 	ToolBuilders toolBuilders = new ToolBuilders(
 	    new ClientCredentialsTokenBuilder() {
 
 			@Override
 			public String build(ClientCredentialsRequest request) {
-				AlgorithmFactory algorithmFactory = new AlgorithmFactory(publicKey, privateKey);
+				AlgorithmFactory algorithmFactory = new AlgorithmFactory(publicKey, privateKey, "RSA");
 
 				return Jwts.builder()
 								.setHeaderParam("kid", getKid())
@@ -109,12 +132,12 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 								.compact();
 			} }, 
 	    new UrlEncodedFormAccessTokenRequestBuilderImpl(),
-	    new JWSTokenBuilder(toolDefinition.getPublicKey(), toolDefinition.getPrivateKey())
+	    new JWSTokenBuilder(publicKey, privateKey, "RSA")
 	    {
 
 			@Override
 			public String build(DeepLinkingResponse deepLinkingResponse) {
-				AlgorithmFactory algorithmFactory = new AlgorithmFactory(publicKey, privateKey);
+				AlgorithmFactory algorithmFactory = new AlgorithmFactory(publicKey, privateKey, "RSA");
 
 				final JwtBuilder builder = Jwts.builder()
 								.setHeaderParam("kid", getKid())
@@ -162,19 +185,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 		);
 
 
-    ClaimAccessor claimAccessor = new JWSClaimAccessor(toolDefinition.getKeySetUrl()) {
-
-		@Override
-		public String getAudience() {
-			// Implementation expects comma separated string, not JSON array.
-			String audience = super.getAudience();
-			if (audience != null && audience.startsWith("[") && audience.endsWith("]")) {
-				audience = audience.substring(1, audience.length()-1);
-			}
-			return audience;
-		}
-    	
-    };
+    ClaimAccessor claimAccessor = new JWSClaimAccessor(key_set_url);
 	
 	private ProviderInfo() {
 	  OIDCLaunchSession oidcLaunchSession = new InMemoryOIDCLaunchSession();

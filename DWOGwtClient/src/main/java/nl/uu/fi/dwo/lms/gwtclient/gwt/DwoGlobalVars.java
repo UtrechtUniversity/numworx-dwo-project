@@ -610,4 +610,8 @@ public class DwoGlobalVars {
 	public void setKiosk(boolean kiosk) {
 		this.kiosk = kiosk;
 	}
+
+	public boolean isTrace() {
+		return isPremium() && getActiveSchoolRoleAndClass().getSchool().getSchoolRights().contains("t");
+	}
 }

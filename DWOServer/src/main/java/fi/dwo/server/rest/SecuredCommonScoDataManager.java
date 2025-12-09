@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
@@ -86,6 +87,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
 
 abstract class SecuredCommonScoDataManager {
   private static final Logger LOG = Logger.getLogger(SecuredCommonScoDataManager.class.getName());
@@ -181,6 +183,20 @@ abstract class SecuredCommonScoDataManager {
                                     entry.setValue(xml.LMSGetValue(entry.getKey()));
                                 } else
                                     entry.setValue(String.valueOf(completionStatus)); break;
+                            case COMPLETION_TIMESTAMP:        
+                            	    SimpleDateFormat fmt = new SimpleDateFormat(RestyDateTimeFormat.RESTY_DATETIME_FORMAT);
+                            	    String timestamp = "";
+                                    if (pssd == null) {
+                                	    timestamp = fmt.format(new java.util.Date(pssc.getLastChangeTimeStamp()));
+                                    	entry.setValue(timestamp);
+                                    } else {
+                                    	if (xml == null) xml = new Scorm2Xml(pssd.getCocd());
+                                    	timestamp = xml.LMSGetValue(entry.getKey());
+                                    	if (timestamp.isEmpty()) 
+                                    		timestamp = fmt.format(new java.util.Date(Math.max(pssd.getLastChangeTimeStamp(), pssc.getLastChangeTimeStamp())));
+                                    }
+                                    entry.setValue(timestamp);
+                                    break;
                             case SESSION_TIME:
                                 entry.setValue(Objects.toString(pssc.getSessionTime(), ""));break;
                             case SESSION_TIME2004:
@@ -710,6 +726,26 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
         case LOCATION:
             pssc.setLocation(value);break;
         case COMPLETION_STATUS:
+// same as below..
+        	if(xml == null) {
+                if(pssd == null) {
+                    pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+                    if(pssd == null) {
+                        pssd = new PersistentStudentScoData(pssc.getStudentSco());
+                        pssd.setSuspendData("");
+                        pssd.setCocd(Scorm2Xml.EMPTY_DOC);
+                        StudentScoDataManager.create(pssd);
+                    }
+                }
+                String xmlStr = pssd.getCocd();
+                xml = new Scorm2Xml(String.valueOf(xmlStr));
+            }
+        	if (COMPLETE.equals(value) ) {
+        		if (!COMPLETE.equals(pssc.getCompletionStatus()))
+        			xml.LMSSetValue("cmi.comments_from_lms.0.timestamp", new SimpleDateFormat(RestyDateTimeFormat.RESTY_DATETIME_FORMAT).format(new java.util.Date()));
+        	} else {
+        		xml.LMSSetValue("cmi.comments_from_lms.0.timestamp", ""); // or remove?
+        	}
             pssc.setCompletionStatus(value);break;
         case COCD:
             try {
@@ -781,6 +817,8 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
                 LOG.warning("setValues: totaltime= " + value + " e:" + e);
             }
             break;
+        case COMPLETION_TIMESTAMP:
+        	break; // not okay, ignore
         case XML:
 //TODO
             break;

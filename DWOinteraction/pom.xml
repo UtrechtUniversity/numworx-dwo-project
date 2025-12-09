@@ -59,13 +59,10 @@
 	</dependencies>
 	<parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO</artifactId>
-        <version>2.5.35-SNAPSHOT</version>
+        <artifactId>dwo</artifactId>
+        <version>2.5.47</version>
         <relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<groupId>nl.uu.fi.dwo.mobile</groupId>
 	<description>interaction library</description>
-	<scm>
-		<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/DWOinteraction/trunk</developerConnection>
-	</scm>
 </project>

@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>nl.numworx.uploadwidget</groupId>
-    <artifactId>UploadWidget-parent</artifactId>
-    <version>2.5.46</version>
+    <artifactId>uploadwidget-parent</artifactId>
+    <version>2.5.47</version>
   </parent>
   <artifactId>uploadwidget-local</artifactId>
   <properties>
@@ -32,7 +32,7 @@
       </dependency>
 	<dependency>
 		<groupId>nl.numworx.uploadwidget</groupId>
-		<artifactId>UploadWidgetGWT</artifactId>
+		<artifactId>uploadwidgetgwt</artifactId>
 		<version>${project.version}</version>
 		<classifier>classes</classifier>
 		<exclusions>

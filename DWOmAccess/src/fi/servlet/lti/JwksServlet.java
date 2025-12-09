@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-import edu.uoc.elc.lti.tool.ToolDefinition;
 import edu.uoc.lti.jwt.AlgorithmFactory;
 import sun.security.util.DerInputStream;
 import sun.security.util.DerValue;

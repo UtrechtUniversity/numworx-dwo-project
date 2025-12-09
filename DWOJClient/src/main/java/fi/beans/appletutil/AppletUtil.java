@@ -5,7 +5,6 @@
 package fi.beans.appletutil;
 
 import java.applet.Applet;
-import java.applet.AudioClip;
 import java.awt.Image;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,11 +19,11 @@ import java.util.logging.Logger;
 
 import javax.swing.JComponent;
 
+import fi.beans.mainframe.AudioClip;
 import fi.beans.mainframe.JApplet;
 
 /**
- * Standaard Fi Utilities voor applets. Gebruik voor resourceBundles, Images en
- * AudioClips
+ * Standaard Fi Utilities voor applets. Gebruik voor resourceBundles, Images 
  *
  * @author Wim van Velthoven
  */
@@ -163,14 +162,12 @@ public class AppletUtil {
         URL u = applet.getClass().getResource(resourceName);
 //System.out.println(u);
         if (u != null) {
-            audio = applet.getAudioClip(u);
+            audio = AudioClip.adapt( applet.getAudioClip(u) );
         }
         if (audio != null) {
             return audio;
         }
-
-//	return applet.getAudioClip(applet.getCodeBase(),getPackage() + resourceName);
-        return applet.getAudioClip(getCodeBaseResource(resourceName));
+        return AudioClip.adapt(applet.getAudioClip(getCodeBaseResource(resourceName)));
     }
 
     /**

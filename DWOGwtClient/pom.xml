@@ -2,13 +2,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO</artifactId>
+        <artifactId>dwo</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
-        <version>2.5.46</version>
+        <version>2.5.47</version>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>nl.uu.fi.dwo.lms</groupId>
-    <artifactId>DWOGwtClient</artifactId>
+    <artifactId>dwogwtclient</artifactId>
     <packaging>war</packaging>
 
     <url>http://www.dwo.nl</url>
@@ -33,7 +33,7 @@
         <maven.test.skip>true</maven.test.skip>
         <context.xml>context-dwo_devel.xml</context.xml>
         <copy.ui.skip>true</copy.ui.skip>
-        <registerVersion>2.5.2</registerVersion>
+        <registerVersion>2.5.47-SNAPSHOT</registerVersion>
         <gwtModule>nl.uu.fi.dwo.lms.gwtclient.gwtclient</gwtModule>
         <smModule>nl.uu.fi.dwo.lms.gwtclient.smclient</smModule>
         <local.dwo>/dwo</local.dwo>
@@ -93,20 +93,20 @@
         <!-- dwo dependencies -->
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
-            <artifactId>DWO-gwt-lib</artifactId>
+            <artifactId>dwo-gwt-lib</artifactId>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
-            <artifactId>DWO-gwt-lib</artifactId>
+            <artifactId>dwo-gwt-lib</artifactId>
             <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
-            <artifactId>DWO-rest-lib</artifactId>
+            <artifactId>dwo-rest-lib</artifactId>
         </dependency>      
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
-            <artifactId>DWO-rest-lib</artifactId>
+            <artifactId>dwo-rest-lib</artifactId>
             <classifier>sources</classifier>
         </dependency>
         
@@ -114,7 +114,6 @@
             <groupId>com.owlike</groupId>
             <artifactId>genson</artifactId>
             <version>1.6</version>
-            <!--<scope>provided</scope>-->
         </dependency> 
         <dependency>
             <groupId>com.github.nmorel.gwtjackson</groupId>
@@ -148,8 +147,8 @@
         </dependency>
         <dependency>
         	<groupId>nl.uu.fi.dwo.lms</groupId>
-        	<artifactId>DwoGwtClientHtmlUi</artifactId>
-        	<version>2.5.46</version>
+        	<artifactId>dwogwtclienthtmlui</artifactId>
+        	<version>2.5.47p1</version>
         	<scope>runtime</scope>
         	<type>war</type>
         </dependency>
@@ -167,13 +166,13 @@
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.lms</groupId>
-			<artifactId>ChatGWT-shared</artifactId>
-			<version>2.5.26</version>
+			<artifactId>chatgwt-shared</artifactId>
+			<version>2.5.47</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.lms</groupId>
-			<artifactId>ChatGWT-shared</artifactId>
-			<version>2.5.26</version>
+			<artifactId>chatgwt-shared</artifactId>
+			<version>2.5.47</version>
 			<classifier>sources</classifier>
 		</dependency>
     </dependencies>
@@ -353,7 +352,7 @@
                         <!--    useful in case war is part of compiled local code, hence no version in deployable.-->
                         <deployable>
                             <groupId>nl.uu.fi.dwo</groupId>
-                            <artifactId>DWOServer</artifactId> 
+                            <artifactId>dwoserver</artifactId> 
                             <type>war</type>    
                             <properties>
                                 <context>{local.dwo}</context>
@@ -388,7 +387,7 @@
 						<CDNURL>http://localhost:8082</CDNURL>
                     	<DWO_ENV>testkiosk</DWO_ENV>
                     	<ALLOW_ORIGIN>http://localhost:8080</ALLOW_ORIGIN>
-                    	<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>
+<!--                    	<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>-->
                     	<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>               
                     	<AZ_ENDPOINT>http://127.0.0.1:10000/devstoreaccount1/</AZ_ENDPOINT>
                     	<AZ_SHAREDKEY>Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==</AZ_SHAREDKEY>
@@ -399,7 +398,7 @@
                     <webapps>
                         <webapp>
                             <groupId>nl.uu.fi.dwo</groupId>
-                            <artifactId>DWOServer</artifactId>
+                            <artifactId>dwoserver</artifactId>
                             <version>${project.version}</version>
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
@@ -408,15 +407,15 @@
                         </webapp>
                         <webapp>
                             <groupId>fi.dwo</groupId>
-                            <artifactId>DWO-apps</artifactId> 
-                            <version>2.5.36</version> 
+                            <artifactId>dwo-apps</artifactId> 
+                            <version>${project.version}</version> 
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>/dwo/apps</contextPath>
                         </webapp>
                        <webapp>
                             <groupId>nl.uu.fi.dwo.mobile</groupId>
-                            <artifactId>DWOplayer</artifactId>
+                            <artifactId>dwoplayer</artifactId>
                             <version>${project.version}</version>
                             <type>war</type>
                             <contextPath>/dwo/tablet</contextPath>
@@ -424,7 +423,7 @@
                         </webapp>
                         <webapp>
                         	<groupId>nl.uu.fi.dwo.register</groupId>
-							<artifactId>Register</artifactId>
+							<artifactId>register</artifactId>
 							<version>${registerVersion}</version>
                             <type>war</type>
                             <contextPath>/dwo/register</contextPath>
@@ -432,8 +431,8 @@
                         </webapp>
                         <webapp>
                           <groupId>fi.servlet</groupId>
-  						  <artifactId>ideas</artifactId>
- 						  <version>0.0.12</version>
+  						  <artifactId>ideas-war</artifactId>
+ 						  <version>0.0.16</version>
                           <type>war</type>
                           <contextPath>/ideas</contextPath>
                           <asWebapp>true</asWebapp>              
@@ -441,20 +440,18 @@
                          <webapp>
 						    <groupId>nl.numworx.uploadwidget</groupId>
 						    <artifactId>uploadwidget-local</artifactId>
-						    <version>2.5.44-SNAPSHOT</version>
+						    <version>${project.version}</version>
                             <type>war</type>
                             <contextPath>/dwo/dav/upload</contextPath>
                             <asWebapp>true</asWebapp>
                          </webapp>
-
-<!--                          <webapp>-->
-<!--                              <groupId>nl.uu.fi.dwo.lms</groupId>-->
-<!--                              <artifactId>ChatGWT-server</artifactId>-->
-<!--                          	  <version>${chatGWTVersion}</version>-->
-<!--                              <type>war</type>-->
-<!--                              <contextPath>/chatbox</contextPath>-->
-<!--                              <asWebapp>true</asWebapp>-->
-<!--                          </webapp>-->
+                         <webapp>
+						    <groupId>nl.numworx.xapi</groupId>
+						    <artifactId>xapiserver</artifactId>
+  							<version>0.0.1-SNAPSHOT</version>
+							<contextPath>/data/xAPI</contextPath>
+							<asWebapp>true</asWebapp>
+						 </webapp>
                     </webapps>                         
                 </configuration> 
                 <dependencies>
@@ -585,7 +582,7 @@
 				<dependency>
     				<groupId>nl.uu.fi.dwo.rest</groupId>
 					<artifactId>redis-config</artifactId>
-					<version>2.5.37</version>
+					<version>2.5.47</version>
 				</dependency>
                 </dependencies>
             </plugin>            
@@ -622,41 +619,6 @@
                     </execution>
                 </executions>
             </plugin>            
-            <!-- sample version for with mysql building -->
-            <!--                        <plugin>  docker test configuration om gwtclient in een docker image te starten 
-                <groupId>io.fabric8</groupId>
-                <artifactId>fabric8-maven-plugin</artifactId> 
-                <version>3.2.28</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>resource</goal>
-                            <goal>build</goal>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <images>  
-                        <image>
-                            <name>${project.build.finalName}</name>
-                             "alias" is used to correlate to the containers in the pod spec 
-                            <alias>GwtClientDocky</alias>
-                            <build>
-                                <from>tomcat:8.0</from>
-                                <assembly>
-                                    <basedir>/deployments</basedir>
-                                    <descriptorRef>artifact-with-dependencies</descriptorRef>
-                                </assembly>
-                                <env>
-                                    <JAVA_LIB_DIR>/deployments</JAVA_LIB_DIR>
-                                    <JAVA_MAIN_CLASS>org.apache.camel.cdi.Main</JAVA_MAIN_CLASS>
-                                </env>
-                            </build>
-                        </image>
-                    </images> 
-                </configuration>
-            </plugin>-->
         </plugins>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </build>
@@ -724,5 +686,24 @@
 		            </dependency>
 		        </dependencies>
 		    </profile>
+		    <profile>
+				<id>github</id>
+				<repositories>
+					<repository>
+						<id>numworx-dwo-gwtclienthtmlui</id>
+						<url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-gwtclienthtmlui</url>
+						<snapshots>
+							<enabled>true</enabled>
+						</snapshots>
+					</repository>			
+			 	    <repository>
+				      <id>numworx-dwo-project</id>
+				      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-project</url>
+				      <snapshots>
+						  <enabled>true</enabled>
+					  </snapshots>
+			 	    </repository>
+				</repositories>
+			</profile>
     </profiles>
 </project>

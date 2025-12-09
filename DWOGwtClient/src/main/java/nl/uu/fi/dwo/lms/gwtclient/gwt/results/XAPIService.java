@@ -1,5 +1,7 @@
 package nl.uu.fi.dwo.lms.gwtclient.gwt.results;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.fusesource.restygwt.client.Defaults;
@@ -83,6 +85,19 @@ private Promise<XapiManager> man;
 		  }
 	  });
   }
+
+  public Promise<List<String>> saveStatements(List<Statement> statements) {
+    return man.then(xapi -> {
+        try {
+          Defaults.ignoreJsonNulls();
+          return xapi.getValue().saveStatements(statements);
+        } finally {
+          Defaults.dontIgnoreJsonNulls();
+        }
+      });
+
+	
+}
   
   
 }

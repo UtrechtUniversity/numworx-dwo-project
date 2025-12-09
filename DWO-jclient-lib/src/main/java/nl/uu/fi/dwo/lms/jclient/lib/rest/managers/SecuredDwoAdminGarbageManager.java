@@ -25,6 +25,10 @@ public class SecuredDwoAdminGarbageManager {
   }
   
   public List<DomUserFullwLoginContext> getUsers(Integer amount, Long since) throws Dwo2Exception {
+	  return getUsers(amount, since, null);
+  }
+  
+  public List<DomUserFullwLoginContext> getUsers(Integer amount, Long since, Boolean single) throws Dwo2Exception {
     List<DomUserFullwLoginContext> result = null;
     String query = "";
     if (amount != null) {
@@ -34,6 +38,11 @@ public class SecuredDwoAdminGarbageManager {
       if (query.isEmpty()) query = "?"; else query += "&";
       query += "before=" + since;
     }
+    if (single != null) {
+        if (query.isEmpty()) query = "?"; else query += "&";
+        query += "single=" + single;
+    }
+    	
     String path = "rest/sec:" + PathId.getId(getContext()) + "/dwoadmin/garbage/user/get" + query;
     RestListClassTypes type = RestListClassTypes.DomUserFullwLoginContext;
     result = manager.getList(path, type);    

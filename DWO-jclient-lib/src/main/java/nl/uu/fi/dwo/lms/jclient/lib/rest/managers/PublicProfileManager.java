@@ -14,12 +14,19 @@ public class PublicProfileManager {
         DomDwoProfileFull.class);
   }
 
+  private static DomDwoProfileFull get(Number id) throws Dwo2Exception {
+	    String name = id.toString();
+	    return StoredRestManager.getInstance().get("rest/public/profile/" + name,
+	        DomDwoProfileFull.class); 
+  }
+  
+  
   public static DomDwoProfileFull get(long id) throws Dwo2Exception {
-    return get(Long.toString(id));
+    return get(Long.valueOf(id));
   }
 
   public static DomDwoProfileFull get(int id) throws Dwo2Exception {
-    return get(Integer.toString(id));
+    return get(Integer.valueOf(id));
   }
 
 }

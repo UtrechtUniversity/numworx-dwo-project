@@ -2,11 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>nl.numworx.uploadwidget</groupId>
-    <artifactId>UploadWidget-parent</artifactId>
-    <version>2.5.46</version>
+    <artifactId>uploadwidget-parent</artifactId>
+    <version>2.5.47</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>UploadWidgetGWT</artifactId>
+  <artifactId>uploadwidgetgwt</artifactId>
   <packaging>war</packaging>
   <name>UploadWidget GWT</name>
   <description>Upload Widget GWT project</description>
@@ -99,7 +99,7 @@
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.rest</groupId>
-			<artifactId>DWO-jclient-lib</artifactId>
+			<artifactId>dwo-jclient-lib</artifactId>
 		</dependency>
 
 <dependency> 
@@ -116,11 +116,11 @@
 </dependency>
   	<dependency>
   		<groupId>nl.uu.fi.dwo</groupId>
-  		<artifactId>DWO-commons-lib</artifactId>
+  		<artifactId>dwo-commons-lib</artifactId>
   	</dependency>
   	<dependency>
   		<groupId>nl.uu.fi.dwo.rest</groupId>
-  		<artifactId>DWO-rest-lib</artifactId>
+  		<artifactId>dwo-rest-lib</artifactId>
   		<scope>provided</scope>
   		<classifier>sources</classifier>
   	</dependency>
@@ -163,6 +163,8 @@
 				<configuration>
 					<attachClasses>true</attachClasses>
                     <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+        			<packagingIncludes>*.css,*GWT/**,WEB-INF/**</packagingIncludes>
+        			<packagingExcludes>*.html</packagingExcludes>
 				</configuration>
 			</plugin>
     </plugins>

@@ -2,19 +2,17 @@
   <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO</artifactId>
-        <version>2.5.46</version>
+        <artifactId>dwo</artifactId>
+        <version>2.5.47</version>
         <relativePath>../DWO</relativePath>
     </parent>
   <groupId>nl.numworx.uploadwidget</groupId>
-  <artifactId>UploadWidget-parent</artifactId>
+  <artifactId>uploadwidget-parent</artifactId>
   <packaging>pom</packaging>
   <name>UploadWidget parent</name>
   <modules>
   	<module>uploadwidget-common</module>
-  	<module>uploadwidget</module>
   	<module>UploadWidgetGWT</module>
-  	<module>UploadWidgetRM</module>
   	<module>uploadwidget-az</module>
   	<module>uploadwidget-s3</module>
   	<module>uploadwidget-local</module>
@@ -26,19 +24,6 @@
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	<maven.test.skip>true</maven.test.skip>
   </properties>
-	<distributionManagement>
-		<repository>
-			<id>release</id>
-			<url>https://repos.dwo.nl/artifactory/libs-release-local</url>
-		</repository>
-
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>libs-snapshot</name>
-			<url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -46,17 +31,12 @@
 				<artifactId>uploadwidget-common</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-                        <dependency>
-                                <groupId>nl.numworx.uploadwidget</groupId>
-                                <artifactId>uploadwidget-common</artifactId>
+            <dependency>
+                <groupId>nl.numworx.uploadwidget</groupId>
+                <artifactId>uploadwidget-common</artifactId>
 				<classifier>sources</classifier>
-                                <version>${project.version}</version>
-                        </dependency>
-			<dependency>
-				<groupId>nl.numworx.uploadwidget</groupId>
-				<artifactId>uploadwidgetrm</artifactId>
-				<version>${project.version}</version>
-			</dependency>
+                <version>${project.version}</version>
+            </dependency>
 			<dependency>
 				<groupId>nl.numworx.uploadwidget</groupId>
 				<artifactId>uploadwidget-s3</artifactId>

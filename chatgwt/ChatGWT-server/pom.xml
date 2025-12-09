@@ -4,17 +4,17 @@
 
   <parent>
     <groupId>nl.uu.fi.dwo.lms</groupId>
-    <artifactId>ChatGWT</artifactId>
-    <version>2.5.27-SNAPSHOT</version>
+    <artifactId>chatgwt</artifactId>
+    <version>2.5.47</version>
   </parent>
 
-  <artifactId>ChatGWT-server</artifactId>
+  <artifactId>chatgwt-server</artifactId>
   <packaging>war</packaging>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ChatGWT-shared</artifactId>
+      <artifactId>chatgwt-shared</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -35,7 +35,7 @@
 </dependency>
   	<dependency>
   		<groupId>nl.uu.fi.dwo.rest</groupId>
-  		<artifactId>DWO-jclient-lib</artifactId>
+  		<artifactId>dwo-jclient-lib</artifactId>
   		<scope>runtime</scope>
   	</dependency>
   </dependencies>
@@ -83,7 +83,7 @@
       <dependencies>
         <dependency>
           <groupId>${project.groupId}</groupId>
-          <artifactId>ChatGWT-client</artifactId>
+          <artifactId>chatgwt-client</artifactId>
           <version>${project.version}</version>
           <type>war</type>
           <scope>runtime</scope>

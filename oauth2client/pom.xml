@@ -4,14 +4,14 @@
   <!-- POM file generated with GWT webAppCreator -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.numworx.oauth2</groupId>
-  <artifactId>OAuth2Client</artifactId>
+  <artifactId>oauth2client</artifactId>
   <packaging>war</packaging>
   <name>nl.numworx.oauth2client.OAuth2Client</name>
   <parent>
 		<groupId>nl.uu.fi.dwo</groupId>
-		<artifactId>DWO</artifactId>
+		<artifactId>dwo</artifactId>
 		<relativePath>../DWO</relativePath>
-		<version>2.5.46</version>
+		<version>2.5.47</version>
   </parent>
 
   <properties>
@@ -67,11 +67,11 @@
     </dependency>
       <dependency>
         <groupId>nl.uu.fi.dwo.rest</groupId>
-        <artifactId>DWO-jclient-lib</artifactId>
+        <artifactId>dwo-jclient-lib</artifactId>
       </dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
-			<artifactId>DWO-commons-lib</artifactId>
+			<artifactId>dwo-commons-lib</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.ws.xmlrpc</groupId>
@@ -85,8 +85,8 @@
 		</dependency>
 	<dependency>
 	    <groupId>fi.servlet</groupId>
-	    <artifactId>DWOmAccess</artifactId>
-	    <version>2.5.20-p1</version>
+	    <artifactId>dwomaccess</artifactId>
+	    <version>2.5.47</version>
 	    <classifier>classes</classifier>	
 	</dependency>
 	<dependency>
@@ -312,11 +312,4 @@
             </plugin>            
     </plugins>
   </build>
-   	<repositories>	<!-- als de mirror uit staat -->
-		<repository>
-		  <id>repos</id>
-		  <url>https://repos.dwo.nl/artifactory/repos</url>
-		</repository>
-	</repositories>
-
 </project>

@@ -3,11 +3,11 @@
     <!-- Adjust artifact, name and description for new projects -->
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
-        <artifactId>DWO</artifactId>
-        <version>2.5.46</version>
+        <artifactId>dwo</artifactId>
+        <version>2.5.47</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
-    <artifactId>DWOServer</artifactId>
+    <artifactId>dwoserver</artifactId>
     <packaging>war</packaging>
     <name>${project.build.finalName}</name>
     <url>http://www.dwo.nl</url>
@@ -52,7 +52,7 @@
     <dependencies>
          <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
-            <artifactId>DWO-commons-lib</artifactId>
+            <artifactId>dwo-commons-lib</artifactId>
         </dependency>
 		<dependency>
 		    <groupId>com.sun.mail</groupId>
@@ -75,7 +75,6 @@
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
             <version>140</version>
-            <!--  <scope>provided</scope>-->
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
@@ -153,14 +152,9 @@
             <artifactId>urlrewritefilter</artifactId>
             <version>4.0.3</version>
         </dependency>
-<!--        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-rs-security-cors</artifactId>
-            <version>2.6.1</version>
-        </dependency>-->
     	<dependency>
     		<groupId>nl.uu.fi.dwo.rest</groupId>
-    		<artifactId>DWO-rest-lib</artifactId>
+    		<artifactId>dwo-rest-lib</artifactId>
     	</dependency>
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
@@ -184,7 +178,7 @@
 		</dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo.rest</groupId>
-            <artifactId>DWO-jclient-lib</artifactId>
+            <artifactId>dwo-jclient-lib</artifactId>
         </dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -212,7 +206,7 @@
 	   		<dependency>
 	   			<groupId>nl.numworx.schoolyear</groupId>
 	   			<artifactId>schoolyear-jclient-lib</artifactId>
-	   			<version>2.5.32</version>
+	   			<version>2.5.47</version>
 	   		</dependency>
 			<dependency>
 			  <groupId>dev.samstevens.totp</groupId>
@@ -220,15 +214,7 @@
 			  <version>1.7.1</version>
 			</dependency>
     	</dependencies>
-    
-<!--    <distributionManagement>
-        <repository>
-            <id>snapshots</id>
-            <name>libs-snapshot</name>
-            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
-        </repository>
-    </distributionManagement>    -->
-    
+        
     <build>
 	  <testResources>
 		<testResource>
@@ -320,7 +306,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <warSourceDirectory>src/main/webapp</warSourceDirectory>
-<!--                    <contextFile>${basedir}/config/tomcat/context.xml</contextFile>                    -->
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
   					<attachClasses>true</attachClasses>
@@ -353,9 +338,6 @@
                 <version>2.2</version>
                     <configuration>
                         <server>TomcatServer</server>
-<!--                        <username>${tomcat.local.deploy.username}</username>
-                        <password>${tomcat.local.deploy.password}</password>
-                        <url>${tomcat.local.deploy.url}</url>-->
                         <path>/dwo</path>
                         <systemProperties>
                             <java.util.secureRandomSeed>true</java.util.secureRandomSeed>
@@ -363,8 +345,8 @@
                     		<DWO_REDIRECT>false</DWO_REDIRECT>
                     		<ALLOW_ORIGIN>http://localhost:8080</ALLOW_ORIGIN>
                     		<ENV_NOSEB>true</ENV_NOSEB>                   
-                    		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>
-                    		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>
+<!--                    		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>-->
+<!--                    		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>-->
                     		<AZ_ENDPOINT>http://127.0.0.1:10000/devstoreaccount1/</AZ_ENDPOINT>
                     		<AZ_SHAREDKEY>Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==</AZ_SHAREDKEY>
                     		<S3_BUCKET>devstoreaccount1</S3_BUCKET>      
@@ -376,7 +358,7 @@
                          <webapp>
 						    <groupId>nl.numworx.uploadwidget</groupId>
 						    <artifactId>uploadwidget-local</artifactId>
-						    <version>2.5.42</version>
+						    <version>2.5.47-SNAPSHOT</version>
                             <type>war</type>
                             <contextPath>/dwo/dav/upload</contextPath>
                             <asWebapp>true</asWebapp>
@@ -495,7 +477,7 @@
 				<dependency>
     				<groupId>nl.uu.fi.dwo.rest</groupId>
 					<artifactId>redis-config</artifactId>
-					<version>2.5.37</version>
+					<version>2.5.47</version>
 				</dependency>
           </dependencies>
             </plugin> 
@@ -521,20 +503,6 @@
 				    <jdkToolchain>
 				        <version>11</version>
 				    </jdkToolchain>
-                    <!--                   <systemProperties>
-                        <property>
-                            <name>jersey.config.test.container.factory</name>
-                            <value>org.glassfish.jersey.test.framework.spi.container.external.ExternalTestContainerFactory</value>
-                        </property>
-                        <property>
-                            <name>jersey.test.host</name>
-                            <value>localhost</value>
-                        </property>
-                        <property>
-                            <name>jersey.config.test.container.port</name>
-                            <value>8080</value>
-                        </property>
-                    </systemProperties>  -->
                 </configuration>
             </plugin>                    
         </plugins>

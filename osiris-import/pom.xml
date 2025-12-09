@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
-		<artifactId>DWO</artifactId>
-		<version>2.5.46-SNAPSHOT</version>
+		<artifactId>dwo</artifactId>
+		<version>2.5.47</version>
 		<relativePath>../DWO</relativePath>
 	</parent>
   <groupId>nl.numworx.osiris</groupId>
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>edexml</artifactId>
-			<version>2.5.34-SNAPSHOT</version>
+			<version>2.5.47</version>
 			<exclusions>
 				<exclusion>
 					<groupId>junit</groupId>
@@ -31,7 +31,7 @@
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
-			<artifactId>DWO-commons-lib</artifactId>
+			<artifactId>dwo-commons-lib</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.ws.xmlrpc</groupId>
@@ -61,8 +61,8 @@
        </dependency>
        <dependency>
        	<groupId>nl.numworx.oauth2</groupId>
-       	<artifactId>OAuth2Client</artifactId>
-       	<version>1.0.13</version>
+       	<artifactId>oauth2client</artifactId>
+       	<version>2.5.47</version>
        	<classifier>classes</classifier>
        </dependency>
 	</dependencies>

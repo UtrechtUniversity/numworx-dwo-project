@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.uu.fi.dwo</groupId>
-    <artifactId>DWO.master.pom</artifactId>
-    <version>1.1</version>
+    <artifactId>dwo.master.pom</artifactId>
+    <version>2.5.47</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,99 +16,74 @@
     <organization>
         <name>Freudenthal Institute</name>
         <url>http://www.uu.nl/onderzoek/freudenthal-instituut</url>
-    </organization>    
+    </organization>
+    <modules>
+		<module>MicroIndex</module>
+		<module>xapiserver</module>
+		<module>DWO</module>
+		<module>async-lib</module>
+		<module>eawt</module>
+		<module>promise-api</module>
+		<module>numworxlf</module>
+		<module>beans_lineairealgebra</module>
+	</modules>    
 
     <!-- automagically use snapshot/release -->
     <distributionManagement>
+	    <repository>
+	      <id>github</id>
+	      <name>GitHub Packages</name>
+	      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-project</url>
+	    </repository>
         <snapshotRepository>
-            <id>snapshots</id>
-            <name>libs-snapshot</name>
-            <url>https://repos.dwo.nl/artifactory/libs-snapshot-local</url>    
+          <id>github</id>
+          <name>GitHub Packages</name>
+          <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-project</url>
         </snapshotRepository>
-        <repository>
-            <id>release</id>
-            <name>libs-release</name>
-            <url>https://repos.dwo.nl/artifactory/libs-release-local</url>    
-        </repository>
-    </distributionManagement>    
-            
-    <!--<reporting>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.6</version>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.6</version>
-            <reportSets>
-              <reportSet>
-                <reports> select reports 
-                  <report>index</report>
-                </reports>
-              </reportSet>
-            </reportSets>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9</version>
-            <reportSets>
-              <reportSet> by default, id = "default" 
-                <reports> select non-aggregate reports 
-                  <report>javadoc</report>
-                  <report>test-javadoc</report>
-                </reports>
-              </reportSet>
-              <reportSet> aggregate reportSet, to define in poms having modules 
-                <id>aggregate</id>
-                <inherited>false</inherited> don't run aggregate in child modules 
-                <reports>
-                  <report>aggregate</report>
-                </reports>
-              </reportSet>
-            </reportSets>
-          </plugin>
-        </plugins>
-    </reporting> -->
+    </distributionManagement>           
     <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>libs-release</name>
-            <url>https://repos.dwo.nl/artifactory/libs-release</url>
-        </repository>
-        <repository>
-            <snapshots />
-            <id>snapshots</id>
-            <name>libs-snapshot</name>
-            <url>https://repos.dwo.nl/artifactory/libs-snapshot</url>
-        </repository>
-        <repository>
-            <snapshots />
-            <id>deprecated</id>
-            <name>deprecated-local</name>
-            <url>https://repos.dwo.nl/artifactory/deprecated-local</url>
-        </repository>        
+ 	    <repository>
+	      <id>numworx-dwo-project</id>
+	      <name>GitHub Packages</name>
+	      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-project</url>
+	      <snapshots>
+			  <enabled>true</enabled>
+		  </snapshots>
+	    </repository>		
     </repositories>
     <pluginRepositories>
-        <pluginRepository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>plugins-release</name>
-            <url>https://repos.dwo.nl/artifactory/plugins-release</url>
-        </pluginRepository>
-        <pluginRepository>
-            <snapshots />
-            <id>snapshots</id>
-            <name>plugins-snapshot</name>
-            <url>https://repos.dwo.nl/artifactory/plugins-snapshot</url>
-        </pluginRepository>
     </pluginRepositories>    
+    <build>
+	<plugins>
+                <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>1.0-m5.1</version>
+                <configuration>
+                        <!-- see goals wiki page for configuration options -->
+                        <flowInitContext>
+                                <developBranchName>develop</developBranchName>
+                                <masterBranchName>main</masterBranchName>
+                        </flowInitContext>
+                        <localOnly>false</localOnly>
+                        <allowSnapshots>false</allowSnapshots>
+                        <enableSshAgent>true</enableSshAgent>
+                        <noDeploy>true</noDeploy>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+                          <dependencies>
+                            <dependency>
+                              <groupId>com.jcraft</groupId>
+                              <artifactId>jsch</artifactId>
+                              <version>0.1.54</version>
+                            </dependency>
+                                <dependency>
+                                  <groupId>net.java.dev.jna</groupId>
+                                  <artifactId>jna-platform</artifactId>
+                                  <version>5.12.1</version>
+                                </dependency>
+                          </dependencies>
+                </plugin>
+	</plugins>
+   </build>
 </project>

@@ -3,6 +3,7 @@ package fi.dwo.server.rest;
 import java.sql.Date;
 import java.sql.Time;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -49,6 +50,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
+import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
 
 @PermitAll
 @Path("/secure/teacher/scormValues")
@@ -188,6 +190,28 @@ public class SecuredTeacherScormValuesManager {
 			case LOCATION:
 				pssc.setLocation(value);break;
 			case COMPLETION_STATUS:
+	        	if(xml == null) {
+	                if(pssd == null) {
+	                    pssd = StudentScoDataManager.findEntity(pssc.getStudentSco());
+	                    if(pssd == null) {
+	                        pssd = new PersistentStudentScoData(pssc.getStudentSco());
+	                        pssd.setSuspendData("");
+	                        pssd.setCocd(Scorm2Xml.EMPTY_DOC);
+	                        StudentScoDataManager.create(pssd);
+	                    }
+	                }
+	                String xmlStr = pssd.getCocd();
+	                xml = new Scorm2Xml(String.valueOf(xmlStr));
+	            }
+	        	if (SecuredCommonScoDataManager.COMPLETE.equals(value) ) {
+	        		if (!SecuredCommonScoDataManager.COMPLETE.equals(pssc.getCompletionStatus())) {
+						java.util.Date now = new java.util.Date(Math.max(pssc.getLastChangeTimeStamp(), pssd.getLastChangeTimeStamp()));
+						xml.LMSSetValue("cmi.comments_from_lms.0.timestamp", new SimpleDateFormat(RestyDateTimeFormat.RESTY_DATETIME_FORMAT).format(now));
+					}
+	        	} else {
+	        		xml.LMSSetValue("cmi.comments_from_lms.0.timestamp", ""); // or remove?
+	        	}
+
 				pssc.setCompletionStatus(value);break;
 			case COCD:
 				if(xml == null) {
@@ -241,6 +265,7 @@ public class SecuredTeacherScormValuesManager {
 				break;
 			case XML:
 			case STUDENT_MODEL:
+			case COMPLETION_TIMESTAMP:
 				break;
 			}
 		}

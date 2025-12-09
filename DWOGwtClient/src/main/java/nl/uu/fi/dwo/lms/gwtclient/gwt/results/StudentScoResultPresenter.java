@@ -363,7 +363,9 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
     String shortValue = value.length() > 10 ? value.substring(0, 10) + "..." : value;
     LOG.info("SetValue " + key + ", " + shortValue);
 
-    if ( ResultsService.SUSPEND_DATA.equals(key)) return "false"; // never writable
+    if ( ResultsService.SUSPEND_DATA.equals(key)
+    	|| ResultsService.COMPLETION_TIMESTAMP.equals(key)	
+       ) return "false"; // never writable
     if ( "dme.statement".equals(key)) {
       createStatement(value);
       return "true";
@@ -382,7 +384,7 @@ protected void initTail(DomResultStudentScoContext ssc, JavaScriptObject context
     createStatement(s);
   }
 
-	private static final Verb COMPLETED = new Verb();
+    static final Verb COMPLETED = new Verb();
 	static {
 		COMPLETED.id = XAPIService.COMPLETED;
 		COMPLETED.display = Collections.singletonMap("en-US", "completed");
@@ -528,7 +530,7 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
       
     } else
       seal = seal(value, dssc);
-    if (value && dwoGlobalVars.isPremium() && dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool().getSchoolRights().contains("t")) {
+    if (value && dwoGlobalVars.isTrace()) {
     	createCompletedStatement();
     }
     seal

@@ -1,12 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>nl.uu.fi.dwo</groupId>
-    <artifactId>DWO-GWT</artifactId>
-    <version>1.0</version>
+        <groupId>nl.uu.fi.dwo</groupId>
+        <artifactId>dwo</artifactId>
+        <version>2.5.47</version>
+        <relativePath>../DWO/pom.xml</relativePath>
   </parent>
   <groupId>fi.wiskopdrgwt</groupId>
-  <artifactId>WiskOpdrGWT</artifactId>
+  <artifactId>wiskopdrgwt</artifactId>
   <name>WiskOpdrGWT</name>
   <properties>
   	<gwtVersion>2.8.2</gwtVersion>
@@ -22,6 +23,7 @@
   		<groupId>com.google.gwt</groupId>
   		<artifactId>gwt-user</artifactId>
   		<scope>provided</scope>
+  		<version>${gwtVersion}</version>
   	</dependency>
   	<dependency>
   		<groupId>nl.uu.fi.dwo.mobile</groupId>
@@ -30,8 +32,8 @@
 
   	<dependency>
   		<groupId>nl.uu.fi.dwo.ideas</groupId>
-  		<artifactId>IdeasGWT</artifactId>
-  		<version>0.1.1</version>
+  		<artifactId>ideasgwt</artifactId>
+  		<version>0.1.9</version>
   	</dependency>
   </dependencies>
   <build>
@@ -58,8 +60,5 @@
     </plugins>
   </build>
   <description />
-  <version>0.0.8-SNAPSHOT</version>
-  <scm>
-  	<developerConnection>scm:svn:https://svn.science.uu.nl/repos/project.fisme.java/DWOProject/GWT/WiskOpdrGWT/trunk</developerConnection>
-  </scm>
+  <version>2.5.47</version>
 </project>

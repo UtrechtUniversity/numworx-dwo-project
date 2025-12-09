@@ -83,10 +83,26 @@ public class GarbageManagerIT {
     SecurityContext sc = getSecurityContext();
     Integer limit = 1;
     Long before = System.currentTimeMillis();
-    List<DomUserFullwLoginContext> result = manager.getUsers(sc, before, limit );
+    List<DomUserFullwLoginContext> result = manager.getUsers(sc, before, limit, Boolean.FALSE );
     assertEquals(1, result.size());
-  }
+    result = manager.getUsers(sc, before, limit, Boolean.TRUE );
+    assertEquals(1, result.size());
+ }
 
+  @Test
+  public void testGetUsersAll() throws Dwo2Exception {
+    SecurityContext sc = getSecurityContext();
+    Integer limit = null;
+    Long before = System.currentTimeMillis();
+    List<DomUserFullwLoginContext> result = manager.getUsers(sc, before, limit, Boolean.FALSE );
+    assertEquals(3, result.size());
+    result = manager.getUsers(sc, before, limit, Boolean.TRUE );
+    assertEquals(6, result.size());
+ }
+
+  
+  
+  
   @Test
   public void testDeleteUser() throws Exception {
     SecurityContext sc = getSecurityContext();
