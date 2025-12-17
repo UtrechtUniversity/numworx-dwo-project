@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -190,7 +191,7 @@ public class DwoProfileManager {
 				q.setParameter("dwoProfileName", id);
 			}
 			return q.getSingleResult();
-		} catch ( NoResultException nores) {
+		} catch ( NoResultException|NonUniqueResultException nores) {
 			return null;
 		} finally {
 			em.close();
