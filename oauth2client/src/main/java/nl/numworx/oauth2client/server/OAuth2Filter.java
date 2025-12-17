@@ -1,11 +1,13 @@
 package nl.numworx.oauth2client.server;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -20,6 +22,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.xml.security.utils.Base64;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.OAuthManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
@@ -97,6 +103,8 @@ public class OAuth2Filter implements Filter {
 				String retry = manager.authorization_token(code, client_id, Objects.toString(verifier, null), redirect);
 			if(retry != null) {
 				String bearer = instance.getBasicAuthString().substring(7);
+				String sub = extractsub(bearer);
+				request.setAttribute("username", sub);
 				LOG.severe("chain with new bearer " + bearer);
 				storage.removeAttribute(PREFIX + "state");
 				storage.setAttribute(PREFIX_TOKEN + "bearer", bearer);
@@ -156,4 +164,24 @@ public class OAuth2Filter implements Filter {
 	public void destroy() {
 	}
 
+	public static String extractsub(String jwt) throws IOException {
+		int dot = jwt.indexOf('.');
+		String body = jwt.substring(dot+1);
+		dot = body.indexOf('.');
+		body = body.substring(0, dot);
+		byte[] data = java.util.Base64.getDecoder().decode(body);
+		JSONParser p = new JSONParser();
+		Map map;
+		try {
+			map = (Map) p.parse(new String(data, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		} catch (ParseException e) {
+			return null;
+		}
+		return (String) map.get("sub");
+	}
+	
+	
+	
 }
