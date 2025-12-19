@@ -2,7 +2,6 @@ package fi.dwo.server.PersistentDataManagers.core;
 
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
-import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,36 +20,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class SchoolClassManager {
+public class SchoolClassManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(SchoolClassManager.class.getName());
-
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param entity
-     */
-    public static void create(PersistentSchoolClass entity) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(entity);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentSchoolClass.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -146,15 +118,7 @@ public class SchoolClassManager {
     }
 
     public static PersistentSchoolClass findEntity(Long id) {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentSchoolClass.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentSchoolClass with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentSchoolClass.class);
     }
 
     public static PersistentSchoolClass findEntity(String className, PersistentSchool school) {

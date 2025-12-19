@@ -8,8 +8,6 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,7 +34,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentStudentOfClass.findByClassID", query = "SELECT p FROM PersistentStudentOfClass p WHERE p.persistentStudentOfClassPK.classID = :classID and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
     @NamedQuery(name = "PersistentStudentOfClass.findByHasRolePK", query = "SELECT p FROM PersistentStudentOfClass p WHERE p.persistentStudentOfClassPK.userID = :userID and p.persistentStudentOfClassPK.schoolGroupID= :schoolGroupID"),
     @NamedQuery(name = "PersistentStudentOfClass.findByRegisterDate", query = "SELECT p FROM PersistentStudentOfClass p WHERE p.registerDate = :registerDate")})
-public class PersistentStudentOfClass implements Serializable {
+public class PersistentStudentOfClass implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -147,9 +145,7 @@ public class PersistentStudentOfClass implements Serializable {
         return id;
     } 
     
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
 

@@ -14,8 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -39,7 +37,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentLoginContext.findByUserID", query = "SELECT p FROM PersistentLoginContext p WHERE p.userID = :userID"),
     @NamedQuery(name = "PersistentLoginContext.findByRegisterTimeStamp", query = "SELECT p FROM PersistentLoginContext p WHERE p.registerTimeStamp = :registerTimeStamp"),
     @NamedQuery(name = "PersistentLoginContext.findByLoginTimeStamp", query = "SELECT p FROM PersistentLoginContext p WHERE p.lastLoginTimeStamp = :lastLoginTimeStamp")})
-public class PersistentLoginContext implements Serializable {
+public class PersistentLoginContext implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -76,9 +74,7 @@ public class PersistentLoginContext implements Serializable {
     @Basic(optional = false)
     @Column(name = "lastChangeTimeStamp", nullable = true)
     private Long lastChangeTimeStamp;
-    @PrePersist
-    @PreUpdate
-    private void now() {
+    public void changeTimestamp() {
       lastChangeTimeStamp = System.currentTimeMillis();
     }
 

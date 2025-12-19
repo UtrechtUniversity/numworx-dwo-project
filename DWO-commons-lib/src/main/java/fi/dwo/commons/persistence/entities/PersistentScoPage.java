@@ -1,13 +1,10 @@
 package fi.dwo.commons.persistence.entities;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -20,7 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
     @NamedQuery(name="PersistentScoPage.bySco", query="SELECT p FROM PersistentScoPage p WHERE p.id.scoID = :scoID and p.id.userID = 0 ORDER BY p.id.sequencenr ASC"),
     @NamedQuery(name="PersistentScoPage.byStudentSco", query="SELECT p FROM PersistentScoPage p WHERE p.id.scoID = :scoID and p.id.userID = :userID and p.id.schoolGroupID = :schoolGroupID ORDER BY p.id.sequencenr ASC"),
 })
-public class PersistentScoPage {
+public class PersistentScoPage implements PersistentEntity {
   private static final Float FACTOR_1 = Float.valueOf(1.000f);	
 	
   @EmbeddedId
@@ -34,9 +31,7 @@ public class PersistentScoPage {
   @Column(name="del",nullable = false)
   private DelState delState = DelState.not;
 
-  @PrePersist
-  @PreUpdate
-  void changeTimestamp() {
+  public void changeTimestamp() {
       lastChangeTimeStamp = System.currentTimeMillis();
       if (maxFactor == null) maxFactor = FACTOR_1;
   }

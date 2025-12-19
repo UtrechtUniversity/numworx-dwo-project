@@ -18,36 +18,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class ScoDataManager {
+public class ScoDataManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(ScoDataManager.class.getName());
-
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param ssd studentScoData
-     */
-    public static void create(PersistentScoData ssd) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(ssd);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentScoData.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -61,6 +34,7 @@ public class ScoDataManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            sd.changeTimestamp();
             sd = em.merge(sd);
             em.getTransaction().commit();
             return sd;
@@ -133,15 +107,7 @@ public class ScoDataManager {
     }
 
     public static PersistentScoData findEntity(Long id) {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentScoData.class, id);
-         } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentScoData with " + id + " was not found.", e);
-            throw e;
-         } finally {
-            em.close();
-        }
+        return find(id, PersistentScoData.class);
     }
 
     public static int getEntityCount() {

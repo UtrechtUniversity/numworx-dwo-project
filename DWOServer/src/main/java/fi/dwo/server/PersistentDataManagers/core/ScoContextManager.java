@@ -27,39 +27,10 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class ScoContextManager {
+public class ScoContextManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(ScoContextManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param sc
-     */
-    public static void create(PersistentScoContext sc) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(sc);
-            em.getTransaction().commit();
-        } catch (PersistenceException e) {
-        		LOG.log(Level.SEVERE, "Can't create the PersistentScoContext.", e);
-        		throw e;
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentScoContext, wrap", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -73,6 +44,7 @@ public class ScoContextManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            sc.changeTimestamp();
             sc = em.merge(sc);
             em.getTransaction().commit();
             return sc;
@@ -205,15 +177,7 @@ public class ScoContextManager {
     }
         
     public static PersistentScoContext findEntity(Long id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentScoContext.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentScoContext with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentScoContext.class);
     }
 
     public static int getEntityCount() {

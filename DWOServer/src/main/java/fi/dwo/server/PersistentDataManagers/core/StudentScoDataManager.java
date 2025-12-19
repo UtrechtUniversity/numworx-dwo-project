@@ -24,36 +24,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class StudentScoDataManager {
+public class StudentScoDataManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(StudentScoDataManager.class.getName());
-
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param ssd studentScoData
-     */
-    public static void create(PersistentStudentScoData ssd) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(ssd);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentStudentScoData.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -67,6 +40,7 @@ public class StudentScoDataManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            ssd.changeTimestamp();
             ssd = em.merge(ssd);
             em.getTransaction().commit();
         } catch(PersistenceException e) { 
@@ -142,24 +116,7 @@ public class StudentScoDataManager {
     }
 
     public static PersistentStudentScoData findEntity(Long id) throws PersistenceException {
-        EntityManager em = getEntityManager();
-        try {
-            em.getTransaction().begin();
-            PersistentStudentScoData o = em.find(PersistentStudentScoData.class, id);
-            if (o != null) {
-                em.refresh(o);
-            }
-            em.getTransaction().commit();
-            return o;
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentStudentScoData with " + id + " was not found.", e);
-            throw e;
-        } catch (RuntimeException r) {
-            LOG.log(Level.FINE, "The PersistentStudentScoData with " + id + " had a serious error.", r);
-            throw r;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentStudentScoData.class);
     }
 
     public static int getEntityCount() {

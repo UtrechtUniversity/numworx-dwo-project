@@ -22,39 +22,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class LoginContextManager {
+public class LoginContextManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(LoginContextManager.class.getName());
-
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param loginContext
-     */
-    public static void create(PersistentLoginContext loginContext) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(loginContext);
-            em.getTransaction().commit();
-        } catch (EntityExistsException ex) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentLoginContext.", ex);
-            throw ex;
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentLoginContext.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -67,6 +37,7 @@ public class LoginContextManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            loginContext.changeTimestamp();
             loginContext = em.merge(loginContext);
             em.getTransaction().commit();
             return loginContext;
@@ -157,15 +128,7 @@ public class LoginContextManager {
     }
 
     public static PersistentLoginContext findEntity(Long id) throws PersistenceException {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentLoginContext.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentLoginContext with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentLoginContext.class);
     }
 
     public static int getEntityCount() {

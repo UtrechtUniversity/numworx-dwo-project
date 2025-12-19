@@ -10,7 +10,6 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolGroup;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
-import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +20,6 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -31,14 +29,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class StudentScoContextManager {
+public class StudentScoContextManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(StudentScoContextManager.class.getName());
-
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
 
     /**
      * Create.
@@ -265,15 +258,7 @@ public class StudentScoContextManager {
   }
 
     public static PersistentStudentScoContext findEntity(Long id)  throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentStudentScoContext.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentStudentScoContext with " + id + " was not found.", e);
-            throw e;       
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentStudentScoContext.class);
     }
 
     public static int getEntityCount() {
