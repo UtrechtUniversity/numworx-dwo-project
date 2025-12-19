@@ -20,4 +20,5 @@
 .contentPanel {
 	display: block;
 	overflow-x: visible;
+	page-break-inside: avoid;
 }
