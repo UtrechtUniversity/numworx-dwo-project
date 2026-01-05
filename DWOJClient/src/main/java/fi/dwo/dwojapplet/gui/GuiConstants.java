@@ -193,122 +193,109 @@ public abstract class GuiConstants {
         PLAYER_BASE = getString(prop, "player_base");
 // TODO deze code opnemen in profile.properties:
         dwoProfile = profile;
-
-//        if (profile == 77||profile==100) {
-//          HEADER_COLOR = fi.beans.numworxlf.Constants.COLOR15;
-//          HEADER_TEXT = new Font("Ubuntu", Font.BOLD, 24);
-//          MAIN_FOREGROUND = fi.beans.numworxlf.Constants.COLOR15;
-//          CELL_BACKGROUND = Color.WHITE;
-//
-//        } else
         
-        if (profile == 5 || profile == 56) {
-            MAIN_BACKGROUND = new Color(255, 255, 255);
-            CELL_BACKGROUND = new Color(255, 255, 255);
-            FI_LOGO_LOCATION = "resources/fi.gif";
-            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-            HEADER_COLOR = new Color(0, 0, 0);
-            //if(!DwoHelper.isApplication())
-            GUI_IMAGE_BG = true;
-            //else GUI_IMAGE_BG = false;
-            GUI_IMAGE_WELCOME = "resources/UU-dwo-en-welkom.png";
-            GUI_IMAGE_SCO = "resources/UU-dwo-en-sco.png";
-            GUI_IMAGE_COURSE = "resources/UU-dwo-en-course.png";
-        } else if (profile == 28) {
-            MAIN_BACKGROUND = new Color(255, 255, 255);
-            CELL_BACKGROUND = new Color(255, 255, 255);
-            FI_LOGO_LOCATION = "resources/fi.gif";
-            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-            HEADER_COLOR = new Color(0, 0, 0);
-            GUI_IMAGE_BG = true;
-            GUI_IMAGE_WELCOME = "resources/UU-nkbw-welkom.png";
-            GUI_IMAGE_SCO = "resources/UU-nkbw-sco.png";
-            GUI_IMAGE_COURSE = "resources/UU-nkbw-course.png";
-        } else if (profile == 32) {
-            MAIN_BACKGROUND = new Color(255, 255, 255);
-            CELL_BACKGROUND = new Color(255, 255, 255);
-            FI_LOGO_LOCATION = "resources/fi.gif";
-            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-            HEADER_COLOR = new Color(0, 0, 0);
-            GUI_IMAGE_BG = true;
-            GUI_IMAGE_WELCOME = "resources/zoefi-welkom22.jpg";
-            GUI_IMAGE_SCO = "resources/zoefi-sco.jpg";
-            GUI_IMAGE_COURSE = "resources/zoefi-course.jpg";
-        } else if (profile == 36) {
-            MAIN_BACKGROUND = new Color(255, 255, 255);
-            CELL_BACKGROUND = new Color(255, 255, 255);
-            FI_LOGO_LOCATION = "resources/fi.gif";
-            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-            HEADER_COLOR = new Color(0, 0, 0);
-            GUI_IMAGE_BG = true;
-            GUI_IMAGE_WELCOME = "resources/UU-mi-welkom.png";
-            GUI_IMAGE_SCO = "resources/UU-mi-sco.png";
-            GUI_IMAGE_COURSE = "resources/UU-mi-course.png";
-        } else if (profile == 16 || profile == 25 || profile == 26 || profile == 29 || profile == 30 || profile == 35 || profile == 37 || profile == 50) {
-            MAIN_BACKGROUND = new Color(255, 255, 255);
-            CELL_BACKGROUND = new Color(255, 255, 255);
-            FI_LOGO_LOCATION = "resources/fi.gif";
-            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-            HEADER_COLOR = new Color(0, 0, 0);
-            GUI_IMAGE_BG = true;
-            GUI_IMAGE_WELCOME = "resources/UU-mbo-welkom.png";
-            GUI_IMAGE_SCO = "resources/UU-mbo-sco.png";
-            GUI_IMAGE_COURSE = "resources/UU-mbo-course.png";
-        } else if (profile == 38 || profile == 13 || profile == 20 || profile == 48) {
-            MAIN_BACKGROUND = new Color(255, 255, 255);
-            CELL_BACKGROUND = new Color(255, 255, 255);
-            FI_LOGO_LOCATION = "resources/fi.gif";
-            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-            HEADER_COLOR = new Color(0, 0, 0);
-            GUI_IMAGE_BG = true;
-            GUI_IMAGE_WELCOME = "resources/EPN-welkom.jpg";
-            GUI_IMAGE_SCO = "resources/EPN-sco.png";
-            GUI_IMAGE_COURSE = "resources/EPN-course.png";
-        } else if (profile == 51 || profile == 27) {
-            MAIN_BACKGROUND = new Color(255, 255, 255);
-            CELL_BACKGROUND = new Color(255, 255, 255);
-            FI_LOGO_LOCATION = "resources/fi.gif";
-            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 33);
-            HEADER_COLOR = new Color(0, 95, 169);
-            GUI_IMAGE_BG = true;
-            GUI_IMAGE_WELCOME = "resources/MW-welkom.png";
-            GUI_IMAGE_SCO = "resources/MW-tf-sco.png";
-            GUI_IMAGE_COURSE = "resources/MW-tf-course.png";
-            //GUI_BGIMAGE_ICON = "resources/MW-iconized-bgimage.png";
-            //GUI_BGIMAGE_MENU = "resources/MW-menu-bgimage.png";
-            //GUI_BGIMAGE_SCO  = "resources/MW-sco-bgimage.png";
-        } else if (profile == 39 || profile == 58) {
-            MAIN_BACKGROUND = new Color(255, 255, 255);
-            CELL_BACKGROUND = new Color(255, 255, 255);
-            FI_LOGO_LOCATION = "resources/fi.gif";
-            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-            HEADER_COLOR = new Color(0, 0, 0);
-            GUI_IMAGE_BG = true;
-            GUI_IMAGE_WELCOME = "resources/UU-sk-welkom.png";
-            GUI_IMAGE_SCO = "resources/UU-sk-sco.png";
-            GUI_IMAGE_COURSE = "resources/UU-sk-course.png";
-        } else if (profile == 40 || profile == 41) {
-            MAIN_BACKGROUND = new Color(255, 255, 255);
-            CELL_BACKGROUND = new Color(255, 255, 255);
-            FI_LOGO_LOCATION = "resources/fi.gif";
-            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-            HEADER_COLOR = new Color(0, 0, 0);
-            GUI_IMAGE_BG = true;
-            GUI_IMAGE_WELCOME = "resources/UU-ec-welkom.png";
-            GUI_IMAGE_SCO = "resources/UU-ec-sco.png";
-            GUI_IMAGE_COURSE = "resources/UU-ec-course.png";
-        } else if (profile == 42) {
-            MAIN_BACKGROUND = new Color(255, 255, 255);
-            CELL_BACKGROUND = new Color(255, 255, 255);
-            FI_LOGO_LOCATION = "resources/fi.gif";
-            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
-            HEADER_COLOR = new Color(0, 0, 0);
-            GUI_IMAGE_BG = true;
-            GUI_IMAGE_WELCOME = "resources/UU-bvsd-welkom.png";
-            GUI_IMAGE_SCO = "resources/UU-bvsd-sco.png";
-            GUI_IMAGE_COURSE = "resources/UU-bvsd-course.png";
-        } else {
-        }
+//        if (profile == 5 || profile == 56) {
+//            MAIN_BACKGROUND = new Color(255, 255, 255);
+//            CELL_BACKGROUND = new Color(255, 255, 255);
+//            FI_LOGO_LOCATION = "resources/fi.gif";
+//            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+//            HEADER_COLOR = new Color(0, 0, 0);
+//            GUI_IMAGE_BG = true;
+//            GUI_IMAGE_WELCOME = "resources/UU-dwo-en-welkom.png";
+//            GUI_IMAGE_SCO = "resources/UU-dwo-en-sco.png";
+//            GUI_IMAGE_COURSE = "resources/UU-dwo-en-course.png";
+//        } else if (profile == 28) {
+//            MAIN_BACKGROUND = new Color(255, 255, 255);
+//            CELL_BACKGROUND = new Color(255, 255, 255);
+//            FI_LOGO_LOCATION = "resources/fi.gif";
+//            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+//            HEADER_COLOR = new Color(0, 0, 0);
+//            GUI_IMAGE_BG = true;
+//            GUI_IMAGE_WELCOME = "resources/UU-nkbw-welkom.png";
+//            GUI_IMAGE_SCO = "resources/UU-nkbw-sco.png";
+//            GUI_IMAGE_COURSE = "resources/UU-nkbw-course.png";
+//        } else if (profile == 32) {
+//            MAIN_BACKGROUND = new Color(255, 255, 255);
+//            CELL_BACKGROUND = new Color(255, 255, 255);
+//            FI_LOGO_LOCATION = "resources/fi.gif";
+//            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+//            HEADER_COLOR = new Color(0, 0, 0);
+//            GUI_IMAGE_BG = true;
+//            GUI_IMAGE_WELCOME = "resources/zoefi-welkom22.jpg";
+//            GUI_IMAGE_SCO = "resources/zoefi-sco.jpg";
+//            GUI_IMAGE_COURSE = "resources/zoefi-course.jpg";
+//        } else if (profile == 36) {
+//            MAIN_BACKGROUND = new Color(255, 255, 255);
+//            CELL_BACKGROUND = new Color(255, 255, 255);
+//            FI_LOGO_LOCATION = "resources/fi.gif";
+//            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+//            HEADER_COLOR = new Color(0, 0, 0);
+//            GUI_IMAGE_BG = true;
+//            GUI_IMAGE_WELCOME = "resources/UU-mi-welkom.png";
+//            GUI_IMAGE_SCO = "resources/UU-mi-sco.png";
+//            GUI_IMAGE_COURSE = "resources/UU-mi-course.png";
+//        } else if (profile == 16 || profile == 25 || profile == 26 || profile == 29 || profile == 30 || profile == 35 || profile == 37 || profile == 50) {
+//            MAIN_BACKGROUND = new Color(255, 255, 255);
+//            CELL_BACKGROUND = new Color(255, 255, 255);
+//            FI_LOGO_LOCATION = "resources/fi.gif";
+//            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+//            HEADER_COLOR = new Color(0, 0, 0);
+//            GUI_IMAGE_BG = true;
+//            GUI_IMAGE_WELCOME = "resources/UU-mbo-welkom.png";
+//            GUI_IMAGE_SCO = "resources/UU-mbo-sco.png";
+//            GUI_IMAGE_COURSE = "resources/UU-mbo-course.png";
+//        } else if (profile == 38 || profile == 13 || profile == 20 || profile == 48) {
+//            MAIN_BACKGROUND = new Color(255, 255, 255);
+//            CELL_BACKGROUND = new Color(255, 255, 255);
+//            FI_LOGO_LOCATION = "resources/fi.gif";
+//            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+//            HEADER_COLOR = new Color(0, 0, 0);
+//            GUI_IMAGE_BG = true;
+//            GUI_IMAGE_WELCOME = "resources/EPN-welkom.jpg";
+//            GUI_IMAGE_SCO = "resources/EPN-sco.png";
+//            GUI_IMAGE_COURSE = "resources/EPN-course.png";
+//        } else if (profile == 51 || profile == 27) {
+//            MAIN_BACKGROUND = new Color(255, 255, 255);
+//            CELL_BACKGROUND = new Color(255, 255, 255);
+//            FI_LOGO_LOCATION = "resources/fi.gif";
+//            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 33);
+//            HEADER_COLOR = new Color(0, 95, 169);
+//            GUI_IMAGE_BG = true;
+//            GUI_IMAGE_WELCOME = "resources/MW-welkom.png";
+//            GUI_IMAGE_SCO = "resources/MW-tf-sco.png";
+//            GUI_IMAGE_COURSE = "resources/MW-tf-course.png";
+//        } else if (profile == 39 || profile == 58) {
+//            MAIN_BACKGROUND = new Color(255, 255, 255);
+//            CELL_BACKGROUND = new Color(255, 255, 255);
+//            FI_LOGO_LOCATION = "resources/fi.gif";
+//            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+//            HEADER_COLOR = new Color(0, 0, 0);
+//            GUI_IMAGE_BG = true;
+//            GUI_IMAGE_WELCOME = "resources/UU-sk-welkom.png";
+//            GUI_IMAGE_SCO = "resources/UU-sk-sco.png";
+//            GUI_IMAGE_COURSE = "resources/UU-sk-course.png";
+//        } else if (profile == 40 || profile == 41) {
+//            MAIN_BACKGROUND = new Color(255, 255, 255);
+//            CELL_BACKGROUND = new Color(255, 255, 255);
+//            FI_LOGO_LOCATION = "resources/fi.gif";
+//            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+//            HEADER_COLOR = new Color(0, 0, 0);
+//            GUI_IMAGE_BG = true;
+//            GUI_IMAGE_WELCOME = "resources/UU-ec-welkom.png";
+//            GUI_IMAGE_SCO = "resources/UU-ec-sco.png";
+//            GUI_IMAGE_COURSE = "resources/UU-ec-course.png";
+//        } else if (profile == 42) {
+//            MAIN_BACKGROUND = new Color(255, 255, 255);
+//            CELL_BACKGROUND = new Color(255, 255, 255);
+//            FI_LOGO_LOCATION = "resources/fi.gif";
+//            HEADER_TEXT = new Font("SansSerif", Font.BOLD, 36);
+//            HEADER_COLOR = new Color(0, 0, 0);
+//            GUI_IMAGE_BG = true;
+//            GUI_IMAGE_WELCOME = "resources/UU-bvsd-welkom.png";
+//            GUI_IMAGE_SCO = "resources/UU-bvsd-sco.png";
+//            GUI_IMAGE_COURSE = "resources/UU-bvsd-course.png";
+//        } else {
+//        }
     }
 
     private static void installFonts(String fonts) {

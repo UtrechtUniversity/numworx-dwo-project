@@ -469,7 +469,7 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
         }
         if (args != null && args.length > o && args[o] != null) {
             try {
-            	dwoProfileKey = args[0];
+            	dwoProfileKey = args[o];
                 dwoProfileID = Integer.parseInt(args[o]);
             } catch (NumberFormatException e) {
             }
