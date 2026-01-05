@@ -2384,10 +2384,10 @@ public class Algebra
 
 		if (e instanceof Vermenigvuldiging)
 		{
-			if (e.kind1.geefWaarde() == 1)
-				return e.kind2;
-			else if (e.kind1.geefWaarde() == 0 || e.kind2.geefWaarde() == 0)
+			if (e.kind1.geefWaarde() == 0 || e.kind2.geefWaarde() == 0)
 				return new BasisExpressie(0);
+			else if (e.kind1.geefWaarde() == 1)
+				return e.kind2;
 			else if (e.kind2.geefWaarde() == 1)
 				return e.kind1;
 			else if (e.kind1.geefWaarde() == -1)
