@@ -390,8 +390,7 @@ public abstract class GuiConstants {
 
     private static boolean getBoolean(Properties p, String key) {
         String value = p.getProperty(key);
-        //return Boolean.parseBoolean(value); // 1.5
-        return Boolean.valueOf(value);
+        return Boolean.parseBoolean(value); // since 1.5
     }
 
     private static String getString(Properties p, String key) {
