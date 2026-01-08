@@ -643,6 +643,15 @@ ${upload.servlet.mapping}
       <param-name>hstsMaxAgeSeconds</param-name>
       <param-value>31536000</param-value>
     </init-param>
+<!-- iframe in rekenweb/wikiwijs, possibly others: turn off -->
+    <init-param>
+    	<param-name>antiClickJackingOption</param-name>
+    	<param-value>SAMEORIGIN</param-value>
+    </init-param>
+    <init-param>
+    	<param-name>antiClickJackingEnabled</param-name>
+    	<param-value>false</param-value>
+    </init-param>
 </filter>
 <filter-mapping>
     <filter-name>httpHeaderSecurity</filter-name>
