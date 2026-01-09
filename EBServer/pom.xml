@@ -890,11 +890,11 @@
   	</init-param>
   	<init-param>
   		<param-name>maxSize</param-name>
-  		<param-value>20971520</param-value>
+  		<param-value>52428800</param-value>
   	</init-param>
   	<init-param>
   		<param-name>maxFileSize</param-name>
-  		<param-value>20971520</param-value>
+  		<param-value>52428800</param-value>
   	</init-param>
   </servlet>
   <servlet>
