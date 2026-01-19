@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd target/UploadWidgetGWT
+cd target/uploadwidgetgwt
 S=UploadWidgetGWT.css
 cp $S $HOME/Public/apps/
 S=UploadWidgetGWT

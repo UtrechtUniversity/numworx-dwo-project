@@ -13,8 +13,6 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.validation.constraints.Null;
-
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
