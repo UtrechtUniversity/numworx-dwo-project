@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
@@ -104,9 +105,9 @@ public class DwoSystemParametersManager implements Serializable {
     private static List<PersistentDwoSystemParameters> findEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            CriteriaQuery<PersistentDwoSystemParameters> cq = em.getCriteriaBuilder().createQuery(PersistentDwoSystemParameters.class);
             cq.select(cq.from(PersistentDwoSystemParameters.class));
-            Query q = em.createQuery(cq);
+            TypedQuery<PersistentDwoSystemParameters> q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);

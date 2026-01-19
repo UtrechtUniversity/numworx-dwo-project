@@ -87,10 +87,10 @@ public class PersistentDwoProfile implements Serializable {
     @Column(name = "language", length = 5)
     private String language;
     @Size(max = 45)
-    @Column(name = "title", length = 5)
+    @Column(name = "title", length = 45)
     private String title;
     @Size(max = 45)
-    @Column(name = "base", length = 5)
+    @Column(name = "base", length = 45)
     private String base;
     
     
