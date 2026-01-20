@@ -20,36 +20,10 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class SamlUserManager {
+public class SamlUserManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(SamlUserManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param persistentUser
-     */
-    public static void create(PersistentSamlUser persistentUser) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(persistentUser);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentSamlUser.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -62,6 +36,7 @@ public class SamlUserManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            persistentUser.changeTimestamp();
             persistentUser = em.merge(persistentUser);
             em.getTransaction().commit();
         } catch (Exception e) {

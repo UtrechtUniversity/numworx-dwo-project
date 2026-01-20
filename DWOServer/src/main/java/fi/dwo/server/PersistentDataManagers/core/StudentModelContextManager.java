@@ -34,49 +34,9 @@ import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
  *
  * @author G.A.J. van der Plas
  */
-public class StudentModelContextManager {
+public class StudentModelContextManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(StudentModelContextManager.class.getName());
-
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param model
-     */
-    public static PersistentStudentModelContext create(PersistentStudentModelContext model) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            model.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());
-            PersistentDwoProfile profile = null;
-            Long pid = model.getDwoProfileID();
-            if (pid != null && pid.longValue() != 0L) {
-            	model.setDwoProfileID(null);
-            	if (model.getSchoolID() == 0L)
-            		profile = em.find(PersistentDwoProfile.class, pid);
-            }
-            em.persist(model);
-            if (profile != null) {
-            	model.getProfiles().add(profile);
-            	profile.getStudentModels().add(model);
-            }
-           em.getTransaction().commit();
-            return model;
-        } catch (RuntimeException e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentStudentModelContext.", e);
-            throw e;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -89,7 +49,7 @@ public class StudentModelContextManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            model.setLastChangeTimeStamp(DwoDateUtilities.getCurrentDwoUnixTimeStamp());            
+            model.changeTimestamp();        
             model = em.merge(model);
             em.getTransaction().commit();
         } catch (PersistenceException e) {
@@ -252,15 +212,7 @@ public class StudentModelContextManager {
 	
 
 	public static PersistentStudentModelContext findEntity(Long id) throws PersistenceException {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentStudentModelContext.class, id);
-         } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentStudentModelContext with " + id + " was not found.", e);
-            throw e;
-       } finally {
-            em.close();
-        }
+        return find(id, PersistentStudentModelContext.class);
     }
 
     public static int getEntityCount() {

@@ -8,8 +8,6 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -25,7 +23,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
   @NamedQuery(name = "PersistentSchoolMethod.findAll", query = "SELECT p FROM PersistentSchoolMethod p"),
   @NamedQuery(name = "PersistentSchoolMethod.findBySchoolID", query = "SELECT p FROM PersistentSchoolMethod p WHERE p.id.schoolID = :schoolID")
 })
-public class PersistentSchoolMethod {
+public class PersistentSchoolMethod implements PersistentEntity {
   @EmbeddedId
   private PersistentSchoolMethodPK id;
 
@@ -84,11 +82,9 @@ public class PersistentSchoolMethod {
   @Column(name = "lastChangeTimeStamp", nullable = true)
   private Long lastChangeTimeStamp;
 
-  @PrePersist
-  @PreUpdate
-    private void now() {
-      lastChangeTimeStamp = System.currentTimeMillis();
-    }
+  public void changeTimestamp() {
+    lastChangeTimeStamp = System.currentTimeMillis();
+  }
 
   public Long getOptlock() {
     return optlock;

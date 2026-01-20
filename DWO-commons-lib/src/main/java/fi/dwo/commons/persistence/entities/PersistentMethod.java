@@ -41,7 +41,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
         size=10, // Use 64,000 as the initial cache size. 
         expiry=36000000 // 10 minutes 
 )
-public class PersistentMethod implements Serializable {
+public class PersistentMethod implements Serializable, PersistentEntity {
 
     public PersistentMethod() {
       dwoProfileID = Long.valueOf(77); // FIXME temporary
@@ -132,11 +132,9 @@ public class PersistentMethod implements Serializable {
       this.method = method;
     }
 
-    @PrePersist
-    @PreUpdate
-      private void now() {
+    public void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
-      }
+    }
 
     public Long getDwoProfileID() {
       return dwoProfileID;

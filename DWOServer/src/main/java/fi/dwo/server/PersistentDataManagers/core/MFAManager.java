@@ -14,40 +14,9 @@ import javax.persistence.criteria.Root;
 import fi.dwo.commons.persistence.entities.PersistentMFA;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
-public class MFAManager {
+public class MFAManager extends AbstractManager {
     private static final Logger LOG = Logger.getLogger(MFAManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param mfa persistentMFA
-     */
-    public static void create(PersistentMFA mfa) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(mfa);
-            em.getTransaction().commit();
-        } 
-        catch (PersistenceException e) {
-          LOG.log(Level.SEVERE, "Can't create the PersistentMFA.", e);
-          throw e;
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentMFA.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -59,6 +28,7 @@ public class MFAManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            mfa.changetTimestamp();
             mfa = em.merge(mfa);
             em.getTransaction().commit();
             return mfa;
@@ -120,15 +90,7 @@ public class MFAManager {
     }
 
     public static PersistentMFA findEntity(Long id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentMFA.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentMFA with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+    	return find(id, PersistentMFA.class);
     }
 
     public static int getEntityCount() {

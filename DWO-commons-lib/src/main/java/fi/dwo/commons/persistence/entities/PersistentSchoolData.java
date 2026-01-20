@@ -1,39 +1,21 @@
 /* Copyrighted 2015.  */
 package fi.dwo.commons.persistence.entities;
 
-import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchool4DwoAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolDataFull;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFrom;
-import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
-import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
-import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
 /**
  *
@@ -50,7 +32,7 @@ import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 //        size=10000, // Use 64,000 as the initial cache size. 
 //        expiry=36000000 // 10 minutes 
 //)
-public class PersistentSchoolData implements Serializable {
+public class PersistentSchoolData implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -67,9 +49,7 @@ public class PersistentSchoolData implements Serializable {
     @Column(name = "lastChangeTimeStamp")
     private long lastChangeTimeStamp;
 
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
     

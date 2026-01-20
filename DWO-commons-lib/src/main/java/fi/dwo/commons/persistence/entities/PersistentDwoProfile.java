@@ -15,8 +15,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -46,7 +44,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileBase", query = "SELECT p FROM PersistentDwoProfile p WHERE p.base = :base"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileRights", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileRights = :dwoProfileRights"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileDescription", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileDescription = :dwoProfileDescription")})
-public class PersistentDwoProfile implements Serializable {
+public class PersistentDwoProfile implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -261,9 +259,7 @@ public class PersistentDwoProfile implements Serializable {
         return id;
     }
 
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public  void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
 

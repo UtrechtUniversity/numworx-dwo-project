@@ -22,17 +22,13 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 
-public class MethodManager {
+public class MethodManager extends AbstractManager {
     private static final Logger LOG = Logger.getLogger(MethodManager.class.getName());
     public static final Long NUL = Long.valueOf(0L);
 
 	private MethodManager() {
 	}
 
-	private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
     /**
      * Create.
      *
@@ -52,6 +48,7 @@ public class MethodManager {
 //            	if (method.getSchoolID() == 0L)
 //            		profile = em.find(PersistentDwoProfile.class, pid);
 //            }
+            method.changetTimestamp();
             em.persist(method);
             if (profile != null) {
             	method.getProfiles().add(profile);
@@ -83,6 +80,7 @@ public class MethodManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            method.changeTimestamp();
             method = em.merge(method);
             em.getTransaction().commit();
             return method;
@@ -157,15 +155,7 @@ public class MethodManager {
     }
 
     public static PersistentMethod findEntity(String id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentMethod.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentRole with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentMethod.class);
     }
 
     public static int getEntityCount() {

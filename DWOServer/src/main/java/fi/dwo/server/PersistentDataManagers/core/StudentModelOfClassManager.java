@@ -7,59 +7,19 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import fi.dwo.commons.persistence.entities.PersistentHasRolePK;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelContext;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentModelOfClassPK;
-import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
-import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
-import fi.dwo.server.persistence.DwoEmfFactory;
 
-public class StudentModelOfClassManager {
+public class StudentModelOfClassManager extends AbstractManager {
 
 	private static final Logger LOG = Logger.getLogger(StudentModelOfClassManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param studentOf
-     */
-    public static void create(PersistentStudentModelOfClass studentOf) throws PersistenceException {
-        EntityManager em = null;
-// assert userid not nul(l)     
-        final Long classID = studentOf.getId().getClassID();
-		if (classID == null || classID.longValue() == 0) {
-			throw new PersistenceException("StudentModelOfClass.classid=" + classID);
-		}
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(studentOf);
-            em.getTransaction().commit();
-        }
-        catch (PersistenceException e) {
-          LOG.log(Level.WARNING, "Can't create the PersistentStudentModelOfClass.", e);
-          throw (e);
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentStudentModelOfClass.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -72,6 +32,7 @@ public class StudentModelOfClassManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            studentOf.changeTimestamp();
             studentOf = em.merge(studentOf);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -173,15 +134,7 @@ public class StudentModelOfClassManager {
     }    
     
     public static PersistentStudentModelOfClass findEntity(PersistentStudentModelOfClassPK id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentStudentModelOfClass.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentStudentOfClass with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentStudentModelOfClass.class);
     }
 
     public static int getEntityCount() {

@@ -19,8 +19,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -56,7 +54,7 @@ import org.eclipse.persistence.annotations.Converter;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentStudentModelContext.findBySchoolID", query = "SELECT p FROM PersistentStudentModelContext p WHERE p.schoolID = :schoolID")})
-public class PersistentStudentModelContext implements Serializable {
+public class PersistentStudentModelContext implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -236,9 +234,7 @@ public class PersistentStudentModelContext implements Serializable {
 //        this.classType = classType;
 //    }
     
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
 

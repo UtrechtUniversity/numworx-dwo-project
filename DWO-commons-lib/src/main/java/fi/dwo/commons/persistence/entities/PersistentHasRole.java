@@ -15,8 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -45,7 +43,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 //        size=10000, // Use 64,000 as the initial cache size. 
 //        expiry=36000000 // 10 minutes 
 //)
-public class PersistentHasRole implements Serializable {
+public class PersistentHasRole implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
@@ -239,9 +237,7 @@ public class PersistentHasRole implements Serializable {
 			this.classID = null;
 	}
     
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public void changeTimestamp() {
     	lastChangeTimeStamp = System.currentTimeMillis();
     }
 

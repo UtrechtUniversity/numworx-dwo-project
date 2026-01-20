@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -28,7 +26,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @NamedQueries({
     @NamedQuery(name = "PersistentImage.findAll", query = "SELECT p FROM PersistentImage p"),
     @NamedQuery(name = "PersistentImage.findByCourseID", query = "SELECT p FROM PersistentImage p WHERE p.courseID = :courseID")})
-public class PersistentImage implements Serializable {
+public class PersistentImage implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -125,9 +123,7 @@ public class PersistentImage implements Serializable {
     @Version 
     private Long optlock;
 
-    @PrePersist
-    @PreUpdate
-    private void now() {
+    public void changeTimestamp() {
       lastChangeTimeStamp = System.currentTimeMillis();
     }
 

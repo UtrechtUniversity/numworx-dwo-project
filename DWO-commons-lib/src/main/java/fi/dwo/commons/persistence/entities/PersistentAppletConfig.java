@@ -38,7 +38,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 		@NamedQuery(name = "PersistentAppletConfig.findByAppletID", query = "SELECT p FROM PersistentAppletConfig p WHERE p.appletID = :appletID"),
 		@NamedQuery(name = "PersistentAppletConfig.findByName", query = "SELECT p FROM PersistentAppletConfig p WHERE p.name = :name"),
 		@NamedQuery(name = "PersistentAppletConfig.findByLanguage", query = "SELECT p FROM PersistentAppletConfig p WHERE p.language = :language") })
-public class PersistentAppletConfig implements Serializable {
+public class PersistentAppletConfig implements Serializable, PersistentEntity {
 
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -222,9 +222,7 @@ public class PersistentAppletConfig implements Serializable {
 		return id;
 	}
 
-	@PrePersist
-	@PreUpdate
-	void changeTimestamp() {
+	public void changeTimestamp() {
 		lastChangeTimeStamp = System.currentTimeMillis();
 	}
 

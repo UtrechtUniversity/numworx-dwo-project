@@ -24,36 +24,10 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class DwoProfileManager {
+public class DwoProfileManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(DwoProfileManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param dwoProfile
-     */
-    public static void create(PersistentDwoProfile dwoProfile) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(dwoProfile);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentDwoProfile.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -67,6 +41,7 @@ public class DwoProfileManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            dwoProfile.changeTimestamp();
             dwoProfile = em.merge(dwoProfile);
             em.getTransaction().commit();
             return dwoProfile;

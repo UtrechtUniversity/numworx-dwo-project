@@ -23,42 +23,10 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class HasRoleManager {
+public class HasRoleManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(HasRoleManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param hasRole
-     */
-    public static void create(PersistentHasRole hasRole) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(hasRole);
-            em.getTransaction().commit();
-        }
-        catch (PersistenceException e) {
-          LOG.log(Level.SEVERE, "Can't create the PersistentHasRole.", e);
-          throw (e);
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentHasRole.", e);
-            throw newPersistenceException(e);
-        }
-        finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -71,6 +39,7 @@ public class HasRoleManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            hasRole.changeTimestamp();
             hasRole = em.merge(hasRole);
             em.getTransaction().commit();
             return hasRole;
@@ -220,16 +189,7 @@ public class HasRoleManager {
     }
 
     public static PersistentHasRole findEntity(PersistentHasRolePK id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentHasRole.class, id);
-         } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentHasRole with " + id + " was not found.", e);
-            throw e;       
-        }
-        finally {
-            em.close();
-        }
+    	return find(id, PersistentHasRole.class);
     }
 
     public static int getEntityCount() {
