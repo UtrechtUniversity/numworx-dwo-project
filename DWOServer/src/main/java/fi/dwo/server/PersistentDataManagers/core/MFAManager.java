@@ -1,7 +1,6 @@
 package fi.dwo.server.PersistentDataManagers.core;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
@@ -12,7 +11,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import fi.dwo.commons.persistence.entities.PersistentMFA;
-import fi.dwo.server.persistence.DwoEmfFactory;
 
 public class MFAManager extends AbstractManager {
     private static final Logger LOG = Logger.getLogger(MFAManager.class.getName());
@@ -28,7 +26,7 @@ public class MFAManager extends AbstractManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            mfa.changetTimestamp();
+            mfa.changeTimestamp();
             mfa = em.merge(mfa);
             em.getTransaction().commit();
             return mfa;

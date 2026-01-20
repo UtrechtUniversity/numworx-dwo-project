@@ -183,8 +183,10 @@ public class ACLManager extends AbstractManager {
              item.setCourseID(s.getCourseID());
              item.setDwoProfileID(s.getDwoProfileID());
              item.setSchoolID(s.getSchoolID());
+             item.changeTimestamp();
              em.persist(item);
            } else {
+        	 item.changeTimestamp();
              item = em.merge(item);
            }
            list.add(item);

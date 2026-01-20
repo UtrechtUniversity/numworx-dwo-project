@@ -48,7 +48,7 @@ public class MethodManager extends AbstractManager {
 //            	if (method.getSchoolID() == 0L)
 //            		profile = em.find(PersistentDwoProfile.class, pid);
 //            }
-            method.changetTimestamp();
+            method.changeTimestamp();
             em.persist(method);
             if (profile != null) {
             	method.getProfiles().add(profile);
