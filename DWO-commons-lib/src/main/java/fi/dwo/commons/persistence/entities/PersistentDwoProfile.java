@@ -215,7 +215,7 @@ public class PersistentDwoProfile implements Serializable {
     }
 
     private void fillDomDwoProfile(DomDwoProfile profile) {
-        profile.setId(buildPersistenceId());
+        profile.setId(buildPersistenceId(), dwoProfileID);
         profile.setOptLock(getOptlock());
         profile.setDwoProfileName(getDwoProfileName());
         profile.setDwoProfileRights(getDwoProfileRights());

@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.dwo.server.db.Util" %>
-<%@ include file="/dwo/saml_util.jsp" %>
+<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache" %>
 <!DOCTYPE html>
 <% 
-	int profile = 77;
+	int profile = PublicProfileCache.get("VO").asLong().intValue();
 	String query = request.getQueryString();
 	if(Util.illegal(query))
 	 	query = "?base=/vo/&responsive=true&profile=" + profile;
@@ -15,6 +15,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
 		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width">
         <title>Numworx Voortgezet Onderwijs</title>
 		<style type="text/css">
