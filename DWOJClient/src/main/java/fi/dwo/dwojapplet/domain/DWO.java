@@ -2071,7 +2071,7 @@ LOG.info("time results = " + (-t) + " ms");
     		if(parent != null && parent.getChildren() != null)
     			pc.setSequencenr(Long.valueOf(parent.getChildren().length));
     		else 
-    			; // TODO from root
+    			pc.setSequencenr(0L); // TODO from root
     		
     		DomCourseFull edit = pc.buildDomCourseFull();
 			edit = manager.add(edit);
