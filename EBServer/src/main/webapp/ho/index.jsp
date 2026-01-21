@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache" %>
 <!DOCTYPE html>
 <% 
-	int profile = 99;
+	int profile = PublicProfileCache.get("HO").asLong().intValue();
     String base = "/ho/";
     String locale = "nl";  
 %>

@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="fi.dwo.server.db.Util" %>
-<%@ include file="/dwo/saml_util.jsp" %>
+<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache" %>
 <!DOCTYPE html>
 <% 
-	int profile = 106;
+	int profile = PublicProfileCache.get("/public").asLong().intValue();
 	String query = request.getQueryString();
 	if(Util.illegal(query))
 	 	query = "?base=/public/&responsive=true&profile=" + profile;

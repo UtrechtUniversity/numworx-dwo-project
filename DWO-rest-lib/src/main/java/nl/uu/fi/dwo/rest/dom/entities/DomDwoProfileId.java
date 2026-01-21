@@ -20,12 +20,14 @@ public class DomDwoProfileId extends DomId {
 		super.setId(id);
 	}
 
-	public void setId(PersistenceId id, Long profile) {
+	public void setProfile(PersistenceId id, Long profile) {
 		this.profile = profile;
 		super.setId(id);
 	}
 
+
 	private transient Long profile; // cache...
+
 	public Long asLong() {
 		if  (profile != null) return profile;
 		PersistenceId id = getId();

@@ -3,6 +3,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="fi.servlet.dwomaccess.Subnet" %>
 <%@ page import="java.util.*" %>
+<%@ page import="nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache" %>
 <%@ include file="/dwo/saml_util.jsp" %>
 <%@ include file='/dwo/toets_util.jsp' %>
 <!doctype html>
@@ -51,6 +52,7 @@
 		} catch(Exception e) {}
 	}
 	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
+	int profile = PublicProfileCache.get("VO").asLong().intValue();
 %>
 <html>
   <head>
@@ -59,7 +61,7 @@
     <link type="text/css" rel="stylesheet" href="<%=cdn %>/apps/images/font-awesome-4.1.0/css/font-awesome.css">
     <meta name="gwt:property" content="locale=nl" >
     <script>
-    	DWO_PROFILE_ID = 77
+    	DWO_PROFILE_ID = <%=profile%>
     	formfactor = "<%=formfactor%>"
     	SECURE_MODE="SEB" // possibly others
         dwo_env = "<%=dwo_env%>"
