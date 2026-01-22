@@ -6,7 +6,53 @@
 // and `.wasm` files as well:
 importScripts("https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js");
 
+self.state = { bytes: [], cnt: 0, off: 0, code: ""}
+
 self.output = function(ch) {
+
+	if (ch < 0) {
+		ch = ch & 0xFF; // make 128..255
+		if ( (ch & 0x40) == 0) { // continuation byte
+			self.state.bytes[self.state.off++] = ch & 0x3F;
+			if (self.state.off >= self.state.cnt) {
+				ch = self.state.bytes[0];
+				for(i = 1; i < self.state.cnt; i ++) {
+					ch = (ch << 6) + self.state.bytes[i];
+				}
+				self.state.bytes = []
+				self.state.off = 0;
+				self.state.cnt = 0;
+				if (ch > 0xFFFF) {
+				    ch -= 0x10000;
+					var lo = ch & 0x3FF;
+					var hi = ch >>> 10;
+					let string = String.fromCharCode(hi|0xD800) + String.fromCharCode(lo|0xDC00);
+					self.postMessage(JSON.stringify( { "output": string } ))
+					return;
+				}				
+			} else { 
+				return;
+			}	
+		} else switch (ch & 0xF0) {
+		case 0xC0: 
+		case 0xD0:
+			self.state.bytes = [ ch & 0x1F ]; // 11 bits
+			self.state.off = 1;
+			self.state.cnt = 2;
+			return;
+		case 0xE0:
+			self.state.bytes = [ ch & 0xF ]; // 16 bits
+			self.state.off = 1;
+			self.state.cnt = 3;
+			return;	
+		case 0xF0:
+			self.state.bytes = [ ch & 0xF ]; // 22 bits of 21 bits??
+			self.state.off = 1;
+			self.state.cnt = 4;
+			return;
+		}
+	}
+
 	let string = String.fromCharCode(ch);
 	self.postMessage(JSON.stringify( { "output": string } ))
 }
