@@ -34,6 +34,7 @@ public class DwoRedirect extends HttpServlet {
 		HttpSession session = req.getSession();
 		String state = (String) session.getAttribute("dwologin.state");
 		if (state == null) {
+			log("FATAL: dwologin.state = null");
 			resp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 			return;
 		}
