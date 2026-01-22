@@ -452,6 +452,7 @@
 				<gwt.compiler.force>false</gwt.compiler.force>
  				<warClassifier>debug</warClassifier>
 				<maven.war.webxml>war/WEB-INF/web.xml</maven.war.webxml>
+				<runTarget>DWO2player.html</runTarget>
 			</properties>
 			<build>
 				<plugins>
@@ -466,6 +467,7 @@
                     	<DWO_ENV>test</DWO_ENV>                   
                     </systemProperties>
                     <warSourceDirectory>target/${finalName}</warSourceDirectory>
+                    <port>8888</port>
                 </configuration> 
                 <dependencies>
                     <dependency>
