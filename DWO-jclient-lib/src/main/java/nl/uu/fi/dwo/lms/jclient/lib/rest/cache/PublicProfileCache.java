@@ -17,7 +17,7 @@ public class PublicProfileCache {
 
 	static volatile private Cache<String, DomDwoProfileFull> _instance;
 
-	static synchronized Cache<String, DomDwoProfileFull> cache() {
+	public static synchronized Cache<String, DomDwoProfileFull> cache() {
 		if (_instance == null) {
 				_instance = CacheUtilManager.createCache(NAME, String.class, DomDwoProfileFull.class);
 
