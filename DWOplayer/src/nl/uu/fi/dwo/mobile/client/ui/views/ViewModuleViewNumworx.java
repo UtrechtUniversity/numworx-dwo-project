@@ -103,6 +103,7 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
           }
       };
       initWidget(root = uiBinder.createAndBindUi(this));
+      headerView.installTop(headerTop);
       delegate.initialize();
       if (noBottom) {
     	  root.setWidgetHidden(headerBottom, noBottom);
