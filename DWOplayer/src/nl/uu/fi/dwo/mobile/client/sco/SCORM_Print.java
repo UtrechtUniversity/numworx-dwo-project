@@ -44,13 +44,17 @@ public class SCORM_Print extends SCORM_2004_API {
 		return Promises.resolved("");
 	}
 
+	public static class NoSupport extends Exception { } // marker instead of resolve("")
+	
 	@Override
 	public Promise<String> getValuePromise(String name) {
-		return Promises.resolved("");
+		if (hasGetValueAsync()) return super.getValuePromise(name);
+		return Promises.failed(new NoSupport());
 	}
 
 	@Override
 	public Promise<Map<String, String>> getValuesPromise(Collection<String> names) {
+		//return Promises.failed(new NoSupport());
 		return super.getValuesPromise(names);
 	}
 
