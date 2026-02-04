@@ -1031,18 +1031,18 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		return enabled;
 	}
 
-	public FormuleButton getButton(int j)
-	{
-		try
-		{
-			return buttons.get(j);
-		}
-		catch (Exception e)
-		{
-			return null;
-		}
-
-	}
+//	public FormuleButton getButton(int j)
+//	{
+//		try
+//		{
+//			return buttons.get(j);
+//		}
+//		catch (Exception e)
+//		{
+//			return null;
+//		}
+//
+//	}
 
 	private void addButtonHandler(FormuleButton button, int id)
 	{
@@ -1245,7 +1245,7 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 		}
 	}
 
-	private int getItemCorrectie(int j)
+	public int getItemCorrectie(int j)
 	{
 		HashMap state = states[currentActiviteit][j];
 		ObjectMap map = JSONUtilities.wrapMap(state);
@@ -3161,5 +3161,13 @@ public class OpdrNav implements OpdrNavIF, Runnable, ScoreNavIF.GotoOpdracht
 
 	public void setVisited(Collection<String> v) {
 		visited[getCurrentActiviteit()][getCurrentOpdracht()] = v;
+	}
+
+	public String getTitle(int j) {
+		HashMap<String, Object> opdrachtInfo = opdrachten[0][j];
+		ObjectMap ht = JSONUtilities.wrapMap(opdrachtInfo);
+		if (ht.getBoolean("hasTitle", false))
+			return ht.getString("titel");
+		return null;
 	}
 }

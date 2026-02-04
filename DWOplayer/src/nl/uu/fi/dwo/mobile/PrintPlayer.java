@@ -225,12 +225,23 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 			ViewModuleViewImpl other = (ViewModuleViewImpl) component.view();
 			RootPanel.get().add(other);
 			other.setupView(launchdata);
+			setTitle(on, cur, ps);
 			cur++;
 		}
 		PrintSeparator ps = new PrintSeparator(cur);
+		setTitle(on,cur, ps);
 		RootPanel.get().add(ps);		
 	    RootLayoutPanel.get().getElement().getStyle().setDisplay(Display.NONE); // No rootlayoutpanel here.
 		return p;
+	}
+
+	protected void setTitle(OpdrNav on, int cur, PrintSeparator ps) {
+		int maxScore = on.getMaxScores()[cur-1];
+		int score = on.getScoresHuidigeActiviteit()[cur-1];
+		int corr = on.getItemCorrectie(cur-1);
+		ps.setScore(score, corr, maxScore);
+		String title = on.getTitle(cur-1);
+		ps.setTitle(title);
 	}
 	
 	private void failure(Promise<?>p) {
