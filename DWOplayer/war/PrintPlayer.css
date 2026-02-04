@@ -22,3 +22,7 @@
 	overflow-x: visible;
 	page-break-inside: avoid;
 }
+
+svg text, img {
+	page-break-inside: avoid;
+}

@@ -12,6 +12,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
@@ -19,8 +22,10 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 //import com.googlecode.mgwt.ui.client.MGWT;
 //import com.googlecode.mgwt.ui.client.MGWTSettings;
@@ -44,7 +49,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
  * die moet worden weggewerkt!
  * daar komt ook de .landscape vandaan!@!!!
  */
-public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, ClosingHandler {
+public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, ClosingHandler, ResizeHandler {
 
 	public PrintPlayer() {
 		super();
@@ -133,6 +138,9 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 			logger.log(Level.SEVERE, "api.initialize()", fail.getFailure());
 		});
 
+		if (DWOplayer.RESPONSIVE) {
+			Window.addResizeHandler(this);
+		}
 }
 
 
@@ -166,16 +174,6 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
  * Helemaal uitzetten. Deze setup heeft zijeffecten. We doen alles default.
  */
 	protected void MGWTsetup() {
-//		//MGWT Settings//
-//		ViewPort viewport = new MGWTSettings.ViewPort();
-//		//viewport.setTargetDensity(DENSITY.MEDIUM);
-//		//viewport.setUserScaleAble(false).setMinimumScale(1.0).setMaximumScale(1.0);
-//		MGWTSettings settings = new MGWTSettings();
-//		settings.setViewPort(viewport);
-//		//settings.setAddGlosToIcon(true);
-//		settings.setFullscreen(true);
-//		settings.setPreventScrolling(false);
-//		MGWT.applySettings(settings);
 	}
 
 	@Override
@@ -231,7 +229,8 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 		PrintSeparator ps = new PrintSeparator(cur);
 		setTitle(on,cur, ps);
 		RootPanel.get().add(ps);		
-	    RootLayoutPanel.get().getElement().getStyle().setDisplay(Display.NONE); // No rootlayoutpanel here.
+	    RootLayoutPanel.get().getElement().getStyle().setVisibility(Visibility.HIDDEN); // No rootlayoutpanel here.
+	    RootLayoutPanel.get().setStyleName("screenonly");
 		return p;
 	}
 
@@ -290,6 +289,18 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
   public void onWindowClosing(ClosingEvent event) {
     view.abort();    
   }
+
+  private void resize(Widget w) {
+	  if (w instanceof RequiresResize)
+	  {
+		  ((RequiresResize) w).onResize();
+	  }
+  }
+  
+@Override
+public void onResize(ResizeEvent event) {
+	RootPanel.get().forEach(this::resize);
+}
 	
 	
 }
