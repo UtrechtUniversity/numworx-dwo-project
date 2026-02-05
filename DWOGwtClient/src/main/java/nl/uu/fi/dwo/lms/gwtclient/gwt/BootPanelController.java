@@ -294,6 +294,7 @@ public class BootPanelController {
     @Inject
     DwoGlobalVars dwoGlobalVars;
     private int profile;
+    private String profileStr;
 
     public int getProfile() {
 		return profile;
@@ -326,6 +327,7 @@ public class BootPanelController {
         this.guestBuilder = initialBuilder;
         //hideGwtGui = false;
         profile = 77;
+        profileStr = "VO";
         stage = 1;
         
         History.addValueChangeHandler(evt -> this.eventBus.fireEventFromSource(evt, this));
@@ -352,9 +354,11 @@ public class BootPanelController {
         //parse profile if it exists.
         String value = Window.Location.getParameter("profile");
         try {
-            profile = Integer.parseInt(value);
+        	if (value != null) 
+        	{	profileStr = value;
+            	profile = Integer.parseInt(value);
+        	}
         } catch (Exception e) {
-            profile = 77;
         }
         
         //dwoGlobalVars.setInf(profile == PROFILE_INF);
@@ -459,14 +463,16 @@ public class BootPanelController {
 //        if (!testIsOn) {
 //            Window.Location.replace("http://www.dwo.nl");
 //        }
-        LOG.log(Level.INFO, "profile=" + profile + ".");
+        LOG.log(Level.INFO, "profile=" + profileStr + ".");
 //        LOG.log(Level.INFO, "testIsOn=" + testIsOn + ".");
         parseGwtParam();
 //        LOG.log(Level.INFO, "HideGwt=" + hideGwtGui + ".");
 
         //intialize our global and environmental variables instance.
-        Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profile)
-        .filter(v -> v != null);
+        Promise<DomDwoProfileFull> promise = new PublicProfileManager().get(profileStr)
+        .filter(v -> v != null).then(prom -> {
+        	profile = prom.getValue().asLong().intValue();
+        	return prom;} );
         dwoGlobalVars.setProfile(promise);
         //promise.then(this::insertcss);
         promise.then(this::hasChat);
