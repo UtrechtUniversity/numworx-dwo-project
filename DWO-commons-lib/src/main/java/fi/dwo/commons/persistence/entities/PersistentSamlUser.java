@@ -60,8 +60,11 @@ public class PersistentSamlUser implements Serializable, PersistentEntity {
     @NotNull
     @Column(name = "userID", nullable = false)
     private Long userID;
+    /*
+     * legacy null values in production database
+     */
     @NotNull
-    @Column(name = "authtoken", nullable = false, length = 16)
+    @Column(name = "authtoken", nullable = true, length = 16)
     private String authToken;
     @NotNull
     @Column(name = "timestampauthtoken", nullable = false)

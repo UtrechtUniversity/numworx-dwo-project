@@ -8,11 +8,13 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -53,7 +55,9 @@ public class PersistentSchoolData implements Serializable, PersistentEntity {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
     
-    @Column(name="schoolData")
+    @Lob
+    @Size(min = 0, max = 16777215)
+    @Column(name="schoolData", length = 16777215)
     private String schoolData = "{}";
     
     public PersistentSchoolData() {
