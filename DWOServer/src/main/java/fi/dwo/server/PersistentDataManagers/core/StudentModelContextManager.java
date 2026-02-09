@@ -254,6 +254,8 @@ public class StudentModelContextManager extends AbstractManager {
 				return;
 			m.getProfiles().add(profile);
 			profile.getStudentModels().add(m);
+			profile.changeTimestamp();
+			m.changeTimestamp();
 			em.getTransaction().commit();
 		} finally {
 			em.close();
@@ -266,8 +268,10 @@ public class StudentModelContextManager extends AbstractManager {
 			em.getTransaction().begin();
 			m = em.merge(m);
 			profile = em.merge(profile);
-			m.getProfiles().remove(profile);
-			profile.getStudentModels().remove(m);
+			if (m.getProfiles().remove(profile) )
+				m.changeTimestamp();
+			if (profile.getStudentModels().remove(m))
+				profile.changeTimestamp();
 			em.getTransaction().commit();
 		} finally {
 			em.close();

@@ -246,8 +246,8 @@ public class MethodManager extends AbstractManager {
 			em.getTransaction().begin();
 			m = em.merge(m);
 			profile = em.merge(profile);
-			m.getProfiles().add(profile);
-			profile.getMethods().add(m);
+			if (m.getProfiles().add(profile) ) m.changeTimestamp();
+			if (profile.getMethods().add(m)) profile.changeTimestamp();
 			em.getTransaction().commit();
 		} finally {
 			em.close();
@@ -260,8 +260,8 @@ public class MethodManager extends AbstractManager {
 			em.getTransaction().begin();
 			m = em.merge(m);
 			profile = em.merge(profile);
-			m.getProfiles().remove(profile);
-			profile.getMethods().remove(m);
+			if (m.getProfiles().remove(profile)) m.changeTimestamp();
+			if (profile.getMethods().remove(m)) profile.changeTimestamp();
 			em.getTransaction().commit();
 		} finally {
 			em.close();

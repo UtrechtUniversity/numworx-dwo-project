@@ -16,12 +16,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
@@ -65,7 +67,9 @@ public class PersistentStudentModelContext implements Serializable, PersistentEn
     @Column(name = "schoolID", nullable = false)
     private Long schoolID;
     @NotNull
-    @Column(name = "model", nullable = false)
+    @Lob
+    @Size(min = 0, max = 16777215)
+    @Column(name = "model", nullable = false, length = 16777215, columnDefinition="JSON")
     @Convert("studentModelStructureConverter")
     private DomStudentModelStructure modelStructure;
     @Column(name = "optlock")
