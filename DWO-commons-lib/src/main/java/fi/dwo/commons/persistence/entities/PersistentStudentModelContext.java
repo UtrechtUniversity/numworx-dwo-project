@@ -68,7 +68,6 @@ public class PersistentStudentModelContext implements Serializable, PersistentEn
     private Long schoolID;
     @NotNull
     @Lob
-    @Size(min = 0, max = 16777215)
     @Column(name = "model", nullable = false, length = 16777215, columnDefinition="JSON")
     @Convert("studentModelStructureConverter")
     private DomStudentModelStructure modelStructure;

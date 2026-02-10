@@ -23,7 +23,6 @@ public class PersistentLogDataPK implements Serializable {
 
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 128)
     @Column(name = "timeStamp", nullable = false)
     private long utcTimeStamp;
     @Basic(optional = false)

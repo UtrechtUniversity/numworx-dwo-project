@@ -78,7 +78,6 @@ public class PersistentStudentModelData implements Serializable {
     private PersistentHasRolePK persistentHasRolePK;
     @Convert("studentModelScoreConverter")
     @Lob
-    @Size(min = 0, max = 16777215)
     @Column(name = "modelData", length = 16777215, columnDefinition="JSON")
     private DomStudentModelStructureScore modelData;
     @Column(name = "optlock")

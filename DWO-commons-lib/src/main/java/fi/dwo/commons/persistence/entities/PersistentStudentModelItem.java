@@ -40,7 +40,6 @@ public class PersistentStudentModelItem {
   private Long schoolID;
   @NotNull
   @Column(name = "item", nullable = false, length = 16777215, columnDefinition="JSON")
-  @Size(min = 0, max = 16777215)
   @Convert("studentModelObjConverter")
   @Lob
   private DomStudentModelObj item;
