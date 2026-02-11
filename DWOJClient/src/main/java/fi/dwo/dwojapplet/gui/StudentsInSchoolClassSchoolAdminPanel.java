@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomLoginContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import fi.beans.numworxlf.Constants;
@@ -531,7 +532,7 @@ public class StudentsInSchoolClassSchoolAdminPanel extends JPanel implements Cen
             try {
                 NewSingleSchoolStudentsTeacherPanel panel
                         = new NewSingleSchoolStudentsTeacherPanel(schoolClass,
-                                NewSingleSchoolStudentsTeacherPanel.UserType.SCHOOLADMIN);
+                                RoleType.SCHOOLADMIN);
                 center.loadCenter(panel);
             } catch (Dwo2Exception ex) {
                 LOG.log(Level.FINE, "", ex);

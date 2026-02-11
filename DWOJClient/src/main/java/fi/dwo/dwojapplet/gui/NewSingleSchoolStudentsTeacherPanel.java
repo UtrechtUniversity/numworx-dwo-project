@@ -383,7 +383,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         header.add(Box.createRigidArea(new Dimension(30, 0)));
         header.add(importButton);
         header.add(Box.createRigidArea(new Dimension(30, 0)));
-        header.add(email);
+        if (RoleType.TEACHER == userType) header.add(email);
         header.add(Box.createHorizontalGlue());
         header.add(addButton);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
