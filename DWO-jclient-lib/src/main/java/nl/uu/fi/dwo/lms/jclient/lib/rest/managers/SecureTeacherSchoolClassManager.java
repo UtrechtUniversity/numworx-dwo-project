@@ -4,6 +4,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
@@ -29,6 +30,7 @@ import nl.uu.fi.dwo.rest.entities.RestClassCourseFull;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudentv2;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
@@ -298,6 +300,22 @@ public class SecureTeacherSchoolClassManager {
     return result;
   }
 
+  public static Boolean submitSingleSchoolStudentv2(DomNewSingleSchoolStudent submit, DomDwoProfileId profile)
+	      throws Dwo2Exception {
+	    RestNewSingleSchoolStudentv2 rest = new RestNewSingleSchoolStudentv2();
+	    rest.setRestContext(getContext());
+	    rest.setDomNewSingleSchoolStudent(submit);
+	    rest.setDwoProfile(profile);
+	    Boolean result = getRestManager()
+	        .put("rest/sec:" + PathId.getId(getContext()) + "/teacher/schoolclass/submitSingleSchoolStudentv2", Boolean.class, rest);
+	    LOG.log(Level.FINE, "Submitted teacher {1} to schoolclass {2} for user with username {0}.",
+	        new Object[] {getUserName(),
+	            rest.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent().getId(),
+	            rest.getDomNewSingleSchoolStudent().getDomSchoolClass().getId()});
+	    return result;
+	  }
+
+  
   public static DomSingleSchoolStudent getSingleSchoolStudent(DomGetSingleSchoolStudent submit)
       throws Dwo2Exception {
     RestGetSingleSchoolStudent rest = new RestGetSingleSchoolStudent();

@@ -19,6 +19,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
@@ -35,6 +36,7 @@ import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudentv2;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
@@ -53,19 +55,42 @@ import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.LoginContextUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import fi.dwo.server.rest.util.Origin;
 import fi.dwo.server.testutil.TestSecurityContext;
 
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.EventListener;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.Filter;
+import javax.servlet.FilterRegistration;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
+import javax.servlet.ServletRegistration.Dynamic;
+import javax.servlet.SessionCookieConfig;
+import javax.servlet.SessionTrackingMode;
+import javax.servlet.descriptor.JspConfigDescriptor;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseAndProfile;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassCourseProfilewAccessKey;
@@ -602,6 +627,354 @@ public class SecuredTeacherSchoolClassManagerIT {
         }
     }
 
+    class MockServletContext implements ServletContext {
+    	Hashtable<String,String> map = new Hashtable<>();
+    	
+		@Override
+		public String getContextPath() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public ServletContext getContext(String uripath) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public int getMajorVersion() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getMinorVersion() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getEffectiveMajorVersion() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getEffectiveMinorVersion() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public String getMimeType(String file) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Set<String> getResourcePaths(String path) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public URL getResource(String path) throws MalformedURLException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public InputStream getResourceAsStream(String path) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public RequestDispatcher getRequestDispatcher(String path) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public RequestDispatcher getNamedDispatcher(String name) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Servlet getServlet(String name) throws ServletException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Enumeration<Servlet> getServlets() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Enumeration<String> getServletNames() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void log(String msg) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void log(Exception exception, String msg) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void log(String message, Throwable throwable) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public String getRealPath(String path) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getServerInfo() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String getInitParameter(String name) {
+			// TODO Auto-generated method stub
+			return map.get(name);
+		}
+
+		@Override
+		public Enumeration<String> getInitParameterNames() {
+			return map.keys();
+		}
+
+		@Override
+		public boolean setInitParameter(String name, String value) {
+			return null == map.put(name, value);
+		}
+
+		@Override
+		public Object getAttribute(String name) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Enumeration<String> getAttributeNames() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setAttribute(String name, Object object) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void removeAttribute(String name) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public String getServletContextName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Dynamic addServlet(String servletName, String className) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Dynamic addServlet(String servletName, Servlet servlet) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Dynamic addServlet(String servletName, Class<? extends Servlet> servletClass) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <T extends Servlet> T createServlet(Class<T> clazz) throws ServletException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public ServletRegistration getServletRegistration(String servletName) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Map<String, ? extends ServletRegistration> getServletRegistrations() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, String className) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName, Filter filter) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public javax.servlet.FilterRegistration.Dynamic addFilter(String filterName,
+				Class<? extends Filter> filterClass) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <T extends Filter> T createFilter(Class<T> clazz) throws ServletException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public FilterRegistration getFilterRegistration(String filterName) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Map<String, ? extends FilterRegistration> getFilterRegistrations() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public SessionCookieConfig getSessionCookieConfig() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Set<SessionTrackingMode> getDefaultSessionTrackingModes() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Set<SessionTrackingMode> getEffectiveSessionTrackingModes() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void addListener(String className) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public <T extends EventListener> void addListener(T t) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void addListener(Class<? extends EventListener> listenerClass) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public <T extends EventListener> T createListener(Class<T> clazz) throws ServletException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public JspConfigDescriptor getJspConfigDescriptor() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public ClassLoader getClassLoader() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void declareRoles(String... roleNames) {
+			// TODO Auto-generated method stub
+			
+		}
+    	
+    }
+    
+    
+    @Test public void testSubmitSingleSchoolStudenv2() throws Dwo2Exception {
+        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+    	PersistentUser user = UserManager.findByUserName("user07");
+    	PersistentSchool school = SchoolManager.findBySchoolLogin("school01");
+        SecuredTeacherSchoolClassManager instance = new SecuredTeacherSchoolClassManager();
+        ServletContext context = new MockServletContext();
+        context.setInitParameter("fi.dwo.server.rest.smtp.server", "localhost");
+        context.setInitParameter("fi.dwo.server.rest.smtp.port", "2525");
+        context.setInitParameter("fi.dwo.server.rest.smtp.tls", "false");
+        context.setInitParameter("fi.dwo.server.rest.smtp.ssl", "false");
+        context.setInitParameter("fi.dwo.server.rest.smtp.auth", "false");
+        context.setInitParameter("fi.dwo.server.rest.smtp.email", user.getEmail());
+        Origin.ORIGINS[0] = "http://localhost:8080";
+		RestNewSingleSchoolStudentv2 rest = new RestNewSingleSchoolStudentv2();
+	       DomNewSingleSchoolStudent nss = new DomNewSingleSchoolStudent();
+	        DomSingleSchoolStudent dss = new DomSingleSchoolStudent();
+	        nss.setDomSingleSchoolStudent(dss);
+	        dss.setUserName("singleschooluser");
+	        dss.setGivenName("a");
+	        dss.setInsertion("b");
+	        dss.setFamilyName("c");
+	        dss.setEmail("a@b.cd");
+	        dss.setPassword("pwd05");
+	        dss.setSingleSchool(true);
+	        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(2L);
+	        nss.setDomSchoolClass(schoolClass.buildDomSchoolClass());
+	        rest.setDomNewSingleSchoolStudent(nss);
+	        rest.setDwoProfile(new DomDwoProfileId(PersistentDwoProfile.buildPersistenceId(1L), 1L));
+	        rest.setRestContext(new DomContext());
+            DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.TEACHER, school).buildDomHasRole();
+	        rest.getRestContext().setDomHasRole(hr);
+		Boolean result = instance.submitSingSchoolStudentv2(sc, context, rest);
+    	assertTrue(result);
+    }
+    
+    
+    
     /**
      * Test of SubmitSingleSchoolStudent method, of class
      * SecuredSchoolAdminSchoolClassManager. Tests if a single student student

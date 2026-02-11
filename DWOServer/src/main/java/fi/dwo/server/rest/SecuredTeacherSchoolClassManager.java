@@ -6,6 +6,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
@@ -29,11 +30,14 @@ import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClass;
 import fi.dwo.commons.persistence.entities.PersistentTeacherOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.system.MD5;
+import fi.dwo.commons.system.TextMapper;
 import fi.dwo.commons.util.DatatypeConverter;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudentv2;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
@@ -44,8 +48,10 @@ import nl.uu.fi.dwo.rest.entities.RestSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder;
 import fi.dwo.server.PersistentDataManagers.access.CascadingPersistenceBuilder.State_C_CC_HR_P_R_S_SC_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SC_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
@@ -67,8 +73,14 @@ import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
+import fi.dwo.server.rest.util.Origin;
 import fi.dwo.server.rest.util.Realm;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
@@ -80,7 +92,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -90,7 +104,19 @@ import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.InternetHeaders;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -101,6 +127,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
+import org.stringtemplate.v4.ST;
+
 import com.digitalmolehill.crypto.SymmetricCryptor;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
@@ -109,6 +137,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomCourse;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomCoursesOfSchoolClass4Teacherv2;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfile;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
@@ -1130,14 +1159,175 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
         return Boolean.TRUE;
     }
 
-    /**
+    
+    @PUT
+    @Produces({"application/json"})
+    @Path("/submitSingleSchoolStudentv2")
+    public Boolean submitSingSchoolStudentv2(@Context SecurityContext sc, @Context ServletContext servletContext, RestNewSingleSchoolStudentv2 nsss) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U s0 = AnonDomainAuthorizer.build().submitUser(sc)
+    			.setRealm(nsss.getRestContext().getRealm())
+    			.setHasRole(nsss.getRestContext().getDomHasRole());
+    	TeacherState_HR_R_S_SG_U s1 = s0.buildSchoolAdminTeacher().setTeacher();
+    	TeacherState_HR_P_R_S_SG_U s2 = s1.addProfile(nsss.getDwoProfile());
+    	TeacherState_HR_P_R_S_SC_SG_U s3 = s2.addSchoolClass(nsss.getDomNewSingleSchoolStudent().getDomSchoolClass());
+    	return submitSingleSchoolStudent(s3, nsss.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent(), servletContext, s0.getRealm());
+    }
+    
+    
+    
+    
+    
+    private Boolean submitSingleSchoolStudent(TeacherState_HR_P_R_S_SC_SG_U s3,
+			DomUserFull user, ServletContext servletContext, String realm) throws Dwo2Exception {
+
+   // verify email, password, username, 
+    	String email = user.getEmail();
+        if (!ValidUserFieldsChecker.isValidEmail(email)) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
+        }
+        String userName = user.getUserName();
+        if (!ValidUserFieldsChecker.isValidUserName(userName)) {
+            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
+        }
+        if (realm != null) userName += realm;
+    //
+        String password = user.getPassword();
+        password = DomLoginCheck.crypt(password); // decrypt ROT-13
+    	if (!ValidUserFieldsChecker.isValidPassword(password))
+    		throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "Invalid password");
+    // create user
+        PersistentUser pu = new PersistentUser();
+        pu.setEmail(email);
+        pu.setGivenName(user.getGivenName());
+        pu.setInsertion(user.getInsertion());
+        pu.setLastname(user.getFamilyName());
+        pu.setPassword(MD5.getHashString(password));
+        pu.setUsername(userName);
+        pu.setSingleSchoolAccount(Boolean.TRUE);
+        PersistentSchoolClass schoolClass = s3.getSchoolClass();
+        PersistentSchool school = s3.getSchool();
+        SchoolUtilManager.addSingleSchoolStudentAccount(pu, school, schoolClass);
+        //add to schoolClass
+        PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
+        toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(pu.getId(), schoolClass.getClassID(), pu.getSchoolGroupId()));
+        java.util.Date d = pu.getRegisterDate();
+        toSoc.setRegisterDate(d);
+        StudentOfClassManager.create(toSoc);
+// sent email
+        if (servletContext != null) {
+        	pu.setPassword(password);
+        	try {
+				sendSubmitEmail(s3, servletContext, pu);
+			} catch (IOException | MessagingException e) {
+				throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+			}
+        }
+    	return Boolean.TRUE;
+	}
+
+	/**
      * Registers a new user.
      *
      * @param sc
      * @param nssStudent
      * @return
+	 * @throws IOException 
+	 * @throws MessagingException 
+	 * @throws AddressException 
      */
-    @PUT
+    private void sendSubmitEmail(TeacherState_HR_P_R_S_SC_SG_U s3, ServletContext servletContext, PersistentUser user) throws IOException, AddressException, MessagingException {
+		// Rendering
+    	String language = s3.getDwoProfile().getLanguage();
+        InputStream in = getClass().getResourceAsStream("submitSingleSchoolStudentMessage_" + language + ".txt");
+        if (in == null) in = getClass().getResourceAsStream("submitSingleSchoolStudentMessage.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String message;        
+        message = "";
+        String line;
+        while( (line = reader.readLine()) != null) {
+        	message += line;
+        	message += "\r\n";            }
+        reader.close();
+        ST template;
+        template = new ST(message, '{', '}');
+        template.add("user", user);
+        template.add("profile", s3.getDwoProfile());
+        template.add("school", s3.getSchool());
+        template.add("schoolClass", s3.getSchoolClass());
+        template.add("sender", s3.getUser());
+        template.add("origin", Origin.ORIGINS[0]);  // NIET GOED, gebruik URIInfo
+        String cdn = System.getProperty("CDNURL", "https://cdn.dwo.nl");
+        template.add("cdn", cdn);
+        message = template.render(new Locale(language));
+        // sending:
+        //place this in servlet
+        String smtpServer = servletContext.getInitParameter("fi.dwo.server.rest.smtp.server");
+        String smtpPort = servletContext.getInitParameter("fi.dwo.server.rest.smtp.port");
+        String smtpTLS = servletContext.getInitParameter("fi.dwo.server.rest.smtp.tls");
+        String smtpSSL = servletContext.getInitParameter("fi.dwo.server.rest.smtp.ssl");
+        String smtpAuth = servletContext.getInitParameter("fi.dwo.server.rest.smtp.auth");
+        String smtpUser = servletContext.getInitParameter("fi.dwo.server.rest.smtp.user");
+        String smtpPassword = servletContext.getInitParameter("fi.dwo.server.rest.smtp.password");
+        String smtpEmail = servletContext.getInitParameter("fi.dwo.server.rest.smtp.email");//from address.
+        Properties props = new Properties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.starttls.enable", smtpTLS);
+        props.put("mail.smtp.host", smtpServer);
+        props.put("mail.smtp.port", smtpPort);
+        props.put("mail.smtp.auth", smtpAuth);
+        if (smtpSSL != null) props.put("mail.smtp.ssl.enable", smtpSSL);
+        Session session;
+        if (smtpAuth.equals("true")) {
+            session = Session.getInstance(props,
+                    new javax.mail.Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(smtpUser, smtpPassword);
+                }
+            });
+        } else {
+            session = Session.getDefaultInstance(props);
+        }
+        // uncomment for debugging infos to stdout
+        session.setDebug(true);
+        Transport transport = session.getTransport();
+        MimeMessage mime = new MimeMessage(session);
+        mime.setFrom(new InternetAddress(smtpEmail));
+//FIXME i18n
+        int sep = message.indexOf("\n\n");
+        
+        String content = message.substring(sep+2);
+        message = message.substring(0, sep);
+
+        for (String header : message.split("\n")) mime.addHeaderLine(header);
+        
+        sep = content.indexOf("----------");
+        String text = content.substring(0,sep).trim();
+        String html = content.substring(sep+10).trim();
+
+        MimeBodyPart textPart = new MimeBodyPart();
+        textPart.setText(text, "utf-8");
+
+        MimeBodyPart htmlPart = new MimeBodyPart();
+        htmlPart.setContent(html, "text/html; charset=utf-8");
+
+        MimeMultipart multiPart = new MimeMultipart("alternative");
+		multiPart.addBodyPart(textPart); // <-- first
+        multiPart.addBodyPart(htmlPart); // <-- second
+        mime.setContent(multiPart);            
+        
+        
+        mime.addRecipient(Message.RecipientType.TO,
+                new InternetAddress(user.getEmail()));
+
+        transport.connect();
+        transport.sendMessage(mime,
+                mime.getRecipients(Message.RecipientType.TO));
+        transport.close();
+
+	}
+
+	@PUT
     @Produces({"application/json"})
     @Path("/submitSingleSchoolStudent")
     public Boolean SubmitSingleSchoolStudent(@Context SecurityContext sc, RestNewSingleSchoolStudent nssStudent
