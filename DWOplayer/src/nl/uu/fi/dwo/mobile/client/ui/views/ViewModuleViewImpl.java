@@ -199,7 +199,9 @@ public class ViewModuleViewImpl extends XMLView implements ViewModuleViewBuilder
 	public ViewModuleViewImpl(ActivityComponent a, RPCHandler rpc) {
 		super(rpc,a);
 		if (lastState == Combined.NONE) {
-			if (a.parameters().isDesktop() && !TouchStartEvent.isSupported()) // INITIAL form of DESKTOP/MOBILE
+			if (a.parameters().isDesktop() &&
+					(!TouchStartEvent.isSupported() || a.parameters().inExam())
+			   ) // INITIAL form of DESKTOP/MOBILE
 			lastState = Combined.TABLET;
 		else
 			lastState = Combined.TABLET_ACTIVE_SOFT;
