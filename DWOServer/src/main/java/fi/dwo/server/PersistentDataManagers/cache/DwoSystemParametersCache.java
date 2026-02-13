@@ -12,27 +12,37 @@ public class DwoSystemParametersCache {
 	}
 
 	private static Cache<String, PersistentDwoSystemParameters> initializeCache() {		
-		return CacheUtilManager.createCache("PersistentDwoSystemParameters", String.class, PersistentDwoSystemParameters.class);
+		try {
+			return CacheUtilManager.createCache("PersistentDwoSystemParameters", String.class, PersistentDwoSystemParameters.class);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public static void put(PersistentDwoSystemParameters parameter) {
-		cache.put(parameter.getName(), parameter);
+		if (cache != null) cache.put(parameter.getName(), parameter);
 	}
 	
 	public static void putIfPresent(PersistentDwoSystemParameters parameter) {
-		cache.getAndReplace(parameter.getName(), parameter);
+		if (cache != null) cache.getAndReplace(parameter.getName(), parameter);
 	}
 	
 	public static PersistentDwoSystemParameters get(String id) {
-		return cache.get(id);
+		if (cache != null) return cache.get(id);
+		return null;
 	}
 	
 	public static void remove(String id) {
-		cache.remove(id);
+		if (cache != null) cache.remove(id);
 	}
 
-	public static Cache<String, PersistentDwoSystemParameters> cache() {
+	static Cache<String, PersistentDwoSystemParameters> cache() {
 		return cache;
+	}
+
+	public static void clear() {
+		if (cache != null) cache.clear();
+		
 	}
 
 }

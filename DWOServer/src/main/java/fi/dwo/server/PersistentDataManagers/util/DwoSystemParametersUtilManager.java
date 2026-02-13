@@ -7,7 +7,7 @@ import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 public class DwoSystemParametersUtilManager {
 
 	static {
-		DwoSystemParametersCache.cache().clear(); // start afresh when booting
+		DwoSystemParametersCache.clear(); // start afresh when booting
 	}
 
 	public static PersistentDwoSystemParameters findByName(String string) {

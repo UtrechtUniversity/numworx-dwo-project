@@ -373,7 +373,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         importButton = new JButton(TextMapper.getText("Import from clipboard"));
         importButton.setSize(importButton.getPreferredSize());
         importButton.addActionListener(this);
-        email = new JCheckBox("send email");
+        email = new JCheckBox("en verstuur email");
         
         Box header = Box.createHorizontalBox();
         header.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -382,10 +382,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         header.add(backButton);
         header.add(Box.createRigidArea(new Dimension(30, 0)));
         header.add(importButton);
-        header.add(Box.createRigidArea(new Dimension(30, 0)));
-        if (RoleType.TEACHER == userType) header.add(email);
+
         header.add(Box.createHorizontalGlue());
         header.add(addButton);
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.add(email);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
 //        header.add(schoolClassComboBox);
         this.add(header);
@@ -489,9 +490,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                                 		NewSingleSchoolStudentsTeacherPanelProperties.submitSingleSchoolStudent(student);
                                     break;
                                 case SCHOOLADMIN:
-                                	submit.setPassword(MD5.getHashString(submit.getPassword()));
-                                    NewSingleSchoolStudentsSchoolAdminPanelProperties.submitSingleSchoolStudent(student);
-                                    break;
+                                	if (email.isSelected())
+                                		NewSingleSchoolStudentsSchoolAdminPanelProperties.submitSingleSchoolStudentv2(student);
+                                	else
+                                		NewSingleSchoolStudentsSchoolAdminPanelProperties.submitSingleSchoolStudent(student);
+                                	break;
                                 default:
                             }
                         } catch (Dwo2Exception ex) {

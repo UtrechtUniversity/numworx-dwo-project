@@ -13,25 +13,30 @@ public class SchoolCache {
 	}
 
 	private static Cache<String, PersistentSchool> initializeCache() {		
-		return CacheUtilManager.createCache("PersistentSchool", String.class, PersistentSchool.class);
+		try {
+			return CacheUtilManager.createCache("PersistentSchool", String.class, PersistentSchool.class);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	public static void put(PersistentSchool school) {
-		cache.put(school.getSchoolLogin(), school);
+		if (cache != null) cache.put(school.getSchoolLogin(), school);
 	}
 	
 	public static void putIfPresent(PersistentSchool school) {
-		cache.getAndReplace(school.getSchoolLogin(), school);
+		if (cache != null) cache.getAndReplace(school.getSchoolLogin(), school);
 	}
 	
 	public static PersistentSchool get(String id) {
-		return cache.get(id);
+		if (cache != null) return cache.get(id);
+		return null;
 	}
 	
 	public static void remove(String id) {
-		cache.remove(id);
+		if (cache != null) cache.remove(id);
 	}
 
-	public static Cache<String, PersistentSchool> cache() {
+	static Cache<String, PersistentSchool> cache() {
 		return cache;
 	}
 

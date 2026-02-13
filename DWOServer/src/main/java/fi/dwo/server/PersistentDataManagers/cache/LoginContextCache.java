@@ -13,22 +13,30 @@ public class LoginContextCache {
 	}
 
 	private static Cache<Long, PersistentLoginContext> initializeCache() {		
-		return CacheUtilManager.createCache("PersistentLoginContext", Long.class, PersistentLoginContext.class);
+		try {
+			return CacheUtilManager.createCache("PersistentLoginContext", Long.class, PersistentLoginContext.class);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	public static void put(PersistentLoginContext role) {
-		cache.put(role.getId(), role);
+		if (cache != null)
+			cache.put(role.getId(), role);
 	}
 	
 	public static void putIfPresent(PersistentLoginContext role) {
-		cache.getAndReplace(role.getId(), role);
+		if (cache != null)
+			cache.getAndReplace(role.getId(), role);
 	}
 	
 	public static PersistentLoginContext get(Long id) {
+		if (cache == null) return null;
 		return cache.get(id);
 	}
 	
 	public static void remove(Long id) {
-		cache.remove(id);
+		if (cache != null)
+			cache.remove(id);
 	}
 
 	public static Cache<Long, PersistentLoginContext> cache() {
