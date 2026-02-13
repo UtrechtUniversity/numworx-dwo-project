@@ -41,7 +41,7 @@ public class NewSingleSchoolStudentsSchoolAdminPanelProperties {
         return result;
     }
 
-    // password is crypt 
+    // password is crypt
     public static Boolean submitSingleSchoolStudentv2(DomNewSingleSchoolStudent submit) throws Dwo2Exception {
     	submit.getDomSingleSchoolStudent().setPassword(DomLoginCheck.crypt(submit.getDomSingleSchoolStudent().getPassword()));
     	DomDwoProfileId profile = DWO.getDwoProfile();

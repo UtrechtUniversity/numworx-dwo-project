@@ -1,6 +1,9 @@
 package fi.dwo.server.rest;
 
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdminAndHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -18,6 +21,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.OrderType;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -26,6 +30,7 @@ import fi.dwo.commons.persistence.entities.PersistentStudentInClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClass;
 import fi.dwo.commons.persistence.entities.PersistentStudentOfClassPK;
 import fi.dwo.commons.persistence.entities.PersistentUser;
+import fi.dwo.commons.system.MD5;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestSchoolAdmin;
@@ -36,10 +41,12 @@ import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
+import nl.uu.fi.dwo.rest.entities.RestUserFullv2;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -50,14 +57,18 @@ import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.StudentInClassManager;
 import fi.dwo.server.PersistentDataManagers.util.UserUtilManager;
+import fi.dwo.server.rest.util.MailUtilManager;
 import fi.dwo.server.rest.util.Realm;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -65,7 +76,10 @@ import java.util.stream.Stream;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -432,6 +446,48 @@ public class SecuredSchoolAdminSchoolManager {
         return true;
     }
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/submitTeacherv2")
+    public Boolean submitTeacher2(@Context SecurityContext sc, RestUserFullv2 rest, @Context ServletContext context) throws Dwo2Exception, IOException, AddressException, MessagingException {
+    	UserState_HR_R_S_SG_U s0 = AnonDomainAuthorizer.build().submitUser(sc)
+    			.setRealm(rest.getRestContext().getRealm())
+    			.setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+    	PersistentSchool school = s0.getSchool();
+    	String realm = s0.getRealm();
+    	PersistentUser user = new PersistentUser();
+        Date now = DwoDateUtilities.getCurrentDwoDate();
+        user.setEmail(rest.getDomUserFull().getEmail());
+        user.setGivenName(rest.getDomUserFull().getGivenName());
+        user.setInsertion(rest.getDomUserFull().getInsertion());
+        user.setLastname(rest.getDomUserFull().getFamilyName());
+        
+        String password = rest.getDomUserFull().getPassword();
+        password = DomLoginCheck.crypt(password);
+        user.setPassword(MD5.getHashString(password));
+        user.setRegisterDate(now);
+        String userName = rest.getDomUserFull().getUserName();
+        if (realm != null) userName = userName + realm;
+        user.setUsername(userName);
+        user.setSingleSchoolAccount(false);
+        SchoolUtilManager.addAccountAsTeacherInSchool(user, school);
+        user.setPassword(password);
+        Map<String,Object> properties = new TreeMap<>();
+        Long pid = MySQLPersistenceId.getNativeId(rest.getDwoProfile());
+        DomDwoProfileFull profile = PublicProfileCache.get(pid);
+        if (profile == null) {
+        	profile = DwoProfileManager.findEntity(pid).buildDomDwoProfileFull();
+        }
+        properties.put("school", school);
+        properties.put("sender", s0.getUser());
+        properties.put("profile", profile);
+        properties.put("user", user);
+        MailUtilManager.send(user.getEmail(), properties, getClass().getPackage().getName() + ".submitTeacherMessage", profile.getLanguage(), context);
+        
+    	return Boolean.TRUE;
+    }
+    
+    
     /**
      * Registers a new user and make him/her a teacher in the school.
      *

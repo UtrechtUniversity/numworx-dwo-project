@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
@@ -21,6 +22,8 @@ import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
+import nl.uu.fi.dwo.rest.entities.RestUserFullv2;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -197,7 +200,25 @@ public static List<DomTeacher> getTeachersInSchool() throws Dwo2Exception {
   public static Boolean submitTeacher(DomUserFull submit) throws Dwo2Exception {
 	  return submitTeacher(StoredRestManager.getInstance(), submit);
   }
+  public static Boolean submitTeacherv2(DomUserFull submit, DomDwoProfileId profile) throws Dwo2Exception {
+	  return submitTeacherv2(StoredRestManager.getInstance(), submit, profile);
+  }
+
   
+  private static Boolean submitTeacherv2(StoredRestManager instance, DomUserFull submit, DomDwoProfileId profile) throws Dwo2Exception {
+	    RestUserFullv2 rest = new RestUserFullv2();
+	    rest.setRestContext(instance.getContext());
+	    rest.setDomUserFull(submit);
+	    rest.setDwoProfile(profile);
+	    Boolean result = instance
+	        .put("rest/sec:" + PathId.getId(instance.getContext()) + "/schooladmin/school/submitTeacherv2", Boolean.class, rest);
+	    LOG.log(Level.FINE, "Submitted new user {1} enlisted as teacher in the school by user {0}.",
+	        new Object[] {instance.getAuthenticator().getUsername(),
+	            rest.getDomUserFull().getId()});
+	    return result;
+
+  }
+
   public Boolean SubmitTeacher(DomUserFull submit) throws Dwo2Exception {
 	  return submitTeacher(instance, submit);
   }
