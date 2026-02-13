@@ -5,6 +5,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
+import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.PersistentDataManagers.util.SchoolClassUtilManager;
@@ -13,6 +14,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -26,6 +28,7 @@ import fi.dwo.commons.persistence.entities.PersistentUser;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudentv2;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
@@ -36,6 +39,7 @@ import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
+import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolGroupManager;
@@ -56,6 +60,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.security.PermitAll;
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -458,6 +463,22 @@ public class SecuredSchoolAdminSchoolClassManager extends AbstractSchoolClassMan
         return true;
     }
 
+    @PUT
+    @Produces({"application/json"})
+    @Path("/submitSingleSchoolStudentv2")
+    public Boolean SubmitSingleSchoolStudentv2(@Context SecurityContext sc, RestNewSingleSchoolStudentv2 nssStudent, @Context ServletContext context) throws Dwo2Exception {
+    	UserState_HR_R_S_SG_U s0 = AnonDomainAuthorizer.build().submitUser(sc).setRealm(nssStudent.getRestContext().getRealm()).setHasRoleIfType(nssStudent.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
+    	s0.buildSchoolAdminTeacher();
+    	DomUserFull user = nssStudent.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent();
+		String realm = s0.getRealm();
+        Long schoolclassID = MySQLPersistenceId.getNativeId(nssStudent.getDomNewSingleSchoolStudent().getDomSchoolClass());
+        if (schoolclassID == null) throw new Dwo2RestException(Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set, "null schoolclassID");
+        PersistentSchoolClass schoolClass = SchoolClassManager.findEntity(schoolclassID);
+		PersistentSchool school = s0.getSchool();
+		PersistentDwoProfile profile = DwoProfileManager.findEntity(MySQLPersistenceId.getNativeId(nssStudent.getDwoProfile()));
+		PersistentUser sender = s0.getUser();
+		return SecuredTeacherSchoolClassManager.submitSingleSchoolStudent(user, context, realm, schoolClass, school, profile, sender);
+    }
     /**
      * Registers a new user.
      *

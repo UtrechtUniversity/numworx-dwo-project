@@ -1173,79 +1173,85 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
     	TeacherState_HR_P_R_S_SC_SG_U s3 = s2.addSchoolClass(nsss.getDomNewSingleSchoolStudent().getDomSchoolClass());
     	return submitSingleSchoolStudent(s3, nsss.getDomNewSingleSchoolStudent().getDomSingleSchoolStudent(), servletContext, s0.getRealm());
     }
-    
-    
-    
-    
-    
-    private Boolean submitSingleSchoolStudent(TeacherState_HR_P_R_S_SC_SG_U s3,
+        
+    private static Boolean submitSingleSchoolStudent(TeacherState_HR_P_R_S_SC_SG_U s3,
 			DomUserFull user, ServletContext servletContext, String realm) throws Dwo2Exception {
-
-   // verify email, password, username, 
-    	String email = user.getEmail();
-        if (!ValidUserFieldsChecker.isValidEmail(email)) {
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
-        }
-        String userName = user.getUserName();
-        if (!ValidUserFieldsChecker.isValidUserName(userName)) {
-            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
-        }
-        if (realm != null) userName += realm;
-    //
-        String password = user.getPassword();
-        password = DomLoginCheck.crypt(password); // decrypt ROT-13
-    	if (!ValidUserFieldsChecker.isValidPassword(password))
-    		throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "Invalid password");
-    // create user
-        PersistentUser pu = new PersistentUser();
-        pu.setEmail(email);
-        pu.setGivenName(user.getGivenName());
-        pu.setInsertion(user.getInsertion());
-        pu.setLastname(user.getFamilyName());
-        pu.setPassword(MD5.getHashString(password));
-        pu.setUsername(userName);
-        pu.setSingleSchoolAccount(Boolean.TRUE);
         PersistentSchoolClass schoolClass = s3.getSchoolClass();
         PersistentSchool school = s3.getSchool();
-        SchoolUtilManager.addSingleSchoolStudentAccount(pu, school, schoolClass);
-        //add to schoolClass
-        PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
-        toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(pu.getId(), schoolClass.getClassID(), pu.getSchoolGroupId()));
-        java.util.Date d = pu.getRegisterDate();
-        toSoc.setRegisterDate(d);
-        StudentOfClassManager.create(toSoc);
-// sent email
-        if (servletContext != null) {
-        	pu.setPassword(password);
-        	try {
-				sendSubmitEmail(s3, servletContext, pu);
-			} catch (IOException | MessagingException e) {
-				throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
-			}
-        }
-    	return Boolean.TRUE;
+		PersistentDwoProfile profile = s3.getDwoProfile();
+		PersistentUser sender = s3.getUser();
+		return submitSingleSchoolStudent(user, servletContext, realm, schoolClass, school, profile, sender);
+	}
+
+	static Boolean submitSingleSchoolStudent(DomUserFull user, ServletContext servletContext, String realm,
+			PersistentSchoolClass schoolClass, PersistentSchool school, PersistentDwoProfile profile,
+			PersistentUser sender) throws Dwo2Exception {
+		// verify email, password, username, 
+		    	String email = user.getEmail();
+		        if (!ValidUserFieldsChecker.isValidEmail(email)) {
+		            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Email_Address_Invalid, "The email address does not  conform with RFC 5322.");
+		        }
+		        String userName = user.getUserName();
+		        if (!ValidUserFieldsChecker.isValidUserName(userName)) {
+		            throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_UserName_Invalid, "The username address is not correctly formatted.");
+		        }
+		        if (realm != null) userName += realm;
+		    //
+		        String password = user.getPassword();
+		        password = DomLoginCheck.crypt(password); // decrypt ROT-13
+		    	if (!ValidUserFieldsChecker.isValidPassword(password))
+		    		throw new Dwo2Exception(Dwo2ExceptionCode.Rest_Registration_Password_Invalid, "Invalid password");
+		    // create user
+		        PersistentUser pu = new PersistentUser();
+		        pu.setEmail(email);
+		        pu.setGivenName(user.getGivenName());
+		        pu.setInsertion(user.getInsertion());
+		        pu.setLastname(user.getFamilyName());
+		        pu.setPassword(MD5.getHashString(password));
+		        pu.setUsername(userName);
+		        pu.setSingleSchoolAccount(Boolean.TRUE);
+		        SchoolUtilManager.addSingleSchoolStudentAccount(pu, school, schoolClass);
+		        //add to schoolClass
+		        PersistentStudentOfClass toSoc = new PersistentStudentOfClass();
+		        toSoc.setPersistentStudentOfClassPK(new PersistentStudentOfClassPK(pu.getId(), schoolClass.getClassID(), pu.getSchoolGroupId()));
+		        java.util.Date d = pu.getRegisterDate();
+		        toSoc.setRegisterDate(d);
+		        StudentOfClassManager.create(toSoc);
+		// sent email
+		        if (servletContext != null) {
+		        	pu.setPassword(password);
+		        	try {
+						sendSubmitEmail(servletContext, pu, sender, schoolClass, profile, school);
+					} catch (IOException | MessagingException e) {
+						throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());
+					}
+		        }
+		    	return Boolean.TRUE;
 	}
 
 	/**
      * Registers a new user.
-     *
-     * @param sc
-     * @param nssStudent
-     * @return
+	 * @param sender TODO
+	 * @param schoolClass TODO
+	 * @param profile TODO
+	 * @param school TODO
+	 * @param sc
+	 * @param nssStudent
+	 * @return
 	 * @throws IOException 
 	 * @throws MessagingException 
 	 * @throws AddressException 
      */
-    private void sendSubmitEmail(TeacherState_HR_P_R_S_SC_SG_U s3, ServletContext servletContext, PersistentUser user) throws IOException, AddressException, MessagingException {
+    private static void sendSubmitEmail(ServletContext servletContext, PersistentUser user, PersistentUser sender, PersistentSchoolClass schoolClass, PersistentDwoProfile profile, PersistentSchool school) throws IOException, AddressException, MessagingException {
 		// Rendering
-    	String language = s3.getDwoProfile().getLanguage();
-    	String resource = getClass().getPackage().getName() + ".submitSingleSchoolStudentMessage";
+    	String language = profile.getLanguage();
+    	String resource = "fi.dwo.server.rest.submitSingleSchoolStudentMessage";
     	Map<String, Object> properties = new TreeMap<>();
         properties.put("user", user);
-        properties.put("profile", s3.getDwoProfile());
-        properties.put("school", s3.getSchool());
-        properties.put("schoolClass", s3.getSchoolClass());
-        properties.put("sender", s3.getUser());
+        properties.put("profile", profile);
+        properties.put("school", school);
+        properties.put("schoolClass", schoolClass);
+        properties.put("sender", sender);
    	
     	MailUtilManager.send(user.getEmail(), properties, resource, language, servletContext);   	
 	}
