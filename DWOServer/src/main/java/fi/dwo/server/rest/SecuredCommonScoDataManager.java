@@ -948,9 +948,13 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				}
 			}
 			
-			
-			if (onsState == null) return "";
-			JsonArray orScores = onsState.getJsonArray("orScores");
+			JsonArray orScores;
+			if (onsState == null) {
+				if (!sealed)
+					return "";
+				orScores = null;
+			} else
+				orScores = onsState.getJsonArray("orScores");
 			Number n;
 			try {
 				orScores = orScores.getJsonArray(0);

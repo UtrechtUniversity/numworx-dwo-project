@@ -224,6 +224,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 			RootPanel.get().add(other);
 			other.setupView(launchdata);
 			setTitle(on, cur, ps);
+			on = other.getOpdrNav(); // new view, new opdrnav (if reviewfix) 
 			cur++;
 		}
 		PrintSeparator ps = new PrintSeparator(cur);
