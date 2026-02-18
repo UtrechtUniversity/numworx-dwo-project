@@ -34,7 +34,7 @@ import org.osgi.util.promise.Promises;
 import org.osgi.util.promise.Success;
 
 import jsinterop.annotations.JsMethod;
-
+import nl.uu.fi.dwo.lms.gwtclient.gwt.BootPanelController;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.SwitchViewEvent;
@@ -95,6 +95,7 @@ public class StudentScoResultPresenter {
   @Inject GwtClientMessages rb;
   private JavaScriptObject resultState;
   private DomStudent student;
+  private int profile;
 
   public interface Display  extends BasicDisplay{
 
@@ -112,10 +113,11 @@ public class StudentScoResultPresenter {
 
   }
 
-  @Inject StudentScoResultPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars) {
+  @Inject StudentScoResultPresenter(EventBus anEventBus, DwoGlobalVars aDwoGlobalVars, BootPanelController boot) {
     eventBus = anEventBus;
     dwoGlobalVars = aDwoGlobalVars;
-    FAILURE = new LoggingFailure(LOG, anEventBus);    
+    FAILURE = new LoggingFailure(LOG, anEventBus); 
+    this.profile = boot.getProfile();
   }
 
   private String mapRealm(DomUser uu) {
@@ -497,8 +499,7 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
     LOG.info("Frame = "+random);
     String locale = LocaleInfo.getCurrentLocale().getLocaleName();
     if ("default".equals(locale) ) locale =  "nl";
-    String profile = Location.getParameter("profile");
-    if(profile == null || profile.isEmpty()) profile = "77";
+    String profile = Integer.toString(this.profile);
 
     String url;
     UrlBuilder u = new UrlBuilder();
@@ -588,8 +589,7 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
     LOG.info("Frame = "+random);
     String locale = LocaleInfo.getCurrentLocale().getLocaleName();
     if ("default".equals(locale) ) locale =  "nl";
-    String profile = Location.getParameter("profile");
-    if(profile == null || profile.isEmpty()) profile = "77";
+    String profile = Integer.toString(this.profile);
 
     String url;
     UrlBuilder u = new UrlBuilder();
