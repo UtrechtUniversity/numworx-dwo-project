@@ -1114,7 +1114,7 @@ private static int sumOfCorrectie(JsonObject data) {
 		return 0;
 	}
 	JsonNumber n = correctie.getJsonNumber("reviewScoreCorrectie");
-	return n.intValue();
+	return n == null ? 0 : n.intValue();
 }
 
 private static int sumOfCorrectie(JsonArray panelStates) {
