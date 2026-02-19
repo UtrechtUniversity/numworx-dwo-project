@@ -973,10 +973,11 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				data = parser.getObject();
 				JsonArray contState = data.getJsonArray("opdrContStates");
 				contState = contState.getJsonArray(0);
+				if (! contState.isNull(pagenr)) {
 				data = contState.getJsonObject(pagenr);
 				int sum = sumOfCorrectie(data);
 				n = Integer.valueOf(sum + n.intValue());
-			}} else {
+			}}} else {
 				JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
 				if (nakijken != null && 0 == nakijken.getInt(0) && !sealed) {
 					return "";
