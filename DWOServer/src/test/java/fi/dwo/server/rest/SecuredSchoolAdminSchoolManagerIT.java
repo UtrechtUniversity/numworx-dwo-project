@@ -389,7 +389,8 @@ public class SecuredSchoolAdminSchoolManagerIT {
         assertEquals(dssStudent.getInsertion(), user.getInsertion());
         assertEquals(dssStudent.getFamilyName(), user.getLastname());
         assertEquals(dssStudent.getEmail(), user.getEmail());
-        assertEquals(dssStudent.getPassword(), user.getPassword());
+// MD5.hash( LoginCheck.crypt("pwd05"))
+        assertEquals("2cbcd3c7b749a8365d6785d21fa710cf", user.getPassword());
         assertFalse(user.isSingleSchoolAccount());
         PersistentHasRole phr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, SchoolManager.findBySchoolLogin("school01"), RoleType.TEACHER);
         assertNotNull(phr);
