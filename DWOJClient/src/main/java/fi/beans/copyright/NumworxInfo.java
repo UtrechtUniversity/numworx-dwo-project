@@ -24,6 +24,7 @@ import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JComboBox;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.gui.GuiConstants;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -149,7 +150,7 @@ public class NumworxInfo extends JLabel implements ActionListener {
 
   private String fromProfile(String item) {
     try {
-      DomDwoProfileFull dwo = PublicProfileManager.get(item);
+      DomDwoProfileFull dwo = PublicProfileCache.get(item);
       return dwo.getDwoProfileName();
     } catch (Dwo2Exception e) {
     }
@@ -158,7 +159,7 @@ public class NumworxInfo extends JLabel implements ActionListener {
 
   private String toProfile(String item) {
     try {
-      DomDwoProfileFull dwo = PublicProfileManager.get(item);
+      DomDwoProfileFull dwo = PublicProfileCache.get(item);
       return f(dwo.getId().getIdString());
     } catch (Dwo2Exception e) {
     }
@@ -200,7 +201,7 @@ public class NumworxInfo extends JLabel implements ActionListener {
   
   private void toLanguage(String item) {
 	    try {
-	        DomDwoProfileFull dwo = PublicProfileManager.get(item);
+	        DomDwoProfileFull dwo = PublicProfileCache.get(item);
 	        if (toLanguage(dwo))
 	        	return;
 	      } catch (Dwo2Exception e) {

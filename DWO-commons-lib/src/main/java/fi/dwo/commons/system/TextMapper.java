@@ -74,6 +74,7 @@ public abstract class TextMapper {
 	public static final String LBL_CLICK_TO_SELECT_A_TEACHER= "LBL_CLICK_TO_SELECT_A_TEACHER";
 	public static final String LBL_CLICK_TO_SELECT_A_SCHOOLADMIN= "LBL_CLICK_TO_SELECT_A_SCHOOLADMIN";
 	public static final String LBL_CLICK_TO_SELECT_A_SCHOOLCLASS = "LBL_CLICK_TO_SELECT_A_SCHOOLCLASS";
+	public static final String LBL_INVITE = "en verstuur email";
 
 	/* header panel headers */
 	public static final String HDR_NEW_STUDENTS = "HDR_NEW_STUDENTS";

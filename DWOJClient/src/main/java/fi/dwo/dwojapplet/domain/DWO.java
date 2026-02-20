@@ -95,6 +95,7 @@ import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrCache;
 import fi.dwo.dwojapplet.persistence.PersistenceFacade;
 import fi.dwo.dwojapplet.persistence.StoreCreator;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.AbstractScoContextManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.CourseManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
@@ -1519,7 +1520,7 @@ LOG.info("time results = " + (-t) + " ms");
             String dwoProfileString = getParameter("profile");
             if ((dwoProfileString != null) && (!dwoProfileString.equals(""))) {
                 try {
-                	dwoProfile = PublicProfileManager.get(dwoProfileString);
+                	dwoProfile = PublicProfileCache.get(dwoProfileString);
                 	dwoProfileID = MySQLPersistenceId.getNativeId(dwoProfile).intValue();
                 } catch (Exception e) {
                 }
@@ -1536,9 +1537,9 @@ LOG.info("time results = " + (-t) + " ms");
             if (dwoProfile==null)
             {
             	if (dwoProfileID > 0)
-            		dwoProfile = PublicProfileManager.get(dwoProfileID);
+            		dwoProfile = PublicProfileCache.get(dwoProfileID);
             	else
-            		dwoProfile = PublicProfileManager.get(dwoProfileKey);
+            		dwoProfile = PublicProfileCache.get(dwoProfileKey);
             }
             dwoProfileID = MySQLPersistenceId.getNativeId(dwoProfile).intValue();
             dwoProfileKey = dwoProfile.getDwoProfileName();
@@ -2840,7 +2841,7 @@ LOG.info("time results = " + (-t) + " ms");
     public void switchProfile(int p, String lang) {
       try {
         String old = dwoProfile.getDwoProfileName();
-        dwoProfile = PublicProfileManager.get(p);
+        dwoProfile = PublicProfileCache.get(p);
         dwoProfileID = p;
         dwoProfileKey = dwoProfile.getDwoProfileName();
         firePropertyChange("profile", old, dwoProfile.getDwoProfileName());

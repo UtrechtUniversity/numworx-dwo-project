@@ -28,6 +28,7 @@ import fi.dwo.commons.persistence.MySQLPersistenceId;
 import fi.dwo.commons.system.TextMapper;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.PublicProfileManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureDwoAdminProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
@@ -156,7 +157,10 @@ public class DwoProfilePanel extends JPanel implements ActionListener,
 					if ( sc != null) {
 	                	try {
 							if (SecureDwoAdminProfileManager.updateProfile(sc));
-							model.profiles[row] = PublicProfileManager.get(sc.getDwoProfileName());
+							{
+								PublicProfileCache.clear();
+								model.profiles[row] = PublicProfileCache.get(sc.getDwoProfileName());
+							}
 						} catch (Dwo2Exception e) {
 							LOG.log(Level.SEVERE, "edit profile", e);
 							GuiCreator.instance().ShowErrorDialog(DwoProfilePanel.this, e);

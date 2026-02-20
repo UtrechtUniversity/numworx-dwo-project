@@ -41,6 +41,8 @@ public class MailUtilManager {
         reader.close();
         ST template;
         template = new ST(message, '{', '}');
+        // niet automatisch, zoals beloofd
+        template.groupThatCreatedThisInstance.registerRenderer(String.class, new org.stringtemplate.v4.StringRenderer());        
         template.add("origin", Origin.ORIGINS[0]);  // XXXX NIET GOED, gebruik URIInfo, is dat zo?
         String cdn = System.getProperty("CDNURL", "https://cdn.dwo.nl");
         template.add("cdn", cdn);

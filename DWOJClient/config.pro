@@ -36,6 +36,10 @@
     <methods>;
 }
 
+-keep class nl.uu.fi.dwo.lms.jclient.lib.rest.cache.CacheUtilManager {
+	public static void setCachingProvider(java.util.function.Supplier);
+}
+
 -keep class fi.dwo.dwojapplet.system.* {
     <fields>;
     <methods>;

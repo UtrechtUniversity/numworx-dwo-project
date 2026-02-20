@@ -373,7 +373,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         importButton = new JButton(TextMapper.getText("Import from clipboard"));
         importButton.setSize(importButton.getPreferredSize());
         importButton.addActionListener(this);
-        email = new JCheckBox("en verstuur email");
+        email = new JCheckBox(TextMapper.getText(TextMapper.LBL_INVITE));
         
         Box header = Box.createHorizontalBox();
         header.setAlignmentX(Component.RIGHT_ALIGNMENT);

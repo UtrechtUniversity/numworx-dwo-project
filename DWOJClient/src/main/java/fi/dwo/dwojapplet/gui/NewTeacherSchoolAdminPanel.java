@@ -410,7 +410,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         importButton.setSize(importButton.getPreferredSize());
         importButton.addActionListener(this);
         
-        email = new JCheckBox(TextMapper.getText("en stuur email"));
+        email = new JCheckBox(TextMapper.getText(TextMapper.getText(TextMapper.LBL_INVITE)));
 
         Box header = Box.createHorizontalBox();
         header.setAlignmentX(Component.RIGHT_ALIGNMENT);

@@ -1,7 +1,7 @@
 Subject: Aanmelding voor {origin}{profile.base}
 Reply-To: {sender.email}
 
-Beste {user.givenName} {user.insertion} {user.lastname},
+Beste {user.givenName; format="cap"} {user.insertion; format="cap"} {user.lastname; format="cap"},
 
 Je bent aangemeld voor "{profile.dwoProfileDescription}" als docent
 
@@ -12,7 +12,7 @@ school: {school.schoolName}
 
 Ga naar {origin}{profile.base}
 
-Je ben aangemeld door {sender.givenName} {sender.insertion} {sender.lastname} <{sender.email}>
+Je ben aangemeld door {sender.givenName; format="cap"} {sender.insertion} {sender.lastname; format="cap"} <{sender.email}>
 ----------
 <html>
 <style type="text/css">
@@ -62,18 +62,18 @@ body \{
 <body>
 <div id="header"> <p>Aanmelding {origin}{profile.base}</p> </div>
 <div id="body">
-<p>Beste {user.givenName} {user.insertion} {user.lastname},
+<p>Beste {user.givenName; format="cap"} {user.insertion} {user.lastname; format="cap"},
 
 <p>Je bent aangemeld voor "{profile.dwoProfileDescription}" als docent
 
-<p>gebruikersnaam: <b>{user.username}</b>
-<br>wachtwoord: <b>{user.password}</b>
+<p>gebruikersnaam: <b>{user.username; format="xml-encode"}</b>
+<br>wachtwoord: <b>{user.password; format="xml-encode"}</b>
 
 <p>school: {school.schoolName}
 
 <p>Ga naar <a href='{origin}{profile.base}'>{origin}{profile.base}</a>
 
-<p>Je ben aangemeld door {sender.givenName} {sender.insertion} {sender.lastname} &lt;{sender.email}&gt;
+<p>Je ben aangemeld door {sender.givenName; format="cap"} {sender.insertion} {sender.lastname; format="cap"} &lt;{sender.email}&gt;
 </p>
 </div>
 </body>
