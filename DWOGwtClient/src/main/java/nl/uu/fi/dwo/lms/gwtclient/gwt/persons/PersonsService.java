@@ -100,7 +100,15 @@ public abstract class PersonsService {
     return null;
   }
   public Promise<Boolean> submitTeacher(DomUserFull newUser) {
-    return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "no implementation of getModules"));
+    return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "no implementation of submitTeacher"));
   }
+  public Promise<Boolean> submitTeacherv2(DomUserFull newUser) {
+	    return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "no implementation of submitTeacherv2"));
+	  }
+  public Promise<Boolean> submitSingleSchoolStudentv2(DomNewSingleSchoolStudent newStudent) {
+	    return Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Client_InternalError, "no implementation of submitSingleSchoolStudentv2"));
+	  }
 
+  
+  
 }

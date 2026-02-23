@@ -34,7 +34,7 @@ public class CacheUtilManager {
 				if (cachingProvider == null) return null;
 				Properties properties = new Properties(cachingProvider.getDefaultProperties());
 				// last change for configuration....
-				manager = cachingProvider.getCacheManager(null, null, properties);
+				manager = cachingProvider.getCacheManager(null, CacheUtilManager.class.getClassLoader(), properties);
 			} finally  {
 				supplier = null;
 			}

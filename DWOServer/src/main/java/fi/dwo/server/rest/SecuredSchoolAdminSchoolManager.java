@@ -475,9 +475,6 @@ public class SecuredSchoolAdminSchoolManager {
         Map<String,Object> properties = new TreeMap<>();
         Long pid = MySQLPersistenceId.getNativeId(rest.getDwoProfile());
         DomDwoProfileFull profile = PublicProfileCache.get(pid);
-        if (profile == null) {
-        	profile = DwoProfileManager.findEntity(pid).buildDomDwoProfileFull();
-        }
         properties.put("school", school);
         properties.put("sender", s0.getUser());
         properties.put("profile", profile);

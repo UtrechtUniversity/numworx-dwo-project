@@ -8,6 +8,7 @@ import org.osgi.util.promise.Promise;
 
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolClassManager;
 import fi.dwo.gwt.lib.rest.CallManagers.SecuredSchoolAdminSchoolManager;
+import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.dagger.RoleScope;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
@@ -55,11 +56,13 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
   final SecuredSchoolAdminSchoolClassManager manager;
   final SecuredSchoolAdminSchoolManager manager2;
   final DomContext context;
+  final DwoGlobalVars vars;
   
-  @Inject PersonsServiceSchoolAdmin(DomContext context) {
+  @Inject PersonsServiceSchoolAdmin(DomContext context, DwoGlobalVars vars) {
     manager = new SecuredSchoolAdminSchoolClassManager();
     manager2 = new SecuredSchoolAdminSchoolManager();
     this.context = context;
+    this.vars = vars;
   }
 
   @Override
@@ -194,6 +197,18 @@ public class PersonsServiceSchoolAdmin extends PersonsService {
 	} 
 	public Promise<List<DomSchoolAdminAndHasRole>> getSchoolAdminsAndHasRoleInSchool() {
 		return manager2.getSchoolAdminsAndHasRoleInSchool(context);
+	}
+
+	@Override
+	public Promise<Boolean> submitTeacherv2(DomUserFull newUser) {
+		return vars.getProfile().then( p -> 
+			manager2.submitTeacherv2(context, newUser, p.getValue()) );
+	}
+
+	@Override
+	public Promise<Boolean> submitSingleSchoolStudentv2(DomNewSingleSchoolStudent newStudent) {
+		return vars.getProfile().then(p -> 
+			manager.submitSingleSchoolStudentv2(context, newStudent, p.getValue()));
 	} 
   
 }

@@ -14,6 +14,7 @@ import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredSchoolAdminSchoolClassRestCaller;
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
@@ -27,6 +28,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestMoveStudentToSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudentv2;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
@@ -224,8 +226,22 @@ public class SecuredSchoolAdminSchoolClassManager {
         return defer.getPromise();
     }
 
+    public Promise<Boolean> submitSingleSchoolStudentv2(DomContext context, DomNewSingleSchoolStudent newStudent, DomDwoProfileId profile) {
+        RestNewSingleSchoolStudentv2 restData = new RestNewSingleSchoolStudentv2();
+        restData.setRestContext(context);
+        restData.setDomNewSingleSchoolStudent(newStudent);
+        restData.setDwoProfile(profile);
+        PromiseCallback<Boolean> defer = new PromiseCallback<Boolean>();
+        this.submitSingleSchoolStudentv2(restData, defer);
+        return defer.getPromise();
+    }
+
     private void submitSingleSchoolStudent(RestNewSingleSchoolStudent restData, MethodCallback<Boolean> callBack) {
         F(service::submitSingleSchoolStudent,PathId.getId(restData.getRestContext()), restData, (callBack));
     }
-    
+
+    private void submitSingleSchoolStudentv2(RestNewSingleSchoolStudentv2 restData, MethodCallback<Boolean> callBack) {
+        F(service::submitSingleSchoolStudentv2,PathId.getId(restData.getRestContext()), restData, (callBack));
+    }
+   
 }

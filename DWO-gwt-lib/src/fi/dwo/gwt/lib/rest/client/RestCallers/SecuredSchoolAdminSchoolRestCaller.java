@@ -30,6 +30,7 @@ import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
+import nl.uu.fi.dwo.rest.entities.RestUserFullv2;
 
 public interface SecuredSchoolAdminSchoolRestCaller extends RestService {
 
@@ -84,6 +85,9 @@ public interface SecuredSchoolAdminSchoolRestCaller extends RestService {
     @PUT
     @Path("/sec:{id}/schooladmin/school/submitTeacher")
     public void submitTeacher(@PathParam("id") String id,  RestUserFull teacher, MethodCallback<Boolean> callback);
+    @PUT
+    @Path("/sec:{id}/schooladmin/school/submitTeacherv2")
+    public void submitTeacherv2(@PathParam("id") String id,  RestUserFullv2 teacher, MethodCallback<Boolean> callback);
  
     @PUT
     @Path("/sec:{id}/schooladmin/school/getStudentsSchoolClassList")

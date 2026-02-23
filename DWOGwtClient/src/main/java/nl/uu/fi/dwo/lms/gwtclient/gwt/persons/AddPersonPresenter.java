@@ -20,6 +20,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
@@ -99,7 +100,7 @@ public abstract class AddPersonPresenter {
 
     @JsMethod
     public void submitSingleSchoolStudent(String schoolClassId, String username, String givenName, String insertion,
-        String familyName, String eMail, String password) { 
+        String familyName, String eMail, String password, boolean invite) { 
         // Verify formfields
               if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(password, familyName, givenName, eMail, username)) {
                 LOG.log(Level.INFO, "valid required fields.");
@@ -135,20 +136,23 @@ public abstract class AddPersonPresenter {
                 student.setGivenName(givenName);
                 student.setInsertion(insertion);
          // MD5 password
-                student.setPassword(MD5.md5(password));
+                if (invite)
+                	student.setPassword(DomLoginCheck.crypt(password));  
+                else
+                	student.setPassword(MD5.md5(password));
                 student.setUserName(username);
                 DomSchoolClass schoolClass = taggedSchoolClasses.getOrDefault(schoolClassId, NULL).getSchoolClass();
-                submitSingleSchoolStudent(schoolClass, student);
+                submitSingleSchoolStudent(schoolClass, student, invite);
             }
 
-    private void submitSingleSchoolStudent(DomSchoolClass schoolClass, DomSingleSchoolStudent student) {
+    private void submitSingleSchoolStudent(DomSchoolClass schoolClass, DomSingleSchoolStudent student, boolean invite) {
         Promise<Boolean> promise;
         DomNewSingleSchoolStudent newStudent = new DomNewSingleSchoolStudent();
         newStudent.setDomSingleSchoolStudent(student);
         newStudent.setDomSchoolClass(schoolClass);
         if (schoolClass == null)
           promise = Promises.failed(new Dwo2Exception(Dwo2ExceptionCode.Rest_Active_SchoolClass_Not_Set, "null"));
-        else promise = manager.submitSingleSchoolStudent(newStudent);
+        else promise = invite ? manager.submitSingleSchoolStudentv2(newStudent) : manager.submitSingleSchoolStudent(newStudent);
         // onSuccess update view
         promise.then(new Success<Boolean, Void>() {
             @Override
