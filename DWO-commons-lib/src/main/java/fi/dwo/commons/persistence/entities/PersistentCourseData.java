@@ -5,8 +5,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -18,7 +16,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 
 @Entity
 @Table(name = "tblcoursedata", schema = "")
-public class PersistentCourseData {
+public class PersistentCourseData implements PersistentEntity {
   @Id
   @Basic(optional = false)
   @Column(name = "courseID", nullable = false)
@@ -52,9 +50,7 @@ public class PersistentCourseData {
   @Column(name="del",nullable = false)
   private DelState delState = DelState.not;
 
-  @PrePersist
-  @PreUpdate
-  void changeTimestamp() {
+  public void changeTimestamp() {
       lastChangeTimeStamp = System.currentTimeMillis();
   }
 

@@ -74,9 +74,9 @@ public class PersistentDwoSystemParameters implements Serializable {
         return value;
     }
 
-//    public void setValue(String value) {
-//        this.value = value;
-//    }
+    public void setValue(String value) {
+        this.value = value;
+    }
     @Override
     public int hashCode() {
         int hash = 0;

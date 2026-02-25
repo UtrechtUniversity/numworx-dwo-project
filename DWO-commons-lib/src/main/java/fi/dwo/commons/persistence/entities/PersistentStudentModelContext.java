@@ -16,14 +16,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructure;
@@ -56,7 +56,7 @@ import org.eclipse.persistence.annotations.Converter;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "PersistentStudentModelContext.findBySchoolID", query = "SELECT p FROM PersistentStudentModelContext p WHERE p.schoolID = :schoolID")})
-public class PersistentStudentModelContext implements Serializable {
+public class PersistentStudentModelContext implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -67,7 +67,8 @@ public class PersistentStudentModelContext implements Serializable {
     @Column(name = "schoolID", nullable = false)
     private Long schoolID;
     @NotNull
-    @Column(name = "model", nullable = false)
+    @Lob
+    @Column(name = "model", nullable = false, length = 16777215, columnDefinition="JSON")
     @Convert("studentModelStructureConverter")
     private DomStudentModelStructure modelStructure;
     @Column(name = "optlock")
@@ -236,9 +237,7 @@ public class PersistentStudentModelContext implements Serializable {
 //        this.classType = classType;
 //    }
     
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
 

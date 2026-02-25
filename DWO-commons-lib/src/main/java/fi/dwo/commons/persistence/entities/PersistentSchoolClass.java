@@ -14,8 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -42,7 +40,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentSchoolClass.findByIconizer", query = "SELECT p FROM PersistentSchoolClass p WHERE p.iconizer = :iconizer"),
     @NamedQuery(name = "PersistentSchoolClass.findByClass1", query = "SELECT p FROM PersistentSchoolClass p WHERE p.class1 = :class1"),
     @NamedQuery(name = "PersistentSchoolClass.findByRegistrationKey", query = "SELECT p FROM PersistentSchoolClass p WHERE p.registrationKey = :registrationKey")})
-public class PersistentSchoolClass implements Serializable {
+public class PersistentSchoolClass implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -225,9 +223,7 @@ public class PersistentSchoolClass implements Serializable {
                 PersistenceClassType.PersistentSchoolClass.name(), aSchoolClassId));
         return id;
     }
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
 

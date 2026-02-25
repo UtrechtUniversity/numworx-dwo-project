@@ -1,20 +1,16 @@
 package fi.dwo.commons.persistence.entities;
 
-import fi.dwo.commons.persistence.MySQLPersistenceId;
 import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -51,7 +47,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentStudentScoContext.removeByScoIDandHasRolePK", query = "DELETE FROM PersistentStudentScoContext p WHERE p.scoID = :scoID and p.persistentHasRolePK = :keyID"),    
     @NamedQuery(name = "PersistentStudentScoContext.findByCreateDate", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.createDate = :createDate"),
     @NamedQuery(name = "PersistentStudentScoContext.findByScore", query = "SELECT p FROM PersistentStudentScoContext p WHERE p.score = :score")})
-public class PersistentStudentScoContext implements Serializable {
+public class PersistentStudentScoContext implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Size(max = 100)

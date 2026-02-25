@@ -15,8 +15,6 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -46,7 +44,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileBase", query = "SELECT p FROM PersistentDwoProfile p WHERE p.base = :base"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileRights", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileRights = :dwoProfileRights"),
     @NamedQuery(name = "PersistentDwoProfile.findByDwoProfileDescription", query = "SELECT p FROM PersistentDwoProfile p WHERE p.dwoProfileDescription = :dwoProfileDescription")})
-public class PersistentDwoProfile implements Serializable {
+public class PersistentDwoProfile implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -87,10 +85,10 @@ public class PersistentDwoProfile implements Serializable {
     @Column(name = "language", length = 5)
     private String language;
     @Size(max = 45)
-    @Column(name = "title", length = 5)
+    @Column(name = "title", length = 45)
     private String title;
     @Size(max = 45)
-    @Column(name = "base", length = 5)
+    @Column(name = "base", length = 45)
     private String base;
     
     
@@ -215,7 +213,7 @@ public class PersistentDwoProfile implements Serializable {
     }
 
     private void fillDomDwoProfile(DomDwoProfile profile) {
-        profile.setId(buildPersistenceId());
+        profile.setProfile(buildPersistenceId(), dwoProfileID);
         profile.setOptLock(getOptlock());
         profile.setDwoProfileName(getDwoProfileName());
         profile.setDwoProfileRights(getDwoProfileRights());
@@ -261,9 +259,7 @@ public class PersistentDwoProfile implements Serializable {
         return id;
     }
 
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public  void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
 

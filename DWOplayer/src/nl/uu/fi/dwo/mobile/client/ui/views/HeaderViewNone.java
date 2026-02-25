@@ -237,4 +237,15 @@ public void onResize() {
 	
 }
 
+@Override
+public HeaderView install() {
+	RootLayoutPanel.get().addStyleName("header-none");
+	return HeaderView.super.install();
+}
+
+@Override
+public void installTop(Widget w) {
+	w.getElement().setAttribute("aria-hidden", "true");
+}
+
 }

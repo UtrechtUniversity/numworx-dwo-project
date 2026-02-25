@@ -3,7 +3,6 @@ package fi.dwo.server.PersistentDataManagers.core;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
 import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
-import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
 
 import java.util.List;
@@ -26,38 +25,11 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
  *
  * @author G.A.J. van der Plas
  */
-public class ClassCourseManager {
+public class ClassCourseManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(ClassCourseManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
 
-    /**
-     * Create.
-     *
-     * @param classCourse
-     */
-    public static PersistentClassCourse create(PersistentClassCourse classCourse) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(classCourse);
-//            em.flush();
-            em.getTransaction().commit();
-            return classCourse;
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentClassCourse.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -70,6 +42,7 @@ public class ClassCourseManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            classCourse.changeTimestamp();
             classCourse = em.merge(classCourse);
             em.getTransaction().commit();
             return classCourse;
@@ -108,11 +81,14 @@ public class ClassCourseManager {
             
             if(list.isEmpty()){
                 //insert
+            	cc.changeTimestamp();
                 em.persist(cc);
             } else {
                 //merge
-            	list.get(0).setViewState(cc.getViewState()); // ???? missing, irrelevant?
-                cc = em.merge(list.get(0));                
+            	PersistentClassCourse pcc = list.get(0);
+				pcc.setViewState(cc.getViewState()); // ???? missing, irrelevant?
+            	pcc.changeTimestamp();
+                cc = em.merge(pcc);                
             }
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -144,6 +120,7 @@ public class ClassCourseManager {
             em.getTransaction().begin();
             cc = em.find(PersistentClassCourse.class, id);
             cc.setViewState(state);
+            cc.changeTimestamp();
             cc = em.merge(cc);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -175,6 +152,7 @@ public class ClassCourseManager {
             em.getTransaction().begin();
             cc = findEntity(id);
             cc.setType(type.ordinal());
+            cc.changeTimestamp();
             cc = em.merge(cc);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -206,6 +184,7 @@ public class ClassCourseManager {
             em.getTransaction().begin();
             cc = findEntity(id);
             cc.setNotBefore(date);
+            cc.changeTimestamp();
             cc = em.merge(cc);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -237,6 +216,7 @@ public class ClassCourseManager {
             em.getTransaction().begin();
             cc = findEntity(id);
             cc.setNotAfter(date);
+            cc.changeTimestamp();
             cc = em.merge(cc);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -362,15 +342,7 @@ public class ClassCourseManager {
     }
 
     public static PersistentClassCourse findEntity(Long id) throws PersistenceException {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentClassCourse.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentClassCourse with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentClassCourse.class);
     }
 
     public static int getEntityCount() {
@@ -394,6 +366,7 @@ public class ClassCourseManager {
             em.getTransaction().begin();
             cc = findEntity(id);
             cc.setAccessKey(accessKey);
+            cc.changeTimestamp();
             cc = em.merge(cc);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -424,6 +397,7 @@ public class ClassCourseManager {
             em.getTransaction().begin();
             cc = em.find(PersistentClassCourse.class, id);
             cc.setResults(results);
+            cc.changeTimestamp();
             cc = em.merge(cc);
             em.getTransaction().commit();
             return cc;

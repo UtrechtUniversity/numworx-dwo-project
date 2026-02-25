@@ -1,0 +1,82 @@
+Subject: Aanmelding voor {origin}{profile.base}
+Reply-To: {sender.email}
+
+Beste {user.givenName; format="cap"} {user.insertion} {user.lastname; format="cap"},
+
+Je bent aangemeld voor "{profile.dwoProfileDescription}" 
+
+gebruikersnaam: {user.username}
+wachtwoord: {user.password}
+
+klas: {schoolClass.class1}
+school: {school.schoolName}
+
+Ga naar {origin}{profile.base}
+
+Je ben aangemeld door {sender.givenName; format="cap"} {sender.insertion} {sender.lastname; format="cap"} <{sender.email}>
+----------
+<html>
+<style type="text/css">
+@import url("{cdn}/apps/css/ubuntu.css");
+body \{
+	height: 100%;
+	width: 100%;
+	background-color: #8ebee5 !important;
+	margin: 0px !important;
+\}
+#header \{
+	background-color: #314770;
+	color: #8eBee5;
+	font-size: 16pt;
+	font-weight: bold;
+	font-family: "Ubuntu" !important;
+	display: flex;
+	height: 50px;
+\}
+#header p \{
+	margin: auto;
+\}
+#body \{
+	width: 80%;
+	display: block;
+	margin: 20px auto; 
+	border: solid black 1px;
+	background-color: #314770;
+	padding: 10px
+\}
+
+#body p \{
+	font-family: Ubuntu, sans-serif !important;
+	font-size: 18px;
+	color: white;
+\}
+#body a \{
+	font-family: Ubuntu, sans-serif !important;
+	font-size: 18px;
+	color: white;
+	font-weight: bold;
+\}
+
+</style>
+
+</head>
+<body>
+<div id="header"> <p>Aanmelding {origin}{profile.base}</p> </div>
+<div id="body">
+<p>Beste {user.givenName; format="cap"} {user.insertion} {user.lastname; format="cap"},
+
+<p>Je bent aangemeld voor "{profile.dwoProfileDescription}" 
+
+<p>gebruikersnaam: <b>{user.username; format="xml-encode"}</b>
+<br>wachtwoord: <b>{user.password; format="xml-encode"}</b>
+
+<p>klas: {schoolClass.class1}
+<br>school: {school.schoolName}
+
+<p>Ga naar <a href='{origin}{profile.base}'>{origin}{profile.base}</a>
+
+<p>Je ben aangemeld door {sender.givenName; format="cap"} {sender.insertion} {sender.lastname; format="cap"} &lt;{sender.email}&gt;
+</p>
+</div>
+</body>
+</html>

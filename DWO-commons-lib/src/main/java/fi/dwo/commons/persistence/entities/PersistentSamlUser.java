@@ -12,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -40,7 +38,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentSamlUser.findByUserID", query = "SELECT p FROM PersistentSamlUser p WHERE p.userID = :userID")})
     
 
-public class PersistentSamlUser implements Serializable {
+public class PersistentSamlUser implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -62,8 +60,11 @@ public class PersistentSamlUser implements Serializable {
     @NotNull
     @Column(name = "userID", nullable = false)
     private Long userID;
+    /*
+     * legacy null values in production database
+     */
     @NotNull
-    @Column(name = "authtoken", nullable = false, length = 16)
+    @Column(name = "authtoken", nullable = true, length = 16)
     private String authToken;
     @NotNull
     @Column(name = "timestampauthtoken", nullable = false)
@@ -208,10 +209,8 @@ public class PersistentSamlUser implements Serializable {
         return id;
     }
 
-    @PrePersist
-    @PreUpdate
-      private void now() {
+    public void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
-      }
+    }
 
 }

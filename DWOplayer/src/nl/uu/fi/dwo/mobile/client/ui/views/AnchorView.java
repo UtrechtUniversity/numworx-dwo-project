@@ -72,6 +72,18 @@ public class AnchorView implements IsWidget, ClickHandler, TekstElementWithFont 
 			anchor.addClickHandler(new Actions.Handler(href));
 			
 		} else
+		if (href.startsWith("history:")) {
+			if (href.equals("history:back")) {
+				anchor = new Anchor(tekst, "javascript:history.back()");				
+			} else {
+				try {
+					int go = Integer.parseInt(href.substring(9));
+					anchor = new Anchor(tekst, "javascript:history.go(" + go + ")");
+				} catch(Exception oops) {				
+					anchor = new Anchor(tekst, "javascript:return false;");
+				}
+			}
+		} else
 		if(href.startsWith("goto:") || href.startsWith("anchor:"))
 		{
 			anchor = new Anchor(tekst, "javascript:return false;"); // bug in firefox?

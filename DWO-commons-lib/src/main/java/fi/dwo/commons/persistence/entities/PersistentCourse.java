@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -71,7 +69,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     @NamedQuery(name = "PersistentCourse.findByParentIDTrash", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID and p.trashID != 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not"),
     @NamedQuery(name = "PersistentCourse.findByParentID", query = "SELECT p FROM PersistentCourse p WHERE p.parentID = :parentID and p.trashID = 0 and p.delState = nl.uu.fi.dwo.rest.dom.entities.util.DelState.not")})
 //    @NamedQuery(name = "PersistentCourse.findByNotVisible", query = "SELECT p FROM PersistentCourse p WHERE p.notVisible = :notVisible")})
-public class PersistentCourse implements Serializable {
+public class PersistentCourse implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     public static final int MAX_NAME = 255;
@@ -414,7 +412,7 @@ public class PersistentCourse implements Serializable {
 		this.notVisible = notVisible;
 	}
 
-    public void changeTimeStamp() {
+    public void changeTimestamp() {
 	    lastChangeTimeStamp = System.currentTimeMillis();
 	  }
 

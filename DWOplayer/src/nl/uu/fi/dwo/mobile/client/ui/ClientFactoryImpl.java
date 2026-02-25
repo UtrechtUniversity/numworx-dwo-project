@@ -71,7 +71,7 @@ public abstract class ClientFactoryImpl implements ClientFactory
 	}
 
 	public HeaderView getHeaderView() {
-		return headerView.get();
+		return headerView.get().install();
 	}
 		
 	protected void setRPCHandler(RPCHandler handler) {

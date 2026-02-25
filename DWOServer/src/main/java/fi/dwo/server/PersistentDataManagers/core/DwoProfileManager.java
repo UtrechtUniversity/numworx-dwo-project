@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -23,36 +24,10 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class DwoProfileManager {
+public class DwoProfileManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(DwoProfileManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param dwoProfile
-     */
-    public static void create(PersistentDwoProfile dwoProfile) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(dwoProfile);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentDwoProfile.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -66,6 +41,7 @@ public class DwoProfileManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            dwoProfile.changeTimestamp();
             dwoProfile = em.merge(dwoProfile);
             em.getTransaction().commit();
             return dwoProfile;
@@ -190,7 +166,7 @@ public class DwoProfileManager {
 				q.setParameter("dwoProfileName", id);
 			}
 			return q.getSingleResult();
-		} catch ( NoResultException nores) {
+		} catch ( NoResultException|NonUniqueResultException nores) {
 			return null;
 		} finally {
 			em.close();

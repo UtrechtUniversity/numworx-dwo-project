@@ -3,11 +3,14 @@ package nl.uu.fi.dwo.mobile.client.sco;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
 
 public class SCORM_Print extends SCORM_2004_API {
+	
+	final Logger LOG = Logger.getLogger(getClass().getName());
 
 	static final Map<String, String> VALUES = new HashMap<>();
 	static {
@@ -44,13 +47,18 @@ public class SCORM_Print extends SCORM_2004_API {
 		return Promises.resolved("");
 	}
 
+	public static class NoSupport extends Exception { } // marker instead of resolve("")
+	
 	@Override
 	public Promise<String> getValuePromise(String name) {
-		return Promises.resolved("");
+		LOG.warning("GetValueAsync " + name + " " + hasGetValueAsync() );
+		if (hasGetValueAsync()) return super.getValuePromise(name);
+		return Promises.failed(new NoSupport());
 	}
 
 	@Override
 	public Promise<Map<String, String>> getValuesPromise(Collection<String> names) {
+		LOG.warning("GetValuesAsync " + names);
 		return super.getValuesPromise(names);
 	}
 

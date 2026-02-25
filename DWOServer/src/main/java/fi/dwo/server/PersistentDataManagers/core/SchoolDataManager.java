@@ -23,38 +23,10 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class SchoolDataManager {
+public class SchoolDataManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(SchoolDataManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        return DwoEmfFactory.getEntityManager();
-    }
-
-    /**
-     * Create.
-     *
-     * @param school
-     */
-    public static void create(PersistentSchoolData school) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(school);
-            em.getTransaction().commit();
-        } catch (PersistenceException e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentSchool.", e);
-        	throw e;
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentSchool.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -67,6 +39,7 @@ public class SchoolDataManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            school.changeTimestamp();
             school = em.merge(school);
             em.getTransaction().commit();
             return school;
@@ -138,16 +111,8 @@ public class SchoolDataManager {
         }
     }
 
-    public static PersistentSchoolData findEntity(Long id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentSchoolData.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentSchoolData with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+    public static PersistentSchoolData findEntity(Long id) throws PersistenceException {
+        return find(id, PersistentSchoolData.class);
     }
 
     public static int getEntityCount() {

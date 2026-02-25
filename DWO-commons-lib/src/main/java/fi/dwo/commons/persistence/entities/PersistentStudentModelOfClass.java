@@ -9,8 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -27,7 +25,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
   @NamedQuery(name = "PersistentStudentModelOfClass.findByModelID", query = "SELECT p FROM PersistentStudentModelOfClass p WHERE p.id.modelID = :modelID and p.id.schoolID = :schoolID"),
   @NamedQuery(name = "PersistentStudentModelOfClass.findByClassID", query = "SELECT p FROM PersistentStudentModelOfClass p WHERE p.id.classID = :classID and p.id.schoolID = :schoolID"),
   @NamedQuery(name = "PersistentStudentModelOfClass.findBySchoolID", query = "SELECT p FROM PersistentStudentModelOfClass p WHERE p.id.schoolID = :schoolID")})
-public class PersistentStudentModelOfClass {
+public class PersistentStudentModelOfClass implements PersistentEntity {
 
   
   @EmbeddedId
@@ -39,9 +37,7 @@ public class PersistentStudentModelOfClass {
   @Column(name = "lastChangeTimeStamp")
   private long lastChangeTimeStamp;
 
-  @PrePersist
-  @PreUpdate
-  void changeTimestamp() {
+  public void changeTimestamp() {
       lastChangeTimeStamp = System.currentTimeMillis();
   }
 

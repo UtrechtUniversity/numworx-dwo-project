@@ -12,15 +12,25 @@ import fi.beans.copyright.NumworxInfo;
 import fi.beans.numworxlf.JRadioButton;
 import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.gui.GuiCreator;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
 
 public class DwoProfileStrategy extends JPanel implements ActionListener {
-  static final int HE_ID = 100;
+	
+  private static int first(int id, String name) {
+	  try {
+		  return PublicProfileCache.get(name).asLong().intValue();
+	  } catch(Exception oops) {}
+	  return id;
+  }
+	
+	
+  static final int HE_ID = first(100, "HE (English)");
 
-  static final int SE_ID = 92;
+  static final int SE_ID = first(92, "SE (English)");
 
-  static final int HO_ID = 99;
+  static final int HO_ID = first(99, "HO");
 
-  static final int VO_ID = 77;
+  static final int VO_ID = first(77, "VO");
 
   JRadioButton vo;
 

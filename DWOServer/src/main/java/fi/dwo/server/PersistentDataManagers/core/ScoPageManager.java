@@ -14,29 +14,14 @@ import fi.dwo.commons.persistence.entities.PersistentScoPagePK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
-public class ScoPageManager {
+public class ScoPageManager extends AbstractManager {
     private static final Logger LOG = Logger.getLogger(ScoPageManager.class.getName());
-
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    public static void create(PersistentScoPage p) throws PersistenceException {
-    	EntityManager em = getEntityManager();
-    	try {
-    		em.getTransaction().begin();
-    		em.persist(p);
-    		em.getTransaction().commit();
-    	} finally {
-    		em.close();
-    	}
-    }
     
     public static PersistentScoPage edit(PersistentScoPage p) throws PersistenceException {
     	EntityManager em = getEntityManager();
     	try {
     		em.getTransaction().begin();
+    		p.changeTimestamp();
     		p = em.merge(p);
     		em.getTransaction().commit();
     	} finally {
@@ -107,12 +92,7 @@ public class ScoPageManager {
     }
 
 	public static PersistentScoPage findEntity(PersistentScoPagePK id) {
-    	EntityManager em = getEntityManager();
-    	try {
-    		return em.find(PersistentScoPage.class, id);
-    	} finally {
-    		em.close();
-    	}
+    	return find(id, PersistentScoPage.class);
 	}
     
     

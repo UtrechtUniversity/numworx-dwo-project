@@ -1,6 +1,8 @@
 package fi.dwo.server.PersistentDataManagers.cache;
 
 import java.security.Principal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.cache.Cache;
 import javax.ws.rs.core.SecurityContext;
@@ -12,13 +14,19 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.CacheUtilManager;
 
 public class HasRoleCache {
 	
+	private static Logger LOG = Logger.getLogger(HasRoleCache.class.getName());
 	private static Cache<PersistentHasRolePK, PersistentHasRole> cache = initializeCache();
 
 	private HasRoleCache() {
 	}
 
 	private static Cache<PersistentHasRolePK, PersistentHasRole> initializeCache() {
-		return CacheUtilManager.createCache("PersistentHasRole", PersistentHasRolePK.class, PersistentHasRole.class);
+		try {
+			return CacheUtilManager.createCache("PersistentHasRole", PersistentHasRolePK.class, PersistentHasRole.class);
+		} catch (Exception e) {
+			LOG.log(Level.WARNING, "no cache for HasRole", e);
+			return null;
+		}
 	}
 
 	public static void put(PersistentHasRole role) {

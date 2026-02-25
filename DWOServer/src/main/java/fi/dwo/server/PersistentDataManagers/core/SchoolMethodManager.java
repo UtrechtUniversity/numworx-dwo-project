@@ -17,36 +17,9 @@ import fi.dwo.commons.persistence.entities.PersistentSchoolMethod;
 import fi.dwo.commons.persistence.entities.PersistentSchoolMethodPK;
 import fi.dwo.server.persistence.DwoEmfFactory;
 
-public class SchoolMethodManager {
+public class SchoolMethodManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(SchoolMethodManager.class.getName());
-
-	private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-	public static void create(PersistentSchoolMethod sm) {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(sm);
-            em.getTransaction().commit();
-        } catch (PersistenceException e0) {
-            LOG.log(Level.SEVERE, "Can't create the schoolmethod.", e0);
-            throw e0;
-        } catch (RuntimeException re) {
-        	throw re;
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the schoolmethod.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-	}
 
 	public static List<PersistentSchoolMethod> findEntities() {
 		return findEntities(true, 0,0);
@@ -84,6 +57,7 @@ public class SchoolMethodManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            sm.changeTimestamp();
             sm = em.merge(sm);
             em.getTransaction().commit();
             return sm;
@@ -142,15 +116,7 @@ public class SchoolMethodManager {
 	}
 	
     public static PersistentSchoolMethod findEntity(PersistentSchoolMethodPK id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentSchoolMethod.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentSchoolMethod with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentSchoolMethod.class);
     }
 
 }

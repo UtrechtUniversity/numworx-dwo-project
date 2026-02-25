@@ -20,8 +20,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -64,7 +62,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 //        size = 10000, // Use 64,000 as the initial cache size. 
 //        expiry = 36000000 // 10 minutes 
 //)
-public class PersistentUser implements Serializable {
+public class PersistentUser implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -448,8 +446,7 @@ public class PersistentUser implements Serializable {
       return withoutRealm(realm, buildDomUserFull());
     }
     
-    @PrePersist
-    @PreUpdate
+	public
     void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
     }

@@ -30,13 +30,11 @@ import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import java.text.MessageFormat;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javax.activation.MimeType;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.persistence.PersistenceException;

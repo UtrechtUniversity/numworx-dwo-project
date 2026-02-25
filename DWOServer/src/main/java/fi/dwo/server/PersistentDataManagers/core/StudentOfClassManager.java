@@ -27,45 +27,10 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class StudentOfClassManager {
+public class StudentOfClassManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(StudentOfClassManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param studentOf
-     */
-    public static void create(PersistentStudentOfClass studentOf) throws PersistenceException {
-        EntityManager em = null;
-// assert userid not nul(l)     
-        final Long userID = studentOf.getPersistentStudentOfClassPK().getUserID();
-		if (userID == null || userID.longValue() == 0) {
-			throw new PersistenceException("StudentOfClass.userid=" + userID);
-		}
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(studentOf);
-            em.getTransaction().commit();
-        }
-        catch (PersistenceException e) {
-          LOG.log(Level.WARNING, "Can't create the PersistentStudentOfClass.", e);
-          throw (e);
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentStudentOfClass.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -79,6 +44,7 @@ public class StudentOfClassManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            studentOf.changeTimestamp();
             studentOf = em.merge(studentOf);
             em.getTransaction().commit();
             return studentOf;
@@ -180,15 +146,7 @@ public class StudentOfClassManager {
     }    
     
     public static PersistentStudentOfClass findEntity(PersistentStudentOfClassPK id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentStudentOfClass.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentStudentOfClass with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentStudentOfClass.class);
     }
 
     public static int getEntityCount() {

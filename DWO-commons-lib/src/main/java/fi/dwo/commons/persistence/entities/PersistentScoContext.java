@@ -11,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
@@ -46,7 +44,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 //    @NamedQuery(name = "PersistentScoContext.findBySequencenr", query = "SELECT p FROM PersistentScoContext p WHERE p.sequencenr = :sequencenr"),
     @NamedQuery(name = "PersistentScoContext.findByCourseIDTrash", query = "SELECT p FROM PersistentScoContext p WHERE p.courseID = :courseID and p.trashID != 0")})
 
-public class PersistentScoContext implements Serializable {
+public class PersistentScoContext implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -127,9 +125,7 @@ public class PersistentScoContext implements Serializable {
     @Column(name="showdocent")
     private Boolean showdocent;
     
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public void changeTimestamp() {
     	lastChangeTimeStamp = System.currentTimeMillis();
     }
    

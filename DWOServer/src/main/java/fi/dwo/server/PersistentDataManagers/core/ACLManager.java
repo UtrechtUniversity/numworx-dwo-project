@@ -24,42 +24,11 @@ import javax.persistence.criteria.Root;
  * @author Wim van Velthoven
  * @since 2.3.13
  */
-public class ACLManager {
+public class ACLManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(ACLManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param persistentApplet
-     */
-    public static void create(PersistentACL persistentAcl) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(persistentAcl);
-            em.getTransaction().commit();
-        } 
-        catch (PersistenceException e) {
-          LOG.log(Level.SEVERE, "Can't create the PersistentAcl.", e);
-          throw e;
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentAcl.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
-
+ 
     /**
      * Update
      *
@@ -70,6 +39,7 @@ public class ACLManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            persistentAcl.changeTimestamp();
             persistentAcl = em.merge(persistentAcl);
             em.getTransaction().commit();
             return persistentAcl;
@@ -141,15 +111,7 @@ public class ACLManager {
     }
 
     public static PersistentACL findEntity(Long id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentACL.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentACL with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+    	return find(id, PersistentACL.class);
     }
 
     public static int getEntityCount() {
@@ -221,8 +183,10 @@ public class ACLManager {
              item.setCourseID(s.getCourseID());
              item.setDwoProfileID(s.getDwoProfileID());
              item.setSchoolID(s.getSchoolID());
+             item.changeTimestamp();
              em.persist(item);
            } else {
+        	 item.changeTimestamp();
              item = em.merge(item);
            }
            list.add(item);

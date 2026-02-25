@@ -29,7 +29,7 @@ public class TestCopyIT {
 			EntityManager em = DwoEmfFactory.getEntityManager();
 			PersistentCourse course = new PersistentCourse(2L);
 			course.setName("course 1234");
-			course.changeTimeStamp();
+			course.changeTimestamp();
 			course.version = 1L;
 			course.setDwoProfileID(1L);
 			course.setParentID(0L);

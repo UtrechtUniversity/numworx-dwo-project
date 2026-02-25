@@ -10,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -34,7 +32,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 @NamedQueries({
     @NamedQuery(name = "PersistentScoData.findAll", query = "SELECT p FROM PersistentScoData p"),
     @NamedQuery(name = "PersistentScoData.findByScoID", query = "SELECT p FROM PersistentScoData p WHERE p.scoID = :scoID")})
-public class PersistentScoData implements Serializable {
+public class PersistentScoData implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -66,9 +64,7 @@ public class PersistentScoData implements Serializable {
     @Column(name="del",nullable = false)
     private DelState delState = DelState.not;
 
-    @PrePersist
-    @PreUpdate
-    void changeTimestamp() {
+    public void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
     }
 

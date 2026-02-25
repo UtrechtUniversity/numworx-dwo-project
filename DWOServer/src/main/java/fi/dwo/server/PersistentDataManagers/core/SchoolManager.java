@@ -23,39 +23,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class SchoolManager {
+public class SchoolManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(SchoolManager.class.getName());
-
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param school
-     */
-    public static void create(PersistentSchool school) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(school);
-            em.getTransaction().commit();
-        } catch (PersistenceException e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentSchool.", e);
-        	throw e;
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentSchool.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -68,6 +38,7 @@ public class SchoolManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            school.changeTimestamp();
             school = em.merge(school);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -139,15 +110,7 @@ public class SchoolManager {
     }
 
     public static PersistentSchool findEntity(Long id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentSchool.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentSchool with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentSchool.class);
     }
 
     public static int getEntityCount() {

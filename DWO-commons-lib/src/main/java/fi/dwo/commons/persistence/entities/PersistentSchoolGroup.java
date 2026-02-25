@@ -45,7 +45,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 //        size=10000, // Use 64,000 as the initial cache size. 
 //        expiry=36000000 // 10 minutes 
 
-public class PersistentSchoolGroup implements Serializable {
+public class PersistentSchoolGroup implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -79,9 +79,8 @@ public class PersistentSchoolGroup implements Serializable {
     @Basic(optional = false)
     @Column(name = "lastChangeTimeStamp", nullable = true)
     private long lastChangeTimeStamp;
-    @PrePersist
-    @PreUpdate
-    private void now() {
+
+    public void changeTimestamp() {
       lastChangeTimeStamp = System.currentTimeMillis();
     }
     @PostLoad

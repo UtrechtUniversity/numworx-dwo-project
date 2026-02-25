@@ -549,6 +549,8 @@ public class Text_en extends ListResourceBundle {
             { TextMapper.GUISM_CHAPTER, "Chapter"},
             { TextMapper.GUISM_YEAR, "Grade"},
             { TextMapper.GUISM_NAME, "Name method"},
+            
+            { TextMapper.LBL_INVITE, "and send invitation"},
 	};
 
 	public Text_en() {

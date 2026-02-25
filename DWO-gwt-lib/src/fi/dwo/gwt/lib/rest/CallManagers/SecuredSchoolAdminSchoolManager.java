@@ -9,6 +9,7 @@ import com.google.gwt.core.shared.GWT;
 import static fi.dwo.gwt.lib.rest.GwtRestVars.F;
 import fi.dwo.gwt.lib.rest.client.RestCallers.SecuredSchoolAdminSchoolRestCaller;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomGetSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
@@ -33,6 +34,7 @@ import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
+import nl.uu.fi.dwo.rest.entities.RestUserFullv2;
 import nl.uu.fi.dwo.rest.util.PathId;
 
 public class SecuredSchoolAdminSchoolManager {
@@ -156,12 +158,24 @@ public class SecuredSchoolAdminSchoolManager {
     return F(service::submitTeacher,PathId.getId(context), restUserFull(context, teacher));
   }
 
+  public Promise<Boolean> submitTeacherv2(DomContext context, DomUserFull teacher, DomDwoProfileId profile) {
+	    return F(service::submitTeacherv2,PathId.getId(context), restUserFullv2(context, teacher, profile));
+	  }
+
   private static RestStudent restStudent(DomContext context, DomStudent student) {
     RestStudent result = new RestStudent();
     result.setDomStudent(student);
     result.setRestContext(context);
     return result;
   }
+
+  private static RestUserFullv2 restUserFullv2(DomContext context, DomUserFull student, DomDwoProfileId profile) {
+	    RestUserFullv2 result = new RestUserFullv2();
+	    result.setDomUserFull(student);
+	    result.setDwoProfile(profile);
+	    result.setRestContext(context);
+	    return result;
+	  }
 
   public Promise<List<DomSchoolClass>> getStudentsSchoolClasses(DomContext context,
       DomStudent student) {

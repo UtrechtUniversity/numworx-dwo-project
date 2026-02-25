@@ -29,42 +29,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class UserManager {
+public class UserManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
-
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param persistentUser
-     */
-    public static void create(PersistentUser persistentUser) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(persistentUser);
-            em.getTransaction().commit();
-        } catch (EntityExistsException ex) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentUser.", ex);
-            throw ex;
-        } catch (PersistenceException e) {
-          LOG.log(Level.SEVERE, "Can't create the PersistentUser.", e);
-          throw (e);
-      } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentUser.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -76,6 +43,7 @@ public class UserManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            persistentUser.changeTimestamp();
             persistentUser = em.merge(persistentUser);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -112,6 +80,7 @@ public class UserManager {
             p.setInsertion(persistentUser.getInsertion());
             p.setEmail(persistentUser.getEmail());
             p.setPassword(persistentUser.getPassword());
+            persistentUser.changeTimestamp();
             persistentUser = em.merge(p);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -203,15 +172,7 @@ public class UserManager {
     }
 
     public static PersistentUser findEntity(Long id) throws PersistenceException {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentUser.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentUser with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentUser.class);
     }
 
     public static PersistentUser findEntity(PersistentHasRolePK key) {

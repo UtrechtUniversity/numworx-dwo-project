@@ -18,46 +18,9 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class CourseDataManager {
+public class CourseDataManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(CourseDataManager.class.getName());
-
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param course
-     */
-    public static void create(PersistentCourseData course) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(course);
-            em.getTransaction().commit();
-        }
-        catch(RollbackException e) {
-          LOG.log(Level.WARNING, "Can't create the PersistentCourse.", e);
-          throw e;
-        }
-        catch(PersistenceException e)
-        {
-          LOG.log(Level.SEVERE, "Can't create the PersistentCourse.", e);
-          throw e;
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentCourse.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -70,20 +33,13 @@ public class CourseDataManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            course.changeTimestamp();
             course = em.merge(course);
             em.getTransaction().commit();
         } 
-        catch (RollbackException e) {
+        catch (PersistenceException e) {
           throw e;
         } catch (Exception e) {
-            String msg = e.getLocalizedMessage();
-            if (msg == null || msg.length() == 0) {
-                Long id = course.getCourseID();
-                if (findEntity(id) == null) {
-                    LOG.log(Level.INFO, "The PersistentCourseData with " + id + " no longer exists.", e);
-                    throw new PersistenceException(e);
-                }
-            }
             throw new PersistenceException(e);
         } finally {
             if (em != null) {
@@ -145,15 +101,7 @@ public class CourseDataManager {
     }
 
     public static PersistentCourseData findEntity(Long id) throws PersistenceException {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentCourseData.class, id);
-         } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentCourse with " + id + " was not found.", e);
-            throw e;
-       } finally {
-            em.close();
-        }
+    	return find(id, PersistentCourseData.class);
     }
 
     public static int getEntityCount() {

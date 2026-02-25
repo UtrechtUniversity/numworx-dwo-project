@@ -20,36 +20,10 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class ImageManager {
+public class ImageManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(ImageManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param image
-     */
-    public static void create(PersistentImage image) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(image);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentImage.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -62,6 +36,7 @@ public class ImageManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            image.changeTimestamp();
             image = em.merge(image);
             em.getTransaction().commit();
             return image;
@@ -134,15 +109,7 @@ public class ImageManager {
     }
     
     public static PersistentImage findEntity(Long id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentImage.class, id);
-         } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentImage with " + id + " was not found.", e);
-            throw e;
-         } finally {
-            em.close();
-        }
+    	return find(id, PersistentImage.class);
     }
 
     public static int getEntityCount() {

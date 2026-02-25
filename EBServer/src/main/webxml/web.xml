@@ -635,6 +635,31 @@ ${upload.servlet.mapping}
   	<servlet-name>sebhosting</servlet-name>
   	<url-pattern>*.seb</url-pattern>
   </servlet-mapping>
+
+<filter>
+    <filter-name>httpHeaderSecurity</filter-name>
+  <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
+    <init-param>
+      <param-name>hstsMaxAgeSeconds</param-name>
+      <param-value>31536000</param-value>
+    </init-param>
+<!-- iframe in rekenweb/wikiwijs, possibly others: turn off -->
+    <init-param>
+    	<param-name>antiClickJackingOption</param-name>
+    	<param-value>SAMEORIGIN</param-value>
+    </init-param>
+    <init-param>
+    	<param-name>antiClickJackingEnabled</param-name>
+    	<param-value>false</param-value>
+    </init-param>
+</filter>
+<filter-mapping>
+    <filter-name>httpHeaderSecurity</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+</filter-mapping>
+
+
   
 	<listener>
         <listener-class>

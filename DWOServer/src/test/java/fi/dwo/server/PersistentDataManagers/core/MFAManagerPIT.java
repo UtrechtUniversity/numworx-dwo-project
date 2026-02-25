@@ -53,6 +53,7 @@ public class MFAManagerPIT {
 		em.persist(mfa);
 		
 		mfa.setSecret("public");
+		mfa.changeTimestamp();
 		mfa = em.merge(mfa);
 		em.getTransaction().commit();
 		em.close();

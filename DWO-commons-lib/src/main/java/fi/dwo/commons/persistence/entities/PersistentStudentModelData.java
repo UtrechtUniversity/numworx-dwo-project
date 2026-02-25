@@ -11,11 +11,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelData;
@@ -75,6 +77,8 @@ public class PersistentStudentModelData implements Serializable {
     @NotNull
     private PersistentHasRolePK persistentHasRolePK;
     @Convert("studentModelScoreConverter")
+    @Lob
+    @Column(name = "modelData", length = 16777215, columnDefinition="JSON")
     private DomStudentModelStructureScore modelData;
     @Column(name = "optlock")
     @Version

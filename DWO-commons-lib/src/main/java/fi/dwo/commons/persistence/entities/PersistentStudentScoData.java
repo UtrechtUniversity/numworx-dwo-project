@@ -13,8 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -39,7 +37,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
     ,
     @NamedQuery(name = "PersistentStudentScoData.removeByScoIDandHasRolePK", query = "DELETE FROM PersistentStudentScoData p WHERE p.studentSco=:studentSco")})
 
-public class PersistentStudentScoData implements Serializable {
+public class PersistentStudentScoData implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -66,8 +64,7 @@ public class PersistentStudentScoData implements Serializable {
     @Column(name = "del", nullable = false)
     private DelState delState = DelState.not;
 
-    @PrePersist
-    @PreUpdate
+	public
     void changeTimestamp() {
         lastChangeTimeStamp = System.currentTimeMillis();
     }

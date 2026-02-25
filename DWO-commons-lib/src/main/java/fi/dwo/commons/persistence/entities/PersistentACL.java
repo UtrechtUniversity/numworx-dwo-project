@@ -30,7 +30,7 @@ import nl.uu.fi.dwo.rest.persistence.PersistenceId;
   @NamedQuery(name = "PersistentACL.findByCourseID", query = "SELECT p FROM PersistentACL p WHERE p.courseID = :courseID"),
   @NamedQuery(name = "PersistentACL.findBySchoolIDProfileID", query = "SELECT p FROM PersistentACL p WHERE p.schoolID = :schoolID AND p.dwoProfileID = :profileID")
 })
-public class PersistentACL implements Serializable {
+public class PersistentACL implements Serializable, PersistentEntity {
   private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,9 +64,7 @@ public class PersistentACL implements Serializable {
   @Column(name= "access")
   private ACL access = ACL.NONE;
   
-  @PrePersist
-  @PreUpdate
-  private void now() {
+  public void changeTimestamp() {
     lastChangeTimeStamp = System.currentTimeMillis();
   }
   

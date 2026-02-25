@@ -1,0 +1,82 @@
+Subject: Invitation for {origin}{profile.base}
+Reply-To: {sender.email}
+
+Dear {user.givenName; format="cap"} {user.insertion} {user.lastname; format="cap"},
+
+You are invited to join "{profile.dwoProfileDescription}" 
+
+username: {user.username}
+password: {user.password}
+
+class: {schoolClass.class1}
+school: {school.schoolName}
+
+Go to {origin}{profile.base}
+
+This invitation is sent by {sender.givenName; format="cap"} {sender.insertion} {sender.lastname; format="cap"} <{sender.email}>
+----------
+<html>
+<style type="text/css">
+@import url("{cdn}/apps/css/ubuntu.css");
+body \{
+	height: 100%;
+	width: 100%;
+	background-color: #8ebee5 !important;
+	margin: 0px !important;
+\}
+#header \{
+	background-color: #314770;
+	color: #8eBee5;
+	font-size: 16pt;
+	font-weight: bold;
+	font-family: "Ubuntu" !important;
+	display: flex;
+	height: 50px;
+\}
+#header p \{
+	margin: auto;
+\}
+#body \{
+	width: 80%;
+	display: block;
+	margin: 20px auto; 
+	border: solid black 1px;
+	background-color: #314770;
+	padding: 10px
+\}
+
+#body p \{
+	font-family: Ubuntu, sans-serif !important;
+	font-size: 18px;
+	color: white;
+\}
+#body a \{
+	font-family: Ubuntu, sans-serif !important;
+	font-size: 18px;
+	color: white;
+	font-weight: bold;
+\}
+
+</style>
+
+</head>
+<body>
+<div id="header"> <p>Invitation for {origin}{profile.base}</p> </div>
+<div id="body">
+<p>Dear {user.givenName; format="cap"} {user.insertion} {user.lastname; format="cap"},
+
+<p>You are invited to join "{profile.dwoProfileDescription}" 
+
+<p>username: <b>{user.username; format="xml-encode"}</b>
+<br>password: <b>{user.password; format="xml-encode"}</b>
+
+<p>class: {schoolClass.class1}
+<br>school: {school.schoolName}
+
+<p>Go to <a href='{origin}{profile.base}'>{origin}{profile.base}</a>
+
+<p>This invitation is sent by {sender.givenName; format="cap"} {sender.insertion} {sender.lastname; format="cap"} &lt;{sender.email}&gt;
+</p>
+</div>
+</body>
+</html>

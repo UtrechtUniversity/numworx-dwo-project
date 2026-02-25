@@ -13,8 +13,6 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.validation.constraints.Null;
-
 import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 
@@ -24,17 +22,13 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 
-public class MethodManager {
+public class MethodManager extends AbstractManager {
     private static final Logger LOG = Logger.getLogger(MethodManager.class.getName());
     public static final Long NUL = Long.valueOf(0L);
 
 	private MethodManager() {
 	}
 
-	private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
     /**
      * Create.
      *
@@ -54,6 +48,7 @@ public class MethodManager {
 //            	if (method.getSchoolID() == 0L)
 //            		profile = em.find(PersistentDwoProfile.class, pid);
 //            }
+            method.changeTimestamp();
             em.persist(method);
             if (profile != null) {
             	method.getProfiles().add(profile);
@@ -85,6 +80,7 @@ public class MethodManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            method.changeTimestamp();
             method = em.merge(method);
             em.getTransaction().commit();
             return method;
@@ -159,15 +155,7 @@ public class MethodManager {
     }
 
     public static PersistentMethod findEntity(String id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentMethod.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentRole with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentMethod.class);
     }
 
     public static int getEntityCount() {
@@ -258,8 +246,8 @@ public class MethodManager {
 			em.getTransaction().begin();
 			m = em.merge(m);
 			profile = em.merge(profile);
-			m.getProfiles().add(profile);
-			profile.getMethods().add(m);
+			if (m.getProfiles().add(profile) ) m.changeTimestamp();
+			if (profile.getMethods().add(m)) profile.changeTimestamp();
 			em.getTransaction().commit();
 		} finally {
 			em.close();
@@ -272,8 +260,8 @@ public class MethodManager {
 			em.getTransaction().begin();
 			m = em.merge(m);
 			profile = em.merge(profile);
-			m.getProfiles().remove(profile);
-			profile.getMethods().remove(m);
+			if (m.getProfiles().remove(profile)) m.changeTimestamp();
+			if (profile.getMethods().remove(m)) profile.changeTimestamp();
 			em.getTransaction().commit();
 		} finally {
 			em.close();

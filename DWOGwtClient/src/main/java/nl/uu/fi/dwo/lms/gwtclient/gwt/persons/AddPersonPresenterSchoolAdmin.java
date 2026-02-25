@@ -15,6 +15,7 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.DwoGlobalVars;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.LoggingFailure;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithOKEvent;
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.MessageDialogWithOKEvent;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSubmitTeacherToSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomTeacher;
@@ -50,7 +51,7 @@ public class AddPersonPresenterSchoolAdmin extends AddPersonPresenter {
 
   @JsMethod
   public void submitTeacher(String schoolClassId, String username, String givenName,
-      String insertion, String familyName, String eMail, String password) {
+      String insertion, String familyName, String eMail, String password, boolean invite) {
     // Verify formfields
     if (SimpleValidUserFieldsChecker.isNonEmptyNorNull(password, familyName, givenName, eMail,
         username)) {
@@ -93,11 +94,15 @@ public class AddPersonPresenterSchoolAdmin extends AddPersonPresenter {
     newUser.setFamilyName(familyName);
     newUser.setGivenName(givenName);
     newUser.setInsertion(insertion);
-    newUser.setPassword(MD5.md5(password));
+// crypt or md5
+    if (invite)
+    	newUser.setPassword(DomLoginCheck.crypt(password));
+    else 
+    	newUser.setPassword(MD5.md5(password));
     newUser.setSingleSchool(false);
     newUser.setUserName(username);
 
-    Promise<?> promise = manager.submitTeacher(newUser);
+    Promise<?> promise = invite ? manager.submitTeacherv2(newUser) : manager.submitTeacher(newUser);
     DomSchoolClass schoolClass = taggedSchoolClasses.getOrDefault(schoolClassId, NULL).getSchoolClass();
     if (schoolClass != null) {
       promise = promise.then(p -> { return manager.getTeachersInSchool(); })

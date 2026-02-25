@@ -445,7 +445,8 @@ public class Stub implements OpdrNavIF, FormuleKeyboardIF, NativePreviewHandler 
 
 	@Override
 	public void blur() {
-		
+		setFocus2(false, soft);
+		editor = null;
 	}
 
 	@Override

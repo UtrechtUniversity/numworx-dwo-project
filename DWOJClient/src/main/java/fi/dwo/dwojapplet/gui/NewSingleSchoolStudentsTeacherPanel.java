@@ -2,11 +2,13 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.MD5;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import fi.dwo.commons.system.TextMapper;
@@ -67,6 +69,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     private JButton backButton;
     private JButton addButton;
     private JButton importButton;
+    private JCheckBox email;
 //    private JComboBox schoolClassComboBox;
     private Clipboard systemClipboard;
     String[] columnNames = {
@@ -83,12 +86,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
     private JPanel jtbl;
     private JTable jtable = new JTable();
 
-    public enum UserType {
-
-        TEACHER, SCHOOLADMIN
-    };
-
-    private UserType userType = UserType.TEACHER;
+    private RoleType userType = RoleType.TEACHER;
     
     public class ImageRenderer extends JLabel implements TableCellRenderer, Icon {
 
@@ -326,7 +324,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
 
     }
 
-    public NewSingleSchoolStudentsTeacherPanel(DomSchoolClass sc, NewSingleSchoolStudentsTeacherPanel.UserType type) throws Dwo2Exception {
+    public NewSingleSchoolStudentsTeacherPanel(DomSchoolClass sc, RoleType type) throws Dwo2Exception {
         super(null);
         init(sc, type);
 
@@ -339,7 +337,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
      * @param userType
      * @throws nl.uu.fi.dwo.rest.exceptions.Dwo2Exception
      */
-    private void init(DomSchoolClass sc, UserType userType) throws Dwo2Exception {
+    private void init(DomSchoolClass sc, RoleType userType) throws Dwo2Exception {
         schoolClass = sc;
         this.userType = userType;
         this.setSize(480, 500);
@@ -375,7 +373,8 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         importButton = new JButton(TextMapper.getText("Import from clipboard"));
         importButton.setSize(importButton.getPreferredSize());
         importButton.addActionListener(this);
-
+        email = new JCheckBox(TextMapper.getText(TextMapper.LBL_INVITE));
+        
         Box header = Box.createHorizontalBox();
         header.setAlignmentX(Component.RIGHT_ALIGNMENT);
         header.setMaximumSize(new Dimension(3000, 100));
@@ -383,8 +382,11 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
         header.add(backButton);
         header.add(Box.createRigidArea(new Dimension(30, 0)));
         header.add(importButton);
+
         header.add(Box.createHorizontalGlue());
         header.add(addButton);
+        header.add(Box.createRigidArea(new Dimension(10, 0)));
+        header.add(email);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
 //        header.add(schoolClassComboBox);
         this.add(header);
@@ -477,25 +479,34 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                         try {
                             tmpPassword = submit.getPassword();
                             DomNewSingleSchoolStudent student = new DomNewSingleSchoolStudent();
-                            submit.setPassword(MD5.getHashString(submit.getPassword()));
+                            
                             student.setDomSingleSchoolStudent(submit);
                             student.setDomSchoolClass((DomSchoolClass) schoolClass);
                             switch (userType) {
                                 case TEACHER:
-                                    NewSingleSchoolStudentsTeacherPanelProperties.submitSingleSchoolStudent(student);
+                                	if (email.isSelected())
+                                		NewSingleSchoolStudentsTeacherPanelProperties.submitSingleSchoolStudentv2(student);
+                                	else
+                                		NewSingleSchoolStudentsTeacherPanelProperties.submitSingleSchoolStudent(student);
                                     break;
                                 case SCHOOLADMIN:
-                                    NewSingleSchoolStudentsSchoolAdminPanelProperties.submitSingleSchoolStudent(student);
-                                    break;
+                                	if (email.isSelected())
+                                		NewSingleSchoolStudentsSchoolAdminPanelProperties.submitSingleSchoolStudentv2(student);
+                                	else
+                                		NewSingleSchoolStudentsSchoolAdminPanelProperties.submitSingleSchoolStudent(student);
+                                	break;
+                                default:
                             }
                         } catch (Dwo2Exception ex) {
-                            submit.setPassword(tmpPassword);
+                            
                             resultList.add(submit);
                             LOG.log(Level.FINE, "", ex);
                             failFlag = true;
                         } catch (Exception ex2) {
                             LOG.log(Level.FINE, "", ex2);
                             fatalFlag = true;
+                        } finally {
+                        	submit.setPassword(tmpPassword); // reset password
                         }
                     }
                 }
@@ -528,7 +539,7 @@ public class NewSingleSchoolStudentsTeacherPanel extends JPanel implements Cente
                 }
             }
             try {
-                if (userType.equals(UserType.TEACHER)) {
+                if (userType==(RoleType.TEACHER)) {
                     StudentsInSchoolClassTeacherPanel panel = new StudentsInSchoolClassTeacherPanel(schoolClass);
                     center.loadCenter(panel);
                 } else {

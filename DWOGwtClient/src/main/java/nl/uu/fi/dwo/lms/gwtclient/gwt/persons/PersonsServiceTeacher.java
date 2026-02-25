@@ -34,16 +34,18 @@ public class PersonsServiceTeacher extends PersonsService {
 
   private final SecuredTeacherSchoolClassManager manager;
   private final DomContext context;
+  private final DwoGlobalVars vars;
   @Inject
   public PersonsServiceTeacher(DwoGlobalVars vars) {
-    this(new SecuredTeacherSchoolClassManager());
-    context.setDomHasRole(vars.getActiveSchoolRoleAndClass().getHasRole());
-    context.setRealm(vars.getCurrentLoginContext().getRealm());
+    this(new SecuredTeacherSchoolClassManager(), vars);
   }
 
-  private PersonsServiceTeacher(SecuredTeacherSchoolClassManager securedTeacherSchoolClassManager) {
+  private PersonsServiceTeacher(SecuredTeacherSchoolClassManager securedTeacherSchoolClassManager, DwoGlobalVars vars2) {
     manager = securedTeacherSchoolClassManager;
     context = new DomContext();
+    vars = vars2;
+    context.setDomHasRole(vars2.getActiveSchoolRoleAndClass().getHasRole());
+    context.setRealm(vars2.getCurrentLoginContext().getRealm());
   }
 
   @Override
@@ -146,5 +148,10 @@ public class PersonsServiceTeacher extends PersonsService {
   public Promise<Boolean> removeTeacherFromSchoolClass(DomRemoveTeacherFromSchoolClass data) {
     return manager.removeTeacherFromSchoolClass(context, data);
   }
+  @Override
+  public Promise<Boolean> submitSingleSchoolStudentv2(DomNewSingleSchoolStudent newStudent) {
+	return vars.getProfile().then(p -> 
+			manager.submitSingleSchoolStudentv2(context, newStudent, p.getValue()));
+  } 
 
 }

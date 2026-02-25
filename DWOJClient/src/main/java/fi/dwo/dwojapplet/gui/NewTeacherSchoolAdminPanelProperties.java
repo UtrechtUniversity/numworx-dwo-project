@@ -4,6 +4,7 @@
 package fi.dwo.dwojapplet.gui;
 
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SecureSchoolAdminSchoolManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomLoginCheck;
 import nl.uu.fi.dwo.rest.dom.entities.DomUserFull;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -11,6 +12,9 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 
 import java.util.logging.Logger;
+
+import fi.dwo.commons.system.MD5;
+import fi.dwo.dwojapplet.domain.DWO;
 
 /**
  * Property class for ClassTeacherPanel
@@ -57,7 +61,16 @@ public class NewTeacherSchoolAdminPanelProperties {
 
     }
 
+    // password is MD5 
     static Boolean submitNewTeacher(DomUserFull submit) throws Dwo2Exception {
+    	submit.setPassword(MD5.getHashString(submit.getPassword()));
         return SecureSchoolAdminSchoolManager.submitTeacher(submit);
     }
+
+    // password is crypt
+    static Boolean submitNewTeacherv2(DomUserFull submit) throws Dwo2Exception {
+    	submit.setPassword(DomLoginCheck.crypt(submit.getPassword()));
+    	return SecureSchoolAdminSchoolManager.submitTeacherv2(submit, DWO.getDwoProfile());
+    }
+
 }

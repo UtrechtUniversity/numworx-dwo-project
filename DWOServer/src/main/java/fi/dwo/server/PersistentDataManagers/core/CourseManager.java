@@ -28,47 +28,10 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class CourseManager {
+public class CourseManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(CourseManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param course
-     */
-    public static void create(PersistentCourse course) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            course.changeTimeStamp();
-            em.persist(course);
-            em.getTransaction().commit();
-        }
-        catch(RollbackException e) {
-          LOG.log(Level.WARNING, "Can't create the PersistentCourse.", e);
-          throw e;
-        }
-        catch(PersistenceException e)
-        {
-          LOG.log(Level.SEVERE, "Can't create the PersistentCourse.", e);
-          throw e;
-        }
-        catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentCourse.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -81,7 +44,7 @@ public class CourseManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            course.changeTimeStamp();
+            course.changeTimestamp();
             course = em.merge(course);
             em.getTransaction().commit();
         } 
@@ -109,7 +72,7 @@ public class CourseManager {
     	EntityManager em = getEntityManager();
     	try {
     		em.getTransaction().begin();
-    		course.changeTimeStamp();
+    		course.changeTimestamp();
     		course = em.merge(course);
     		updateDescendants(course, em);
     		em.getTransaction().commit();
@@ -359,15 +322,7 @@ public class CourseManager {
     }
 
     public static PersistentCourse findEntity(Long id) throws PersistenceException {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentCourse.class, id);
-         } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentCourse with " + id + " was not found.", e);
-            throw e;
-       } finally {
-            em.close();
-        }
+        return find(id, PersistentCourse.class);
     }
 
     public static int getEntityCount() {

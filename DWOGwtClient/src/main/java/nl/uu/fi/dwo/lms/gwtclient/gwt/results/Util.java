@@ -133,7 +133,10 @@ class Util {
     	  item.setMaxScore(null);
       }
       if (i < correctie.length && correctie[i] != null)
-        item.setCorrectie(correctie[i].doubleValue());
+      {
+    	  item.setCorrectie(correctie[i].doubleValue());
+    	  item.setMaxScore(maxScores[i].doubleValue()); // https://numworx.atlassian.net/browse/LMS-683
+      }
       PersistenceId key = new PersistenceId("LOCAL;none;" + label);
       result.put(key, item);
     }
@@ -169,10 +172,11 @@ private static JSONNumber[] getCorrectie(String review_data, int aantal, boolean
       JSONArray  data = review.get("opdrContStates").isArray().get(0).isArray();
       JSONNumber[] result = new JSONNumber[data.size()];
       for(int i = 0; i < result.length; i++) {
-        result[i] = NUMBER_NUL; // TODO ....
+        result[i] = null; // can be null as not corrected
         JSONValue value = data.get(i);
         if(value != null) {
-          result[i] = new JSONNumber(sumCorrectie(value));
+          Double sum = sumCorrectie(value);
+		result[i] = sum == null ? null : new JSONNumber(sum.doubleValue());
         }
       }
       return result;
@@ -182,13 +186,19 @@ private static JSONNumber[] getCorrectie(String review_data, int aantal, boolean
     }
   }
 
-  private static double sumCorrectie(JSONValue value) {
-    if(value == null) return 0;
+  private static Double plus(Double a, Double b) {
+	  if (a == null) return b;
+	  if (b == null) return a;
+	  return a + b;
+  }
+
+  private static Double sumCorrectie(JSONValue value) {
+    if(value == null) return null;
     JSONArray a = value.isArray();
     if(a != null) {
-      double result = 0;
+      Double result = null;
       for(int i=0; i < a.size(); i++) {
-        result += sumCorrectie(a.get(i));
+        result = plus(result, sumCorrectie(a.get(i)));
       }
       return result;
     }
@@ -197,18 +207,18 @@ private static JSONNumber[] getCorrectie(String review_data, int aantal, boolean
       double result = 0;
       value = o.get("interactiePanelStates");
       if(value != null) {
-        result += sumCorrectie(value);
+        result = plus( sumCorrectie(value), result);
       }
       value = o.get("reviewInteractieData");
       if(value != null) {
-        result += sumCorrectie(value);
+        result = plus (sumCorrectie(value), result);
       }
       value = o.get("reviewScoreCorrectie");
       if (value != null) 
-        result += value.isNumber().doubleValue();
+        result = plus( value.isNumber().doubleValue(), result);
       return result;
     }
-    return 0;
+    return null;
   }
 
   private static JSONNumber[] getMaxScores(JSONValue launchdata, int aantal) {

@@ -8,8 +8,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -19,7 +17,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 
 @Entity
 @Table(name = "tblmfa")
-public class PersistentMFA implements Serializable {
+public class PersistentMFA implements Serializable, PersistentEntity {
   private static final long serialVersionUID = 1L;
   @Id
   @Basic(optional = false)
@@ -50,9 +48,7 @@ public class PersistentMFA implements Serializable {
   @Column(name= "del")
   private DelState delState = DelState.not;
   
-  @PrePersist
-  @PreUpdate
-  private void now() {
+  public void changeTimestamp() {
     lastChangeTimeStamp = System.currentTimeMillis();
   }
     

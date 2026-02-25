@@ -120,6 +120,11 @@ public class WiskOpdrPlayer implements EntryPoint, ValueChangeHandler<String>, C
 		
 	void insertProfileCSS() {
 		String profile = Window.Location.getParameter("profile");
+		try { 
+			DWOplayer.PROFILE_ID = Integer.parseInt(profile); // try to set profile
+		} catch(Exception oops) { }
+// not good!!!!
+// FIXME get domDwoProfile from scorm variable and check "c"ss and "name"
 		if ("111".equals(profile)) {
 			String css = "inf"; // ons kent ons
     		insertStylesheet( getBase() + "css/" + css + ".css");

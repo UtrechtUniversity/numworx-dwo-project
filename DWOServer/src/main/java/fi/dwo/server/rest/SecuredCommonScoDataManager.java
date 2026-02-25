@@ -948,9 +948,13 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				}
 			}
 			
-			
-			if (onsState == null) return "";
-			JsonArray orScores = onsState.getJsonArray("orScores");
+			JsonArray orScores;
+			if (onsState == null) {
+				if (!sealed)
+					return "";
+				orScores = null;
+			} else
+				orScores = onsState.getJsonArray("orScores");
 			Number n;
 			try {
 				orScores = orScores.getJsonArray(0);
@@ -969,10 +973,11 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				data = parser.getObject();
 				JsonArray contState = data.getJsonArray("opdrContStates");
 				contState = contState.getJsonArray(0);
+				if (! contState.isNull(pagenr)) {
 				data = contState.getJsonObject(pagenr);
 				int sum = sumOfCorrectie(data);
 				n = Integer.valueOf(sum + n.intValue());
-			}} else {
+			}}} else {
 				JsonArray nakijken = onsState.getJsonArray("aantalNakijken");
 				if (nakijken != null && 0 == nakijken.getInt(0) && !sealed) {
 					return "";
@@ -1110,7 +1115,7 @@ private static int sumOfCorrectie(JsonObject data) {
 		return 0;
 	}
 	JsonNumber n = correctie.getJsonNumber("reviewScoreCorrectie");
-	return n.intValue();
+	return n == null ? 0 : n.intValue();
 }
 
 private static int sumOfCorrectie(JsonArray panelStates) {

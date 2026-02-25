@@ -6,6 +6,7 @@ package fi.dwo.dwojapplet.gui;
 
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JCheckBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.dwo.commons.system.MD5;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
@@ -68,6 +69,7 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
     private JButton backButton;
     private JButton addButton;
     private JButton importButton;
+    private JCheckBox email;
 //    private JComboBox schoolClassComboBox;
     private Clipboard systemClipboard;
     String[] columnNames = {
@@ -407,6 +409,8 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         importButton = new JButton(TextMapper.getText("Import from clipboard"));
         importButton.setSize(importButton.getPreferredSize());
         importButton.addActionListener(this);
+        
+        email = new JCheckBox(TextMapper.getText(TextMapper.getText(TextMapper.LBL_INVITE)));
 
         Box header = Box.createHorizontalBox();
         header.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -417,6 +421,8 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
         header.add(importButton);
         header.add(Box.createHorizontalGlue());
         header.add(addButton);
+        header.add(Box.createRigidArea(new Dimension(10,0)));
+        header.add(email);
         header.add(Box.createRigidArea(new Dimension(10, 0)));
 //        header.add(schoolClassComboBox);
         this.add(header);
@@ -508,16 +514,19 @@ public class NewTeacherSchoolAdminPanel extends JPanel implements CenterSubPanel
                         cnt++;
                         try {
                             tmpPassword = submit.getPassword();
-                            submit.setPassword(MD5.getHashString(submit.getPassword()));
-                            NewTeacherSchoolAdminPanelProperties.submitNewTeacher(submit);
+                            if (email.isSelected())
+                            	NewTeacherSchoolAdminPanelProperties.submitNewTeacherv2(submit);
+                            else
+                            	NewTeacherSchoolAdminPanelProperties.submitNewTeacher(submit);
                         } catch (Dwo2Exception ex) {
-                            submit.setPassword(tmpPassword);
                             resultList.add(submit);
                             LOG.log(Level.FINE, "", ex);
                             failFlag = true;
                         } catch (Exception ex2) {
                             LOG.log(Level.FINE, "", ex2);
                             fatalFlag = true;
+                        } finally {
+                        	submit.setPassword(tmpPassword);
                         }
                     }
                 }

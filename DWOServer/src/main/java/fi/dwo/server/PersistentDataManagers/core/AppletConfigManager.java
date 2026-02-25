@@ -17,36 +17,11 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class AppletConfigManager {
+public class AppletConfigManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(AppletConfigManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
 
-    /**
-     * Create.
-     *
-     * @param persistentAppletConfig
-     */
-    public static void create(PersistentAppletConfig persistentAppletConfig) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(persistentAppletConfig);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentAppletConfig.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -58,6 +33,7 @@ public class AppletConfigManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            persistentAppletConfig.changeTimestamp();
             persistentAppletConfig = em.merge(persistentAppletConfig);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -129,15 +105,7 @@ public class AppletConfigManager {
     }
 
     public static PersistentAppletConfig findEntity(Long id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentAppletConfig.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentAppletConfig with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+    	return find(id, PersistentAppletConfig.class);
     }
 
     public static int getEntityCount() {

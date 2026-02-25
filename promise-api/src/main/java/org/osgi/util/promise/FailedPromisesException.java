@@ -39,7 +39,7 @@ public class FailedPromisesException extends RuntimeException {
      * Create a new FailedPromisesException with the specified Promises.
      *
      * @param failed A collection of Promises that have been resolved with a failure. Must not be null.
-     * @param cause  the cause (which is saved for later retrieval by the {@link #getCause()} method).  (A <tt>null</tt>
+     * @param cause  the cause (which is saved for later retrieval by the {@link #getCause()} method).  (A <code>null</code>
      *               value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public FailedPromisesException(Collection<Promise<?>> failed, Throwable cause) {

@@ -115,6 +115,8 @@ public class JavaUpload extends HttpServlet implements Constants {
 			return;
 			
 		}
+		req.setAttribute("username", req.getSession().getAttribute("username"));
+		
 		DomSchool school = actor.get().getSchool();		
 		String prefix = getPrefix(paths, school);
 		
@@ -258,6 +260,7 @@ public class JavaUpload extends HttpServlet implements Constants {
 		DomHasRole hasRole;
 		try {
 			user   = SecureUserAccountManager.getAccountData(rest);
+			session.setAttribute("username", user.getUserName());
 LOG.info("user = " + user.getUniqueDisplayName());
 			logins = SecureUserAccountLoginsManager.getSchoolLogins(rest);
 LOG.info("logins = " + logins.getActiveSchoolRoleAndClass().getSchool().getSchoolName());
@@ -335,6 +338,7 @@ LOG.info("class " + b2);
 			resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			return;			
 		}
+		req.setAttribute("username", req.getSession().getAttribute("username"));
 		DomSchool school = actor.get().getSchool();
 		paths[0] = Store.getPathId(actor.get().getHasRole());
 		String name = paths[3];

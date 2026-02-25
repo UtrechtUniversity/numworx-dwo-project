@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -38,15 +39,16 @@ public class PersistentStudentModelItem {
   @Column(name = "schoolID", nullable = false)
   private Long schoolID;
   @NotNull
-  @Column(name = "item", nullable = false)
+  @Column(name = "item", nullable = false, length = 16777215, columnDefinition="JSON")
   @Convert("studentModelObjConverter")
+  @Lob
   private DomStudentModelObj item;
   @Column(name = "optlock")
   @Version
   private Long optlock;
   @Column(name = "lastChangeTimeStamp")
   private long lastChangeTimeStamp;
-  @Column(name = "id", nullable = false)
+  @Column(name = "id", nullable = false, length = 50)
   @Size(max = 50)
   @NotNull
   private String id;

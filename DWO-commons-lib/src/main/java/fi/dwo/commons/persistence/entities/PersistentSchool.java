@@ -10,7 +10,6 @@ import nl.uu.fi.dwo.rest.dom.entities.util.DelState;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -20,8 +19,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -55,7 +52,7 @@ import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 //        size=10000, // Use 64,000 as the initial cache size. 
 //        expiry=36000000 // 10 minutes 
 //)
-public class PersistentSchool implements Serializable {
+public class PersistentSchool implements Serializable, PersistentEntity {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -355,9 +352,7 @@ public class PersistentSchool implements Serializable {
       return build;
     }  
     
-    @PrePersist
-    @PreUpdate
-    private void now() {
+    public void changeTimestamp() {
       lastChangeTimeStamp = System.currentTimeMillis();
     }
 

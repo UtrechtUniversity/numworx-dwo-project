@@ -5,6 +5,7 @@ package fi.dwo.server.rest;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdmin;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolAdminAndHasRole;
@@ -20,6 +21,7 @@ import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
 import fi.dwo.commons.persistence.MySQLPersistenceId;
 import nl.uu.fi.dwo.rest.persistence.PersistenceClassType;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
 import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
@@ -37,6 +39,7 @@ import nl.uu.fi.dwo.rest.entities.RestSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.entities.RestStudent;
 import nl.uu.fi.dwo.rest.entities.RestTeacher;
 import nl.uu.fi.dwo.rest.entities.RestUserFull;
+import nl.uu.fi.dwo.rest.entities.RestUserFullv2;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
@@ -47,12 +50,18 @@ import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
+import fi.dwo.server.rest.util.Origin;
 import fi.dwo.server.testutil.TestSecurityContext;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.servlet.ServletContext;
 import javax.ws.rs.core.SecurityContext;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -344,6 +353,56 @@ public class SecuredSchoolAdminSchoolManagerIT {
       
     }
  
+    @Test public void testSubmitTeacherv2() throws Dwo2Exception, AddressException, IOException, MessagingException { 
+        SecurityContext sc = new TestSecurityContext("user06", RoleType.SCHOOLADMIN);//school01
+    	PersistentUser user = UserManager.findByUserName("user06");
+    	PersistentSchool school = SchoolManager.findBySchoolLogin("school01");
+        SecuredSchoolAdminSchoolManager instance = new SecuredSchoolAdminSchoolManager();
+        
+        RestUserFullv2 teacher = new RestUserFullv2();
+        DomSingleSchoolStudent dssStudent = new DomSingleSchoolStudent();
+        dssStudent.setUserName("testuser01");
+        dssStudent.setGivenName("a");
+        dssStudent.setInsertion("b");
+        dssStudent.setFamilyName("c");
+        dssStudent.setEmail("a@b.cd");
+        dssStudent.setPassword("pwd05");
+        teacher.setDomUserFull(dssStudent);
+        teacher.setDwoProfile(new DomDwoProfileId(PersistentDwoProfile.buildPersistenceId(1L), 1L));
+        teacher.setRestContext(new DomContext());
+        ServletContext context = new MockServletContext();
+        context.setInitParameter("fi.dwo.server.rest.smtp.server", "localhost");
+        context.setInitParameter("fi.dwo.server.rest.smtp.port", "2525");
+        context.setInitParameter("fi.dwo.server.rest.smtp.tls", "false");
+        context.setInitParameter("fi.dwo.server.rest.smtp.ssl", "false");
+        context.setInitParameter("fi.dwo.server.rest.smtp.auth", "false");
+        context.setInitParameter("fi.dwo.server.rest.smtp.email", "noreply@example.com");
+        Origin.ORIGINS[0] = "http://localhost:8080";
+        DomHasRole hr = HasRoleUtilManager.getHasRole(user.getId(), RoleType.SCHOOLADMIN, school).buildDomHasRole();
+        teacher.getRestContext().setDomHasRole(hr);
+
+		Boolean result = instance.submitTeacher2(sc, teacher, context);
+        assertTrue(result);
+
+        user = UserManager.findByUserName(dssStudent.getUserName());
+        assertEquals(dssStudent.getGivenName(), user.getGivenName());
+        assertEquals(dssStudent.getInsertion(), user.getInsertion());
+        assertEquals(dssStudent.getFamilyName(), user.getLastname());
+        assertEquals(dssStudent.getEmail(), user.getEmail());
+// MD5.hash( LoginCheck.crypt("pwd05"))
+        assertEquals("2cbcd3c7b749a8365d6785d21fa710cf", user.getPassword());
+        assertFalse(user.isSingleSchoolAccount());
+        PersistentHasRole phr = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(user, SchoolManager.findBySchoolLogin("school01"), RoleType.TEACHER);
+        assertNotNull(phr);
+        
+      }
+
+    
+    
+    
+    
+    
+    
     @Test public void testSubmitTeacher_expire() { 
       PersistentSchool school = SchoolManager.findBySchoolLogin("school01");    
       school.setExpire(new Date(0));

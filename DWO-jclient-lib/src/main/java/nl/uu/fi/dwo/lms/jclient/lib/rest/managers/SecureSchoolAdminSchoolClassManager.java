@@ -1,6 +1,7 @@
 package nl.uu.fi.dwo.lms.jclient.lib.rest.managers;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomContext;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 import nl.uu.fi.dwo.rest.dom.entities.DomNewSingleSchoolStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomRemoveTeacherFromSchoolClass;
@@ -15,6 +16,7 @@ import nl.uu.fi.dwo.rest.util.PathId;
 import nl.uu.fi.dwo.rest.RestListClassTypes;
 import nl.uu.fi.dwo.rest.entities.RestContext;
 import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudent;
+import nl.uu.fi.dwo.rest.entities.RestNewSingleSchoolStudentv2;
 import nl.uu.fi.dwo.rest.entities.RestRemoveStudentFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestRemoveTeacherFromSchoolClass;
 import nl.uu.fi.dwo.rest.entities.RestSchoolClass;
@@ -264,7 +266,27 @@ public class SecureSchoolAdminSchoolClassManager {
 	  return submitSingleSchoolStudent(getInstance(), submit);
   }
   
-  public static Boolean submitSingleSchoolStudent(StoredRestManager instance, DomNewSingleSchoolStudent submit)
+  public static Boolean submitSingleSchoolStudentv2(DomNewSingleSchoolStudent submit, DomDwoProfileId profile)
+	      throws Dwo2Exception {
+	  return submitSingleSchoolStudentv2(getInstance(), submit, profile);
+  }
+  
+private static Boolean submitSingleSchoolStudentv2(StoredRestManager instance, DomNewSingleSchoolStudent submit,
+		DomDwoProfileId profile) throws Dwo2Exception {
+	    RestNewSingleSchoolStudentv2 rest = new RestNewSingleSchoolStudentv2();
+	    rest.setRestContext(instance.getContext());
+	    rest.setDomNewSingleSchoolStudent(submit);
+	    rest.setDwoProfile(profile);
+	    Boolean result = instance
+	        .put("rest/sec:" + PathId.getId(instance.getContext()) + "/schooladmin/schoolclass/submitSingleSchoolStudentv2", Boolean.class, rest);
+	    LOG.log(Level.FINE,
+	        "Submitted new student with username {1} for schooladmin with username {0}.",
+	        new Object[] {instance.getAuthenticator().getUsername(),
+	            submit.getDomSingleSchoolStudent().getUserName()});
+	    return result;
+}
+
+public static Boolean submitSingleSchoolStudent(StoredRestManager instance, DomNewSingleSchoolStudent submit)
       throws Dwo2Exception {
     RestNewSingleSchoolStudent rest = new RestNewSingleSchoolStudent();
     rest.setRestContext(instance.getContext());

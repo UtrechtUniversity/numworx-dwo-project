@@ -20,36 +20,10 @@ import javax.persistence.criteria.Root;
  *
  * @author G.A.J. van der Plas
  */
-public class SchoolGroupManager {
+public class SchoolGroupManager extends AbstractManager {
 
     private static final Logger LOG = Logger.getLogger(SchoolGroupManager.class.getName());
 
-    private static EntityManager getEntityManager() {
-        EntityManager em = DwoEmfFactory.getEntityManager();
-        return em;
-    }
-
-    /**
-     * Create.
-     *
-     * @param entity
-     */
-    public static void create(PersistentSchoolGroup entity) throws PersistenceException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(entity);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Can't create the PersistentSchoolGroup.", e);
-            throw new PersistenceException(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
 
     /**
      * Update
@@ -62,6 +36,7 @@ public class SchoolGroupManager {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            entity.changeTimestamp();
             entity = em.merge(entity);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -175,15 +150,7 @@ public class SchoolGroupManager {
     }
 
     public static PersistentSchoolGroup findEntity(Long id) throws PersistenceException{
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(PersistentSchoolGroup.class, id);
-        } catch (PersistenceException e) {
-            LOG.log(Level.FINE, "The PersistentSchoolGroup with " + id + " was not found.", e);
-            throw e;
-        } finally {
-            em.close();
-        }
+        return find(id, PersistentSchoolGroup.class);
     }
 
     public static int getEntityCount() {

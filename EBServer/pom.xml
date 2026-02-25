@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>dwo</artifactId>
-		<version>2.5.47</version>
+		<version>2.5.48</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>ebserver</artifactId>
@@ -49,6 +49,15 @@
 		  </snapshots>
 	    </repository>		
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+	      <id>numworx-dwo-project</id>
+	      <url>https://maven.pkg.github.com/UtrechtUniversity/numworx-dwo-project</url>
+	      <snapshots>
+			  <enabled>true</enabled>
+		  </snapshots>			
+		</pluginRepository>
+	</pluginRepositories>
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -90,7 +99,7 @@
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
     				<artifactId>dwogwtclient</artifactId>
-					<version>2.5.47</version>
+					<version>2.5.48</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -185,7 +194,7 @@
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>dwomaccess</artifactId>
-			<version>2.5.47</version>
+			<version>2.5.48</version>
 			<classifier>classes</classifier>
 			<exclusions>
 				<exclusion>
@@ -261,20 +270,20 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>dwo-apps</artifactId>
-			<version>2.5.47</version>
+			<version>2.5.48</version>
 			<scope>runtime</scope>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>dwo-apps</artifactId>
-			<version>2.5.47</version>
+			<version>2.5.48</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
 		     <groupId>nl.uu.fi.dwo.lms</groupId>
              <artifactId>chatgwt-server</artifactId>
-             <version>2.5.47</version>
+             <version>2.5.48</version>
              <type>war</type>
 			 <scope>runtime</scope>
 		</dependency>
@@ -287,14 +296,14 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>dwogwtclient</artifactId>
-		<version>2.5.47</version>
+		<version>2.5.48</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
 	<dependency>
 		<groupId>nl.uu.fi.dwo.register</groupId>
 		<artifactId>register</artifactId>
-		<version>2.5.47</version>
+		<version>2.5.48</version>
 		<type>war</type>
 		<scope>runtime</scope>
 		<exclusions>
@@ -311,7 +320,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.register</groupId>
 		<artifactId>register</artifactId>
-		<version>2.5.47</version>
+		<version>2.5.48</version>
 		<classifier>classes</classifier>
 		<exclusions>
 			<exclusion>
@@ -327,7 +336,7 @@
 	<dependency>
 		<groupId>fi.servlet</groupId>
 		<artifactId>dwomaccess</artifactId>
-		<version>2.5.47</version>
+		<version>2.5.48</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -340,7 +349,7 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>oauth2client</artifactId>
-		<version>2.5.47</version>
+		<version>2.5.48</version>
 		<classifier>classes</classifier>
 		<exclusions>
 			<exclusion>
@@ -352,7 +361,7 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>oauth2client</artifactId>
-		<version>2.5.47</version>
+		<version>2.5.48</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -379,13 +388,13 @@
 		<dependency>
 			<groupId>nl.numworx.notebook</groupId>
 			<artifactId>notebook-service</artifactId>
-			<version>2.5.47</version>
+			<version>2.5.48</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.xapi</groupId>
 			<artifactId>xapiserver</artifactId>
-  			<version>2.5.47</version>
+  			<version>2.5.48</version>
 			<scope>runtime</scope>
 			<type>war</type>
 		</dependency>
@@ -558,6 +567,12 @@
 <!--                    		<XAPI_ENDPOINT>http://localhost:8089/xapi/</XAPI_ENDPOINT>-->
                     		<XAPI_AUTH>bXlfa2V5Om15X3NlY3JldA==</XAPI_AUTH>
                     		<DWO_REDIRECT>false</DWO_REDIRECT>               
+                    		<AZ_ENDPOINT>http://azurite:10000/devstoreaccount1/</AZ_ENDPOINT>
+                    		<AZ_SHAREDKEY>Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==</AZ_SHAREDKEY>
+                    	<!-- alleen bij az	<S3_BUCKET>devstoreaccount1</S3_BUCKET> -->
+							<SCW_ENDPOINT>http://localhost:9444/</SCW_ENDPOINT> <!-- s3-ninja -->
+							<AWS_ACCESS_KEY_ID>AKIAIOSFODNN7EXAMPLE</AWS_ACCESS_KEY_ID>
+							<AWS_SECRET_ACCESS_KEY>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</AWS_SECRET_ACCESS_KEY>
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
@@ -568,7 +583,7 @@
 						<webapp>
 							<groupId>nl.numworx.schoolyear</groupId>
   							<artifactId>sy</artifactId>
-							<version>2.5.34</version>
+							<version>2.5.47</version>
 							<type>war</type>
 							<contextPath>/sy</contextPath>
                             <asWebapp>true</asWebapp>
@@ -795,7 +810,7 @@
 					<dependency>
 						<groupId>fi.microserver</groupId>
 						<artifactId>microindex</artifactId>
-						<version>2.5.47</version>
+						<version>2.5.48</version>
 					</dependency>
 				</dependencies>
 				<configuration>
@@ -927,7 +942,7 @@
 				<dependency>
 					<groupId>nl.numworx.uploadwidget</groupId>
 					<artifactId>uploadwidgetgwt</artifactId>
-					<version>2.5.47</version>
+					<version>2.5.48</version>
 					<classifier>classes</classifier>
 					</dependency>			
 				<dependency>
@@ -938,7 +953,7 @@
 		        <dependency>
 				  <groupId>software.amazon.jdbc</groupId>
 		  		  <artifactId>aws-advanced-jdbc-wrapper</artifactId>
-		  		  <version>2.3.7</version>
+		  		  <version>2.6.5</version>
 		  		  <scope>runtime</scope>
 				</dependency>
 			</dependencies>
@@ -999,7 +1014,7 @@
 				<dependency>
     				<groupId>nl.uu.fi.dwo.rest</groupId>
 					<artifactId>redis-config</artifactId>
-					<version>2.5.47</version>
+					<version>2.5.48</version>
 				</dependency>
 				<dependency>
 					<groupId>org.redisson</groupId>
@@ -1029,7 +1044,7 @@
 							<dependency>
 			    				<groupId>nl.uu.fi.dwo.rest</groupId>
 								<artifactId>redis-config</artifactId>
-								<version>2.5.47</version>
+								<version>2.5.48</version>
 							</dependency>
 						</dependencies>
 					</plugin>
