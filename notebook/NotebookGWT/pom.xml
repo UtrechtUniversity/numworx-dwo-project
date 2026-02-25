@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>notebook-parent</artifactId>
 		<groupId>nl.numworx.notebook</groupId>
-		<version>2.5.48</version>
+		<version>2.5.49-SNAPSHOT</version>
 	</parent>
 	<artifactId>notebookgwt</artifactId>
 	<packaging>gwt-app</packaging>
@@ -44,13 +44,13 @@
         <dependency>
         	<groupId>nl.numworx.notebook</groupId>
         	<artifactId>notebook-common</artifactId>
-        	<version>2.5.48</version>
+        	<version>2.5.49-SNAPSHOT</version>
 			<scope>provided</scope>
         </dependency>
         <dependency>
         	<groupId>nl.numworx.notebook</groupId>
         	<artifactId>notebook-common</artifactId>
-        	<version>2.5.48</version>
+        	<version>2.5.49-SNAPSHOT</version>
         	<classifier>sources</classifier>
 			<scope>provided</scope>
         </dependency>
@@ -70,20 +70,20 @@
 		<dependency>
 			<groupId>nl.numworx.notebook</groupId>
 			<artifactId>notebook-service</artifactId>
-			<version>2.5.48</version>
+			<version>2.5.49-SNAPSHOT</version>
 			<classifier>classes</classifier>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>promise-api</artifactId>
-			<version>2.5.48</version>
+			<version>2.5.49-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>promise-api</artifactId>
-			<version>2.5.48</version>
+			<version>2.5.49-SNAPSHOT</version>
 			<classifier>sources</classifier>
 			<scope>provided</scope>
 		</dependency>
