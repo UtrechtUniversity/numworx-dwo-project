@@ -53,7 +53,7 @@ public class Promises {
 
     /**
      * Create a new Promise that is a latch on the resolution of the specified Promises.
-     * <p/>
+     * <p>
      * The new Promise acts as a gate and must be resolved after all of the specified Promises are resolved.
      *
      * @param promises The Promises which must be resolved before the returned Promise must be resolved. Must not be
@@ -114,7 +114,7 @@ public class Promises {
 
     /**
      * Create a new Promise that is a latch on the resolution of the specified Promises.
-     * <p/>
+     * <p>
      * The new Promise acts as a gate and must be resolved after all of the specified Promises are resolved.
      *
      * @param promises The Promises which must be resolved before the returned Promise must be resolved. Must not be

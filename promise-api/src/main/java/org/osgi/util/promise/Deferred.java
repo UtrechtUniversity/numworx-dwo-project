@@ -20,12 +20,12 @@ import nl.uu.fi.dwo.mobile.promise.client.PromiseImpl;
 
 /**
  * A Deferred Promise resolution.
- * <p/>
+ * <p>
  * Instances of this class can be used to create a Promise that can be resolved in the future. The associated Promise
  * can be successfully resolved with resolve(Object) or resolved with a failure with fail(Throwable).
- * <p/>
+ * <p>
  * It can also be resolved with the resolution of another promise using resolveWith(Promise).
- * <p/>
+ * <p>
  * The associated Promise can be provided to anyone, but the Deferred object should be made available only to the party
  * that will responsible for resolving the Promise.
  *
@@ -52,10 +52,10 @@ public class Deferred<T> {
 
     /**
      * Successfully resolve the Promise associated with this Deferred.
-     * <p/>
+     * <p>
      * After the associated Promise is resolved with the specified value, all registered callbacks are called and any
      * chained Promises are resolved.
-     * <p/>
+     * <p>
      * Resolving the associated Promise happens-before any registered callback is called. That is, in a registered
      * callback, Promise.isDone() must return true and Promise.getValue() and Promise.getFailure() must not block.
      *
@@ -68,10 +68,10 @@ public class Deferred<T> {
 
     /**
      * Fail the Promise associated with this Deferred.
-     * <p/>
+     * <p>
      * After the associated Promise is resolved with the specified failure, all registered callbacks are called and any
      * chained Promises are resolved.
-     * <p/>
+     * <p>
      * Resolving the associated Promise happens-before any registered callback is called. That is, in a registered
      * callback, Promise.isDone() must return true and Promise.getValue() and Promise.getFailure() must not block.
      *
@@ -84,14 +84,14 @@ public class Deferred<T> {
 
     /**
      * Resolve the Promise associated with this Deferred with the specified Promise.
-     * <p/>
+     * <p>
      * If the specified Promise is successfully resolved, the associated Promise is resolved with the value of the
      * specified Promise. If the specified Promise is resolved with a failure, the associated Promise is resolved with
      * the failure of the specified Promise.
-     * <p/>
+     * <p>
      * After the associated Promise is resolved with the specified Promise, all registered callbacks are called and any
      * chained Promises are resolved.
-     * <p/>
+     * <p>
      * Resolving the associated Promise happens-before any registered callback is called. That is, in a registered
      * callback, Promise.isDone() must return true and Promise.getValue() and Promise.getFailure() must not block
      *
