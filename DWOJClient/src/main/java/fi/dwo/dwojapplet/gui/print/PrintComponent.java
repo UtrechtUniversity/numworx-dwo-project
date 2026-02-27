@@ -15,6 +15,8 @@ public class PrintComponent implements Printable {
 
 	private Component component;
 	private Printable delegate, frontpage;
+	private Sco sco;
+	
 
 	public PrintComponent(Component component) {
 		this.component = component;
@@ -31,9 +33,15 @@ public class PrintComponent implements Printable {
 	public PrintComponent(Component component, Sco sco) {
 		this(component);
 		frontpage = new Frontpage(sco);
+		this.sco = sco;
 	}
 	
-	
+	public String toString() {
+		String user = sco.LMSGetValue("cmi.learner_name"); // zo laat mogelijk..
+		if (user != null && !user.isEmpty())
+			return user;
+		return super.toString();
+	}
 	
 	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)
