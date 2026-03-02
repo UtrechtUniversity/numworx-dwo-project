@@ -402,6 +402,16 @@
 			</dependencies>
 		</profile>
         <profile>
+			<id>dwogwtprint</id>
+			<dependencies>
+				<dependency>
+					<groupId>nl.uu.fi.dwo</groupId>
+					<artifactId>dwogwtprint</artifactId>
+					<version>2.5.49-SNAPSHOT</version>
+				</dependency>				
+			</dependencies>
+		</profile>
+        <profile>
             <id>dev</id>
             <!-- profile for running with default/internal configuration -->
             <activation>
