@@ -89,9 +89,11 @@ public class RegisterForm extends HttpServlet {
     String id = req.getParameter("id"); // teamleader id of contact
     String email = req.getParameter("email");
     String givenName = req.getParameter("givenName");
+    if (givenName == null) givenName = "";
     String insertion = req.getParameter("insertion");
     if(insertion == null) insertion = "";
     String familyName = req.getParameter("familyName");
+    if (familyName == null) familyName = "";
     String server = req.getRequestURL().toString();
     String form = req.getParameter("form");
     String locale = req.getParameter("locale");
@@ -341,7 +343,8 @@ private String encode(String string) {
     suggestion = suggestion.toLowerCase();
     suggestion = suggestion.replaceAll("\\W", "");
     try {
-		suggestion = manager.getSuggestion(suggestion);
+    	if (!suggestion.isEmpty())
+    		suggestion = manager.getSuggestion(suggestion);
 	} catch (Exception e) {
 		
 	}
