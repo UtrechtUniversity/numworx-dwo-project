@@ -17,10 +17,10 @@ class PrintStudent extends AbstractAction {
 	 */
 	private static final long serialVersionUID = -4212398671483491492L;
 
-	private PrinterEvent STARTED = new PrinterEvent(this, PrinterEvent.STARTED);
-	private PrinterEvent STOPPED = new PrinterEvent(this, PrinterEvent.STOPPED);
+	protected PrinterEvent STARTED = new PrinterEvent(this, PrinterEvent.STARTED);
+	protected PrinterEvent STOPPED = new PrinterEvent(this, PrinterEvent.STOPPED);
 	
-	private void fire(PrinterEvent e) {
+	protected void fire(PrinterEvent e) {
 		if(listener != null)
 			listener.onPrint(e);
 	}
@@ -28,8 +28,8 @@ class PrintStudent extends AbstractAction {
 	
 	Logger LOG = Logger.getLogger(getClass().getName());
 	
-	private SetupAction parent;
-	private Printable  printable;
+	protected SetupAction parent;
+	Printable  printable;
 	private PrinterListener listener;
 	
 	/**
@@ -56,7 +56,7 @@ class PrintStudent extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		PrinterJob job = parent.getPrinterJob();
 		job.setPrintable(printable, parent.getPageFormat());
-		boolean doPrint = job.printDialog();
+		boolean doPrint = printDialog(job);
 		if( doPrint ) {
 			fire(STARTED);
 			try {
@@ -66,6 +66,10 @@ class PrintStudent extends AbstractAction {
 			}
 			fire(STOPPED);
 		}	
+	}
+
+	protected boolean printDialog(PrinterJob job) {
+		return job.printDialog();
 	}
 
 	/**

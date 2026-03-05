@@ -175,7 +175,7 @@
     	<dependency>
     		<groupId>nl.uu.fi.dwo</groupId>
     		<artifactId>async-lib</artifactId>
-    		<version>2.5.49-SNAPSHOT</version>
+    		<version>2.5.48</version>
     	</dependency>
     	<dependency>
     		<groupId>fi.beans</groupId>
@@ -194,7 +194,7 @@
     	<dependency>
     		<groupId>nl.numworx.gwtpatch</groupId>
     		<artifactId>gwtpatch</artifactId>
-    		<version>2.5.49-SNAPSHOT</version>
+    		<version>2.5.48</version>
     	</dependency>
     	<dependency>
     		<groupId>nl.uu.fi.dwo.mobile</groupId>
@@ -391,6 +391,26 @@
                 <profile.dev>false</profile.dev>
             </properties>
         </profile>-->
+        <profile>
+			<id>dwojprint</id>
+			<dependencies>
+				<dependency>
+					<groupId>nl.uu.fi.dwo</groupId>
+					<artifactId>dwojprint</artifactId>
+					<version>2.5.49-SNAPSHOT</version>
+				</dependency>				
+			</dependencies>
+		</profile>
+        <profile>
+			<id>dwogwtprint</id>
+			<dependencies>
+				<dependency>
+					<groupId>nl.uu.fi.dwo</groupId>
+					<artifactId>dwogwtprint</artifactId>
+					<version>2.5.49-SNAPSHOT</version>
+				</dependency>				
+			</dependencies>
+		</profile>
         <profile>
             <id>dev</id>
             <!-- profile for running with default/internal configuration -->

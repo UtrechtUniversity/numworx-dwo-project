@@ -86,8 +86,10 @@ public class RegisterPanel extends ResizeComposite {
 		String givenName = getCookieOnce("givenName");
 		if (givenName != null) setAndFix(this.givenName, givenName);
 		String insertion = getCookieOnce("insertion");
-		if (insertion != null) setAndFix(this.insertion, insertion);
 		String familyName = getCookieOnce("familyName");
+		boolean empty = familyName == null || familyName.isEmpty();
+		if (insertion != null) setAndFix(this.insertion, insertion, empty);
+		
 		if (familyName != null) setAndFix(this.familyName, familyName);
 		
 		String suggestion = getCookieOnce("suggestion");
@@ -162,7 +164,12 @@ public class RegisterPanel extends ResizeComposite {
 	}
 
 	private void setAndFix(TextBox widget, String string) {
+		setAndFix(widget, string, true);
+	}
+	private void setAndFix(TextBox widget, String string, boolean force) {
 		widget.setText(string);
+		if (force && (string == null || string.isEmpty())) 
+			return;
 		widget.setEnabled(false);
 		widget.addStyleDependentName("disabled");
 	}

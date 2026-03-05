@@ -24,7 +24,7 @@ public class SCORM_Print extends SCORM_2004_API {
 
 	@Override
 	public Promise<String> Terminate() {
-		return Promises.resolved("");
+		return super.Terminate();
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class SCORM_Print extends SCORM_2004_API {
 	public Promise<String> getValuePromise(String name) {
 		LOG.warning("GetValueAsync " + name + " " + hasGetValueAsync() );
 		if (hasGetValueAsync()) return super.getValuePromise(name);
-		return Promises.failed(new NoSupport());
+		return Promises.resolved(GetValue(name)); // try synchronous
 	}
 
 	@Override

@@ -1552,7 +1552,7 @@ LOG.info("time results = " + (-t) + " ms");
 
         boolean limitedSchoolAccess = initLimitedProfile();
 
-        GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
+        GuiConstants.setDwoProfile(dwoProfile, getParameter(PROFILE_EXTENSION));
         ModuleTreePanel.initialize(dwoProfile);
         // Hier fixen we nog de iconizer
         GuiConstants.fixIconizer(scoViewNr, courseViewNr);
@@ -2853,7 +2853,7 @@ LOG.info("time results = " + (-t) + " ms");
         setLocale(locale);
         JComponent.setDefaultLocale(locale);
         DwoHelper.setProfileRights(dwoProfile.getDwoProfileRights());
-        GuiConstants.setDwoProfile(p, getParameter(PROFILE_EXTENSION));
+        GuiConstants.setDwoProfile(dwoProfile, getParameter(PROFILE_EXTENSION));
         TextMapper.setLanguage(lang);
         fi.dwo.dwojapplet.parameters.system.TextMapper.setLanguage(lang);
         firePropertyChange("language", old, lang);
