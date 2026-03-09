@@ -5,13 +5,18 @@ import java.awt.print.PageFormat;
 import java.awt.print.PrinterJob;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 
 import fi.beans.loader.Loader;
+import fi.dwo.dwojapplet.domain.DwoHelper;
 
 public class PDFSetupAction extends SetupAction {
+	
+	java.util.logging.Logger LOG = Logger.getLogger(getClass().getName());
 	
 	Collection<AbstractAction> enabled = Collections.emptySet();
 	private final SetupAction delegate;
@@ -26,22 +31,21 @@ public class PDFSetupAction extends SetupAction {
 		this.delegate = delegate;
 	}
 
+	final static String jars[] = { "dwogwtprint.jar", "dwojprint.jar" }, jobs[] = { "fi.dwo.dwogwtprint.DWOGWTPrint", "fi.dwo.dwojprint.DWOJPrint" };
+	
+	
 	@Override
 	protected PrinterJob createPrinterJob() {
-		ClassLoader loader = Loader.create("dwojprint.jar", getClass().getClassLoader());
+		int index = 1; // 0 
+		if (DwoHelper.noJXB) index = 1;
+ 		
+		ClassLoader loader = Loader.create(jars[index], getClass().getClassLoader());
 		try {
 			@SuppressWarnings("unchecked")
-			Class<PrinterJob> clz = (Class<PrinterJob>) Class.forName("fi.dwo.dwojprint.DWOJPrint", false, loader );
+			Class<PrinterJob> clz = (Class<PrinterJob>) Class.forName(jobs[index], false, loader );
 			return clz.newInstance();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (ClassNotFoundException|InstantiationException|IllegalAccessException e) {
+			LOG.log(Level.SEVERE, e.toString());
 		}
 		setEnabled(false);
 		return super.createPrinterJob();
