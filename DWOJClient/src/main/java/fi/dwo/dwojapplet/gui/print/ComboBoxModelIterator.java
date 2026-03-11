@@ -1,11 +1,13 @@
 package fi.dwo.dwojapplet.gui.print;
 
 import java.awt.print.Printable;
+import java.util.AbstractCollection;
+import java.util.Collection;
 import java.util.Iterator;
 
 import javax.swing.ComboBoxModel;
 
-public class ComboBoxModelIterator<T> implements Iterable<Printable> {
+public class ComboBoxModelIterator<T> extends AbstractCollection<Printable> implements Collection<Printable> {
 
 	private ComboBoxModel<T> model;
 	private Printable component;
@@ -37,6 +39,11 @@ public class ComboBoxModelIterator<T> implements Iterable<Printable> {
 	@Override
 	public Iterator<Printable> iterator() {
 		return new Impl();
+	}
+
+	@Override
+	public int size() {
+		return model.getSize();
 	}
 
 }

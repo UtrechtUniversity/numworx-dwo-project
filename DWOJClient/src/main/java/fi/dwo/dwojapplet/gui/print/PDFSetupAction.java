@@ -36,7 +36,7 @@ public class PDFSetupAction extends SetupAction {
 	
 	@Override
 	protected PrinterJob createPrinterJob() {
-		int index = 1; // 0 
+		int index = 0; 
 		if (DwoHelper.noJXB) index = 1;
  		
 		ClassLoader loader = Loader.create(jars[index], getClass().getClassLoader());

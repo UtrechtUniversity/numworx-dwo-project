@@ -20,7 +20,6 @@ class SetupAction extends AbstractAction {
 		super(name, icon);
 		job = createPrinterJob();
 		pf  = job.defaultPage();
-		//pf.setOrientation(PageFormat.LANDSCAPE);
 	}
 
 	protected PrinterJob createPrinterJob() {

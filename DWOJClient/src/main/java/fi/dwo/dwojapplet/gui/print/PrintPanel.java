@@ -2,6 +2,7 @@ package fi.dwo.dwojapplet.gui.print;
 
 import java.awt.print.Printable;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
 import javax.swing.Box;
@@ -63,7 +64,7 @@ public class PrintPanel extends Box {
 		return printStudent.getPrintable();
 	}
 		
-	public void setIterable(Iterable<Printable> collection) {
+	public void setIterable(Collection<Printable> collection) {
 		printSchoolClass.setPrintable(new PrintIterator(collection));
 		pdfSchoolClass.setPrintable((collection));
 	}

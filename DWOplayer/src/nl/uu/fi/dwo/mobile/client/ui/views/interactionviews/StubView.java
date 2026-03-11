@@ -122,7 +122,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public StubView(ActivityInterface activity, String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
 		this.activity = activity;
-		this.barrier = new TimedBarrier(activity.agent());
+		this.barrier = activity.barrier();
 		html = activity.getStubView() + html;
 		String locale = getLocale();		
 		html += "?locale=" + locale;
@@ -259,6 +259,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(innerView != null)
 		{
 			setState(innerView, object.toString());
+			barrier.cancel();
 			pendingState = null;
 			pendingState = object.toString(); // reset komt mogelijk na
 		}
@@ -404,6 +405,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 			if(pendingState != null) {
 				setState(inner, pendingState);
+				barrier.cancel();
 				pendingState = null;
 			} 
 			if (nagekekenPending != null) {
@@ -501,7 +503,6 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 	private void tickle() {
 		activity.tickle();
-		barrier.cancel();
 	}
 	
 	
