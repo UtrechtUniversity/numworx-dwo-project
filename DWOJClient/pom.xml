@@ -628,17 +628,17 @@
 		    	</dependency>
         	</dependencies>
         </profile>
-<!--         <profile> -->
-<!--         	<id>jfx</id> -->
-<!--         	<dependencies> -->
-<!-- 		    	<dependency> -->
-<!-- 		    		<groupId>nl.numworx.swingbrowser</groupId> -->
-<!-- 		    		<artifactId>swingbrowser-jfx</artifactId> -->
-<!-- 		    		<version>0.0.2</version> -->
-<!-- 	    			<scope>runtime</scope> -->
-<!-- 		    	</dependency> -->
-<!--         	</dependencies>        -->
-<!--         </profile> -->
+        <profile>
+        	<id>jfx</id>
+        	<dependencies>
+		    	<dependency>
+		    		<groupId>nl.numworx.swingbrowser</groupId>
+		    		<artifactId>swingbrowser-jfx</artifactId>
+		    		<version>0.0.20-SNAPSHOT</version>
+	    			<scope>runtime</scope>
+		    	</dependency>
+        	</dependencies>       
+        </profile>
 	<profile>
 		<id>samllogin</id>
 		<dependencies>

@@ -23,33 +23,33 @@
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
 	   <module>../Register</module>
-       <module>../DWO-rest-lib</module>
-       <module>../DWO-gwt-lib</module>
-  	   <module>../Account</module>
- 	   <module>../DWOformule</module>
- 	 	<module>../DWOmAccess</module>
+<!--       <module>../DWO-rest-lib</module> -->
+<!--        <module>../DWO-gwt-lib</module> -->
+<!--   	   <module>../Account</module> -->
+<!--  	   <module>../DWOformule</module> -->
+<!--  	 	<module>../DWOmAccess</module> -->
        <module>../DWO-commons-lib</module>
-        <module>../DWO-jclient-lib</module>
-  	 	<module>../DWO-apps</module>
- 		<module>../chatgwt</module>
+<!--         <module>../DWO-jclient-lib</module> -->
+<!--   	 	<module>../DWO-apps</module> -->
+<!--  		<module>../chatgwt</module> -->
  	 	<module>../DWOGwtClient</module> 
-  	 	<module>../DWOinteraction</module>
+<!--   	 	<module>../DWOinteraction</module> -->
         <module>../DWOJClient</module>
        	<module>../DWOServer</module> 
      	<module>../DWOplayer</module>
-        <module>../edexml</module>
-        <module>../KeyboardGWT</module>
-     	<module>../UploadWidget</module>
-      	<module>../WriteMathGWT</module>
-	<module>../osiris-import</module>
- 		<module>../notebook</module>
-        <module>../oauth2client</module>
+<!--         <module>../edexml</module> -->
+<!--         <module>../KeyboardGWT</module> -->
+<!--      	<module>../UploadWidget</module> -->
+<!--       	<module>../WriteMathGWT</module> -->
+<!-- 	<module>../osiris-import</module> -->
+<!--  		<module>../notebook</module> -->
+<!--         <module>../oauth2client</module> -->
         <module>../EBServer</module>
-        <module>../schoolyear-jclient-lib</module>
-       <module>../schoolyear-war</module>
-	    <module>../redis-config</module>
-	    <module>../WiskOpdrGWT</module>
-	    <module>../gwtpatch</module>
+<!--         <module>../schoolyear-jclient-lib</module> -->
+<!--        <module>../schoolyear-war</module> -->
+<!-- 	    <module>../redis-config</module> -->
+<!-- 	    <module>../WiskOpdrGWT</module> -->
+<!-- 	    <module>../gwtpatch</module> -->
     </modules>
     
     <name>${project.build.finalName}</name>
