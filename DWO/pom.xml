@@ -70,7 +70,7 @@
     		<dependency>
     			<groupId>nl.uu.fi.dwo</groupId>
     			<artifactId>dwo-commons-lib</artifactId>
-    			<version>2.5.48</version>
+    			<version>2.5.49-SNAPSHOT</version>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
@@ -163,6 +163,11 @@
 		<dependency>
     		<groupId>nl.uu.fi.dwo.rest</groupId>
 			<artifactId>redis-config</artifactId>
+			<version>2.5.48</version>
+		</dependency>
+		<dependency>
+  			<groupId>nl.numworx.uploadwidget</groupId>
+  			<artifactId>uploadwidget-common</artifactId>
 			<version>2.5.48</version>
 		</dependency>
     	</dependencies>
