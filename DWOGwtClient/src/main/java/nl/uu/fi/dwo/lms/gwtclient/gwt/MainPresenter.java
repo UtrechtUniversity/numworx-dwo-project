@@ -170,6 +170,10 @@ public class MainPresenter implements ValueChangeHandler<String> {
     @JsMethod
     public void selectView(String selectedView) {
       SwitchViewEvent event;
+      if (selectedView.startsWith("GOTO_URL:")) {
+    	  selectedView = "GOTO:" + selectedView.substring(9);
+    	  event = new SwitchViewEvent(SelectedView.GOTO_URL, Collections.singletonMap("message", selectedView));  
+      } else 
       if (selectedView.startsWith("GOTO:")) {
           event = new SwitchViewEvent(SelectedView.GOTO, Collections.singletonMap("message", selectedView));  
       } else {

@@ -200,7 +200,7 @@ public class BootPanelController {
       $wnd.jsResetMainApp()
     }-*/;
 
-    private static native String getBase() /*-{
+    public static native String getBase() /*-{
 		return $wnd.deploy;
 	}-*/;
 
