@@ -1,6 +1,8 @@
 package fi.dwo.dwojapplet.gui.print;
 
 import java.awt.event.ActionEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Pageable;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -10,7 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 
-class PrintStudent extends AbstractAction {
+class PrintStudent extends AbstractAction implements Pageable{
 
 	/**
 	 * 
@@ -55,7 +57,7 @@ class PrintStudent extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		PrinterJob job = parent.getPrinterJob();
-		job.setPrintable(printable, parent.getPageFormat());
+		job.setPageable(this);
 		boolean doPrint = printDialog(job);
 		if( doPrint ) {
 			fire(STARTED);
@@ -78,9 +80,36 @@ class PrintStudent extends AbstractAction {
 	void setPrintable(Printable printable) {
 		this.printable = printable;
 		setEnabled(printable != null);
+		pages = Pageable.UNKNOWN_NUMBER_OF_PAGES;
+	}
+	
+	void setNumberOfPages(int pages) {
+		this.pages = pages; // -1 is unknown
+	}
+	
+	void setPrintablePages(Printable printable, int pages) {
+		setPrintable(printable);
+		setNumberOfPages(pages);
 	}
 
 	Printable getPrintable() {
+		return printable;
+	}
+
+	int pages = Pageable.UNKNOWN_NUMBER_OF_PAGES;
+
+	@Override
+	public int getNumberOfPages() {
+		return pages;
+	}
+
+	@Override
+	public PageFormat getPageFormat(int pageIndex) throws IndexOutOfBoundsException {
+		return parent.getPageFormat();
+	}
+
+	@Override
+	public Printable getPrintable(int pageIndex) throws IndexOutOfBoundsException {
 		return printable;
 	}
 

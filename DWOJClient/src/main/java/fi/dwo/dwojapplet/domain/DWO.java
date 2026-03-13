@@ -140,10 +140,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
 	private static final Logger LOG = Logger.getLogger("fi.dwo");
 
-    private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
-
-    private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
-
     public static final String PROFILE_EXTENSION = "profileExtension";
 
     private Course currentCourse;

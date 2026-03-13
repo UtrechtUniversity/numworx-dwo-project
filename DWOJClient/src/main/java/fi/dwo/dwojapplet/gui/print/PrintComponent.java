@@ -12,6 +12,7 @@ import javax.swing.RootPaneContainer;
 import fi.dwo.dwojapplet.domain.Sco;
 import fi.dwo.dwojapplet.gui.action.WrapSco;
 import nl.numworx.swingbrowser.scorm.SCORM2004APIInterface;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
 
 public class PrintComponent implements Printable, SCORM2004APIInterface {
 
@@ -87,8 +88,10 @@ public class PrintComponent implements Printable, SCORM2004APIInterface {
 
 	@Override
 	public String GetValue(String key) {
+		if ("dme.server_url".equals(key))
+			return StoredRestManager.getInstance().getAuthenticator().getServerUrlPath().toExternalForm();
 		if ("cmi.launch_data".equals(key))
-		return wrap.GetValue(key);
+			return wrap.GetValue(key);
 		return sco.GetValue(key);
 	}
 
