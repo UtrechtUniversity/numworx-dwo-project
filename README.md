@@ -58,13 +58,8 @@ The EBServer war can be configured with lots of properties:
 
 ## License
 
-With an open-source license, you grant permission to use your work.
-The most common open-source licenses are MIT, GPL3, and Apache 2.0.
-Choose a license that aligns with your goals for your code.
-
-For example:
-
-> This work is licensed under the MIT License.
+This work is licensed under the GNU General Public License version 3.
+Copyright © 2026, Utrecht University, all rights reserved.
 
 ## Contact 
 [Wim van Velthoven](mailto:w.p.g.vanvelthoven@uu.nl)
