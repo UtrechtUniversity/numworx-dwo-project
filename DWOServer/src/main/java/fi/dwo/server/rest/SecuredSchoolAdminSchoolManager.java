@@ -44,6 +44,7 @@ import nl.uu.fi.dwo.rest.entities.RestUserFull;
 import nl.uu.fi.dwo.rest.entities.RestUserFullv2;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAuthorizer.SchoolAdminTeacherState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
@@ -455,6 +456,8 @@ public class SecuredSchoolAdminSchoolManager {
     			.setHasRoleIfType(rest.getRestContext().getDomHasRole(), RoleType.SCHOOLADMIN);
     	PersistentSchool school = s0.getSchool();
     	String realm = s0.getRealm();
+    	//SchoolAdminTeacherState_HR_R_S_SG_U s1 = s0.buildSchoolAdminTeacher();
+    	//SchoolAdminState_HR_P_R_S_SG_U s2 = s1.setSchoolAdmin().addProfile(rest.getDwoProfile());
     	PersistentUser user = new PersistentUser();
         Date now = DwoDateUtilities.getCurrentDwoDate();
         user.setEmail(rest.getDomUserFull().getEmail());
@@ -475,6 +478,10 @@ public class SecuredSchoolAdminSchoolManager {
         Map<String,Object> properties = new TreeMap<>();
         Long pid = MySQLPersistenceId.getNativeId(rest.getDwoProfile());
         DomDwoProfileFull profile = PublicProfileCache.get(pid);
+// cache can fail... (sure in testing)
+        if (profile == null) {
+        	profile = DwoProfileManager.findEntity(pid).buildDomDwoProfileFull();
+        }
         properties.put("school", school);
         properties.put("sender", s0.getUser());
         properties.put("profile", profile);
