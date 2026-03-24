@@ -860,6 +860,7 @@
         <upload.servlet.mapping />
         <OAuth2ClientVersion>2.5.47-SNAPSHOT</OAuth2ClientVersion>
     	<aws.java.sdk.version>2.31.40</aws.java.sdk.version>
+    	<Register.html>Register.html</Register.html>
 	</properties>
 	<profiles>
 		<profile>
@@ -1109,6 +1110,12 @@
 			<version>0.0.1</version>
 		</dependency>				
 			</dependencies>
+		</profile>
+		<profile>
+			<id>registerFree</id>
+			<properties>
+				<Register.html>RegisterFree.html</RegisterFree>
+			</properties>
 		</profile>
 	</profiles>
 </project>

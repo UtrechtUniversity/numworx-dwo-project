@@ -70,6 +70,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
                     <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+				<attachClasses>true</attachClasses>
 				</configuration>
 			</plugin>
 	  </plugins>

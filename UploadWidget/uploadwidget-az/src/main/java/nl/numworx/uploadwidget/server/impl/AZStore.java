@@ -2,7 +2,9 @@ package nl.numworx.uploadwidget.server.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,13 +38,21 @@ public class AZStore extends Store {
 			if (title.startsWith(prefix)) {
 				title = title.substring(prefix.length());
 			}
-			this.id = item.getProperties().getETag();
-			this.length = item.getProperties().getContentLength();
-			this.type = item.getProperties().getContentType();
+			if (item.isPrefix()) {
+				this.id = null;
+				this.length = 0L;
+				this.type = "unix/folder"; // constante?
+				this.modified = OffsetDateTime.MIN;
+			} else {
+				this.id = item.getProperties().getETag();
+				this.length = item.getProperties().getContentLength();
+				this.type = item.getProperties().getContentType();
+				this.modified = item.getProperties().getLastModified();
+			}
 			this.url = title;
 			Map<String, String> metadata = item.getMetadata();
 			if (metadata != null) this.learnerId = metadata.get(LEARNERID); // can be null
-			this.modified = item.getProperties().getLastModified();
+
 		}
 		@Override
 		public int compareTo(AZAtomEntry o) {
