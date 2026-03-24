@@ -1114,7 +1114,7 @@
 		<profile>
 			<id>registerFree</id>
 			<properties>
-				<Register.html>RegisterFree.html</RegisterFree>
+				<Register.html>RegisterFree.html</Register.html>
 			</properties>
 		</profile>
 	</profiles>
