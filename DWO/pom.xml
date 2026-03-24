@@ -170,6 +170,11 @@
   			<artifactId>uploadwidget-common</artifactId>
 			<version>2.5.48</version>
 		</dependency>
+		<dependency>
+			<groupId>fi.wiskopdrgwt</groupId>
+			<artifactId>wiskopdrgwt</artifactId>
+			<version>2.5.48</version>
+		</dependency>
     	</dependencies>
     </dependencyManagement>
 
