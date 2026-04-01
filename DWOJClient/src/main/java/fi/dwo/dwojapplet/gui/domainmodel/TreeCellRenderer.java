@@ -11,12 +11,12 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import fi.dwo.dwojapplet.domain.Course;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 
-class TreeCellRenderer extends DefaultTreeCellRenderer {
+public class TreeCellRenderer extends DefaultTreeCellRenderer {
 
     Icon bookIcon, folderIcon;
     boolean isCourse, isMap;
 
-    TreeCellRenderer() {
+    public TreeCellRenderer() {
         super();
         Image book = DwoHelper.getResourceImage("resources/book.png");
         bookIcon = new ImageIcon(book);
