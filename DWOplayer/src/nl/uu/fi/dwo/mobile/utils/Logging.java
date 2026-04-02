@@ -13,7 +13,7 @@ public interface Logging {
 
 	void setClassName(String string);
 
-	//String getLogID();
+	default String getLogID() { return null; }
 
 	void setLogObjectives(boolean[][] objectives);	
 	void setSMObjectives(String[] objectives);

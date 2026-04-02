@@ -114,8 +114,10 @@ public class WiskOpdrPartialScore implements PartialScoreIF {
                         String keyi = (String)eni.next();
                         if(keyi.equals("reviewInteractieData")) { 
                             ObjectMap reviewInteractieData = objectMap.getObjectMap("reviewInteractieData");
-                            int reviewScoreCorrectie = reviewInteractieData.getInt("reviewScoreCorrectie");
-                            scoreCorrectie += reviewScoreCorrectie;
+                            if (reviewInteractieData.containsKey("reviewScoreCorrectie")) {
+	                            int reviewScoreCorrectie = reviewInteractieData.getInt("reviewScoreCorrectie");
+	                            scoreCorrectie += reviewScoreCorrectie;
+                            }
                             
                         }
                     }

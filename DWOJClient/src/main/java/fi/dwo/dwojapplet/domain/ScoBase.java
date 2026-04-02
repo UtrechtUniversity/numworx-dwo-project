@@ -300,13 +300,20 @@ private static final Logger LOG = Logger.getLogger(ScoBase.class.getName());
               }
         	} else if ("dme.authorization".equals(iDataModelElement)) {
         	  return ok(StoredRestManager.getInstance().getBasicAuthString());
+        	} else if ("dme.sco_name".equals(iDataModelElement)) {
+        		return ok(getScoName());
         	}
         	return ko("");
         }
         return ok(dwo.LMSGetValue(this, user, cls, iDataModelElement));  // null -> 101 else ok()
     }
 
-    /**
+    public String getScoName() {
+    	if (sc != null) return sc.getSco().getScoName();
+		return "";
+	}
+
+	/**
      * Bepaal cmi.core.credit. Is gelijk aan is een assesment of niet.
      *
      * @return credit/no-credit

@@ -3,11 +3,11 @@
   <parent>
     <groupId>nl.uu.fi.dwo</groupId>
     <artifactId>dwo.master.pom</artifactId>
-    <version>2.5.48</version>
+    <version>2.5.49-SNAPSHOT</version>
   </parent>
   <groupId>nl.numworx.xapi</groupId>
   <artifactId>xapiserver</artifactId>
-  <version>2.5.48</version>
+  <version>2.5.49-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>mock xapi server</name>
   <dependencies>

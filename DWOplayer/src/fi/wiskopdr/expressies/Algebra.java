@@ -3990,35 +3990,39 @@ public class Algebra
 			p2 = vereenvoudigBreuk(p2);
 			if (p2.x == 0 || p2.x == 1 && p2.y == 1)
 				return null;
-			long x1 = p1.x;
-			long y1 = p1.y;
-			long x2 = p2.x;
-			long y2 = p2.y;
-			boolean tellerIsNdeLog = false;
-			boolean noemerIsNdeLog = false;
-
-			double wx1 = Math.rint(Math.log((double) x1) / Math.log((double) x2 / (double) y2));
-			double wy1 = Math.rint(Math.log((double) y1) / Math.log((double) x2 / (double) y2));
-			if (isGelijkDouble(Math.pow((double) x2 / (double) y2, (double) wx1), (double) x1))
-				tellerIsNdeLog = true;
-			if (isGelijkDouble(Math.pow((double) x2 / (double) y2, (double) wy1), (double) y1))
-				noemerIsNdeLog = true;
-
-			//System.out.println(""+wx1);
-			//System.out.println(""+wy1);
-
-			if (tellerIsNdeLog && noemerIsNdeLog)
-			{
-				PointLong p = new PointLong((long) wx1 - (long) wy1, 1);
-				//if((long)wx1==9223372036854775807L  || (long)wy1==9223372036854775807L) return null;
-				if (!withinLongRange((long) wx1) || !withinLongRange((long) wy1))
-					return null;
-				return p;
-			}
-			else
-				return null;
+			return logNhelper(p1, p2);
 		}
 
+		// EXTRA:
+		else if (e instanceof Ln) {  // grondtal e
+			PointLong p1 = eval(e.kind1);
+			if (p1 != null && p1.x == p1.y && p1.y != 0L) {
+				return new PointLong(0L,1L);
+			}
+			return null;
+		}
+		else if (e instanceof Log) { // grondtal 10
+			PointLong p1 = eval(e.kind1);
+			if (p1 == null) return null;
+			p1 = vereenvoudigBreuk(p1);
+			// zie boven
+			PointLong p2 = new PointLong(10L, 1L);
+			return logNhelper(p1, p2);
+		}
+		// sin, cos, tan, arcsin, arccos, arctan
+// HIER ALLEEN breuken als resultaat, geen wortels.		
+		
+		// sin(0)=0, sin(pi/3)=1/2 sin(pi/2)=1, etc
+		// cos(x) = sin(pi/2+x)
+		// tan(0)=0, tan(pi/4)=1, tan(p/2)= ∞
+		
+		
+		
+		
+		
+		
+		
+		
 		/*
 		
 		double waarde = e.geefWaarde();
@@ -4032,6 +4036,36 @@ public class Algebra
 			}
 		}*/
 		return null;
+	}
+
+	protected static PointLong logNhelper(PointLong p1, PointLong p2) {
+		long x1 = p1.x;
+		long y1 = p1.y;
+		long x2 = p2.x;
+		long y2 = p2.y;
+		boolean tellerIsNdeLog = false;
+		boolean noemerIsNdeLog = false;
+
+		double wx1 = Math.rint(Math.log((double) x1) / Math.log((double) x2 / (double) y2));
+		double wy1 = Math.rint(Math.log((double) y1) / Math.log((double) x2 / (double) y2));
+		if (isGelijkDouble(Math.pow((double) x2 / (double) y2, (double) wx1), (double) x1))
+			tellerIsNdeLog = true;
+		if (isGelijkDouble(Math.pow((double) x2 / (double) y2, (double) wy1), (double) y1))
+			noemerIsNdeLog = true;
+
+		//System.out.println(""+wx1);
+		//System.out.println(""+wy1);
+
+		if (tellerIsNdeLog && noemerIsNdeLog)
+		{
+			PointLong p = new PointLong((long) wx1 - (long) wy1, 1);
+			//if((long)wx1==9223372036854775807L  || (long)wy1==9223372036854775807L) return null;
+			if (!withinLongRange((long) wx1) || !withinLongRange((long) wy1))
+				return null;
+			return p;
+		}
+		else
+			return null;
 	}
 
 	public static Expressie evalueerGetalsExpressie(Expressie exp)

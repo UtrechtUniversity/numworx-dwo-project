@@ -2,8 +2,10 @@ package fi.dwo.dwojapplet.gui;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,17 +92,15 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
         new SwingWorker<SwingBrowserFactory, Void>() {
           @Override
           protected SwingBrowserFactory doInBackground() throws Exception {
-            SwingBrowserFactory factory = new SwingBrowserProvider().getFactory();
-            factory.newBrowser().close(); // force 1 spare browser
-            return factory;
-          }
-          @Override
-          protected void done() {
-              try {
-                defer.resolve(get());
-              } catch(Throwable t) {
-                defer.fail(t);
-              }
+            try {
+				SwingBrowserFactory factory = new SwingBrowserProvider().getFactory();
+				factory.newBrowser().close(); // force 1 spare browser
+				defer.resolve(factory);
+				return factory;
+			} catch (Exception e) {
+				defer.fail(e);
+				throw e;
+			}
           }
         }.execute();
       }
@@ -358,7 +358,21 @@ public class GuiCreator implements Predicate<Dwo2Exception> {
      * @param u
      */
     public void configurePanelsForUser(User u) {
-        getSBF();
+        Promise<SwingBrowserFactory> promise = getSBF()
+        .then( // last chance to enable/disable jxb
+        		p -> {
+        			DwoHelper.noJXB = false; return p; 
+        		}
+        		, p -> 
+        {
+        	DwoHelper.noJXB = true; 
+        	LOG.log(Level.WARNING, "No SwingBrowserFactory", p.getFailure());
+        });
+		try {
+			promise.getValue(); // wait synchronous.....
+		} catch(Exception oops) {
+		}
+		
         //TODO rewrite nightmare code.
         if (u instanceof Teacher) {
             GuiCreator gc;

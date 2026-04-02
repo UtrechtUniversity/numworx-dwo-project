@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>dwo</artifactId>
-		<version>2.5.48</version>
+		<version>2.5.49</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>ebserver</artifactId>
@@ -99,7 +99,7 @@
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
     				<artifactId>dwogwtclient</artifactId>
-					<version>2.5.48</version>
+					<version>2.5.49</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -296,14 +296,14 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>dwogwtclient</artifactId>
-		<version>2.5.48</version>
+		<version>2.5.49</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
 	<dependency>
 		<groupId>nl.uu.fi.dwo.register</groupId>
 		<artifactId>register</artifactId>
-		<version>2.5.48</version>
+		<version>2.5.49</version>
 		<type>war</type>
 		<scope>runtime</scope>
 		<exclusions>
@@ -320,7 +320,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.register</groupId>
 		<artifactId>register</artifactId>
-		<version>2.5.48</version>
+		<version>2.5.49</version>
 		<classifier>classes</classifier>
 		<exclusions>
 			<exclusion>
@@ -860,6 +860,7 @@
         <upload.servlet.mapping />
         <OAuth2ClientVersion>2.5.47-SNAPSHOT</OAuth2ClientVersion>
     	<aws.java.sdk.version>2.31.40</aws.java.sdk.version>
+    	<Register.html>Register.html</Register.html>
 	</properties>
 	<profiles>
 		<profile>
@@ -1109,6 +1110,12 @@
 			<version>0.0.1</version>
 		</dependency>				
 			</dependencies>
+		</profile>
+		<profile>
+			<id>registerFree</id>
+			<properties>
+				<Register.html>RegisterFree.html</Register.html>
+			</properties>
 		</profile>
 	</profiles>
 </project>

@@ -4,11 +4,11 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>dwo.master.pom</artifactId>
-        <version>2.5.48</version>
+        <version>2.5.49</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>dwo</artifactId>
-    <version>2.5.48</version>
+    <version>2.5.49</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,33 +23,33 @@
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
 	   <module>../Register</module>
-       <module>../DWO-rest-lib</module>
-       <module>../DWO-gwt-lib</module>
-  	   <module>../Account</module>
- 	   <module>../DWOformule</module>
- 	 	<module>../DWOmAccess</module>
+<!--       <module>../DWO-rest-lib</module> -->
+<!--        <module>../DWO-gwt-lib</module> -->
+<!--   	   <module>../Account</module> -->
+<!--  	   <module>../DWOformule</module> -->
+<!--  	 	<module>../DWOmAccess</module> -->
        <module>../DWO-commons-lib</module>
-        <module>../DWO-jclient-lib</module>
-  	 	<module>../DWO-apps</module>
- 		<module>../chatgwt</module>
+<!--         <module>../DWO-jclient-lib</module> -->
+<!--   	 	<module>../DWO-apps</module> -->
+<!--  		<module>../chatgwt</module> -->
  	 	<module>../DWOGwtClient</module> 
-  	 	<module>../DWOinteraction</module>
+<!--   	 	<module>../DWOinteraction</module> -->
         <module>../DWOJClient</module>
        	<module>../DWOServer</module> 
      	<module>../DWOplayer</module>
-        <module>../edexml</module>
-        <module>../KeyboardGWT</module>
-     	<module>../UploadWidget</module>
-      	<module>../WriteMathGWT</module>
-	<module>../osiris-import</module>
- 		<module>../notebook</module>
-        <module>../oauth2client</module>
+<!--         <module>../edexml</module> -->
+<!--         <module>../KeyboardGWT</module> -->
+<!--      	<module>../UploadWidget</module> -->
+<!--       	<module>../WriteMathGWT</module> -->
+<!-- 	<module>../osiris-import</module> -->
+<!--  		<module>../notebook</module> -->
+<!--         <module>../oauth2client</module> -->
         <module>../EBServer</module>
-        <module>../schoolyear-jclient-lib</module>
-       <module>../schoolyear-war</module>
-	    <module>../redis-config</module>
-	    <module>../WiskOpdrGWT</module>
-	    <module>../gwtpatch</module>
+<!--         <module>../schoolyear-jclient-lib</module> -->
+<!--        <module>../schoolyear-war</module> -->
+<!-- 	    <module>../redis-config</module> -->
+<!-- 	    <module>../WiskOpdrGWT</module> -->
+<!-- 	    <module>../gwtpatch</module> -->
     </modules>
     
     <name>${project.build.finalName}</name>
@@ -70,7 +70,7 @@
     		<dependency>
     			<groupId>nl.uu.fi.dwo</groupId>
     			<artifactId>dwo-commons-lib</artifactId>
-    			<version>2.5.48</version>
+    			<version>2.5.49</version>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
@@ -91,19 +91,19 @@
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>dwoserver</artifactId>
-        	<version>2.5.48</version>
+        	<version>2.5.49</version>
         	<type>war</type>
         </dependency>
          <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>dwoserver</artifactId>
-        	<version>2.5.48</version>
+        	<version>2.5.49</version>
         	<classifier>classes</classifier>
         </dependency>
          <dependency>
          	<groupId>nl.uu.fi.dwo</groupId>
          	<artifactId>dwojclient</artifactId>
-         	<version>2.5.48</version>
+         	<version>2.5.49</version>
          </dependency>
          <dependency>
          	<groupId>fi.beans</groupId>
@@ -113,29 +113,29 @@
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-api</artifactId>
-			<version>0.0.19</version>
+			<version>0.0.20</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-jxb</artifactId>
-			<version>0.0.19</version>
+			<version>0.0.20</version>
 		</dependency>
 		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>dwoplayer</artifactId>
-	  		<version>2.5.48</version>
+	  		<version>2.5.49</version>
 	  		<classifier>classes</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>dwoplayer</artifactId>
-	  		<version>2.5.48</version>
+	  		<version>2.5.49</version>
 	  		<classifier>sources</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>dwoplayer</artifactId>
-	  		<version>2.5.48</version>
+	  		<version>2.5.49</version>
   			<type>war</type>
 		</dependency>
 		<dependency>
@@ -154,6 +154,37 @@
 			<groupId>nl.uu.fi.dwo.mobile</groupId>
 			<artifactId>formule</artifactId>
 			<version>2.5.48</version>
+		</dependency>
+	   	<dependency>
+	   		<groupId>nl.numworx.schoolyear</groupId>
+	   		<artifactId>schoolyear-jclient-lib</artifactId>
+	   		<version>2.5.48</version>
+	   	</dependency>
+		<dependency>
+    		<groupId>nl.uu.fi.dwo.rest</groupId>
+			<artifactId>redis-config</artifactId>
+			<version>2.5.48</version>
+		</dependency>
+		<dependency>
+  			<groupId>nl.numworx.uploadwidget</groupId>
+  			<artifactId>uploadwidget-common</artifactId>
+			<version>2.5.48</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.wiskopdrgwt</groupId>
+			<artifactId>wiskopdrgwt</artifactId>
+			<version>2.5.48</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.beans</groupId>
+			<artifactId>lineairealgebra</artifactId>
+			<version>2.5.48</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.beans</groupId>
+			<artifactId>lineairealgebra</artifactId>
+			<version>2.5.48</version>
+			<classifier>sources</classifier>
 		</dependency>
     	</dependencies>
     </dependencyManagement>

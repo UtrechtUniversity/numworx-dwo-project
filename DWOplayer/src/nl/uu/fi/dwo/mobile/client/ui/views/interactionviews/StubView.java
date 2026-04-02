@@ -22,18 +22,16 @@ import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
 import nl.uu.fi.dwo.interaction.client.keyboard.EnterType;
 import nl.uu.fi.dwo.mobile.DWOplayer;
 import nl.uu.fi.dwo.mobile.client.sco.CorrectieFacade;
-import nl.uu.fi.dwo.mobile.client.ui.ActivityComponent;
 import nl.uu.fi.dwo.mobile.client.ui.ActivityInterface;
 import nl.uu.fi.dwo.mobile.client.ui.TekstElementWithFont;
+import nl.uu.fi.dwo.mobile.client.ui.TimedBarrier;
 import nl.uu.fi.dwo.mobile.client.ui.views.AnchorContext;
-import nl.uu.fi.dwo.mobile.utils.LogBuilder;
 import nl.uu.fi.dwo.mobile.utils.Logging;
 import nl.uu.fi.dwo.mobile.utils.PopupFacade;
 
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.FrameElement;
 import com.google.gwt.dom.client.Style.Overflow;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
@@ -95,6 +93,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	private CorrectieFacade correctie;
 	private Logging logging;
 	private AnchorContext aContext;
+	private TimedBarrier barrier;
 	
 	public void setAContext(AnchorContext aContext) {
 		this.aContext = aContext;
@@ -109,9 +108,13 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 				getState0(); // last chance to fill lastResort en correct/score
 			}
 			innerView = null;
+			barrier.cancel();
 		}
 		else 
+		{
 			loadhandler = frame.addLoadHandler(this);
+			barrier.start(1000);
+		}
 		
 	}
 	private HandlerRegistration detachhandler; 
@@ -119,6 +122,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 	public StubView(ActivityInterface activity, String html, HashMap<String, Object> launchdata, String[] randomVarNamen, HashMap<String,Number> randomVarWaarden)
 	{
 		this.activity = activity;
+		this.barrier = activity.barrier();
 		html = activity.getStubView() + html;
 		String locale = getLocale();		
 		html += "?locale=" + locale;
@@ -255,6 +259,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		if(innerView != null)
 		{
 			setState(innerView, object.toString());
+			barrier.cancel();
 			pendingState = null;
 			pendingState = object.toString(); // reset komt mogelijk na
 		}
@@ -400,6 +405,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 
 			if(pendingState != null) {
 				setState(inner, pendingState);
+				barrier.cancel();
 				pendingState = null;
 			} 
 			if (nagekekenPending != null) {
@@ -491,9 +497,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 		wnd.setVisited = function(viewer) {
 			viewer.@nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.StubView::setVisited()()
 		}
-		
-		
-		
+				
 		return wnd.inner;
 	}-*/;
 

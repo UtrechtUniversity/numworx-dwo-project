@@ -140,10 +140,6 @@ public class DWO extends JApplet implements SCORM12APIInterface, SCORM2004APIInt
 
 	private static final Logger LOG = Logger.getLogger("fi.dwo");
 
-    private static final String DWO_SAML_ORGANIZATION_ID = "dwoSAMLOrganizationID";
-
-    private static final String DWO_SAML_USER_ID = "dwoSAMLUserID";
-
     public static final String PROFILE_EXTENSION = "profileExtension";
 
     private Course currentCourse;
@@ -1552,7 +1548,7 @@ LOG.info("time results = " + (-t) + " ms");
 
         boolean limitedSchoolAccess = initLimitedProfile();
 
-        GuiConstants.setDwoProfile(dwoProfileID, getParameter(PROFILE_EXTENSION));
+        GuiConstants.setDwoProfile(dwoProfile, getParameter(PROFILE_EXTENSION));
         ModuleTreePanel.initialize(dwoProfile);
         // Hier fixen we nog de iconizer
         GuiConstants.fixIconizer(scoViewNr, courseViewNr);
@@ -2853,7 +2849,7 @@ LOG.info("time results = " + (-t) + " ms");
         setLocale(locale);
         JComponent.setDefaultLocale(locale);
         DwoHelper.setProfileRights(dwoProfile.getDwoProfileRights());
-        GuiConstants.setDwoProfile(p, getParameter(PROFILE_EXTENSION));
+        GuiConstants.setDwoProfile(dwoProfile, getParameter(PROFILE_EXTENSION));
         TextMapper.setLanguage(lang);
         fi.dwo.dwojapplet.parameters.system.TextMapper.setLanguage(lang);
         firePropertyChange("language", old, lang);

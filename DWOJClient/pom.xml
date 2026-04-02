@@ -8,7 +8,7 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>dwo</artifactId>
-        <version>2.5.48</version>
+        <version>2.5.49</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
@@ -392,6 +392,26 @@
             </properties>
         </profile>-->
         <profile>
+			<id>dwojprint</id>
+			<dependencies>
+				<dependency>
+					<groupId>nl.uu.fi.dwo</groupId>
+					<artifactId>dwojprint</artifactId>
+					<version>2.5.49-SNAPSHOT</version>
+				</dependency>				
+			</dependencies>
+		</profile>
+        <profile>
+			<id>dwogwtprint</id>
+			<dependencies>
+				<dependency>
+					<groupId>nl.uu.fi.dwo</groupId>
+					<artifactId>dwogwtprint</artifactId>
+					<version>2.5.49-SNAPSHOT</version>
+				</dependency>				
+			</dependencies>
+		</profile>
+        <profile>
             <id>dev</id>
             <!-- profile for running with default/internal configuration -->
             <activation>
@@ -608,17 +628,17 @@
 		    	</dependency>
         	</dependencies>
         </profile>
-<!--         <profile> -->
-<!--         	<id>jfx</id> -->
-<!--         	<dependencies> -->
-<!-- 		    	<dependency> -->
-<!-- 		    		<groupId>nl.numworx.swingbrowser</groupId> -->
-<!-- 		    		<artifactId>swingbrowser-jfx</artifactId> -->
-<!-- 		    		<version>0.0.2</version> -->
-<!-- 	    			<scope>runtime</scope> -->
-<!-- 		    	</dependency> -->
-<!--         	</dependencies>        -->
-<!--         </profile> -->
+        <profile>
+        	<id>jfx</id>
+        	<dependencies>
+		    	<dependency>
+		    		<groupId>nl.numworx.swingbrowser</groupId>
+		    		<artifactId>swingbrowser-jfx</artifactId>
+		    		<version>0.0.20-SNAPSHOT</version>
+	    			<scope>runtime</scope>
+		    	</dependency>
+        	</dependencies>       
+        </profile>
 	<profile>
 		<id>samllogin</id>
 		<dependencies>

@@ -61,6 +61,9 @@ public class CorrectieView extends Composite implements HasHide, PopupListener {
     return new Provider<Map<String, Object>>() {
 
       Map<String, Object> result = new HashMap<>();
+      { String logID = logger.getLogID();
+        if (logID != null && !logID.isEmpty()) result.put("logID", logID);
+      }
       PopupPanel popup;
       @Override
       public Map<String, Object> get() {

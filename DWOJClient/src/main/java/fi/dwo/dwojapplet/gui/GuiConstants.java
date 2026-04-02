@@ -4,6 +4,7 @@ import fi.dwo.dwojapplet.domain.DWO;
 import fi.dwo.dwojapplet.domain.DwoHelper;
 import fi.dwo.dwojapplet.domain.User;
 import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileFull;
+import nl.uu.fi.dwo.rest.dom.entities.DomDwoProfileId;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -12,6 +13,7 @@ import java.awt.Insets;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -155,7 +157,7 @@ public abstract class GuiConstants {
      * @param profile
      * @param ext
      */
-    public static void setDwoProfile(int profile, String ext) {
+    public static void setDwoProfile(DomDwoProfileFull profile, String ext) {
         Properties prop = getProperties(profile, ext);
         installFonts(getString(prop,"fonts"));
         GUI_IMAGE_BG = getBoolean(prop, "gui_image_bg");
@@ -192,7 +194,7 @@ public abstract class GuiConstants {
         STUDENT_PLAYER = getString(prop, "student_player");
         PLAYER_BASE = getString(prop, "player_base");
 // TODO deze code opnemen in profile.properties:
-        dwoProfile = profile;
+        dwoProfile = profile.asLong().intValue();
         
 //        if (profile == 5 || profile == 56) {
 //            MAIN_BACKGROUND = new Color(255, 255, 255);
@@ -334,7 +336,7 @@ public abstract class GuiConstants {
         return result;
     }
 
-    private static Properties getProperties(int profile, String testExtension) {
+    private static Properties getProperties(DomDwoProfileFull profile, String testExtension) {
         if (testExtension == null) {
             testExtension = "";
         }
@@ -347,26 +349,33 @@ public abstract class GuiConstants {
             for(String key: rb.keySet()) {
             	result.put(key, rb.getObject(key));
             }
-            DomDwoProfileFull domProfile = DWO.getDwoProfile();
-            if (domProfile.getBase() != null) {
-            	result.put("student_player", domProfile.getBase() + "/");
+            if (profile.getBase() != null) {
+            	result.put("student_player", profile.getBase() + "/");
             }
             result.put("player_base", DwoHelper.getAppURLPath().toString());
             
             if ( !testExtension.isEmpty()) {
-              String r = "resources/profile-" + profile  + ".properties";
+              String r = "resources/profile-" + profile.asLong()  + ".properties";
               URL u = new URL(DwoHelper.getResourceUrlPath(),r);
               result = getProperties(u, result);
             }
-            String resource = "resources/profile-" + profile + testExtension + ".properties";
+            String resource = "resources/profile-" + profile.asLong() + testExtension + ".properties";
             URL u;
             u = new URL(DwoHelper.getResourceUrlPath(),resource);
+            result = getProperties(u, result);
+            resource = "resources/profile-" + encode(profile) + testExtension + ".properties";
+            u = new URL(DwoHelper.getResourceUrlPath(), resource);
             result = getProperties(u, result);
         } catch (IOException e) {
             LOG.log(Level.SEVERE, null, e);
         }
         return result;
     }
+
+	@SuppressWarnings("deprecation")
+	private static String encode(DomDwoProfileFull profile) {
+		return URLEncoder.encode(profile.getDwoProfileName()).replace("+", "%20");
+	}
 
     private static Properties getProperties(URL resource, Properties base) {
         Properties result = base;

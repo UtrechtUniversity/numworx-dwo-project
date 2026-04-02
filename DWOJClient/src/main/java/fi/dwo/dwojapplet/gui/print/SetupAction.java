@@ -9,8 +9,8 @@ import javax.swing.Icon;
 
 class SetupAction extends AbstractAction {
 
-	private PageFormat pf;
-	private PrinterJob job;
+	protected PageFormat pf;
+	protected PrinterJob job;
 	
 	SetupAction(String name) {
 		this(name, null);
@@ -18,9 +18,12 @@ class SetupAction extends AbstractAction {
 
 	SetupAction(String name, Icon icon) {
 		super(name, icon);
-		job = PrinterJob.getPrinterJob();
+		job = createPrinterJob();
 		pf  = job.defaultPage();
-		//pf.setOrientation(PageFormat.LANDSCAPE);
+	}
+
+	protected PrinterJob createPrinterJob() {
+		return PrinterJob.getPrinterJob();
 	}
 
 	@Override

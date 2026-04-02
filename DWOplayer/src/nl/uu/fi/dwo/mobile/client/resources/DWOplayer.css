@@ -180,9 +180,11 @@ span.textEditor_select {
 	pointer-events: none;
 }
 
+@media screen {
 .StubView_readonly {
 	pointer-events: none !important;
 	background-color: rgba(0,0,0,0.125);
+}
 }
 
 .textEditor_nowrap {

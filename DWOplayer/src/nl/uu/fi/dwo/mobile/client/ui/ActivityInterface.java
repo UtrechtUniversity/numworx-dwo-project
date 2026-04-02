@@ -53,4 +53,6 @@ public interface ActivityInterface {
 	}
 	
 	default Lazy<ScoreWidgetIF> scoreWidgetIF() { return this::api; }
+
+	default TimedBarrier barrier() { return new TimedBarrier(agent()); }
 }

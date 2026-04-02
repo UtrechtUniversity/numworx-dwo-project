@@ -11,7 +11,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -27,9 +26,6 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
-//import com.googlecode.mgwt.ui.client.MGWT;
-//import com.googlecode.mgwt.ui.client.MGWTSettings;
-//import com.googlecode.mgwt.ui.client.MGWTSettings.ViewPort;
 
 import fi.dwo.gwt.lib.rest.util.PromiseCallback;
 import nl.uu.fi.dwo.interaction.client.keyboard.FocusOnTouch;
@@ -39,6 +35,7 @@ import nl.uu.fi.dwo.mobile.client.dagger.PrintPlayerComponent;
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
 import nl.uu.fi.dwo.mobile.client.ui.OpdrNav;
+import nl.uu.fi.dwo.mobile.client.ui.TrafficAgent;
 import nl.uu.fi.dwo.mobile.client.ui.views.HeaderPrint;
 import nl.uu.fi.dwo.mobile.client.ui.views.PrintSeparator;
 import nl.uu.fi.dwo.mobile.client.ui.views.ViewModuleViewImpl;
@@ -77,6 +74,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 
 	@Inject protected ViewModuleViewImpl view;
 	@Inject protected EventBus bus;
+	@Inject TrafficAgent agent;
 	private String PREFIX;
 	private PrintPlayerComponent component;
 	@Inject void setParameters(DWOplayerParameters p) {
@@ -232,7 +230,7 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 		RootPanel.get().add(ps);		
 	    RootLayoutPanel.get().getElement().getStyle().setVisibility(Visibility.HIDDEN); // No rootlayoutpanel here.
 	    RootLayoutPanel.get().setStyleName("screenonly");
-		return p;
+		return agent.barrier().flatMap(x -> p).onResolve(view.getApi()::Terminate).onResolve(() -> logger.severe("TERMINATED"));
 	}
 
 	protected void setTitle(OpdrNav on, int cur, PrintSeparator ps) {
@@ -266,7 +264,9 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 			logger.severe("launchdata empty + " + launchData);
 			if(k > 0) {
 				String target = PREFIX + value;
-				view.setupModule(value, target).then(this::checkPremium, this::failure).then(this::nextpages);
+				view.setupModule(value, target).then(this::checkPremium, this::failure).then(this::nextpages)
+				.flatMap(x -> agent.barrier()).onResolve( () -> api.Terminate());
+				;
 			}
 		}
 		else
@@ -275,7 +275,8 @@ public class PrintPlayer implements EntryPoint, ValueChangeHandler<String>, Clos
 			  new Command() {
 				public void execute() {
 					try {
-						checkPremium( Promises.resolved( view.setupView(launchData)) ).then(PrintPlayer.this::nextpages);
+						checkPremium( Promises.resolved( view.setupView(launchData)) ).then(PrintPlayer.this::nextpages)
+						.flatMap(x -> agent.barrier()).onResolve( () -> api.Terminate());
 					} catch (Throwable e) {
 						failure( Promises.failed(e));
 					}

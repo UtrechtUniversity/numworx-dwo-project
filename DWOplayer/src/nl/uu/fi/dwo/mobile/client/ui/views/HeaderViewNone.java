@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.gwt.aria.client.Roles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -245,7 +246,7 @@ public HeaderView install() {
 
 @Override
 public void installTop(Widget w) {
-	w.getElement().setAttribute("aria-hidden", "true");
+	Roles.getHeadingRole().setAriaHiddenState(w.getElement(), true);
 }
 
 }
