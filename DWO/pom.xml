@@ -113,12 +113,12 @@
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-api</artifactId>
-			<version>0.0.20-SNAPSHOT</version>
+			<version>0.0.20</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-jxb</artifactId>
-			<version>0.0.20-SNAPSHOT</version>
+			<version>0.0.20</version>
 		</dependency>
 		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
