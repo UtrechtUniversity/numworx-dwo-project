@@ -186,6 +186,17 @@
 			<version>2.5.48</version>
 			<classifier>sources</classifier>
 		</dependency>
+		<!-- dwo-apps en writemathgwt -->
+		<dependency>
+			<groupId>fi.dwo</groupId>
+			<artifactId>dwo-apps</artifactId>
+			<version>2.5.48</version>
+		</dependency>
+		<dependency>
+			<groupId>fi.writemathgwt</groupId>
+			<artifactId>writemathgwt</artifactId>
+			<version>2.5.48</version>
+		</dependency>
     	</dependencies>
     </dependencyManagement>
 
