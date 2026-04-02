@@ -4,7 +4,7 @@
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>dwo</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
-        <version>2.5.50-SNAPSHOT</version>
+        <version>2.5.49</version>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>nl.uu.fi.dwo.lms</groupId>
