@@ -3,7 +3,7 @@
   <parent>
     <groupId>nl.numworx.uploadwidget</groupId>
     <artifactId>uploadwidget-parent</artifactId>
-    <version>2.5.50-SNAPSHOT</version>
+    <version>2.5.49-SNAPSHOT</version>
     <relativePath>../</relativePath>
   </parent>
   <artifactId>uploadwidget-common</artifactId>
