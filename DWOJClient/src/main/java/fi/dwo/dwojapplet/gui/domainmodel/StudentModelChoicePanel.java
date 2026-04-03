@@ -17,6 +17,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.swing.AbstractCellEditor;
@@ -52,20 +53,29 @@ import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdr;
 import fi.dwo.dwojapplet.gui.wiskopdr.WiskOpdrPanel;
 
 public class StudentModelChoicePanel extends JSplitPane implements TreeSelectionListener {
-  private class LeafNodeEditor extends AbstractCellEditor implements TreeCellEditor {
+  public static class LeafNodeEditor extends AbstractCellEditor implements TreeCellEditor {
 
     private static final int XWIDTH = 20; // positie [x]
-    private  ChoiceCellRenderer renderer = new ChoiceCellRenderer();
+    private final ChoiceCellRenderer renderer;
+    private final Collection<String> enabled;
+    private final Consumer<TreePath> savePath;
     private  ChangeEvent changeEvent = null;
     private  JTree tree;
     private  NodeLeaf leaf;
     private boolean readonly;
  
-    public LeafNodeEditor(JTree tree, boolean b) {
+    public LeafNodeEditor(JTree tree, boolean b, ChoiceCellRenderer renderer, Consumer<TreePath> savePath) {
+       this.renderer = renderer;
+       this.enabled = renderer.enabled;
+       this.savePath = savePath;
        this.tree = tree;
        this.readonly = b;
    }
 
+     private void savePath(TreePath p) {
+    	 savePath.accept(p);
+     }
+    
      public Object getCellEditorValue() {
          JCheckBox checkbox = renderer.getLeafRenderer();
          leaf.setValue(checkbox.isSelected());
@@ -113,7 +123,7 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
                        savePath(path);
                      }
                      
-                     repaint();
+                     tree.repaint();
                  }
              }  
          };
@@ -125,10 +135,11 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
      }
  }
 
-  public  class ChoiceCellRenderer implements TreeCellRenderer {
+  public  static class ChoiceCellRenderer implements TreeCellRenderer {
 
     private JCheckBox    leafRenderer = new JCheckBox();
     private JRadioButton nonLeafRenderer = new JRadioButton();
+    private final Collection<String> enabled;
     private Color selectionBorderColor, selectionForeground, selectionBackground,
             textForeground, textBackground;
 
@@ -136,7 +147,8 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
         return leafRenderer;
     }
 
-    public ChoiceCellRenderer() {
+    public ChoiceCellRenderer(Collection<String> enabled) {
+    	this.enabled = enabled;
         Font fontValue;
         fontValue = UIManager.getFont("Tree.font");
         if (fontValue != null) {
@@ -206,15 +218,16 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
     this(studentModel, false);
   }
   
-  private Collection<String> enabled = Collections.emptySet();
-  
-  public StudentModelChoicePanel(NodeVector studentModel, boolean readonly, Collection<String> enabled) {
-	  this(studentModel, readonly);
-	  this.enabled = enabled;
-  }
+  private final Collection<String> enabled;
   
   public StudentModelChoicePanel(NodeVector studentModel, boolean readonly) {
+	  this(studentModel, readonly, Collections.emptySet());
+	  
+  }
+  
+  public StudentModelChoicePanel(NodeVector studentModel, boolean readonly, Collection<String> enabled) {
     super();
+    this.enabled = enabled;
     this.studentModel = studentModel;
 //    setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
     setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -224,9 +237,9 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
     tree = new JTree(model);
     //tree.setMinimumSize(new Dimension(200,100));
     //tree.setPreferredSize(tree.getMinimumSize());
-    tree.setCellEditor(new LeafNodeEditor(tree, readonly));
+    tree.setCellEditor(new LeafNodeEditor(tree, readonly, new ChoiceCellRenderer(enabled), this::savePath));
     tree.setEditable(!readonly);
-    tree.setCellRenderer(new ChoiceCellRenderer());
+    tree.setCellRenderer(new ChoiceCellRenderer(enabled));
     Box leftBox = Box.createVerticalBox();
     setLeftComponent(leftBox);
     leftBox.add(new JLabel(v.toString()));
