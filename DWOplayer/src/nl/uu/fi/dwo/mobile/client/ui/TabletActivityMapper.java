@@ -12,6 +12,7 @@ import nl.uu.fi.dwo.mobile.client.ui.activities.CourseActivity2;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ExamModuleActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LastExamActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.LoginActivity;
+import nl.uu.fi.dwo.mobile.client.ui.activities.NoCourseActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ReloginActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.ScoActivity;
 import nl.uu.fi.dwo.mobile.client.ui.activities.TreeModuleActivity;
@@ -57,6 +58,7 @@ public class TabletActivityMapper implements ActivityMapper
 //	@Inject Provider<ExamActivity> exam;
 //	@Inject Provider<ClassesActivity> classes;
 	@Inject Provider<LoginActivity> login;
+	@Inject Provider<NoCourseActivity> noCourse;
 	
 	@Inject Map<Class<?>, Provider<Activity>> activityMap;
 	@Inject Lazy<CourseActivity2.Factory> caFactory;
@@ -171,7 +173,11 @@ public class TabletActivityMapper implements ActivityMapper
 			String id = tmp.getToken();
 			SelectModuleItem item = SelectModuleItemHolder.getItemByID(id);
 			if(item == null)
+			{
+				if (vars.withUser())
+					return noCourse.get();
 				return login.get();
+			}
 			item.setPlace(place);
 			return 
 				item.isExam()

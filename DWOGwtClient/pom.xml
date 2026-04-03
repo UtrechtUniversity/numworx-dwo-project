@@ -448,7 +448,7 @@
                          <webapp>
 						    <groupId>nl.numworx.xapi</groupId>
 						    <artifactId>xapiserver</artifactId>
-  							<version>2.5.48-SNAPSHOT</version>
+  							<version>2.5.48</version>
 							<contextPath>/data/xAPI</contextPath>
                             <type>war</type>
 							<asWebapp>true</asWebapp>
