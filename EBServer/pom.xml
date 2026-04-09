@@ -270,14 +270,12 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>dwo-apps</artifactId>
-			<version>2.5.50-SNAPSHOT</version>
 			<scope>runtime</scope>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>dwo-apps</artifactId>
-			<version>2.5.50-SNAPSHOT</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
@@ -303,7 +301,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.register</groupId>
 		<artifactId>register</artifactId>
-		<version>2.5.50-SNAPSHOT</version>
+		<version>2.5.49</version>
 		<type>war</type>
 		<scope>runtime</scope>
 		<exclusions>
@@ -320,7 +318,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.register</groupId>
 		<artifactId>register</artifactId>
-		<version>2.5.50-SNAPSHOT</version>
+		<version>2.5.49</version>
 		<classifier>classes</classifier>
 		<exclusions>
 			<exclusion>

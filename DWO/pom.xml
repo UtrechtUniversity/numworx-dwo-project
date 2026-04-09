@@ -21,7 +21,7 @@
     
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
-	   <module>../Register</module>
+<!--	   <module>../Register</module>-->
 <!--       <module>../DWO-rest-lib</module> -->
 <!--        <module>../DWO-gwt-lib</module> -->
 <!--   	   <module>../Account</module> -->
@@ -189,13 +189,26 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>dwo-apps</artifactId>
-			<version>2.5.48</version>
+			<version>2.5.50-SNAPSHOT</version>
+			<classifier>classes</classifier>
+		</dependency>
+		<dependency>
+			<groupId>fi.dwo</groupId>
+			<artifactId>dwo-apps</artifactId>
+			<version>2.5.50-SNAPSHOT</version>
+			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>fi.writemathgwt</groupId>
 			<artifactId>writemathgwt</artifactId>
 			<version>2.5.48</version>
 		</dependency>
+		<dependency>
+			<groupId>fi.dwo</groupId>
+			<artifactId>fi.dwo.eawt</artifactId>
+			<version>2.5.48</version>
+		</dependency>
+
     	</dependencies>
     </dependencyManagement>
 
