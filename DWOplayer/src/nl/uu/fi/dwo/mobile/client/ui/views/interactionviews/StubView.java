@@ -191,6 +191,7 @@ public class StubView extends SimplePanel implements InteractionView, LoadHandle
 			case 61: return "fi.mathscratch.MathScratch";
 			case 62: return "nl.numworx.uploadwidget.UploadWidget";
 			case 69: return "nl.numworx.aimodel.AIModel";
+			case 72: return "nl.numword.fsm.FSM";
 		}
 	}
 	
