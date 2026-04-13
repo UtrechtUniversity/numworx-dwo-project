@@ -5,6 +5,7 @@
 // `pyodide.js`, and all its associated `.asm.js`, `.json`,
 // and `.wasm` files as well:
 importScripts("https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js");
+importScripts("deploy.jsp");
 
 self.state = { bytes: [], cnt: 0, off: 0, code: ""}
 
@@ -87,11 +88,49 @@ self.input = function() {
   return request.responseText;
 }
 
+     self.showScene = async () => self.pyodide.runPythonAsync(`
+        import turtle
+        import basthon
+
+        svg_dict = turtle.Screen().show_scene()
+        basthon.kernel.display_event({ "display_type": "turtle", "content": svg_dict })
+        turtle.restart()
+      `);
+
+self.makeObject = (x) => {
+  if (x instanceof Map) {
+    return Object.fromEntries(Array.from(
+      x.entries(),
+      ([k, v]) => [k, self.makeObject(v)]
+    ))
+  } else if (x instanceof Array) {
+    return x.map(self.makeObject);
+  } else {
+    return x;
+  }
+}
+
+
+
 async function loadPyodideAndPackages() {
   self.pyodide = await loadPyodide();
   self.pyodide.setStdout( { isatty: true, raw: self.output })
   self.pyodide.setStderr( { isatty: true, raw: self.output })
   self.pyodide.setStdin(  { isatty: true, stdin: self.input, autoEOF: true })
+ // FIXME make OPTIONAL????
+        var fakeBasthonPackage = {
+        kernel: {
+          display_event: (e) => {
+          	let js = self.makeObject(e.toJs());
+          	let st = JSON.stringify(js);
+          	self.postMessage(st);
+          }
+          ,
+          locals: () => self.pyodide.runPython("globals()"),
+        },
+      };
+  	self.pyodide.registerJsModule("basthon", fakeBasthonPackage)
+    await self.pyodide.loadPackage(deploy + "replgwt/turtle-0.0.1-py3-none-any.whl")
   
 }
 let pyodideReadyPromise = loadPyodideAndPackages();
@@ -116,6 +155,7 @@ self.onmessage = async (event) => {
   try {
     await self.pyodide.loadPackagesFromImports(python); // this wil install numpy, etc....
     let results = await self.pyodide.runPythonAsync(python);
+    let extra   = await self.showScene(); // ook optional
     self.postMessage(JSON.stringify({ results, id }));
   } catch (error) {
     self.postMessage(JSON.stringify({ error: error.message, id }));
