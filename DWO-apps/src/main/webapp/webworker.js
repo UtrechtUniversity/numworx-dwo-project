@@ -70,8 +70,16 @@ self.makeid = function(length) {
     return result;
 }
 
+    self.restartScene = async () => self.pyodide.runPythonAsync(`
+        import turtle
+        turtle.restart()
+      `);
+
+
+
 
 self.input = function() {
+ 
   var id = self.makeid(8);
   self.postMessage(JSON.stringify( { "request": "input", "id": id } ));
   const request = new XMLHttpRequest();
@@ -84,7 +92,6 @@ self.input = function() {
   const del = new XMLHttpRequest();
   del.open("DELETE", "/dwo/apps/get_input/"+id, true);
   del.send(null); // send and forget....
-
   return request.responseText;
 }
 
@@ -94,8 +101,16 @@ self.input = function() {
 
         svg_dict = turtle.Screen().show_scene()
         basthon.kernel.display_event({ "display_type": "turtle", "content": svg_dict })
-        turtle.restart()
       `);
+
+    self.syncScene = () => self.pyodide.runPython(`
+        import turtle
+        import basthon
+
+        svg_dict = turtle.Screen().show_scene()
+        basthon.kernel.display_event({ "display_type": "turtle", "content": svg_dict })
+      `);
+
 
 self.makeObject = (x) => {
   if (x instanceof Map) {
@@ -151,11 +166,14 @@ self.onmessage = async (event) => {
   for (const key of Object.keys(context)) {
     self[key] = context[key];
   }
+  if ( self['hasTurtle'] )
+  	await self.restartScene();
+  
   // Now is the easy part, the one that is similar to working in the main thread:
   try {
     await self.pyodide.loadPackagesFromImports(python); // this wil install numpy, etc....
     let results = await self.pyodide.runPythonAsync(python);
-    let extra   = await self.showScene(); // ook optional
+  	if ( self['hasTurtle'] ) await self.showScene(); // ook optional
     self.postMessage(JSON.stringify({ results, id }));
   } catch (error) {
     self.postMessage(JSON.stringify({ error: error.message, id }));
