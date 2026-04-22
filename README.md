@@ -6,11 +6,7 @@ it creates the Learning Management platform "Numworx".
   
 ## Introduction
 
-In this section, provide an overview of your code and describe the
-project in which the code was developed. Highlight the purpose,
-scope, and potential uses of your code. Also, consider including
-links to relevant publications or resources that provide additional
-context.
+This project builds the main platform service. To build you need a Github login and token. 
 
 ## Prerequisites
 
