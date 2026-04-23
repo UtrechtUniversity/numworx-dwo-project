@@ -44,7 +44,8 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
         <context.xml>context.xml</context.xml>
         <jdbc.driver>software.amazon.jdbc.Driver</jdbc.driver>
-        <jdbc.url>jdbc:mysql://127.0.0.1:3306/dwojunittest?useSSL=false</jdbc.url>
+        <jdbc.url>jdbc:mysql://127.0.0.1:3306/dwojunittest?allowPublicKeyRetrieval=true&amp;useSSL=false</jdbc.url>
+        <jdbc.url.xml>jdbc:mysql://127.0.0.1:3306/dwojunittest?allowPublicKeyRetrieval=true&amp;amp;useSSL=false</jdbc.url.xml>
         <jdbc.copy>jdbc:mysql://127.0.0.1:3306/dwocopy?useSSL=false</jdbc.copy>
     </properties>
   
