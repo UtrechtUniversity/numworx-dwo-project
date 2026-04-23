@@ -10,6 +10,6 @@
     <script type="text/javascript" src="PrintPlayer/PrintPlayer.nocache.js"></script>
   </head>
 
-  <body style='margin:0px'>
+  <body class='printing'>
   </body>
 </html>
