@@ -26,3 +26,8 @@
 svg text, img {
 	page-break-inside: avoid;
 }
+
+body.printing {
+	margin: 0px;
+	overflow: auto;
+}

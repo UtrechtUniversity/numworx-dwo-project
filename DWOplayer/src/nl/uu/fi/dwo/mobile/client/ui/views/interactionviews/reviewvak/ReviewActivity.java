@@ -114,6 +114,9 @@ public class ReviewActivity implements ActivityInterface, CBookEventListener {
 		}
 		o.put(INTERACTIE_PANEL_STATES, states);
 		o.put(CHECK_DOCENT, checkDocent);
+// extra
+		o.put("ingeklapt", h.get("ingeklapt"));
+		o.put("hoogtes", h.get("hoogtes"));
         h.put(CorrectieView.REVIEW_INTERACTIE_DATA, o);
 	}
 

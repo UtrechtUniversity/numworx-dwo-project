@@ -2,7 +2,7 @@ package fi.dwo.dwojapplet.gui.domainmodel;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelContextInfo;
 
-interface Node {
+public interface Node {
   public String toString();
   public void setTitle(String title);
   public void setLanguage(String lang);

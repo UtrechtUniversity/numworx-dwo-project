@@ -521,6 +521,9 @@ public class TekstBuffer
 		case 71:
 			StubView stream = new StubView(activity, "StreamGWT.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
 			return x(map, stream);
+		case 72:
+			StubView fsm = new StubView(activity, "Fsmgwt.html", currentVakGegevens, randomVarNamen, randomVarWaarden);
+			return x(map, fsm);
 		}
 
 		if (soortVak == 0)

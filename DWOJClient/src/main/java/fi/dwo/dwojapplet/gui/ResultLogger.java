@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -84,6 +85,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 	private static final String SAVE = "bewaar";
 	private static final String COPY = "kopieer";
 	private static final String SUSPEND_DATA = "cmi.suspend_data";
+	private static final String REVIEW_DATA = "cmi.comments_from_lms.0.comment";
 	private static final String BUTTON_REFRESH = "refresh";
 	private static final String BUTTON_LOGANSWERS = "log answers";
 	private static final String BUTTON_LOGSCORES = "log scores";
@@ -379,6 +381,7 @@ public class ResultLogger extends JPanel implements ActionListener,
 			SortedSet set = new TreeSet();
 			keys.clear();
 			Map[] data = new Map[leerlingen.length];
+			Map<String,Number>[] review = null;
 			boolean old = ReadOnly.hasSuspendData;
 			ReadOnly.hasSuspendData = true;
 			for (int i = 0; i < leerlingen.length; i++) {
@@ -388,6 +391,12 @@ public class ResultLogger extends JPanel implements ActionListener,
 				data[i] = strings;
 				if (strings == null)
 					continue;
+				String reviewData = getReviewData(leerling, sco);
+				Map extra = getReview(reviewData);
+				if (extra != null) {
+					if (review == null) review = new Map[leerlingen.length];
+					review[i] = extra;
+				}
 				set.addAll(strings.keySet());
 			}
 			ReadOnly.hasSuspendData = old;
@@ -433,6 +442,15 @@ public class ResultLogger extends JPanel implements ActionListener,
 					  System.err.println("error " + key);
 					  continue;
 					}
+// add correction to score
+					if (review != null && review[i] != null && value instanceof Map) {
+						Number correctie = review[i].get(key);
+						Number score = (Number) ((Map) value).get("logScore");
+						if (correctie != null && score != null) {
+							((Map) value).put("logScore", Long.valueOf(correctie.longValue() + score.longValue()));
+						}
+					}
+
 					model.setValueAt(value, i1, index);
 					if (value instanceof Map
 							&& ((Map) value).containsKey(LOGKEY_MAXSCORE))
@@ -803,6 +821,40 @@ public class ResultLogger extends JPanel implements ActionListener,
 		return keys.indexOf(key);
 	}
 
+	private Map getReview(String reviewData) {
+		if (reviewData != null && reviewData.startsWith("{")) 
+		{
+			JSONParser parser = new JSONParser();
+			try {
+				Map m = (Map) parser.parse(reviewData);
+				Map<String, Number> result = new HashMap<>();
+				walk(m, result);
+				return result;
+			} catch(ParseException e) {
+				
+			}
+		}
+		return null;
+	}
+	
+	private void walk(Map m, Map<String, Number> result) {
+		if (m.containsKey("logID")) {
+			result.put(m.get("logID").toString(), (Number) m.get("reviewScoreCorrectie"));
+		} else {
+			walk(m.values(), result);
+		}
+	}
+
+	private void walk(Collection values, Map<String, Number> result) {
+		for(Object value: values) {
+			if (value instanceof Map) {
+				walk((Map) value, result);
+			} else if (value instanceof Collection) {
+				walk ( (Collection) value, result);
+			}
+		}
+	}
+
 	private Map getLog(String suspendData) {
 		if (suspendData != null && suspendData.startsWith("{")) // isJSON?
 		{
@@ -827,6 +879,9 @@ public class ResultLogger extends JPanel implements ActionListener,
 
 	private String getSuspendData(User u, Sco s) throws PersistenceException {
 		return PersistenceFacade.instance().LMSGetValue(s, u, schoolClass, SUSPEND_DATA);
+	}
+	private String getReviewData(User u, Sco s) throws PersistenceException {
+		return PersistenceFacade.instance().LMSGetValue(s, u, schoolClass, REVIEW_DATA);
 	}
 
 	public class LogTable extends JTable {

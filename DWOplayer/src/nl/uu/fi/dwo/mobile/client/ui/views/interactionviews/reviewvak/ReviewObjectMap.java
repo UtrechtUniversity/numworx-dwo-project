@@ -1,8 +1,10 @@
 package nl.uu.fi.dwo.mobile.client.ui.views.interactionviews.reviewvak;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import nl.uu.fi.dwo.interaction.client.json.ObjectList;
 import nl.uu.fi.dwo.interaction.client.json.ObjectMap;
@@ -11,6 +13,7 @@ import nl.uu.fi.dwo.mobile.client.ui.views.CorrectieView;
 class ReviewObjectMap implements ObjectMap {
 
 	final static String STATES = ReviewActivity.INTERACTIE_PANEL_STATES;
+	final static Set<String> reviewSet = new TreeSet<>(Arrays.asList(STATES, "hoogtes", "ingeklapt")); 
 	
 	final private ObjectMap delegate;
 	ObjectMap review;
@@ -20,7 +23,7 @@ class ReviewObjectMap implements ObjectMap {
 	}
 
 	public Object get(String key) {
-		if (STATES.equals(key)) return review.get(key);
+		if (reviewSet.contains(key)) return review.get(key);
 		return delegate.get(key);
 	}
 
@@ -33,6 +36,7 @@ class ReviewObjectMap implements ObjectMap {
 	}
 
 	public boolean getBoolean(String key) {
+		if (reviewSet.contains(key)) return review.getBoolean(key, delegate.getBoolean(key));
 		return delegate.getBoolean(key);
 	}
 
@@ -74,6 +78,7 @@ class ReviewObjectMap implements ObjectMap {
 	}
 
 	public List<Double> getDoubleList(String key) {
+		if (reviewSet.contains(key) && review.containsKey(key)) return review.getDoubleList(key);
 		return delegate.getDoubleList(key);
 	}
 

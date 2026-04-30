@@ -1748,7 +1748,7 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 				Connector connector = find(currentObject);
 				comRoot2 = new OpdrNavContext(comRoot,connector, this.bgColorZichtbaar ? bgColor : comRoot.getBackground());
 
-if (zichtbaarNaNakijken && activity.isReview()) {
+if (zichtbaarNaNakijken && activity.isReview() && reviewActivity != null) {
 	LOG.warning("Hier review Opdrnav");
 	comRoot2 = reviewActivity.wrap(comRoot2);
 }

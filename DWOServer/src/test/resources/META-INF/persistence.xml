@@ -44,7 +44,7 @@
       <property name="eclipselink.cache.shared.default" value="false"/>
       <property name="eclipselink.allow-zero-id" value="true"/>
       <property name="javax.persistence.jdbc.driver" value="${jdbc.driver}"/>
-      <property name="javax.persistence.jdbc.url" value="${jdbc.url}"/>
+      <property name="javax.persistence.jdbc.url" value="${jdbc.url.xml}"/>
       <property name="javax.persistence.jdbc.user" value="test"/>
       <property name="javax.persistence.jdbc.password" value="test"/>
 <!--      <property name="eclipselink.weaving" value="static"/>

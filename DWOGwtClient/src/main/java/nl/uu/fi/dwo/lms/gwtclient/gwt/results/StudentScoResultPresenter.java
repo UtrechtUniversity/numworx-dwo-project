@@ -5,6 +5,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Location;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -13,10 +14,8 @@ import fi.dwo.gwt.lib.rest.util.DomMethodCodec;
 import fi.dwo.gwt.lib.rest.util.DomStudentModelStructureCodec;
 import fi.dwo.gwt.lib.rest.util.RestAuthenticator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.fusesource.restygwt.client.JsonEncoderDecoder;
+import org.osgi.util.promise.Deferred;
 import org.osgi.util.promise.Failure;
 import org.osgi.util.promise.Promise;
 import org.osgi.util.promise.Promises;
@@ -47,8 +47,6 @@ import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.AlertDialogWithConfirmCancelEvent.Event
 import nl.uu.fi.dwo.lms.gwtclient.gwt.ui.BasicDisplay;
 import nl.uu.fi.dwo.rest.dom.DomResultTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultSchoolClass;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultScoContext;
-import nl.uu.fi.dwo.rest.dom.entities.DomResultScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomResultsPerTeacherv2;
@@ -477,10 +475,15 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
 	return result;
   }
 
+  Deferred<Boolean> startPrint;
   private void fireSelectedResultReturn() {
 	if (closed && finished) {
 		SwitchViewEvent event = new SwitchViewEvent(SwitchViewEvent.SelectedView.SELECTEDRESULTSRETURN, resultTree, resultState);   
 		eventBus.fireEvent(event);
+	}
+	if (finished && startPrint != null) {
+		startPrint.resolve(Boolean.TRUE);
+		startPrint = null;
 	}
   }
   
@@ -576,6 +579,13 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
   }
   @JsMethod
   public String print(JavaScriptObject context) {
+	if (startPrint == null) {
+		startPrint = new Deferred<>();
+		updateFrame(ssc.getStudentSco());
+	}
+	 
+	startPrint.getPromise().onResolve( () -> {
+	  
     LOG.info("calling print " + scoId);
 //    String pid = scoId; // sco.getScoID().getIdString();
 //    int komma = pid.lastIndexOf(';');
@@ -604,10 +614,19 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
 	u.setHash("cmi.launch_data:"+scoId);
 	url = u.buildString();
     LOG.info("openUrl " + url);
-    return url;
+    Window_open(url, "PrintPlayer"); // see StudentScoResultDisplay.js
+    //return url;
+	});
+	return null; // nu even niet.
   }
 
-  final public static class Callback extends JavaScriptObject {
+  private static native void Window_open(String url, String string) /*-{
+	var w = $wnd.open(url, string);
+	if (w) w.focus();
+	
+}-*/;
+
+final public static class Callback extends JavaScriptObject {
 	  protected Callback() {
 	}
 

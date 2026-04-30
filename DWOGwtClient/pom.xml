@@ -4,7 +4,7 @@
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>dwo</artifactId>
         <relativePath>../DWO/pom.xml</relativePath>
-        <version>2.5.49</version>
+        <version>2.5.50</version>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
     <groupId>nl.uu.fi.dwo.lms</groupId>
@@ -448,7 +448,7 @@
                          <webapp>
 						    <groupId>nl.numworx.xapi</groupId>
 						    <artifactId>xapiserver</artifactId>
-  							<version>2.5.48-SNAPSHOT</version>
+  							<version>2.5.48</version>
 							<contextPath>/data/xAPI</contextPath>
                             <type>war</type>
 							<asWebapp>true</asWebapp>

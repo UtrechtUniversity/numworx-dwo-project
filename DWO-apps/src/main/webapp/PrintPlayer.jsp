@@ -15,7 +15,7 @@
     <script>script("PrintPlayer/PrintPlayer.nocache.js")</script>
   </head>
 
-  <body style='margin:0px;overflow:hidden;'>
+  <body class='printing'>
 	  <p class="screenonly" >
 		  <button class="printbutton" onclick="window.print()" ><%=print %></button>
 	  </p>

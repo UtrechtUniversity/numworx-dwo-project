@@ -149,6 +149,7 @@ public class SecuredDwoAdminGarbageManager {
         Root<PersistentLoginContext> c = q1.from(PersistentLoginContext.class);
         Root<PersistentUser> user = q1.from(PersistentUser.class);
         Expression<Long> lasttimestamp = c.get("lastLoginTimeStamp");
+        Expression<Long> regitimestamp = c.get("registerTimeStamp");
         Expression<Long> uid = user.get("userID");
         Expression<Long> cid = c.get("userID");
         Predicate eq = builder.equal(uid, cid);
@@ -156,6 +157,10 @@ public class SecuredDwoAdminGarbageManager {
         isFalse = builder.isFalse(singleschool);
         ParameterExpression<Long> l = builder.parameter(Long.class);
         Predicate ltt = builder.lessThan(lasttimestamp, l);
+        Predicate ltr = builder.lessThan(regitimestamp, l);
+        isNull = lasttimestamp.isNull();
+        ltr = builder.and(isNull, ltr);
+        ltt = builder.or(ltt, ltr);
         if (single)
         	q1 = q1.select(user).where(ltt, eq); // include single school students
         else

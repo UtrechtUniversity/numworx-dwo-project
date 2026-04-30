@@ -11,7 +11,7 @@
 		<g:DockLayoutPanel unit='PX' ui:field='root' styleName='{style.rootPanel}'>
 		<g:center>
 			<g:ScrollPanel ui:field='centerPanel' styleName='{style.centerPanel}'
-				addStyleNames='{style.centerBackground}'>
+				addStyleNames='{style.centerBackground} profile-body'>
 				<g:FlowPanel>
 					<g:HorizontalPanel styleName='{style.itemPanel}'>
 						<g:FlowPanel styleName='{style.titlePanel}'>
