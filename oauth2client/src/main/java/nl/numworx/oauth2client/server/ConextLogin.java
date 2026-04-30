@@ -19,8 +19,22 @@ public class ConextLogin extends EntreeSLogin implements Login {
 			allow = allow.split("\\s+")[0]; // spaces als separator
 			this.redirect_url = allow + "/redirect/conext";
 		}
-	}
+		if (!System.getProperty("CONEXT_SECRET", "").isEmpty())
+			productie();
+		}
 	public String toString() { return "conext"; }
+
+	private void productie() {
+	// https://connect.surfconext.nl/.well-known/openid-configuration
+		
+		client_id = "app.dwo.nl";
+		client_secret = System.getProperty("CONEXT_SECRET");
+		ISSUER = "https://connect.surfconext.nl";
+		AUTHORIZATION_URL = "https://connect.surfconext.nl/oidc/authorize";
+		TOKEN_URL = 	"https://connect.surfconext.nl/oidc/token";
+		KEYS_URL = "https://connect.surfconext.nl/oidc/certs";
+		USERINFO = "https://connect.surfconext.nl/oidc/userinfo";
+	}
 	
 	public ConextLogin(ServletConfig cfg) {
 		super(cfg);
