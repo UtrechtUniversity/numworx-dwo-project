@@ -117,7 +117,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	private String selectedMethod;
 	
 	private HashMap<String,String> methodeLabels = new HashMap();
-    private PersistenceId activeMethod;
+    PersistenceId activeMethod;
     DomMethod activeRow;
 	
 	private Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();

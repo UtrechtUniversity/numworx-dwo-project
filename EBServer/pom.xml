@@ -347,7 +347,7 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>oauth2client</artifactId>
-		<version>2.5.48</version>
+		<version>2.5.50</version>
 		<classifier>classes</classifier>
 		<exclusions>
 			<exclusion>
@@ -359,7 +359,7 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>oauth2client</artifactId>
-		<version>2.5.48</version>
+		<version>2.5.50</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -571,6 +571,7 @@
 							<SCW_ENDPOINT>http://localhost:9444/</SCW_ENDPOINT> <!-- s3-ninja -->
 							<AWS_ACCESS_KEY_ID>AKIAIOSFODNN7EXAMPLE</AWS_ACCESS_KEY_ID>
 							<AWS_SECRET_ACCESS_KEY>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY</AWS_SECRET_ACCESS_KEY>
+							<CONEXT_SECRET>${CONEXT_SECRET}</CONEXT_SECRET>
                         </systemProperties>
 					<server>TomcatServer</server>
 					<path>/</path>
