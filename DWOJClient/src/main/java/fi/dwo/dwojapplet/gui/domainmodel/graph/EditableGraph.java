@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,6 +55,8 @@ public class EditableGraph extends JPanel implements ActionListener{
 	}
 
 	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter, PersistenceId activeMethod) {
+		if (!graph.graphNodes.isEmpty() && !Objects.equals(activeMethod, graph.activeMethod))
+			updateModel(model); // extra, save graph that will become invisible.
 		graph.setModel(model, filter, activeMethod);
 		editGraph.setModelJustSet(true);
 	}
