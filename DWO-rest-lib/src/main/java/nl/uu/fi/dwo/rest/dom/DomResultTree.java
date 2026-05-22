@@ -219,6 +219,11 @@ public class DomResultTree {
 		boolean hascorrectie = "completed".equals(value.getStudentSco().getCompletionStatus());
 		for(DomStudentScoPage page: pages) {
 			String label = page.getLabel(); //String.valueOf(page.getSequencenr().intValue() + 1);
+			if (page.getMaxFactor() != null && page.getMaxFactor() != 1.0f) {
+				label = label + " (×" + page.getMaxFactor() + ")";
+			}
+			
+			
 			DomResultStudentScoPage resultPage = new DomResultStudentScoPage(label);
 			resultPage.setNodeId(page.getSequencenr().intValue());
 			PersistenceId pid = new PersistenceId("LOCAL;none;" + page.getSequencenr());
@@ -239,6 +244,9 @@ public class DomResultTree {
 				resultPage.setCorrectie(page.getCorrectie().doubleValue());
 				resultPage.setMaxScore(Double.valueOf(page.getMaxScore().doubleValue()));
 			}
+			Float maxFactor = page.getMaxFactor();
+			if (Float.valueOf(1.0F).equals(maxFactor)) maxFactor = null; // 1.0 is default maxFactor
+			resultPage.setMaxFactor(maxFactor);
 		}
 	}
 

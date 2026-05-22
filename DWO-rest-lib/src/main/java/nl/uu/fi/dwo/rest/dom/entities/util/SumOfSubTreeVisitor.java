@@ -180,6 +180,7 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 
 	@Override
 	public void visitStudentScoPage(DomResultStudentScoPage page) {
+		if (page.getTitle() != null) return; // deze is niet idempotent. en wordt tig keer aangeroepen.
 		if (page.getMaxScore() == null) {
 			page.setTitle("&nbsp;");
 			page.setDescription("&nbsp;");
@@ -203,12 +204,37 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 			String score = page.getScore().toString();
 			if ("0".equals(score) && bonus.startsWith("+")) score = "";
 			description = title = score + bonus + "/" + page.getMaxScore() ;
+// FIXME maxFactor perikelen: i18n en  format score + correctie / maxscore
+// FIXME als maxFactor = 0, dan "&nbsp;"
+			Float maxFactor = page.getMaxFactor();
+			if (maxFactor != null) {
+				description = "(" + description + ")×" + maxFactor; // TODO i18n 
+				float correctie = page.getCorrectie() == null ? 0.0f : page.getCorrectie().floatValue();
+				//title = format(( page.getScore().floatValue() + correctie ) * maxFactor) + "/" + format((page.getMaxScore().floatValue() * maxFactor)) ;
+// FIXME: niet idempotent
+				page.setScore(page.getScore() * maxFactor);
+				page.setMaxScore(page.getMaxScore() * maxFactor);
+				bonus = "";
+				if (correctie != 0.0f)
+				{
+					page.setCorrectie(Double.valueOf(correctie * maxFactor));
+					bonus = format(page.getCorrectie().floatValue());
+					if (!bonus.startsWith("-")) bonus = "+" + bonus;
+				}
+// Redo title:
+				score = format(page.getScore().floatValue());
+				if ("0".equals(score) && bonus.startsWith("+")) score = "";
+				title = score + bonus + "/" + format(page.getMaxScore().floatValue());
+			}
 		}
 		page.setTitle(title);
 		page.setDescription(description);
 		page.setFraction(1.0);
 	}
 	
-	
+	// een decimaal
+	protected String format(float value) {
+		return Float.toString(Math.round(value * 10.0f) / 10.0f);
+	}
 	
 }

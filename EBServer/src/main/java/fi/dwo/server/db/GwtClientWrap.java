@@ -174,7 +174,9 @@ public class GwtClientWrap implements Filter {
 					int end = content.indexOf(ENTREEEND, index);
 					if (end >=0 ) {
 						String mid = content.substring(index, end);
-						mid = mid.replace("entree", "conext"); // HO idphint
+// je kan altijd met alle hints inloggen
+//						mid = mid.replace("entree", "conext"); // HO idphint
+//						mid = mid.replace("entree-button-klein-donker", "SURFconext-logo");
 						content = content.substring(0, index) + mid + content.substring(end);
 					}
 					index = content.indexOf(ENTREESTART, index+1);

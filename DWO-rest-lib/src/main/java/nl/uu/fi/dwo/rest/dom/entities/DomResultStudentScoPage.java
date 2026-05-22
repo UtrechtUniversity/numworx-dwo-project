@@ -21,6 +21,7 @@ public class DomResultStudentScoPage extends DomResultScore {
   }
 
   Double maxScore, correctie;
+  Float maxFactor;
 
 public Double getMaxScore() {
 	return maxScore;
@@ -36,6 +37,14 @@ public Double getCorrectie() {
 
 public void setCorrectie(Double correctie) {
 	this.correctie = correctie;
+}
+
+public Float getMaxFactor() {
+	return maxFactor;
+}
+
+public void setMaxFactor(Float float1) {
+	this.maxFactor = float1;
 }
 
 @Override
