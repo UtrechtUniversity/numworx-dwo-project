@@ -408,7 +408,7 @@
                         <webapp>
                             <groupId>fi.dwo</groupId>
                             <artifactId>dwo-apps</artifactId> 
-                            <version>2.5.48</version> 
+                            <version>2.5.50</version> 
                             <type>war</type>    
                             <asWebapp>true</asWebapp> 
                             <contextPath>/dwo/apps</contextPath>
@@ -440,7 +440,7 @@
                          <webapp>
 						    <groupId>nl.numworx.uploadwidget</groupId>
 						    <artifactId>uploadwidget-local</artifactId>
-						    <version>${project.version}</version>
+						    <version>2.5.48</version>
                             <type>war</type>
                             <contextPath>/dwo/dav/upload</contextPath>
                             <asWebapp>true</asWebapp>
