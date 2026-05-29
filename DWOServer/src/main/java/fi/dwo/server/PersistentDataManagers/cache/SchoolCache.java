@@ -35,6 +35,10 @@ public class SchoolCache {
 	public static void remove(String id) {
 		if (cache != null) cache.remove(id);
 	}
+	
+	public static void remove(PersistentSchool s) {
+		remove(s.getSchoolLogin());
+	}
 
 	static Cache<String, PersistentSchool> cache() {
 		return cache;
