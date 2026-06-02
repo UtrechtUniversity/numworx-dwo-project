@@ -942,10 +942,10 @@ public class SecuredSchoolAdminSchoolManager {
         ps = SchoolManager.edit(ps);
 // new school
         SchoolCache.putIfPresent(ps);
-        HasRoleCache.remove(sc); // school has changed.
+        HasRoleCache.remove(ps); // school has changed.
       } catch (OptimisticLockException ole) {
     	  LOG.log(Level.SEVERE, "updateSchool", ole);
-    	  HasRoleCache.remove(sc);
+    	  HasRoleCache.remove(ps);
     	  SchoolCache.remove(ps);
     	  throw new WebApplicationException(409);
       } catch (Exception e) {

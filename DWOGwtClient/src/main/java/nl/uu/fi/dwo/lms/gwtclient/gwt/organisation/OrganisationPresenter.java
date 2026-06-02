@@ -118,11 +118,7 @@ public class OrganisationPresenter {
     order = OrderType.asc;
     if (stub != null) stub.init();
     
-    DomSchool school = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
-    boolean premium = dwoGlobalVars.isPremium();
-    boolean visible = true /* was dwoGlobalVars.isTest() || dwoGlobalVars.isSaml() */;
-	view.initEditModules(school.teachersCanWrite(), school.accessControl() && premium, visible && premium);
-    view.initChooseClass(school.studentsCanRegisterForSchoolClasses());
+    initSchool();
     
     	DomSchoolOrganisation org = new DomSchoolOrganisation();
     	org.setLimit(restsize);
@@ -147,6 +143,14 @@ public class OrganisationPresenter {
     
     
   }
+
+private void initSchool() {
+	DomSchool school = dwoGlobalVars.getActiveSchoolRoleAndClass().getSchool();
+    boolean premium = dwoGlobalVars.isPremium();
+    boolean visible = true /* was dwoGlobalVars.isTest() || dwoGlobalVars.isSaml() */;
+	view.initEditModules(school.teachersCanWrite(), school.accessControl() && premium, visible && premium);
+    view.initChooseClass(school.studentsCanRegisterForSchoolClasses());
+}
 
   
 private final static DateTimeFormat DATE = DateTimeFormat.getFormat("yyMM");
@@ -331,12 +335,21 @@ protected Promise<Object> extractStudents(Promise<DomSchoolOrganisation> p0) {
     
   }
 
+  
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  Promise<Boolean> recover(Promise p) {
+	  initSchool();
+	  return p;
+  }
+  
   void setSchoolRights(DomSchool s, String rights) {
     DomSchoolFull school = new DomSchoolFull();
     school.setId(s.getId());
     school.setSchoolRights(rights);
     String r = rights;
-    service.updateSchool(school).then(p->{
+    service.updateSchool(school)
+    .recoverWith(this::recover)
+    .then(p->{
       s.setSchoolRights(r);
       dwoGlobalVars.getSchoolLogins().getSchoolsRolesAndClassesList().forEach(item -> 
       {  DomSchool ss = item.getSchool();
