@@ -2948,4 +2948,9 @@ LOG.info("time results = " + (-t) + " ms");
       attnDialog.setVisible(true);
     }
 
+	public static void setDwoProfile(DomDwoProfileFull dwoProfile) {
+		DWO.dwoProfile = dwoProfile;
+		DWO.dwoProfileID = dwoProfile.asLong().intValue();
+	}
+
 }
