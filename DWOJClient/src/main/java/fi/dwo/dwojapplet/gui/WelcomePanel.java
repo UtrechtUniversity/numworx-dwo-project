@@ -7,6 +7,7 @@ import fi.beans.loader.Loader;
 import fi.beans.numworxlf.Constants;
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JCheckBox;
+import fi.beans.numworxlf.JComboBox;
 import fi.beans.numworxlf.JOptionPane;
 import fi.beans.numworxlf.JTextField;
 import fi.beans.numworxlf.NumworxTextFieldUI;
@@ -32,6 +33,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -322,7 +325,10 @@ if(DwoHelper.isSamlLogin()) {
         Object org = null;
         if (linkdata != null && null != (org = linkdata.get("IDP"))) {
             linkcheck = new JButton();
-            linkcheck.setIcon(new ImageIcon(DwoHelper.getResourceImage("resources/entree-button-klein-donker.png")));
+ 
+            ImageIcon entreeIcon = new ImageIcon(DwoHelper.getResourceImage("resources/entree-button-klein-donker.png"));
+			ImageIcon surfIcon = new ImageIcon(DwoHelper.getResourceImage("resources/conext-button-klein-donker.png"));
+            linkcheck.setIcon(entreeIcon);
             linkcheck.addActionListener(this);
             linkcheck.setBackground(p.getBackground());
             //linkcheck.setFont(GuiConstants.NORMAL_TEXT);
@@ -331,6 +337,34 @@ if(DwoHelper.isSamlLogin()) {
             p.setSize(p.getWidth(), h + p.getHeight());
             linkcheck.setLocation(3, 80);
             linkcheck.setSize(linkcheck.getPreferredSize());
+            JComboBox<String> swap = new JComboBox<>(new String[] { "entree", "conext" } );
+            
+            p.add(swap);
+            swap.setSize(swap.getPreferredSize());
+            swap.setLocation(3 + linkcheck.getWidth() - swap.getWidth() + 19, 80+linkcheck.getHeight() - swap.getHeight());
+            swap.addItemListener(new ItemListener() {
+				
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					if (e.getStateChange() == ItemEvent.SELECTED) {
+						int i = swap.getSelectedIndex();
+						String v = (String) swap.getSelectedItem();
+						linkdata.put("IDP", v);
+						switch(i) {
+						case 1:
+							linkcheck.setIcon(surfIcon);
+							break;
+						case 0: // entree
+							linkcheck.setIcon(entreeIcon);
+							break;
+						}
+						linkcheck.repaint();
+					}
+					
+				}
+            });
+            swap.setSelectedItem(org);
+            
         } else {
         	linkcheck = new JButton(); // voorkom NPE;
         }
