@@ -39,9 +39,17 @@ public class MethodsProperties extends Vector<DomMethod> implements Comparator<D
         InputStream in;
         DomMethod row;
         in = DwoHelper.getAu().getStream("resources/none.json");
-        row = genson.deserialize(in, DomMethod.class);
-        add(row);
-        in.close();
+        if (in != null) {
+        	row = genson.deserialize(in, DomMethod.class);
+        	add(row);
+        	in.close();
+        } else {
+        	row = new DomMethod(); row.method = "No Method"; row.standard=true;
+        	row.books = Collections.emptyList();
+        	row.chapters = Collections.emptyList();
+        	row.edges = Collections.emptyList();
+        	add(row);
+        }
         
         List<DomMethod> list = getCurrentList();
         Collections.sort(list,this);
@@ -84,7 +92,7 @@ public class MethodsProperties extends Vector<DomMethod> implements Comparator<D
     return SecureTeacherMethodManager.getList(DWO.getDwoProfile());
   }; 
   
-  void refresh() {
+  public void refresh() {
     try {
       List<DomMethod> list = getCurrentList();
       Collections.sort(list, this);
