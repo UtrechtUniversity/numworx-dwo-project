@@ -110,6 +110,7 @@ class Util {
     LOG.info("getPages correctie = " + Arrays.asList(correctie));
     boolean checkDocent[] = getCheckDocent(launchdata, review_check, correctie, aantal, premium);
     for(int i = 0; i < aantal; i++) {
+     
       String label = String.valueOf(i+1);
       // if hasTitle, dan label = launchdata....getString("titel");
       JSONObject opdracht = launchdata.isObject().get("opdracht_1_"+(i+1)).isObject();
@@ -137,7 +138,17 @@ class Util {
     	  item.setCorrectie(correctie[i].doubleValue());
     	  item.setMaxScore(maxScores[i].doubleValue()); // https://numworx.atlassian.net/browse/LMS-683
       }
-      PersistenceId key = new PersistenceId("LOCAL;none;" + label);
+      
+      if (opdracht.containsKey("maxFactor")) {
+    	  JSONValue value = opdracht.get("maxFactor");
+    	  if (value != null) {
+    		  JSONNumber n = value.isNumber();
+    		  if (n != null) {
+    			  item.setMaxFactor((float) n.doubleValue());
+    		  }
+    	  }
+      }
+      PersistenceId key = new PersistenceId("LOCAL;none;" + i);
       result.put(key, item);
     }
     return result;

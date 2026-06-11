@@ -47,6 +47,8 @@ import fi.dwo.server.PersistentDataManagers.access.SchoolAdminTeacherDomainAutho
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_P_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
+import fi.dwo.server.PersistentDataManagers.cache.SchoolCache;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoSystemParametersManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
@@ -79,15 +81,19 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
+
+import org.eclipse.persistence.internal.identitymaps.WeakCacheKey;
 
 import nl.uu.fi.dwo.rest.util.DwoDateUtilities;
 
@@ -933,7 +939,15 @@ public class SecuredSchoolAdminSchoolManager {
       if (school.getExport() != null)
         ps.setExport(school.getExport());
       try {
-        SchoolManager.edit(ps);
+        ps = SchoolManager.edit(ps);
+// new school
+        SchoolCache.putIfPresent(ps);
+        HasRoleCache.remove(ps); // school has changed.
+      } catch (OptimisticLockException ole) {
+    	  LOG.log(Level.SEVERE, "updateSchool", ole);
+    	  HasRoleCache.remove(ps);
+    	  SchoolCache.remove(ps);
+    	  throw new WebApplicationException(409);
       } catch (Exception e) {
         LOG.log(Level.SEVERE, "update school for schooladmin", e);
         throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InternalError, e.getMessage());

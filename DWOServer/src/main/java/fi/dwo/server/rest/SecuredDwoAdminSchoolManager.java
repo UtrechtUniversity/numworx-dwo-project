@@ -42,6 +42,7 @@ import nl.uu.fi.dwo.rest.entities.RestSchoolFull;
 import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.DwoAdminDomainAuthorizer.DwoAdminState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
 import fi.dwo.server.PersistentDataManagers.cache.SchoolCache;
 import fi.dwo.server.PersistentDataManagers.core.ACLManager;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
@@ -301,6 +302,7 @@ public class SecuredDwoAdminSchoolManager {
         PersistentSchool editSchool =
             SchoolManager.findEntity(MySQLPersistenceId.getNativeId(school));
         SchoolCache.remove(editSchool.getSchoolLogin());
+        HasRoleCache.remove(editSchool);
         // User to update is logged in user.
         editSchool.setExpire(school.getExpire());
         // editSchool.setExport(school.getExport());

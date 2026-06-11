@@ -33,7 +33,7 @@ public class SchoolManager extends AbstractManager {
      * @param school
      * @throws Exception
      */
-    public static void edit(PersistentSchool school) throws PersistenceException {
+    public static PersistentSchool edit(PersistentSchool school) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -41,6 +41,9 @@ public class SchoolManager extends AbstractManager {
             school.changeTimestamp();
             school = em.merge(school);
             em.getTransaction().commit();
+            return school;
+        } catch (PersistenceException pe) {
+        	throw pe;
         } catch (Exception e) {
             String msg = e.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {

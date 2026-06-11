@@ -22,6 +22,8 @@ import fi.dwo.server.PersistentDataManagers.access.AnonDomainAuthorizer;
 import fi.dwo.server.PersistentDataManagers.access.TeacherDomainAuthorizer.TeacherState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_HR_R_S_SG_U;
 import fi.dwo.server.PersistentDataManagers.access.UserDomainAuthorizer.UserState_U;
+import fi.dwo.server.PersistentDataManagers.cache.HasRoleCache;
+import fi.dwo.server.PersistentDataManagers.cache.SchoolCache;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
@@ -74,6 +76,8 @@ public class SecuredTeacherSchoolManager {
       if (school.getExport() != null)
         ps.setExport(school.getExport());
       try {
+    	SchoolCache.remove(ps);
+    	HasRoleCache.remove(ps);
         SchoolManager.edit(ps);
       } catch (Exception e) {
           LOG.log(Level.SEVERE, "update school for teacher", e);
