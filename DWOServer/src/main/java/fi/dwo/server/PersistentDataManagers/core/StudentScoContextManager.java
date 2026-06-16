@@ -18,6 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -55,8 +56,10 @@ public class StudentScoContextManager extends AbstractManager {
             if (list.isEmpty()) {
             	studentsco.changeTimestamp();
             	em.persist(studentsco);
+                em.getTransaction().commit();
             	LOG.info("create studentsco " + studentsco.getStudentSco() + " for " + studentsco.getScoID() + " and " + studentsco.getPersistentHasRolePK().getUserID());
         	} else {
+                em.getTransaction().commit();
         		PersistentStudentScoContext i = list.get(0);
         		studentsco.setClassID(i.getClassID());
         		studentsco.setCompletionStatus(i.getCompletionStatus());
@@ -71,7 +74,20 @@ public class StudentScoContextManager extends AbstractManager {
         		studentsco.setTotalTime(i.getTotalTime());
             	LOG.info("use studentsco " + studentsco.getStudentSco() + " for " + studentsco.getScoID() + " and " + studentsco.getPersistentHasRolePK().getUserID());
         	}
-            em.getTransaction().commit();
+
+        } 
+        catch (RollbackException rb) {
+            LOG.log(Level.SEVERE, "Can't create the PersistentStudentScoContext: " + rb);
+        	em.close(); em = null;
+        	try {
+				Thread.sleep(Math.round(Math.random()*20+1));
+			} catch (InterruptedException e) {
+			}
+        	create(studentsco); // try again
+        }
+        catch (RuntimeException e) {
+            LOG.log(Level.SEVERE, "Can't create the PersistentStudentScoContext.", e);
+            throw e;
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentStudentScoContext.", e);
             throw new PersistenceException(e);

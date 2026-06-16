@@ -52,8 +52,8 @@ public class PersistentStudentScoData implements Serializable, PersistentEntity 
     @Column(name = "suspendData", nullable = false, length = 16777215)
     private String suspendData;
     @Lob
-    @Size(max = 65535)
-    @Column(name = "cocd", length = 65535)
+    @Size(max = 16777215)
+    @Column(name = "cocd", length = 16777215)
     private String cocd;
     @Column(name = "optlock")
     @Version
