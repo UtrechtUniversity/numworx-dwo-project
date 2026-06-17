@@ -15,8 +15,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -36,38 +38,56 @@ public class StudentScoContextManager extends AbstractManager {
     /**
      * Create.
      *
-     * @param studentOf
+     * @param studentsco
      */
-    public static void create(PersistentStudentScoContext studentOf) throws PersistenceException {
+    public static void create(PersistentStudentScoContext studentsco) throws PersistenceException {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             // uniqueness constraint: scoid + userid + sgid, not in database!      
-            PersistentHasRolePK userkey = studentOf.getPersistentHasRolePK();
-            Long scokey = studentOf.getScoID();
+            PersistentHasRolePK userkey = studentsco.getPersistentHasRolePK();
+            Long scokey = studentsco.getScoID();
             TypedQuery<PersistentStudentScoContext> q = em.createNamedQuery("PersistentStudentScoContext.findByScoIDandHasRolePK", PersistentStudentScoContext.class);
             q.setParameter("scoID", scokey);
             q.setParameter("keyID", userkey);
+            q.setLockMode(LockModeType.PESSIMISTIC_WRITE);
             List<PersistentStudentScoContext> list = q.getResultList();
             if (list.isEmpty()) {
-            	studentOf.changeTimestamp();
-            	em.persist(studentOf);
+            	studentsco.changeTimestamp();
+            	em.persist(studentsco);
+                em.getTransaction().commit();
+            	LOG.info("create studentsco " + studentsco.getStudentSco() + " for " + studentsco.getScoID() + " and " + studentsco.getPersistentHasRolePK().getUserID());
         	} else {
+                em.getTransaction().commit();
         		PersistentStudentScoContext i = list.get(0);
-        		studentOf.setClassID(i.getClassID());
-        		studentOf.setCompletionStatus(i.getCompletionStatus());
-        		studentOf.setCreateDate(i.getCreateDate());
-        		studentOf.setCreateTime(i.getCreateTime());
-        		studentOf.setLastChangeTimeStamp(i.getLastChangeTimeStamp());
-        		studentOf.setLocation(i.getLocation());
-        		studentOf.setOptlock(i.getOptlock());
-        		studentOf.setScore(i.getScore());
-        		studentOf.setSessionTime(i.getSessionTime());
-        		studentOf.setStudentSco(i.getStudentSco());
-        		studentOf.setTotalTime(i.getTotalTime());
+        		studentsco.setClassID(i.getClassID());
+        		studentsco.setCompletionStatus(i.getCompletionStatus());
+        		studentsco.setCreateDate(i.getCreateDate());
+        		studentsco.setCreateTime(i.getCreateTime());
+        		studentsco.setLastChangeTimeStamp(i.getLastChangeTimeStamp());
+        		studentsco.setLocation(i.getLocation());
+        		studentsco.setOptlock(i.getOptlock());
+        		studentsco.setScore(i.getScore());
+        		studentsco.setSessionTime(i.getSessionTime());
+        		studentsco.setStudentSco(i.getStudentSco());
+        		studentsco.setTotalTime(i.getTotalTime());
+            	LOG.info("use studentsco " + studentsco.getStudentSco() + " for " + studentsco.getScoID() + " and " + studentsco.getPersistentHasRolePK().getUserID());
         	}
-            em.getTransaction().commit();
+
+        } 
+        catch (RollbackException rb) {
+            LOG.log(Level.SEVERE, "Can't create the PersistentStudentScoContext: " + rb);
+        	em.close(); em = null;
+        	try {
+				Thread.sleep(Math.round(Math.random()*20+1));
+			} catch (InterruptedException e) {
+			}
+        	create(studentsco); // try again
+        }
+        catch (RuntimeException e) {
+            LOG.log(Level.SEVERE, "Can't create the PersistentStudentScoContext.", e);
+            throw e;
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Can't create the PersistentStudentScoContext.", e);
             throw new PersistenceException(e);
