@@ -998,6 +998,10 @@ public class LeerdomeinEditPanel2 extends JPanel
 			public Component asComponent() {
 				return LeerdomeinEditPanel2.this.asComponent();
 			}
+			
+			@Override public void  save(DomStudentModelStructure model) {
+				setModel0(model);
+			}
 		};
 
 		Bestand.add(new JMenuItem(new ExportAction(exporter)));
@@ -1025,6 +1029,10 @@ public class LeerdomeinEditPanel2 extends JPanel
 		Instellingen.add(new JMenuItem(rva));
 		RemoveVariantAction dva = new RemoveVariantAction();
 		Instellingen.add(new JMenuItem(dva));
+		
+		/* Hack voor peter.
+		 * Instellingen.addSeparator(); Instellingen.add(new NoMethodAction(exporter));
+		 */		
 		
 		bar.add(Box.createHorizontalGlue());
 
@@ -2012,5 +2020,11 @@ public class LeerdomeinEditPanel2 extends JPanel
       }
       
     }
+
+	@Override
+	public void save(DomStudentModelStructure model) {
+		// push model in tree
+		
+	}
 
 }

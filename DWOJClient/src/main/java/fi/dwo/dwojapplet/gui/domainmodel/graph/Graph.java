@@ -1118,6 +1118,8 @@ private String voorkennisPopupVariant;
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		if (crash)
+			crash = false;
 		int dx = e.getX() - startX;
 		int dy = e.getY() - startY;
 		
@@ -1132,6 +1134,10 @@ private String voorkennisPopupVariant;
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		if (crash)
+		{
+			System.out.println(e); // should not happen!!!!
+		}
 		GraphNode mouseOverNode = null;
 		int ex = (int) ((e.getX()-origin.x)/factor);
 		int ey = (int) ((e.getY()-origin.y)/factor);
@@ -1144,8 +1150,11 @@ private String voorkennisPopupVariant;
 		}
 
 		if (mouseOverNode != null) {
-			//blurVoorkennis(mouseOverNode);
-		} else {
+			{
+				//blurVoorkennis(mouseOverNode);
+				crash = false;
+			}
+		} else if (!crash) {
 			for (int i = 0; i < graphNodes.size(); i++) {
 				graphNodes.get(i).setBlur(false);
 			}
@@ -1182,6 +1191,7 @@ private String voorkennisPopupVariant;
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		crash = false;
 		startX = e.getX();
 		startY = e.getY();
 		
@@ -1522,6 +1532,9 @@ private String voorkennisPopupVariant;
 		}
 	}
 
+	
+	public boolean crash; // slowdown restore blurring
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==zoomInButton && factor<1) {
@@ -1549,6 +1562,7 @@ private String voorkennisPopupVariant;
 		}
 		if (e.getSource() == diVoorkennis) {
 		  blurVoorkennis(voorkennisPopupNode);
+		  crash = true;
 		}
 		if(e.getSource()==voorkennisWegButton) {
 			voorkennisWegButton.setVisible(false);
