@@ -1134,10 +1134,6 @@ private String voorkennisPopupVariant;
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (crash)
-		{
-			System.out.println(e); // should not happen!!!!
-		}
 		GraphNode mouseOverNode = null;
 		int ex = (int) ((e.getX()-origin.x)/factor);
 		int ey = (int) ((e.getY()-origin.y)/factor);
