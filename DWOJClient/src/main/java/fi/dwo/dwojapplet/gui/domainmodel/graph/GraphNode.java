@@ -664,6 +664,8 @@ public class GraphNode {
 	public String search(int x, int y) {
 		for (String code : visible) {
 			Point location = getLocation(code);
+			if (location==null) 
+				continue;
 			Rectangle r = new Rectangle(location.x - size / 2, location.y - size / 2, size, size);
 			if (r.contains(x, y))
 				return code;
