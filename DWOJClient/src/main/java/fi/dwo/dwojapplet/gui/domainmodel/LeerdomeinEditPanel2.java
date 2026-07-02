@@ -1284,7 +1284,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 					pref.width = 380;
 					leftBox.setPreferredSize(pref);
 					graph.setPreferredSize(new Dimension(1000, 650));
-					graph.setModel(model, null, activeMethod);
+					graph.setModel(tree, null, activeMethod);
 					
 					splitLeft.setBottomComponent(rightBox);
 					splitLeft.setDividerSize(20);

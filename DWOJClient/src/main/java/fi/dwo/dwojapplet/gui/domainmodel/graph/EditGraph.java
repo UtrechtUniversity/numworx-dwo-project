@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -25,7 +26,7 @@ import fi.beans.numworxlf.JButton;
 
 public class EditGraph extends JPanel implements MouseListener, MouseMotionListener, ActionListener{
 
-	private ArrayList<GraphNode> graphNodes = new ArrayList<GraphNode>();
+	private List<GNode> graphNodes = new ArrayList<>();
 	private ArrayList<GraphEdge> graphEdges = new ArrayList<GraphEdge>();
 	
 	protected ArrayList<ChapterGraphNode> chapterNodes = new ArrayList<ChapterGraphNode>();
@@ -34,10 +35,10 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	protected ArrayList<BookGraphNode> bookNodes = new ArrayList<BookGraphNode>();
 	protected ArrayList<BookGraphEdge> bookEdges = new ArrayList<BookGraphEdge>();
 	
-	private GraphNode activeNode;
+	private GNode activeNode;
 	private String activeCode;
-	private GraphNode possibleSourceNode;
-	private GraphNode possibleTargetNode;
+	private GNode possibleSourceNode;
+	private GNode possibleTargetNode;
 	
 	private GraphEdge tempEdge;
 	
@@ -62,7 +63,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	
 	private PopupMenu popup;
     private MenuItem miRemove;
-    private GraphNode editPopupNode;
+    private GNode editPopupNode;
     
     public boolean modelJustSet = false;
     
@@ -198,7 +199,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 	}
 	
 	
-	public void setGraphNodes(ArrayList<GraphNode> graphNodes) {
+	public void setGraphNodes(List<GNode> graphNodes) {
 		this.graphNodes = graphNodes;
 	}
 	
@@ -206,7 +207,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		this.graphEdges = graphEdges;
 	}
 	
-	public ArrayList<GraphNode> getGraphNodes() {
+	public List<GNode> getGraphNodes() {
 		return graphNodes;
 	}
 	
@@ -244,8 +245,8 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		repaint();
 	}
 	
-	public GraphNode findNode(int x, int y) {
-		GraphNode node = null;
+	public GNode findNode(int x, int y) {
+		GNode node = null;
 		int ex = (int) ((x-origin.x)/factor);
 		int ey = (int) ((y-origin.y)/factor);
 		for (int i = 0; i < graphNodes.size(); i++) {
@@ -315,12 +316,12 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 				break;
 			}
 		}
-		if(e.isShiftDown() && activeNode != null) {
+		if(e.isShiftDown() && activeNode instanceof GraphNode) {
 			possibleSourceNode = activeNode;
 			GraphNode helpNode = new GraphNode(ex,ey);
 			helpNode.setVisible(true);
 			helpNode.setSelected(true);
-			tempEdge = new GraphEdge(possibleSourceNode, helpNode);
+			tempEdge = new GraphEdge((GraphNode) possibleSourceNode, helpNode);
 			graphEdges.add(tempEdge);
 			activeNode = null;
 		}
@@ -346,8 +347,8 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		}
 		if(e.isShiftDown()) {
 			possibleTargetNode = activeNode;
-			if(possibleTargetNode != possibleSourceNode && possibleTargetNode != null) {
-				graphEdges.add(new GraphEdge(possibleSourceNode, possibleTargetNode));
+			if(possibleTargetNode != possibleSourceNode && possibleTargetNode instanceof GraphNode) {
+				graphEdges.add(new GraphEdge((GraphNode) possibleSourceNode, (GraphNode) possibleTargetNode));
 				repaint();
 			}
 		}
@@ -380,7 +381,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 //					graphNodes.get(i).setSelected(true);	
 //				else
 //					graphNodes.get(i).setSelected(false);
-			    GraphNode node = graphNodes.get(i);
+			    GNode node = graphNodes.get(i);
 			    if (node.isVisible()) {
 			      node.selectInside(selectieRectangle, origin, factor);
 			    }
@@ -394,7 +395,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		
 		if(Math.abs(pressedX-e.getX())>2 || Math.abs(pressedY-e.getY())>2)
 			return;
-		GraphNode node = null;
+		GNode node = null;
 		for(int i=0 ; i<graphNodes.size() ; i++) {
 			if(graphNodes.get(i).contains(ex, ey) && graphNodes.get(i).isVisible()) {
 				node = graphNodes.get(i);
@@ -515,7 +516,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
       boolean set = false;
 	     for(int i=0 ; i<graphNodes.size() ; i++) {
            if(graphNodes.get(i).contains(ex, ey) && graphNodes.get(i).isVisible()) {
-               GraphNode activeNode = graphNodes.get(i);
+               GNode activeNode = graphNodes.get(i);
                //activeNode.setSelected(true);
                String activeCode = activeNode.search(ex,ey);
                String variant = activeNode.getVariant(activeCode);
@@ -614,7 +615,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		int yMin = 10000;//graphNodes.get(0).getLocation().y;
 		
 		for (int i = 0; i < graphNodes.size(); i++) {
-			GraphNode node = graphNodes.get(i);
+			GNode node = graphNodes.get(i);
             if(node.isVisible()) {
               for(String code: node.getVisibleSet()) {
 				Point location = node.getLocation(code);

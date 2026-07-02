@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import javax.swing.JPanel;
 import javax.swing.tree.TreeModel;
 
+import fi.beans.numworxlf.JTree;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelCategoryScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelObjectiveScore;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
@@ -68,7 +69,7 @@ public class EditableGraph extends JPanel implements ActionListener{
 	public void setScore(DomStudentModelStructureScore scores) {
 		HashMap<String, Double> map = new HashMap<>();
 		setScoreMap(scores, map);
-		for (GraphNode node : graph.graphNodes) {
+		for (GNode node : graph.graphNodes) {
 			String id = node.getID();
 			Double score = map.get(id);
 			node.setSuccesFailScore(score);
@@ -128,8 +129,8 @@ public class EditableGraph extends JPanel implements ActionListener{
   public Set<String> getVisibleNodes() {
     if (!graph.isFiltered()) return Collections.emptySet();
     return graph.graphNodes.stream()
-        .filter(GraphNode::isVisible)
-        .map(GraphNode::getID)
+        .filter(GNode::isVisible)
+        .map(GNode::getID)
         .collect(Collectors.toSet());
   }
 
@@ -142,5 +143,16 @@ public class EditableGraph extends JPanel implements ActionListener{
     if (!graph.isFiltered()) return Collections.emptyMap();
     return graph.getFilter();
   }
+
+public void setModel(JTree tree, Map<String, Map<String, Set<Integer>>> filter, PersistenceId activeMethod) {
+	
+	TreeModel model = tree.getModel();
+	if (!graph.graphNodes.isEmpty() && !Objects.equals(activeMethod, graph.activeMethod))
+		updateModel(model); // extra, save graph that will become invisible.
+	graph.setModel(tree, filter, activeMethod);
+	editGraph.setModelJustSet(true);
+
+	
+}
 
 }
