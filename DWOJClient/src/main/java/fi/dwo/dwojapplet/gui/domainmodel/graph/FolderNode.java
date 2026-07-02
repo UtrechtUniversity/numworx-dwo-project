@@ -94,11 +94,8 @@ public class FolderNode extends AbstractNode implements GNode {
 				
 				Polygon poly = new Polygon();
 				for(Point p: hull) poly.addPoint(origin.x + (int) ((p.x) * factor), origin.y + (int) ((p.y) * factor));
-				Rectangle rect = getTextBB(NULLKEY);
-				rect.height = (int) (rect.height * factor);
-				rect.width  = (int) (rect.width * factor);
-				rect.x = (int) (origin.x + rect.x * factor);
-				rect.y = (int) (origin.y + rect.y * factor);
+				Rectangle rect = new Rectangle(x-textLength/2, y-textHeight / 2, textLength, textHeight);
+				
 				rect.grow(3, 3);
 				Area path = new Area(rect);
 				path.add(new Area(poly));

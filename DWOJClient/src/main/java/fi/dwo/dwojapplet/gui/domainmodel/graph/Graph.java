@@ -1369,6 +1369,14 @@ private String voorkennisPopupVariant;
 				if (nv != null) {
 					FolderNode pn = folderById.get(idOf(nv));
 					if (pn != null) pn.add(fn);
+					else {
+						pn = new FolderNode(new ArrayList<>()); pn.add(fn);
+						pn.description = nv.title;
+						pn.ID = nv.info.getId();
+						pn.subdomein = "";
+						folderById.put(pn.ID, pn);
+						values.add(cnt++,pn);
+					}
 				}
 			    fn.expand();
 				values.add(cnt++,fn);

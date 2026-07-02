@@ -5,14 +5,13 @@ import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
 
-interface GNode {
+public interface GNode {
 
 	static final String NOTFOUND = "NOTFOUND";
 	static final String NULLKEY = "null-null-null";

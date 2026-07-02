@@ -9,11 +9,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-class GraphTreeAction implements ActionListener {
+public class GraphTreeAction implements ActionListener {
 
   private JTree tree;
 
-  GraphTreeAction(JTree tree) {
+  public GraphTreeAction(JTree tree) {
     this.tree = tree;
   }
 
