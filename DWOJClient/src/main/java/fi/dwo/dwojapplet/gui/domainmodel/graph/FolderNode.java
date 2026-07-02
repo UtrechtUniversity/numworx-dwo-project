@@ -5,10 +5,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,9 +29,11 @@ public class FolderNode extends AbstractNode implements GNode {
 
 
 	
+	private static final Rectangle EMPTY_RECT = new Rectangle();
 	List<Point> hull = Collections.emptyList();
 	final Collection<GNode> folder = new ArrayList<>();
 	boolean collaps;
+	Shape last = EMPTY_RECT;
 	
 	@Override
 	public void paint(Graphics gr, Point origin, double factor, boolean connectInstances) {
@@ -86,8 +91,19 @@ public class FolderNode extends AbstractNode implements GNode {
 				// was oval met rand, wordt polygon
 				
 				//g.fillOval(x - size / 2, y - size / 2 + textHeight / 6, size, size);
-				Polygon shape = new Polygon();
-				for(Point p: hull) shape.addPoint(origin.x + (int) ((p.x) * factor), origin.y + (int) ((p.y) * factor));
+				
+				Polygon poly = new Polygon();
+				for(Point p: hull) poly.addPoint(origin.x + (int) ((p.x) * factor), origin.y + (int) ((p.y) * factor));
+				Rectangle rect = getTextBB(NULLKEY);
+				rect.height = (int) (rect.height * factor);
+				rect.width  = (int) (rect.width * factor);
+				rect.x = (int) (origin.x + rect.x * factor);
+				rect.y = (int) (origin.y + rect.y * factor);
+				rect.grow(3, 3);
+				Area path = new Area(rect);
+				path.add(new Area(poly));
+				Shape shape = path;
+				last = shape.getBounds(); // contains
 				g.fill(shape);
 				g.setColor(nodeBorderColor);
 				g.setStroke(new BasicStroke(2f * (float) factor));
@@ -125,6 +141,7 @@ public class FolderNode extends AbstractNode implements GNode {
 
 	public void expand() {
 		collaps = false;
+		last = EMPTY_RECT;
 		for (GNode n: folder)
 			if (n instanceof FolderNode) ((FolderNode) n).show(); else
 			n.setVisible(methodeInfos,true);
@@ -142,6 +159,7 @@ public class FolderNode extends AbstractNode implements GNode {
 	
 	public void hide() {
 		setVisible(methodeInfos, false);
+		last = EMPTY_RECT;
 		for (GNode n: folder) {
 			if (n instanceof FolderNode) ((FolderNode) n).hide();
 			else
@@ -180,6 +198,39 @@ public class FolderNode extends AbstractNode implements GNode {
 
 	public Stream<Point> getLocationStream(String key) {
 		return folder.stream().flatMap(n -> n.getLocationStream(key));
+	}
+
+
+	@Override
+	public Object getSuccesFailScore() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Paint getEdgeSuccesFailColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Object getMethodeInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public boolean contains(int x, int y) {
+		return collaps && last.contains(x, y);
+	}
+
+
+	@Override
+	public String search(int x, int y) {
+		return NULLKEY;
 	}
 
 }

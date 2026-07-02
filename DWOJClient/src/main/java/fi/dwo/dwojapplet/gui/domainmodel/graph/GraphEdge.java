@@ -13,9 +13,9 @@ import java.util.Set;
 
 public class GraphEdge {
 
-	private GraphNode source;
-	private GraphNode target;
-	private double vkFactor = 1;
+	private GNode source;
+	private GNode target;
+	private float vkFactor = 1;
 	private int arrowSize = 5;
 	
 	private boolean blur = false;
@@ -29,7 +29,7 @@ public class GraphEdge {
 		this.target = target;
 	}
 	
-	public GraphEdge(GraphNode source, GraphNode target, double vkFactor) {
+	public GraphEdge(GNode source, GNode target, float vkFactor) {
 		this.source = source;
 		this.target = target;
 		this.vkFactor = vkFactor;
@@ -74,7 +74,7 @@ public class GraphEdge {
 			return;
 		Graphics2D g = (Graphics2D)gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		float a = (float)(arrowSize*factor);
+		float a = (float)(arrowSize*factor) * Math.max(1f, vkFactor);
 		
 //		boolean doorsnedeLeeg = true;
 //		Set<String> sourceVisible = source.getVisibleSet();
@@ -140,7 +140,7 @@ public class GraphEdge {
 			       		g.setStroke(new BasicStroke(5f*(float)factor));
 			//        if(getLength()>600 || source.getTempLocation()!=null) {
 			//        System.out.println("vkFactor = "+ vkFactor);
-			        		g.setStroke(new BasicStroke(1.3f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{(float)vkFactor*5f, 5f-(float)vkFactor*5f}, 5));
+			        		g.setStroke(new BasicStroke(1.3f*(float)factor * Math.max(1f, vkFactor), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{vkFactor*5f, Math.max(0f, 5f-vkFactor*5f)}, 5));
 			//        		if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)
 			//        			g.setStroke(new BasicStroke(5f*(float)factor, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{5,5}, 5));
 			//        		
@@ -174,11 +174,11 @@ public class GraphEdge {
 //		return (int)Math.sqrt((x1-x0)*(x1-x0)+(y1-y0)*(y1-y0));
 //	}
 	
-	public GraphNode getSource() {
+	public GNode getSource() {
 		return source;
 	}
 	
-	public GraphNode getTarget() {
+	public GNode getTarget() {
 		return target;
 	}
 	

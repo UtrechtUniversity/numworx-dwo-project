@@ -1,6 +1,7 @@
 package fi.dwo.dwojapplet.gui.domainmodel.graph;
 
 import java.awt.Graphics;
+import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Collection;
@@ -26,7 +27,7 @@ interface GNode {
 	default Stream<Point> getLocationStream(String key) { return Stream.of(getLocation(key)); }
 	boolean getBlur();
 	boolean isVisible();
-	Object getTempLocation();
+	Point getTempLocation();
 	Set<String> getVisibleSet();
 	Rectangle getTextBB(String code);
 	boolean isVisible(String hfstCode);
@@ -58,5 +59,8 @@ interface GNode {
 	void setSelected(String t, boolean b);
 	Collection<String> getMethodeCodes();
 	void setLocation(int ex, int ey);
+	Object getSuccesFailScore();
+	Paint getEdgeSuccesFailColor();
+	Object getMethodeInfo();
 
 }

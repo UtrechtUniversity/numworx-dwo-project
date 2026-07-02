@@ -325,13 +325,6 @@ private String voorkennisPopupVariant;
 			g.drawRect(1, 1, getWidth()-2, getHeight()-2);
 			g.fillRect(1, 1, getWidth()-2, 26);
 			
-//			g.setFont(new Font("SansSerif", Font.BOLD,16));
-//			FontMetrics fm = g.getFontMetrics();
-//			int textHeight = fm.getAscent();
-//			g.setColor(Color.white);
-//			if(!"".equals(selectedBookTitle))
-//				g.drawString(">", 220, 5*textHeight/4);
-//			g.drawString(selectedBookTitle, 260, 5*textHeight/4);
 		}
 		if(factor<0.20) {
 			for(int i=0 ; i<bookNodes.size() ; i++) {
@@ -362,15 +355,32 @@ private String voorkennisPopupVariant;
 		
 		for (int i = 0; i < graphEdges.size(); i++) {
 			GraphEdge edge = graphEdges.get(i);
-			GraphNode source = edge.getSource();
-			GraphNode target = edge.getTarget();
+			GraphNode source = (GraphNode) edge.getSource();
+			GraphNode target = (GraphNode) edge.getTarget();
 //			Point p = makeTempLocation(source, target);
 //			if(source.getTempLocation()==null)
 //				source.setTempLocation(makeTempLocation(source, target));
 //			if(edge.getLength() < 600)
 //				source.setTempLocation(null);
-			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target, selectedMethod) || graphEdges.get(i).isVoorkennisTree())
-				graphEdges.get(i).paint(g, origin, factor);
+			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target, selectedMethod) || edge.isVoorkennisTree())
+			{
+				edge.paint(g, origin, factor);
+				if (!edge.isVoorkennisTree()) {
+				int size[] = new int[1];
+				GNode s = visibleParent(source, size);
+				int   ssize = size[0];
+				size[0] = 0;
+				GNode t = visibleParent(target, size);
+				int tsize = size[0];
+				int msize = Math.min(tsize, ssize);
+				int maxsize = Math.max(tsize, ssize);
+				if (s != null && t != null && s != t && maxsize > 0) {
+					edge = new GraphEdge(s, t, msize + 1);
+					edge.paint(g, origin, factor);
+				}
+				}
+				
+			}
 		}
 		
 		
@@ -400,6 +410,18 @@ private String voorkennisPopupVariant;
 		//zoomFitButton.paint(g);
 	}
 	
+	private GNode visibleParent(GNode source, int[] size) {
+		while (source != null && !source.isVisible()) {
+			String id = idOf(source);
+			NodeVector nv = parentById.get(id);
+			if (nv == null) return null;
+			source = folderById.get(nv.getInfo().getId());
+			size[0]++;
+		}
+		return source;
+	}
+
+
 	private boolean onPanel(GraphNode node) {
 	  for (String code : node.getVisibleSet()) {
 		Point p = node.getLocationOnPanel(code, origin, factor);
@@ -475,8 +497,8 @@ private String voorkennisPopupVariant;
 //			}
 			Set<ChapterGraphEdge> chapterEdgeSet = new HashSet<>();
 			for(GraphEdge edge: graphEdges) {
-			  GraphNode from = edge.getSource();
-			  GraphNode to   = edge.getTarget();
+			  GraphNode from = (GraphNode) edge.getSource();
+			  GraphNode to   = (GraphNode) edge.getTarget();
 		 	  Collection<DomStudentModelMethodInfo> fromChapters = from.getMethodeInfos();
 		 	  Collection<DomStudentModelMethodInfo> orgFromChapters = fromChapters;
 		 	  if (fromChapters == null) continue;
@@ -1231,13 +1253,15 @@ private String voorkennisPopupVariant;
 		GNode node = null;
 		String nodeVariant = "";
 		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(graphNodes.get(i).contains(ex, ey) || graphNodes.get(i).contains(e.getX(), e.getY())) {
-				node = graphNodes.get(i);
+			node = graphNodes.get(i);
+			if(node.contains(ex, ey) || node.contains(e.getX(), e.getY())) {
+				
 				String code = node.search(ex, ey);
 				String v = node.getVariant(code);
 				if (v != null) nodeVariant = "/" + v;
 				break;
 			}
+			node = null;
 		}
 		if(node!=null) {
 			produceAction(node.getID() + nodeVariant);
@@ -1416,10 +1440,10 @@ private String voorkennisPopupVariant;
 				    String[] sourceStrings = source.split("/");
 				    source = sourceStrings[0];
 				   
-				    double vkfactor = 1;
+				    float vkfactor = 1;
 				    if(sourceStrings.length>1) {
 				   		System.out.println("vkFactor = "+ vkfactor);
-				   		vkfactor = Double.parseDouble(sourceStrings[1]);
+				   		vkfactor = Float.parseFloat(sourceStrings[1]);
 				    }
 				    GraphNode gns = graphMap.get(source);
 					if (gns != null) {
@@ -1672,6 +1696,7 @@ private String voorkennisPopupVariant;
 	
 	//ActionProducer
 	private ActionListener actionListener = null;
+	private boolean editMode;
 
 	public void addActionListener(ActionListener l) {
 		actionListener = AWTEventMulticaster.add(actionListener, l);
@@ -1705,7 +1730,6 @@ public void setModel(JTree tree, Map<String, Map<String, Set<Integer>>> filter2,
 	tree.removeTreeExpansionListener(this);
 	if (activeMethod2 == null)
 		tree.addTreeExpansionListener(this);
-	
 }
 
 
@@ -1727,6 +1751,7 @@ public void treeExpanded(TreeExpansionEvent event) {
 
 @Override
 public void treeCollapsed(TreeExpansionEvent event) {
+	if (editMode) return;
 	Object o = event.getPath().getLastPathComponent();
 	o = ((DefaultMutableTreeNode) o).getUserObject();
 	if (o instanceof NodeVector) {
@@ -1738,6 +1763,18 @@ public void treeCollapsed(TreeExpansionEvent event) {
 			repaint();
 		}
 	}
+}
+
+
+public void setEditMode(boolean b) {
+	this.editMode = b;
+	if (b) {
+		for (GNode n: graphNodes) {
+			if (n instanceof FolderNode) 
+				((FolderNode) n).expand();
+		}
+	}
+	
 }
 
 	

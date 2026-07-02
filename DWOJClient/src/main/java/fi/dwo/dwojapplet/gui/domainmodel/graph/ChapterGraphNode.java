@@ -99,7 +99,7 @@ public class ChapterGraphNode {
 		for (GraphEdge edge : graphEdges) {
 			if(edge.getTarget().hasChapterCode(hfstCode) && !edge.getSource().hasChapterCode(hfstCode)) {
 				if(!voorkennisNodes.contains(edge.getSource()) && edge.getSource().hasMethodCode(hfstCode))
-					voorkennisNodes.add(edge.getSource());
+					voorkennisNodes.add((GraphNode) edge.getSource());
 				if(!voorkennisEdges.contains(edge))
 					voorkennisEdges.add(edge);
 			}

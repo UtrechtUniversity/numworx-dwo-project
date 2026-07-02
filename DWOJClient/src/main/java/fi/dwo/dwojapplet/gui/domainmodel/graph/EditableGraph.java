@@ -42,6 +42,7 @@ public class EditableGraph extends JPanel implements ActionListener{
 	}
 
 	public void setEditMode(boolean b) {
+		graph.setEditMode(b);
 		if (b) {
 			editGraph.setOrigin(graph.getOrigin());
 			editGraph.setFactor(graph.getFactor());
