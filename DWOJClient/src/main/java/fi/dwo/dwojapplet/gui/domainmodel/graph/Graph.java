@@ -1252,16 +1252,15 @@ private String voorkennisPopupVariant;
 		int ey = (int) ((e.getY()-origin.y)/factor);
 		GNode node = null;
 		String nodeVariant = "";
-		for(int i=0 ; i<graphNodes.size() ; i++) {
-			node = graphNodes.get(i);
-			if(node.contains(ex, ey) || node.contains(e.getX(), e.getY())) {
-				
+		for(int i=graphNodes.size()-1 ; i>= 0 ; i--) {
+			GNode tmpnode = graphNodes.get(i);
+			if(tmpnode.contains(ex, ey) || tmpnode.contains(e.getX(), e.getY())) {
+				node = tmpnode;
 				String code = node.search(ex, ey);
 				String v = node.getVariant(code);
 				if (v != null) nodeVariant = "/" + v;
 				break;
 			}
-			node = null;
 		}
 		if(node!=null) {
 			produceAction(node.getID() + nodeVariant);
@@ -1357,7 +1356,9 @@ private String voorkennisPopupVariant;
 					.map(o -> (o instanceof NodeLeaf) ?((NodeLeaf) o).getId() : null)
 					.filter(Objects::nonNull)
 					.collect(Collectors.toSet());
-			Collection<GraphNode> nodes = ids.stream().map(id -> graphMap.get(id)).filter(Objects::nonNull).collect(Collectors.toList()); 
+			Collection<GraphNode> nodes = ids.stream().map(id -> graphMap.get(id)).filter(Objects::nonNull)
+					.filter( n -> null != n.getLocation(GNode.NULLKEY))
+					.collect(Collectors.toList()); 
 			if (!nodes.isEmpty())
 			{
 				FolderNode fn = new FolderNode(nodes);

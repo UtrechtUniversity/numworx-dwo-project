@@ -788,7 +788,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 			model.setRoot(filter(root, filter, activeMethod));
 		}
         model.nodeStructureChanged((TreeNode) model.getRoot());
-		graph.setModel(model,filter, activeMethod);
+		graph.setModel(tree,filter, activeMethod);
 		methodListener.filterMethod(filter);
 	}
 
@@ -1496,7 +1496,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 		// OPSLAAN_ACTION.left();
         setActiveMethod(model.getActiveMethod());
         initMethodSelect(structure);
-		graph.setModel(this.model,null, activeMethod);
+		graph.setModel(this.tree,null, activeMethod);
 		filterAction.doFilter();
 	}
 
@@ -1508,7 +1508,7 @@ public class LeerdomeinEditPanel2 extends JPanel
 	methodeAction4.setMethode(am);
 	methodeAction2.setMethode(am);
 	if (graph.isShowing()) {
-      graph.setModel(this.model,null,activeMethod);
+      graph.setModel(this.tree,null,activeMethod);
 	}
     filterAction.doFilter();    
   }

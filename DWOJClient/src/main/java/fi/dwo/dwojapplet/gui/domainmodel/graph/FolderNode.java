@@ -99,6 +99,9 @@ public class FolderNode extends AbstractNode implements GNode {
 				rect.grow(3, 3);
 				Area path = new Area(rect);
 				path.add(new Area(poly));
+				BasicStroke stroke = new BasicStroke((float) (size * factor),BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+				Shape filler = stroke.createStrokedShape(poly);
+				path.add(new Area(filler));
 				Shape shape = path;
 				last = shape.getBounds(); // contains
 				g.fill(shape);
