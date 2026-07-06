@@ -149,7 +149,7 @@ public class GraphNode extends AbstractNode implements GNode {
 //		return hasSameChapterCode(node1, node2, null);
 //	}
 
-	public static boolean hasSameChapterCode(GraphNode node1, GraphNode node2, String methode) {
+	public static boolean hasSameChapterCode(GNode node1, GNode node2, String methode) {
 	    if (methode == null) return true; // Geen methode -> altijd same chapter
 		Map<String, Map<String, Set<Integer>>> info1 = node1.getMethodeInfo();
 		Map<String, Map<String, Set<Integer>>> info2 = node2.getMethodeInfo();

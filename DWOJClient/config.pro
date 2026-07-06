@@ -13,10 +13,18 @@
 -forceprocessing
 
 
--keep class fi.dwo.dwojapplet.gui.domainmodel.graph.* {
+#-keep class fi.dwo.dwojapplet.gui.domainmodel.graph.GNode {
+#	<methods>;
+#	<fields>;
+#}
+#-keep class fi.dwo.dwojapplet.gui.domainmodel.graph.GraphNode {
+#	<methods>;
+#	<fields>;
+#}
+-keep class fi.dwo.dwojapplet.gui.domainmodel.graph.Graph {
 	<methods>;
-	<fields>;
 }
+
 
 -keep class uk.co.wilson.xml.*{
     <fields>;

@@ -355,8 +355,8 @@ private String voorkennisPopupVariant;
 		
 		for (int i = 0; i < graphEdges.size(); i++) {
 			GraphEdge edge = graphEdges.get(i);
-			GraphNode source = (GraphNode) edge.getSource();
-			GraphNode target = (GraphNode) edge.getTarget();
+			GNode source = edge.getSource();
+			GNode target = edge.getTarget();
 //			Point p = makeTempLocation(source, target);
 //			if(source.getTempLocation()==null)
 //				source.setTempLocation(makeTempLocation(source, target));

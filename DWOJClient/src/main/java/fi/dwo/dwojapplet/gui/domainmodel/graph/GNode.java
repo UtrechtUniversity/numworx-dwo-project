@@ -60,6 +60,6 @@ public interface GNode {
 	void setLocation(int ex, int ey);
 	Object getSuccesFailScore();
 	Paint getEdgeSuccesFailColor();
-	Object getMethodeInfo();
+	Map<String, Map<String, Set<Integer>>> getMethodeInfo();
 
 }
