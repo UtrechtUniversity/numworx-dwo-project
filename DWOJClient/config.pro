@@ -12,6 +12,12 @@
 
 -forceprocessing
 
+
+-keep class fi.dwo.dwojapplet.gui.domainmodel.graph.* {
+	<methods>;
+	<fields>;
+}
+
 -keep class uk.co.wilson.xml.*{
     <fields>;
     <methods>;

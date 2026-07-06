@@ -52,7 +52,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<proguard.lib>${java.home}/lib/rt.jar</proguard.lib>
-		
+
+		<proguard.version>7.5.0</proguard.version>
     </properties>
 
     <dependencies>
@@ -528,7 +529,7 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <proguardVersion>7.4.2</proguardVersion>
+                            <proguardVersion>${proguard.version}</proguardVersion>
                             <options>
                                 <option>-verbose</option>
                                 <option>-dontwarn</option> 
@@ -554,7 +555,7 @@
                             <dependency>
                                 <groupId>com.guardsquare</groupId>
                                 <artifactId>proguard-base</artifactId>
-                                <version>7.4.2</version>
+                                <version>${proguard.version}</version>
                                 <scope>runtime</scope>
                             </dependency>
                         </dependencies>

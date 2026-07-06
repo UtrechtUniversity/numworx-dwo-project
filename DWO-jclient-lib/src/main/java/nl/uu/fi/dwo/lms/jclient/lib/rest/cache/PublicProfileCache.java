@@ -62,7 +62,7 @@ public class PublicProfileCache {
 		DomDwoProfileFull result = null;
 		try {
 			result = cache().get(name);
-		} catch (Exception e) {
+		} catch (Exception|NoClassDefFoundError e) {
 		} catch (Error oops) {
 			oops.printStackTrace();
 		}

@@ -28,7 +28,7 @@
 <!--  	   <module>../DWOformule</module> -->
 <!--  	 	<module>../DWOmAccess</module> -->
        <module>../DWO-commons-lib</module>
-<!--         <module>../DWO-jclient-lib</module> -->
+         <module>../DWO-jclient-lib</module>
    	 	<module>../DWO-apps</module>
 <!--  		<module>../chatgwt</module> -->
  	 	<module>../DWOGwtClient</module> 
@@ -74,7 +74,7 @@
     		<dependency>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
     			<artifactId>dwo-jclient-lib</artifactId>
-    			<version>2.5.48</version>
+    			<version>3.0.1-SNAPSHOT</version>
     		</dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>

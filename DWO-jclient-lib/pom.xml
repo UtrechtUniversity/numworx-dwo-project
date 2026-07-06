@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>dwo</artifactId>
-		<version>2.5.49-SNAPSHOT</version>
+		<version>3.0.1-SNAPSHOT</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 
@@ -126,12 +126,10 @@
 		<dependency>
 			<groupId>com.owlike</groupId>
 			<artifactId>genson</artifactId>
-			<version>1.6</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.uu.fi.dwo</groupId>
 			<artifactId>async-lib</artifactId>
-			<version>2.5.48</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.hk2.external</groupId>
@@ -202,7 +200,6 @@
 				<dependency>
     				<groupId>nl.uu.fi.dwo.rest</groupId>
 					<artifactId>redis-config</artifactId>
-					<version>2.5.49-SNAPSHOT</version>
 					<scope>test</scope>
 				</dependency>
 			</dependencies>		
