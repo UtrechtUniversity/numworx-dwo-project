@@ -11,6 +11,8 @@
         <properties>
                 <maven.compiler.source>1.8</maven.compiler.source>
                 <maven.compiler.target>1.8</maven.compiler.target>
+				<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+				<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
         </properties>
 	<dependencies>
         <dependency>
@@ -49,11 +51,11 @@
                 <configuration>
 					<niceManifest>true</niceManifest>
                     <instructions>
-                        <Bundle-Activator>nl.numworx.async.impl.Activator</Bundle-Activator>
+		 			   <_snapshot>${osgi.qualifier}</_snapshot>
+                       <Bundle-Activator>nl.numworx.async.impl.Activator</Bundle-Activator>
                         <Export-Package>
 							nl.numworx.async
-						</Export-Package>
-						
+						</Export-Package>					
 						<Import-Package>
 							!java.*,
 							org.osgi.*;
