@@ -17,6 +17,7 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.26</chatGWTVersion>
         <tomcat7.version>7.0.108</tomcat7.version>
+        <dwoVersion>3.0.1-SNAPSHOT</dwoVersion>
     </properties>
     
     <!-- should move project role names here that fall in the full project scope -->
