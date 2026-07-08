@@ -1524,7 +1524,7 @@ private String voorkennisPopupVariant;
 		}
 	}
 
-	private static String idOf(Object child) {
+	public static String idOf(Object child) {
 		if (child instanceof DefaultMutableTreeNode)
 		   child = ((DefaultMutableTreeNode) child).getUserObject();
 		if (child instanceof NodeLeaf) return ((NodeLeaf) child).getId();
