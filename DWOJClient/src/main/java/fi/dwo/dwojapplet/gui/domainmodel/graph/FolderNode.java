@@ -31,6 +31,7 @@ public class FolderNode extends AbstractNode implements GNode {
 
 	
 	private static final Rectangle EMPTY_RECT = new Rectangle();
+	private static final double SIZE = 2.0;
 	List<Point> hull = Collections.emptyList();
 	final Collection<GNode> folder = new ArrayList<>();
 	boolean collaps;
@@ -50,9 +51,9 @@ public class FolderNode extends AbstractNode implements GNode {
 				Point location = getLocation(code);
 				if (location == null) continue;
 				// g.setFont(defaultFont.deriveFont((int)(defaultFontSize*factor)));
-				g.setFont(new Font("SansSerif", Font.PLAIN, (int) (defaultFontSize * factor)));
+				g.setFont(new Font("SansSerif", Font.PLAIN, (int) (defaultFontSize * SIZE * factor )));
 				if (selected.contains(code))
-					g.setFont(new Font("SansSerif", Font.BOLD, (int) (defaultFontSize * factor)));
+					g.setFont(new Font("SansSerif", Font.BOLD, (int) (defaultFontSize * SIZE * factor)));
 				fm = g.getFontMetrics();
 
 				String space = "";

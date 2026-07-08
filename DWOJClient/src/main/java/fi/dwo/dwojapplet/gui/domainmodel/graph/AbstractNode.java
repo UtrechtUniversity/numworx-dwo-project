@@ -23,8 +23,8 @@ abstract class AbstractNode implements GNode {
 	static Color defaultKennenNodeColor = new Color(255,255,150);
 	static Color defaultKennenNodeBorderColor = new Color(255,200,150);
 	static Color defaultTextColor = LeerdomeinGraphPanel.colorBlue1;
-	static int defaultFontSize = 16;
-	static Font defaultFont = new Font("SansSerif", Font.PLAIN, defaultFontSize);
+	static final int defaultFontSize = 16;
+	static final Font defaultFont = new Font("SansSerif", Font.PLAIN, defaultFontSize);
 
 	FontMetrics fm;
 	Font font = defaultFont;
