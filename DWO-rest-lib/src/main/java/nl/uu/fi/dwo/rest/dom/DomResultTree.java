@@ -229,6 +229,7 @@ public class DomResultTree {
 			PersistenceId pid = new PersistenceId("LOCAL;none;" + page.getSequencenr());
 			value.getChildren().put(pid, resultPage);
 			if (page.getScore() != null) {
+				resultPage.setFraction(1.0);
 				if (hascorrectie && Boolean.TRUE.equals(page.getDocentCorrectie())) {
 					resultPage.setScore(-1.0);
 					resultPage.setMaxScore(Double.valueOf(page.getMaxScore().doubleValue()));					
@@ -238,11 +239,13 @@ public class DomResultTree {
 				}
 			} else {
 				resultPage.setScore(0.0);
-				resultPage.setMaxScore(null);
+				resultPage.setMaxScore(Double.valueOf(page.getMaxScore().doubleValue()));
+				resultPage.setFraction(0.0);
 			}
 			if (hascorrectie && page.getCorrectie() != null) {
 				resultPage.setCorrectie(page.getCorrectie().doubleValue());
 				resultPage.setMaxScore(Double.valueOf(page.getMaxScore().doubleValue()));
+				resultPage.setFraction(1.0);
 			}
 			Float maxFactor = page.getMaxFactor();
 			if (Float.valueOf(1.0F).equals(maxFactor)) maxFactor = null; // 1.0 is default maxFactor

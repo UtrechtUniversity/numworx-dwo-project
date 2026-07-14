@@ -119,7 +119,7 @@ class Util {
       }
       DomResultStudentScoPage item = new DomResultStudentScoPage(label);
       item.setNodeId(i);
-      
+      item.setFraction(1.0);
       //if (scores[i] == null) scores[i] = new JSONNumber(0); // FIXME dit is alleen voor het testen XXX 
 
       if (i < ls && scores[i] != null)
@@ -131,12 +131,14 @@ class Util {
       } else 
       {
     	  item.setScore(0.0);
-    	  item.setMaxScore(null);
+    	  item.setMaxScore(maxScores[i].doubleValue());
+    	  item.setFraction(0.0); // Niet gemaakt
       }
       if (i < correctie.length && correctie[i] != null)
       {
     	  item.setCorrectie(correctie[i].doubleValue());
     	  item.setMaxScore(maxScores[i].doubleValue()); // https://numworx.atlassian.net/browse/LMS-683
+    	  item.setFraction(1.0); // gecorrigeerd = gemaakt.
       }
       
       if (opdracht.containsKey("maxFactor")) {
