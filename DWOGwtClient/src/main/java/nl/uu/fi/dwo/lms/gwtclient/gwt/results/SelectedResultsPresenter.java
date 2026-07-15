@@ -30,6 +30,10 @@ import org.osgi.util.promise.Success;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
@@ -713,5 +717,32 @@ public class SelectedResultsPresenter implements ResultEventHandler {
 			return s;
 		}, FAILURE);
 		
+	}
+	
+	static private NumberFormat f = NumberFormat.getFormat("0.#");
+
+	
+	
+	
+	@JsMethod
+	public JavaScriptObject getCijfer(double score, double frac, int parts, int totalParts, double cesuur) {
+		JSONObject result = new JSONObject();
+		double cijfer;
+		double off = cesuur / 100.0 * frac; // cesuur in points.
+		if (score <= off) // lineair tot 1 .. 5.5
+		{ 
+		   cijfer = 1.0 + score / off * 4.5;
+		} else { // lineair 5.5 .. 10
+		   cijfer = (score - off) / (frac - off) * 4.5 + 5.5;
+		}
+				
+		String format = f.format(cijfer);
+		result.put("longlabel", new JSONString(f.format(score) + "/" + f.format(frac) + " " + format));
+		result.put("label", new JSONString(format));
+		result.put("fraction", new JSONNumber(parts/(double)totalParts));
+		result.put("score", new JSONNumber(cijfer * 10.0)); // 0..100
+		result.put("value", new JSONString(format));
+		return result.getJavaScriptObject();
+
 	}
 }
