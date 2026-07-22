@@ -45,6 +45,7 @@ import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.JButton;
 import fi.beans.numworxlf.JTree;
@@ -1383,6 +1384,7 @@ private String voorkennisPopupVariant;
 				values.add(cnt++,fn);
 			}
 		}
+		for (FolderNode fn: folderById.values()) { fn.calculateHull(GNode.NULLKEY); }
 		setGraphNodes(values);
 		searchEdges(leaves, graphMap, edges);
 		setGraphEdges(edges);
@@ -1744,7 +1746,8 @@ public void setModel(JTree tree, Map<String, Map<String, Set<Integer>>> filter2,
 
 @Override
 public void treeExpanded(TreeExpansionEvent event) {
-	Object o = event.getPath().getLastPathComponent();
+	TreePath path = event.getPath();
+	Object o = path.getLastPathComponent();
 	o = ((DefaultMutableTreeNode) o).getUserObject();
 	if (o instanceof NodeVector) {
 		NodeVector v = (NodeVector) o;
@@ -1752,8 +1755,26 @@ public void treeExpanded(TreeExpansionEvent event) {
 		FolderNode fn = folderById.get(id);
 		if (fn != null) {
 			fn.expand();
+			showParentPath(path);			
 			repaint();
 		}
+	}
+}
+
+
+private void showParentPath(TreePath path) {
+	Object o;
+	NodeVector v;
+	String id;
+	FolderNode fn;
+	path = path.getParentPath();
+	if(path != null) {
+		o = path.getPathComponent(0);
+		v = (NodeVector) ((DefaultMutableTreeNode) o).getUserObject();
+		id = v.info.getId();
+		fn = folderById.get(id);
+		if (fn != null)
+			fn.showParent();
 	}
 }
 
@@ -1769,6 +1790,7 @@ public void treeCollapsed(TreeExpansionEvent event) {
 		FolderNode fn = folderById.get(id);
 		if (fn != null) {
 			fn.collapse();
+			showParentPath(event.getPath());
 			repaint();
 		}
 	}

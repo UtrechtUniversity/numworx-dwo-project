@@ -31,7 +31,7 @@ public class FolderNode extends AbstractNode implements GNode {
 
 	
 	private static final Rectangle EMPTY_RECT = new Rectangle();
-	private static final double SIZE = 2.0;
+	private static final double SIZE = 2.5;
 	List<Point> hull = Collections.emptyList();
 	final Collection<GNode> folder = new ArrayList<>();
 	boolean collaps;
@@ -39,7 +39,7 @@ public class FolderNode extends AbstractNode implements GNode {
 	
 	@Override
 	public void paint(Graphics gr, Point origin, double factor, boolean connectInstances) {
-		if (!isVisible() || factor < 0.15)
+		if ( factor < 0.15)
 			return;
 		Graphics2D g = (Graphics2D) gr;
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -100,12 +100,21 @@ public class FolderNode extends AbstractNode implements GNode {
 				
 				rect.grow(3, 3);
 				Area path = new Area(rect);
-				path.add(new Area(poly));
+if (!collaps) {				
+				path = (new Area(poly));
 				BasicStroke stroke = new BasicStroke((float) (size * factor),BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 				Shape filler = stroke.createStrokedShape(poly);
 				path.add(new Area(filler));
+}
 				Shape shape = path;
 				last = shape.getBounds(); // contains
+if (!collaps&&!blur) { // chapter color if expanded
+	g.setColor(new Color(222, 229, 240));
+	if(factor<0.3)
+		g.setColor(new Color(212, 219, 239));
+	if(factor<0.22)
+		g.setColor(new Color(202, 209, 229));
+}
 				g.fill(shape);
 				g.setColor(nodeBorderColor);
 				g.setStroke(new BasicStroke(2f * (float) factor));
@@ -115,11 +124,11 @@ public class FolderNode extends AbstractNode implements GNode {
 					g.setColor(textColor);
 					g.setStroke(new BasicStroke(4f*(float) factor));
 				}
-				g.draw(shape);
+if (collaps)	g.draw(shape);
 				g.setColor(textColor);
 				if (blur)
 					g.setColor(new Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), 30));
-				g.drawString(label, x - textLength / 2, y + textHeight / 2);
+if (collaps) 		g.drawString(label, x - textLength / 2, y + textHeight / 2);
 
 				if (tempLocation != null)
 					break;
@@ -144,10 +153,15 @@ public class FolderNode extends AbstractNode implements GNode {
 	public void expand() {
 		collaps = false;
 		last = EMPTY_RECT;
+		boolean showchild = false;
 		for (GNode n: folder)
-			if (n instanceof FolderNode) ((FolderNode) n).show(); else
+			if (n instanceof FolderNode) {
+				boolean shown = ((FolderNode) n).show();
+				if (shown) showchild = true;
+			}
+			else
 			n.setVisible(methodeInfos,true);
-		setVisible(methodeInfos,false);
+		setVisible(methodeInfos,!showchild);
 	}
 
 
@@ -169,14 +183,48 @@ public class FolderNode extends AbstractNode implements GNode {
 		}
 	}
 	
-	public void show() { 
+	public boolean show() {
+		boolean show = false;
+		boolean showchild = false;
 		if (collaps) {
 			setVisible(methodeInfos, true);
-		} else 
+		} else
+		{	show = true;
 			for (GNode n: folder) {
-				if (n instanceof FolderNode) ((FolderNode) n).show();
+				if (n instanceof FolderNode) {
+					boolean shown = ((FolderNode) n).show();
+					if (shown) {
+						show = false;
+						showchild = true;
+					}
+				}
 				else n.setVisible(methodeInfos, true);
 			}
+		}
+		if (show) setVisible(methodeInfos, show);
+		return show|showchild;
+	}
+
+	public boolean showParent() {
+		boolean show = false;
+		boolean showchild = false;
+		if (collaps) {
+			
+		} else
+		{	show = true;
+			for (GNode n: folder) {
+				if (n instanceof FolderNode) {
+					boolean shown = ((FolderNode) n).showParent();
+					if (shown) {
+						show = false;
+						showchild = true;
+					}
+				}
+			}
+			setVisible(methodeInfos, show);
+		}
+		
+		return show|showchild;
 	}
 
 
@@ -188,7 +236,7 @@ public class FolderNode extends AbstractNode implements GNode {
 	}
 
 
-	private void calculateHull(String key) {
+	void calculateHull(String key) {
 		List<Point> points = folder.stream().flatMap(n -> n.getLocationStream(key))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
