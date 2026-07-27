@@ -1377,6 +1377,8 @@ private String voorkennisPopupVariant;
 						pn.ID = nv.info.getId();
 						pn.subdomein = "";
 						folderById.put(pn.ID, pn);
+// pn zit niet zelf in een ppn
+						cnt = grantparents(pn, cnt, values);
 						values.add(cnt++,pn);
 					}
 				}
@@ -1438,6 +1440,27 @@ private String voorkennisPopupVariant;
 		//System.out.println("filterInfo: "+filterInfo.keySet());
 		painter.repaint();
 	}
+
+	private int grantparents(FolderNode fn, int cnt, ArrayList<GNode> values) {
+		NodeVector nv = parentById.get(fn.ID);
+		if (nv != null) {
+			FolderNode pn = folderById.get(idOf(nv));
+			if (pn != null) pn.add(fn);
+			else {
+				pn = new FolderNode(new ArrayList<>()); pn.add(fn);
+				pn.description = nv.title;
+				pn.ID = nv.info.getId();
+				pn.subdomein = "";
+				folderById.put(pn.ID, pn);
+//pn zit niet zelf in een ppn
+				cnt = grantparents(pn, cnt, values);
+				values.add(cnt++,pn);
+			}
+			
+		}
+		return cnt;
+	}
+
 
 	private void searchEdges(List<NodeLeaf> leaves, Map<String, GraphNode> graphMap, ArrayList<GraphEdge> edges) {
 		for (NodeLeaf leaf : leaves) {
