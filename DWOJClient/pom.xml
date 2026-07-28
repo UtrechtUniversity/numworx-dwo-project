@@ -359,14 +359,6 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addClasspath>false</addClasspath>
                         </manifest>
-<!--                          <manifestEntries> -->
-<!--                             <Class-Path>swingbrowser-jxb.jar swingbrowser-jfx.jar swingbrowser-api.jar</Class-Path> -->
-<!--                             <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version> -->
-<!--                             <Implementation-Build>${buildNumber}</Implementation-Build> -->
-<!--                             <Implementation-Timestamp>${timestamp}</Implementation-Timestamp> -->
-<!--                             <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch> -->
-<!--                             <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build> -->
-<!--  						 </manifestEntries> -->
     				</archive> 
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -535,8 +527,7 @@
                                 <option>-dontwarn</option> 
                                 <option>-printconfiguration ${project.build.directory}/mapping.txt</option>
                             </options>
-                            <obfuscate>true</obfuscate>                    
-                            <inputDirectory>${project.build.directory}</inputDirectory>
+                            <obfuscate>true</obfuscate>
                             <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
                             <outFilter>!org/xml/sax/**.class</outFilter>
                             <!-- uncomment to change the output file 

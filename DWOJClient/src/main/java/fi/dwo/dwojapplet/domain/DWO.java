@@ -1624,7 +1624,7 @@ LOG.info("time results = " + (-t) + " ms");
         }
         DwoHelper.setCurrentFacadeUser(null);
 
-        if (dwo_env.contains("entree") && DwoHelper.isTest()) {
+        if (dwo_env.contains("entree")) {
         	samlData = new HashMap<>();
         	samlData.put("IDP", "entree");
         	if (DwoHelper.hasProfileRight('H'))
