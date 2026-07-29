@@ -447,15 +447,6 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 		
 		mainPanel.setWidget(0, 0, tekstVakken[0][0]);
 		
-//		randPanel = new LayoutPanel();
-//		randPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-//		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
-//		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
-//		randPanel.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
-//		mainPanel2.add(randPanel);
-//		mainPanel2.setWidgetLeftRight(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-//		mainPanel2.setWidgetTopBottom(randPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
-
 		mainPanel2.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		mainPanel2.getElement().getStyle().setBorderColor(randColor.toString());
 		mainPanel2.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
@@ -890,28 +881,14 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			mainPanel2.getElement().getStyle().setCursor(Cursor.POINTER);
 		}
 		
-		
-//		randPanel = new LayoutPanel();
-//		if(bgColorZichtbaar)
-//			randPanel.getElement().getStyle().setBackgroundColor(bgColor.toString());
-//		randPanel.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
-//		randPanel.getElement().getStyle().setBorderColor(randColor.toString());
-//		randPanel.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
-//		randPanel.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
-//		
 		if(bgColorZichtbaar)
 			mainPanel2.getElement().getStyle().setBackgroundColor(bgColor.toString());
 		mainPanel2.getElement().getStyle().setBorderStyle(BorderStyle.SOLID);
 		mainPanel2.getElement().getStyle().setBorderColor(randColor.toString());
 		mainPanel2.getElement().getStyle().setBorderWidth(randDikte, Unit.PX);
 		mainPanel2.getElement().getStyle().setProperty("borderRadius", (ronding / 2) + "px");
-		
-		
-//		if (callOut)
-//		{
-//			mainPanel2.setPixelSize(breedte - callOutMargeX0 - callOutMargeX1 - randDikte, hoogte - callOutMargeY0 - callOutMargeY1 - randDikte);
-//		}
-		
+
+
 		horizontalBorders = new LayoutPanel[hoogtes.size() - 1];
 		verticalBorders = new LayoutPanel[breedtes.size() - 1];
 		
@@ -958,10 +935,6 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			
 			callOutPanel.setWidgetLeftRight(mainPanel2, callOutMargeX0, Style.Unit.PX, callOutMargeX1, Style.Unit.PX);
 			callOutPanel.setWidgetTopBottom(mainPanel2, callOutMargeY0, Style.Unit.PX, callOutMargeY1, Style.Unit.PX);
-			
-//			mainPanel2.add(callOutCanvas);
-//			mainPanel2.setWidgetLeftRight(callOutCanvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
-//			mainPanel2.setWidgetTopBottom(callOutCanvas, 0, Style.Unit.PX, 0, Style.Unit.PX);
 		}
 		
 		mainPanel = new Grid(hoogtes.size(), breedtes.size());
@@ -971,18 +944,6 @@ public class TekstVakPanel extends Composite implements InteractionViewWithMisco
 			mainPanel.getElement().getStyle().setProperty("borderSpacing", "" + cellSpaceColumn + "px " + cellSpaceRow + "px");
 			mainPanel.getElement().getStyle().setProperty("margin", "" + (-cellSpaceRow - randDikte) + "px " + (-cellSpaceColumn - randDikte) + "px");
 		}
-//		if (callOut)
-//		{
-//			//mainPanel.setPixelSize(breedte - callOutMargeX0 - callOutMargeX1, hoogte - callOutMargeY0 - callOutMargeY1 );
-
-			// add an extra 'fill' panel to create the callOutMargeX0 and callOutMargeY0
-//			LayoutPanel callOutFillPanel = new LayoutPanel();
-//			LayoutPanel callOutFillPanel2 = new LayoutPanel();
-//			callOutFillPanel.setPixelSize(callOutMargeX0, callOutMargeY0);
-//			callOutFillPanel2.setPixelSize(callOutMargeX0, callOutMargeY0);
-//			mainPanel.setWidget(0, 0, callOutFillPanel);
-//			mainPanel.setWidget(0, 1, callOutFillPanel2);
-//		}
 		
 		tekstVakken = new TekstVak[hoogtes.size()][breedtes.size()];
 		for (int i = 0; i < hoogtes.size(); i++)
@@ -3324,9 +3285,7 @@ private Object CamelCase(String name) {
 		if (klikPanel == null)
 		{
 			klikPanel = new FlowPanel();
-			//klikPanel.setBounds(0, 0, getSize().width, getSize().height);
-			//klikPanel.setOpaque(false);
-			//klikPanel.addMouseListener(this);
+			klikPanel.getElement().setAttribute("aria-hidden", "true");
 			mainPanel2.add(klikPanel);
 			mainPanel2.setWidgetLeftRight(klikPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
 			mainPanel2.setWidgetTopBottom(klikPanel, 0, Style.Unit.PX, 0, Style.Unit.PX);
