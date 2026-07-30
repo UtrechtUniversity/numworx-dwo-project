@@ -109,11 +109,11 @@ if (!collaps) {
 				Shape shape = path;
 				last = shape.getBounds(); // contains
 if (!collaps&&!blur) { // chapter color if expanded
-	g.setColor(new Color(222, 229, 240));
+	g.setColor(new Color(222, 229, 240, 200));
 	if(factor<0.3)
-		g.setColor(new Color(212, 219, 239));
+		g.setColor(new Color(212, 219, 239, 200));
 	if(factor<0.22)
-		g.setColor(new Color(202, 209, 229));
+		g.setColor(new Color(202, 209, 229,200));
 }
 				g.fill(shape);
 				g.setColor(nodeBorderColor);

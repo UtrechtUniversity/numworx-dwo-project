@@ -42,6 +42,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
+import javax.swing.plaf.TreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
@@ -1757,18 +1758,68 @@ private String voorkennisPopupVariant;
     return selectedMethod != null;
   }
 
-
+public void syncFolderNodes(JTree tree) {
+	if (graphNodes.get(0) instanceof FolderNode) {
+//		DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+//		Enumeration e = root.depthFirstEnumeration();
+//		while (e.hasMoreElements()) {
+//			DefaultMutableTreeNode object = (DefaultMutableTreeNode) e.nextElement();
+//			TreePath path = new TreePath(object.getPath());
+//			if (tree.isExpanded(path)) {
+//				String id = ((NodeVector) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject()).getInfo().getId();
+//				FolderNode fn = folderById.get(id);
+//				fn.expand();
+//			} else {
+//				Object o = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+//				if (o instanceof NodeVector) {
+//					String id = ((NodeVector) o).getInfo().getId();
+//					FolderNode fn = folderById.get(id);
+//					fn.collapse();
+//				}
+//			}
+//						
+//		}
+//	}
+		int cnt = tree.getRowCount();
+		for (int i = 0; i < cnt; i++) {
+			TreePath path = tree.getPathForRow(i);
+		if (tree.isExpanded(path)) {
+			String id = ((NodeVector) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject()).getInfo().getId();
+			FolderNode fn = folderById.get(id);
+			fn.expand();
+		} else {
+			Object o = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+			if (o instanceof NodeVector) {
+				String id = ((NodeVector) o).getInfo().getId();
+				FolderNode fn = folderById.get(id);
+				fn.collapse();
+			}
+		}
+	}}
+}
+  
+  
+  
 public void setModel(JTree tree, Map<String, Map<String, Set<Integer>>> filter2, PersistenceId activeMethod2) {
 	TreeModel model = tree.getModel();
 	setModel(model, filter2, activeMethod2);
 	tree.removeTreeExpansionListener(this);
 	if (activeMethod2 == null)
+	{
+		TreeUI ui2 = tree.getUI();
+		tree.updateUI();
+		tree.setUI(ui2); // Wat doet dit precies!
 		tree.addTreeExpansionListener(this);
+	}
+	syncFolderNodes(tree);
 }
 
 
 @Override
 public void treeExpanded(TreeExpansionEvent event) {
+	
+	JTree tree = (JTree) event.getSource();
+	syncFolderNodes(tree);
 	TreePath path = event.getPath();
 	Object o = path.getLastPathComponent();
 	o = ((DefaultMutableTreeNode) o).getUserObject();
