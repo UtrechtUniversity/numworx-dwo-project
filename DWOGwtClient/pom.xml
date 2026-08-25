@@ -148,7 +148,7 @@
         <dependency>
         	<groupId>nl.uu.fi.dwo.lms</groupId>
         	<artifactId>dwogwtclienthtmlui</artifactId>
-        	<version>3.0.1-SNAPSHOT</version>
+        	<version>3.0.1</version>
         	<scope>runtime</scope>
         	<type>war</type>
         </dependency>
