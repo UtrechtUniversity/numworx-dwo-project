@@ -1786,13 +1786,13 @@ public void syncFolderNodes(JTree tree) {
 		if (tree.isExpanded(path)) {
 			String id = ((NodeVector) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject()).getInfo().getId();
 			FolderNode fn = folderById.get(id);
-			fn.expand();
+			if (fn != null) fn.expand();
 		} else {
 			Object o = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
 			if (o instanceof NodeVector) {
 				String id = ((NodeVector) o).getInfo().getId();
 				FolderNode fn = folderById.get(id);
-				fn.collapse();
+				if (fn != null) fn.collapse();
 			}
 		}
 	}}
@@ -1810,14 +1810,14 @@ public void setModel(JTree tree, Map<String, Map<String, Set<Integer>>> filter2,
 		tree.updateUI();
 		tree.setUI(ui2); // Wat doet dit precies!
 		tree.addTreeExpansionListener(this);
+		syncFolderNodes(tree);
 	}
-	syncFolderNodes(tree);
 }
 
 
 @Override
 public void treeExpanded(TreeExpansionEvent event) {
-	
+	if (editMode) return;	
 	JTree tree = (JTree) event.getSource();
 	syncFolderNodes(tree);
 	TreePath path = event.getPath();

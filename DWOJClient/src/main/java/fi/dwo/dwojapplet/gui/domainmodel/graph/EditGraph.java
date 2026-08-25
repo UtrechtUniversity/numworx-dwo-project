@@ -16,8 +16,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.ToolTipManager;
@@ -168,14 +166,19 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		for(int i=0 ; i<graphEdges.size() ; i++)
 			graphEdges.get(i).paint(g, origin, factor);
 		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(!graphNodes.get(i).getBlur() && graphNodes.get(i).isVisible())
+			GNode geti = graphNodes.get(i);
+// no foldernodes in paint
+			if (!(geti instanceof GraphNode))
+				continue;
+
+			if(!geti.getBlur() && geti.isVisible())
 			{	
 			  
-			  for (String code: graphNodes.get(i).getVisibleSet()) {
-			    Rectangle rn = graphNodes.get(i).getTextBB(code);
+			  for (String code: geti.getVisibleSet()) {
+			    Rectangle rn = geti.getTextBB(code);
 				if (rn.width == 0) {
-					graphNodes.get(i).paint(g, origin, factor);
-					rn = graphNodes.get(i).getTextBB(code);
+					geti.paint(g, origin, factor);
+					rn = geti.getTextBB(code);
 				}
 				int rx = (int)(origin.x+(rn.x)*factor);
 				int ry = (int)(origin.y+(rn.y)*factor);
@@ -188,7 +191,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 					g.drawRect(r.x+k/2-j, r.y+k/2-j, r.width-(k-2*j), r.height-(k-2*j));
 				}}
 			}
-			graphNodes.get(i).paint(g, origin, factor);
+			geti.paint(g, origin, factor);
 		}
 		g.setColor(new Color(200,200,200));
 		g.drawRect(selectieRectangle.x, selectieRectangle.y, selectieRectangle.width, selectieRectangle.height);
