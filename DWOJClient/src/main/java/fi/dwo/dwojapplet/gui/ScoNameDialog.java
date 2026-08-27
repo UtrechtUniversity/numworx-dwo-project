@@ -275,7 +275,7 @@ public class ScoNameDialog extends JDialog
             }
             if (cnd.isShowDocent()) {
                 if (sco.getShowDocent() != null) {
-                    sco.setShowScore(Boolean.TRUE);
+                    sco.setShowDocent(Boolean.TRUE);
                 }
             } else {
                 sco.setShowDocent(Boolean.FALSE);
