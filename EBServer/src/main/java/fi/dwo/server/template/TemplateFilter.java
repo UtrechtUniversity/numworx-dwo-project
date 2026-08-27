@@ -134,7 +134,7 @@ public class TemplateFilter implements Filter {
 				}
 				if (!legal.matcher(prefix).matches())
 				{
-					LOG.info("Not found " + prefix);
+					LOG.fine("Not found " + prefix);
 					notfound(wrap);
 					return;
 				}
