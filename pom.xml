@@ -10,7 +10,7 @@
         <jdk.version>8</jdk.version>
         <jdk>${env.JAVA_HOME_8}</jdk>
         <buildVersion>${project.version}</buildVersion>
-	<dwoVersion>3.0.1-SNAPSHOT</dwoVersion>
+	<dwoVersion>3.0.1</dwoVersion>
     </properties>
     <name>${project.build.finalName}</name>
     
