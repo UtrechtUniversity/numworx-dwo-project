@@ -3,13 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>nl.uu.fi.dwo</groupId>
     <artifactId>dwo.master.pom</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.version>8</jdk.version>
         <jdk>${env.JAVA_HOME_8}</jdk>
         <buildVersion>${project.version}</buildVersion>
+	<dwoVersion>3.0.1-SNAPSHOT</dwoVersion>
     </properties>
     <name>${project.build.finalName}</name>
     
@@ -21,7 +22,7 @@
 <!--		<module>MicroIndex</module>-->
 <!--		<module>xapiserver</module>-->
 		<module>DWO</module>
-<!--		<module>async-lib</module>-->
+		<module>async-lib</module>
 <!--		<module>eawt</module>-->
 <!--		<module>promise-api</module>-->
 <!--		<module>numworxlf</module>-->

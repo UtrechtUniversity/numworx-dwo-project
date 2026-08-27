@@ -181,9 +181,12 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
 	@Override
 	public void visitStudentScoPage(DomResultStudentScoPage page) {
 		if (page.getTitle() != null) return; // deze is niet idempotent. en wordt tig keer aangeroepen.
-		if (page.getMaxScore() == null) {
+		if (page.getMaxScore() == null|| Double.valueOf(0.0).equals(page.getFraction())) {
 			page.setTitle("&nbsp;");
 			page.setDescription("&nbsp;");
+			if (page.getMaxScore() != null && page.getMaxFactor() != null) {
+				page.setMaxScore(page.getMaxScore() * page.getMaxFactor()); // display *maxfactor
+			}
 			page.setFraction(0.0);
 			return;
 		}

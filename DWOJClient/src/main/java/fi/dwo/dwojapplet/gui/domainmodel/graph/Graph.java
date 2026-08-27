@@ -40,14 +40,20 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.plaf.TreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import fi.beans.numworxlf.JButton;
+import fi.beans.numworxlf.JTree;
 import fi.dwo.dwojapplet.gui.domainmodel.InvisibleNode;
 import fi.dwo.dwojapplet.gui.domainmodel.InvisibleTreeModel;
 import fi.dwo.dwojapplet.gui.domainmodel.NodeLeaf;
+import fi.dwo.dwojapplet.gui.domainmodel.NodeVector;
 import fi.dwo.dwojapplet.gui.domainmodel.methods.MethodsProperties;
 import nl.uu.fi.dwo.rest.dom.entities.DomMethod;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelMethodInfo;
@@ -55,9 +61,9 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelVariant;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.StudentModelUtil;
 
-public class Graph extends JPanel implements MouseListener, MouseMotionListener, ActionListener {
+public class Graph extends JPanel implements MouseListener, MouseMotionListener, ActionListener, TreeExpansionListener {
 
-	final protected ArrayList<GraphNode> graphNodes = new ArrayList<GraphNode>();
+	final protected ArrayList<GNode> graphNodes = new ArrayList<GNode>();
 	final protected ArrayList<GraphEdge> graphEdges = new ArrayList<GraphEdge>();
 	
 	protected ArrayList<ChapterGraphNode> chapterNodes = new ArrayList<ChapterGraphNode>();
@@ -87,7 +93,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	
 	private PopupMenu voorkennisPopupMenu;
     private MenuItem miVoorkennis;
-    private GraphNode voorkennisPopupNode;
+    private GNode voorkennisPopupNode;
     private boolean voorkennisTree;
 	
 	private Font buttonFont = new Font("SansSerif", Font.BOLD, 20);
@@ -321,13 +327,6 @@ private String voorkennisPopupVariant;
 			g.drawRect(1, 1, getWidth()-2, getHeight()-2);
 			g.fillRect(1, 1, getWidth()-2, 26);
 			
-//			g.setFont(new Font("SansSerif", Font.BOLD,16));
-//			FontMetrics fm = g.getFontMetrics();
-//			int textHeight = fm.getAscent();
-//			g.setColor(Color.white);
-//			if(!"".equals(selectedBookTitle))
-//				g.drawString(">", 220, 5*textHeight/4);
-//			g.drawString(selectedBookTitle, 260, 5*textHeight/4);
 		}
 		if(factor<0.20) {
 			for(int i=0 ; i<bookNodes.size() ; i++) {
@@ -358,15 +357,32 @@ private String voorkennisPopupVariant;
 		
 		for (int i = 0; i < graphEdges.size(); i++) {
 			GraphEdge edge = graphEdges.get(i);
-			GraphNode source = edge.getSource();
-			GraphNode target = edge.getTarget();
+			GNode source = edge.getSource();
+			GNode target = edge.getTarget();
 //			Point p = makeTempLocation(source, target);
 //			if(source.getTempLocation()==null)
 //				source.setTempLocation(makeTempLocation(source, target));
 //			if(edge.getLength() < 600)
 //				source.setTempLocation(null);
-			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target, selectedMethod) || graphEdges.get(i).isVoorkennisTree())
-				graphEdges.get(i).paint(g, origin, factor);
+			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target, selectedMethod) || edge.isVoorkennisTree())
+			{
+				edge.paint(g, origin, factor);
+				if (!edge.isVoorkennisTree()) {
+				int size[] = new int[1];
+				GNode s = visibleParent(source, size);
+				int   ssize = size[0];
+				size[0] = 0;
+				GNode t = visibleParent(target, size);
+				int tsize = size[0];
+				int msize = Math.min(tsize, ssize);
+				int maxsize = Math.max(tsize, ssize);
+				if (s != null && t != null && s != t && maxsize > 0) {
+					edge = new GraphEdge(s, t, msize + 1);
+					edge.paint(g, origin, factor);
+				}
+				}
+				
+			}
 		}
 		
 		
@@ -396,6 +412,18 @@ private String voorkennisPopupVariant;
 		//zoomFitButton.paint(g);
 	}
 	
+	private GNode visibleParent(GNode source, int[] size) {
+		while (source != null && !source.isVisible()) {
+			String id = idOf(source);
+			NodeVector nv = parentById.get(id);
+			if (nv == null) return null;
+			source = folderById.get(nv.getInfo().getId());
+			size[0]++;
+		}
+		return source;
+	}
+
+
 	private boolean onPanel(GraphNode node) {
 	  for (String code : node.getVisibleSet()) {
 		Point p = node.getLocationOnPanel(code, origin, factor);
@@ -433,10 +461,10 @@ private String voorkennisPopupVariant;
 //		return pTemp;
 //	}
 
-	public void setGraphNodes(ArrayList<GraphNode> graphNodes) {
-		if (graphNodes != this.graphNodes) {
+	public void setGraphNodes(List<GNode> list) {
+		if (list != this.graphNodes) {
 			this.graphNodes.clear();
-			this.graphNodes.addAll(graphNodes);
+			this.graphNodes.addAll(list);
 			
 		}
 	}
@@ -471,8 +499,8 @@ private String voorkennisPopupVariant;
 //			}
 			Set<ChapterGraphEdge> chapterEdgeSet = new HashSet<>();
 			for(GraphEdge edge: graphEdges) {
-			  GraphNode from = edge.getSource();
-			  GraphNode to   = edge.getTarget();
+			  GraphNode from = (GraphNode) edge.getSource();
+			  GraphNode to   = (GraphNode) edge.getTarget();
 		 	  Collection<DomStudentModelMethodInfo> fromChapters = from.getMethodeInfos();
 		 	  Collection<DomStudentModelMethodInfo> orgFromChapters = fromChapters;
 		 	  if (fromChapters == null) continue;
@@ -609,17 +637,17 @@ private String voorkennisPopupVariant;
 		
 	}
 	
-	private ArrayList<ArrayList<GraphNode>> getVoorkennisNodes(GraphNode graphNode, Optional<Set<String>> deselections) {
-		ArrayList<GraphNode> startList= new ArrayList<GraphNode>();
-		startList.add(graphNode);
-		ArrayList<ArrayList<GraphNode>> resultList = new ArrayList<ArrayList<GraphNode>>();
+	private List<List<GNode>> getVoorkennisNodes(GNode voorkennisPopupNode2, Optional<Set<String>> deselections) {
+		ArrayList<GNode> startList= new ArrayList<>();
+		startList.add(voorkennisPopupNode2);
+		ArrayList<List<GNode>> resultList = new ArrayList<>();
 		resultList.add(startList);
-		ArrayList<ArrayList<GraphNode>> voorkennisNodes = getVoorkennisNodes(startList, resultList);
+		List<List<GNode>> voorkennisNodes = getVoorkennisNodes(startList, resultList);
 		if(deselections.isPresent()) {
-			for( ArrayList<GraphNode> row :  voorkennisNodes) {
-				Iterator<GraphNode> iter = row.iterator();
+			for( List<GNode> row :  voorkennisNodes) {
+				Iterator<GNode> iter = row.iterator();
 				while (iter.hasNext()) {
-					GraphNode n = iter.next();
+					GNode n = iter.next();
 					if (deselections.get().contains(n.getID())) iter.remove();
 				}
 			}
@@ -627,9 +655,9 @@ private String voorkennisPopupVariant;
 		return voorkennisNodes;
 	}
 	
-	private ArrayList<ArrayList<GraphNode>> getVoorkennisNodes(ArrayList<GraphNode> graphNodes, ArrayList<ArrayList<GraphNode>> voorkennisNodes) {
-		ArrayList<GraphNode> vkNodes = new ArrayList<GraphNode>();
-		for(GraphNode graphNode : graphNodes) {
+	private List<List<GNode>> getVoorkennisNodes(List<GNode> graphNodes, List<List<GNode>> voorkennisNodes) {
+		ArrayList<GNode> vkNodes = new ArrayList<>();
+		for(GNode graphNode : graphNodes) {
 			for(GraphEdge edge : graphEdges) {
 				if(edge.getTarget() == graphNode) {
 					if(!vkNodes.contains(edge.getSource()))
@@ -644,13 +672,13 @@ private String voorkennisPopupVariant;
 		return voorkennisNodes;
 	}
 	
-	private void cleanVoorkennisNodes(ArrayList<ArrayList<GraphNode>> voorkennisNodes) {
+	private void cleanVoorkennisNodes(List<List<GNode>> voorkennisNodes) {
 		for(int i=voorkennisNodes.size()-1 ; i>-1 ; i--) {
-			ArrayList<GraphNode> list = voorkennisNodes.get(i);
+			List<GNode> list = voorkennisNodes.get(i);
 			for(int j=0 ; j<list.size() ;  j++) {
-				GraphNode node = list.get(j);
+				GNode node = list.get(j);
 				for(int k=0 ; k<i ; k++) {
-					ArrayList<GraphNode> otherList = voorkennisNodes.get(k);
+					List<GNode> otherList = voorkennisNodes.get(k);
 					otherList.remove(node);
 				}
 					
@@ -680,12 +708,12 @@ private String voorkennisPopupVariant;
 		return StudentModelUtil.strip(set);
 	}
 	
-	private void plaatsVoorkennisTree(GraphNode graphNode, String variant) {
+	private void plaatsVoorkennisTree(GNode voorkennisPopupNode2, String variant) {
 		factor = 0.75;
-		for(GraphNode gn : graphNodes) {
+		for(GNode gn : graphNodes) {
 			gn.setVisible(false);
 		}
-		String id = graphNode.getID();
+		String id = voorkennisPopupNode2.getID();
 		// find variant structures of id.
 		NodeLeaf leaf = mapById.get(id);
 		List<DomStudentModelVariant> variants = leaf.getInfo().getVariants();
@@ -697,12 +725,12 @@ private String voorkennisPopupVariant;
 				.map(DomStudentModelVariant::getDeselections)
 				.map(StudentModelUtil::strip); // FIXME sommige leerdoelen ids hebben een /... suffix
 		
-		ArrayList<ArrayList<GraphNode>> voorkennisNodes = getVoorkennisNodes(graphNode, deselections);
+		List<List<GNode>> voorkennisNodes = getVoorkennisNodes(voorkennisPopupNode2, deselections);
 		cleanVoorkennisNodes(voorkennisNodes);
 		for(int i=0 ; i<voorkennisNodes.size() ; i++) {
-			ArrayList<GraphNode> gnList = voorkennisNodes.get(i);
+			List<GNode> gnList = voorkennisNodes.get(i);
 			for(int j=0 ; j<gnList.size() ; j++) {
-				GraphNode gn = gnList.get(j);
+				GNode gn = gnList.get(j);
 				if(selectedMethod!=null)
 					gn.setVisible(selectedMethod,true);
 				else
@@ -722,7 +750,7 @@ private String voorkennisPopupVariant;
 		
 	
 
-	public ArrayList<GraphNode> getGraphNodes() {
+	public List<GNode> getGraphNodes() {
 		return graphNodes;
 	}
 
@@ -821,7 +849,8 @@ private String voorkennisPopupVariant;
 			if(!graphNodes.get(i).hasMethodCode(methodeCode))
 				graphNodes.get(i).setVisible(false);
 			else
-				graphNodes.get(i).setVisible(methodeCode, true);
+				if (graphNodes.get(i) instanceof GraphNode)
+					graphNodes.get(i).setVisible(methodeCode, true);
 		}
 		if (b) produceAction("filter");
 		zoomFit();
@@ -1028,7 +1057,7 @@ private String voorkennisPopupVariant;
 	public void verbergVoorkennisTree() {
 		voorkennisTree = false;
 		for(int i = 0 ; i<graphNodes.size() ; i++) {
-			GraphNode node = graphNodes.get(i);
+			GNode node = graphNodes.get(i);
 			node.setTempLocation(null);
 		}
 		for(int i = 0 ; i<graphEdges.size() ; i++) {
@@ -1103,8 +1132,8 @@ private String voorkennisPopupVariant;
 		repaint();
 	}
 	
-	public GraphNode findNode(int x, int y) {
-		GraphNode node = null;
+	public GNode findNode(int x, int y) {
+		GNode node = null;
 		int ex = (int) ((x-origin.x)/factor);
 		int ey = (int) ((y-origin.y)/factor);
 		for (int i = 0; i < graphNodes.size(); i++) {
@@ -1118,6 +1147,8 @@ private String voorkennisPopupVariant;
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		if (crash)
+			crash = false;
 		int dx = e.getX() - startX;
 		int dy = e.getY() - startY;
 		
@@ -1132,7 +1163,7 @@ private String voorkennisPopupVariant;
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		GraphNode mouseOverNode = null;
+		GNode mouseOverNode = null;
 		int ex = (int) ((e.getX()-origin.x)/factor);
 		int ey = (int) ((e.getY()-origin.y)/factor);
 		
@@ -1144,8 +1175,11 @@ private String voorkennisPopupVariant;
 		}
 
 		if (mouseOverNode != null) {
-			//blurVoorkennis(mouseOverNode);
-		} else {
+			{
+				//blurVoorkennis(mouseOverNode);
+				crash = false;
+			}
+		} else if (!crash) {
 			for (int i = 0; i < graphNodes.size(); i++) {
 				graphNodes.get(i).setBlur(false);
 			}
@@ -1158,15 +1192,15 @@ private String voorkennisPopupVariant;
 	}
 
 
-  protected void blurVoorkennis(GraphNode mouseOverNode) {
+  protected void blurVoorkennis(GNode voorkennisPopupNode2) {
     for (int i = 0; i < graphNodes.size(); i++) {
-    	if (graphNodes.get(i) != mouseOverNode) {
+    	if (graphNodes.get(i) != voorkennisPopupNode2) {
     		graphNodes.get(i).setBlur(true);
 
     	}
     }
     for (int i = 0; i < graphEdges.size(); i++) {
-    	if (graphEdges.get(i).getTarget() != mouseOverNode) {
+    	if (graphEdges.get(i).getTarget() != voorkennisPopupNode2) {
     		graphEdges.get(i).setBlur(true);
     	} else {
     		graphEdges.get(i).getSource().setBlur(false);
@@ -1182,6 +1216,7 @@ private String voorkennisPopupVariant;
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		crash = false;
 		startX = e.getX();
 		startY = e.getY();
 		
@@ -1217,11 +1252,12 @@ private String voorkennisPopupVariant;
 			return;
 		int ex = (int) ((e.getX()-origin.x)/factor);
 		int ey = (int) ((e.getY()-origin.y)/factor);
-		GraphNode node = null;
+		GNode node = null;
 		String nodeVariant = "";
-		for(int i=0 ; i<graphNodes.size() ; i++) {
-			if(graphNodes.get(i).contains(ex, ey) || graphNodes.get(i).contains(e.getX(), e.getY())) {
-				node = graphNodes.get(i);
+		for(int i=graphNodes.size()-1 ; i>= 0 ; i--) {
+			GNode tmpnode = graphNodes.get(i);
+			if(tmpnode.contains(ex, ey) || tmpnode.contains(e.getX(), e.getY())) {
+				node = tmpnode;
 				String code = node.search(ex, ey);
 				String v = node.getVariant(code);
 				if (v != null) nodeVariant = "/" + v;
@@ -1300,6 +1336,8 @@ private String voorkennisPopupVariant;
 	}
 
 	Map<String, NodeLeaf> mapById;
+	Map<String, FolderNode> folderById = new HashMap<>();
+	Map<String, NodeVector> parentById = new HashMap<>();
 	
 	public void setModel(TreeModel model, Map<String, Map<String, Set<Integer>>> filter, PersistenceId activeMethod) {
 	    Map<String, GraphNode> graphMap = new LinkedHashMap<>();
@@ -1308,9 +1346,49 @@ private String voorkennisPopupVariant;
 	    methodeLabels.putAll(MethodsProperties.instance().stream().collect(Collectors.toMap(DomMethod::key, DomMethod::getMethod)));
 	    
 		List<NodeLeaf> leaves = new ArrayList<>();
+		List<NodeVector> folders = new ArrayList<>();
 		ArrayList<GraphEdge> edges = new ArrayList<>();
-		searchNodes(model, model.getRoot(), graphMap, "", leaves);
-		setGraphNodes(new ArrayList<>(graphMap.values()));
+		searchNodes(model, model.getRoot(), graphMap, "", leaves, folders);
+		ArrayList<GNode> values = new ArrayList<>(graphMap.values());
+		folderById.clear();
+		int cnt = 0;
+		if (activeMethod == null)
+		for(NodeVector v : folders) {
+			Collection<String> ids = v.stream()
+					.map(o -> (o instanceof NodeLeaf) ?((NodeLeaf) o).getId() : null)
+					.filter(Objects::nonNull)
+					.collect(Collectors.toSet());
+			Collection<GraphNode> nodes = ids.stream().map(id -> graphMap.get(id)).filter(Objects::nonNull)
+					.filter( n -> null != n.getLocation(GNode.NULLKEY))
+					.collect(Collectors.toList()); 
+			if (!nodes.isEmpty())
+			{
+				FolderNode fn = new FolderNode(nodes);
+				fn.description = v.title;
+				fn.ID = v.info.getId();
+				fn.subdomein = "";
+				folderById.put(fn.ID, fn);
+				NodeVector nv = parentById.get(fn.ID);
+				if (nv != null) {
+					FolderNode pn = folderById.get(idOf(nv));
+					if (pn != null) pn.add(fn);
+					else {
+						pn = new FolderNode(new ArrayList<>()); pn.add(fn);
+						pn.description = nv.title;
+						pn.ID = nv.info.getId();
+						pn.subdomein = "";
+						folderById.put(pn.ID, pn);
+// pn zit niet zelf in een ppn
+						cnt = grantparents(pn, cnt, values);
+						values.add(cnt++,pn);
+					}
+				}
+			    fn.expand();
+				values.add(cnt++,fn);
+			}
+		}
+		for (FolderNode fn: folderById.values()) { fn.calculateHull(GNode.NULLKEY); }
+		setGraphNodes(values);
 		searchEdges(leaves, graphMap, edges);
 		setGraphEdges(edges);
 		mapById = leaves.stream().collect(Collectors.toMap(NodeLeaf::getId, Function.identity()));
@@ -1364,6 +1442,27 @@ private String voorkennisPopupVariant;
 		painter.repaint();
 	}
 
+	private int grantparents(FolderNode fn, int cnt, ArrayList<GNode> values) {
+		NodeVector nv = parentById.get(fn.ID);
+		if (nv != null) {
+			FolderNode pn = folderById.get(idOf(nv));
+			if (pn != null) pn.add(fn);
+			else {
+				pn = new FolderNode(new ArrayList<>()); pn.add(fn);
+				pn.description = nv.title;
+				pn.ID = nv.info.getId();
+				pn.subdomein = "";
+				folderById.put(pn.ID, pn);
+//pn zit niet zelf in een ppn
+				cnt = grantparents(pn, cnt, values);
+				values.add(cnt++,pn);
+			}
+			
+		}
+		return cnt;
+	}
+
+
 	private void searchEdges(List<NodeLeaf> leaves, Map<String, GraphNode> graphMap, ArrayList<GraphEdge> edges) {
 		for (NodeLeaf leaf : leaves) {
 			String dest = leaf.getId();
@@ -1376,10 +1475,10 @@ private String voorkennisPopupVariant;
 				    String[] sourceStrings = source.split("/");
 				    source = sourceStrings[0];
 				   
-				    double vkfactor = 1;
+				    float vkfactor = 1;
 				    if(sourceStrings.length>1) {
 				   		System.out.println("vkFactor = "+ vkfactor);
-				   		vkfactor = Double.parseDouble(sourceStrings[1]);
+				   		vkfactor = Float.parseFloat(sourceStrings[1]);
 				    }
 				    GraphNode gns = graphMap.get(source);
 					if (gns != null) {
@@ -1390,7 +1489,7 @@ private String voorkennisPopupVariant;
 		}
 	}
 
-	private void searchNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap, String parent, 	List<NodeLeaf> leaves) {
+	private void searchNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap, String parent, 	List<NodeLeaf> leaves, List<NodeVector> folders) {
 		if (model.isLeaf(node)) {
 			DefaultMutableTreeNode object = (DefaultMutableTreeNode) node;
 			boolean visible = true;
@@ -1436,15 +1535,33 @@ private String voorkennisPopupVariant;
 			parent = "";
 		else
 			parent = parent.substring(0, col);
+		Object o = ((DefaultMutableTreeNode) node).getUserObject();
+		NodeVector nv = null;
+		if (o instanceof NodeVector)
+		{ 
+			nv = (NodeVector) o;
+			folders.add(nv);
+		}
 		Enumeration<?> objects = ((TreeNode)node).children();
 		while (objects.hasMoreElements()) {
 			Object child = objects.nextElement();
-			searchNodes(model, child, graphMap, parent, leaves);
+			parentById.put( idOf(child), nv);
+			searchNodes(model, child, graphMap, parent, leaves, folders);
 		}
 	}
 
+	public static String idOf(Object child) {
+		if (child instanceof DefaultMutableTreeNode)
+		   child = ((DefaultMutableTreeNode) child).getUserObject();
+		if (child instanceof NodeLeaf) return ((NodeLeaf) child).getId();
+		if (child instanceof NodeVector) return ((NodeVector) child).getInfo().getId();
+		if (child instanceof GNode) return ((GNode) child).getID();
+		return null;
+	}
+
+
 	public void updateModel(TreeModel model) {
-		Map<String, GraphNode> graphMap = new HashMap<>();
+		Map<String, GNode> graphMap = new HashMap<>();
 		Map<String, Set<String>> edgeMap = new HashMap<>();
 		for (GraphEdge edge : graphEdges) {
 			String source = edge.getSource().getID();
@@ -1452,13 +1569,13 @@ private String voorkennisPopupVariant;
 			Set<String> sources = edgeMap.computeIfAbsent(dest, k -> new TreeSet<>());
 			sources.add(source);
 		}
-		for (GraphNode node : graphNodes) {
+		for (GNode node : graphNodes) {
 			graphMap.put(node.getID(), node);
 		}
 		updateNodes(model, model.getRoot(), graphMap, edgeMap);
 	}
 
-	private void updateNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap,
+	private void updateNodes(TreeModel model, Object node, Map<String, GNode> graphMap,
 			Map<String, Set<String>> edgeMap) {
 		if (model.isLeaf(node)) {
 			DefaultMutableTreeNode object = (DefaultMutableTreeNode) node;
@@ -1466,7 +1583,7 @@ private String voorkennisPopupVariant;
 			if (node instanceof NodeLeaf) {
 				NodeLeaf leaf = (NodeLeaf) node;
 				String id = leaf.getId();
-				GraphNode gn = graphMap.get(id);
+				GNode gn = graphMap.get(id);
 				if (gn != null && gn.getLocation(GraphNode.NULLKEY)!=null) {
 					leaf.setX(gn.getLocation(GraphNode.NULLKEY).x);
 					leaf.setY(gn.getLocation(GraphNode.NULLKEY).y);
@@ -1522,6 +1639,9 @@ private String voorkennisPopupVariant;
 		}
 	}
 
+	
+	public boolean crash; // slowdown restore blurring
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==zoomInButton && factor<1) {
@@ -1549,6 +1669,7 @@ private String voorkennisPopupVariant;
 		}
 		if (e.getSource() == diVoorkennis) {
 		  blurVoorkennis(voorkennisPopupNode);
+		  crash = true;
 		}
 		if(e.getSource()==voorkennisWegButton) {
 			voorkennisWegButton.setVisible(false);
@@ -1580,7 +1701,7 @@ private String voorkennisPopupVariant;
 		
 		for (int i = 0; i < graphNodes.size(); i++) {
 			//graphNodes.get(i).setTempLocation(null);
-			GraphNode node = graphNodes.get(i);
+			GNode node = graphNodes.get(i);
             if(node.isVisible() && node.getTempLocation()==null) {
               for (String code: node.getVisibleSet()) {
 				Point location = node.getLocation(code);
@@ -1610,6 +1731,7 @@ private String voorkennisPopupVariant;
 	
 	//ActionProducer
 	private ActionListener actionListener = null;
+	private boolean editMode;
 
 	public void addActionListener(ActionListener l) {
 		actionListener = AWTEventMulticaster.add(actionListener, l);
@@ -1635,5 +1757,132 @@ private String voorkennisPopupVariant;
   public boolean isFiltered() {
     return selectedMethod != null;
   }
+
+public void syncFolderNodes(JTree tree) {
+	if (graphNodes.get(0) instanceof FolderNode) {
+//		DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
+//		Enumeration e = root.depthFirstEnumeration();
+//		while (e.hasMoreElements()) {
+//			DefaultMutableTreeNode object = (DefaultMutableTreeNode) e.nextElement();
+//			TreePath path = new TreePath(object.getPath());
+//			if (tree.isExpanded(path)) {
+//				String id = ((NodeVector) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject()).getInfo().getId();
+//				FolderNode fn = folderById.get(id);
+//				fn.expand();
+//			} else {
+//				Object o = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+//				if (o instanceof NodeVector) {
+//					String id = ((NodeVector) o).getInfo().getId();
+//					FolderNode fn = folderById.get(id);
+//					fn.collapse();
+//				}
+//			}
+//						
+//		}
+//	}
+		int cnt = tree.getRowCount();
+		for (int i = 0; i < cnt; i++) {
+			TreePath path = tree.getPathForRow(i);
+		if (tree.isExpanded(path)) {
+			String id = ((NodeVector) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject()).getInfo().getId();
+			FolderNode fn = folderById.get(id);
+			if (fn != null) fn.expand();
+		} else {
+			Object o = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+			if (o instanceof NodeVector) {
+				String id = ((NodeVector) o).getInfo().getId();
+				FolderNode fn = folderById.get(id);
+				if (fn != null) fn.collapse();
+			}
+		}
+	}}
+}
+  
+  
+  
+public void setModel(JTree tree, Map<String, Map<String, Set<Integer>>> filter2, PersistenceId activeMethod2) {
+	TreeModel model = tree.getModel();
+	setModel(model, filter2, activeMethod2);
+	tree.removeTreeExpansionListener(this);
+	if (activeMethod2 == null)
+	{
+		TreeUI ui2 = tree.getUI();
+		tree.updateUI();
+		tree.setUI(ui2); // Wat doet dit precies!
+		tree.addTreeExpansionListener(this);
+		syncFolderNodes(tree);
+	}
+}
+
+
+@Override
+public void treeExpanded(TreeExpansionEvent event) {
+	if (editMode) return;	
+	JTree tree = (JTree) event.getSource();
+	syncFolderNodes(tree);
+	TreePath path = event.getPath();
+	Object o = path.getLastPathComponent();
+	o = ((DefaultMutableTreeNode) o).getUserObject();
+	if (o instanceof NodeVector) {
+		NodeVector v = (NodeVector) o;
+		String id  = v.info.getId();
+		FolderNode fn = folderById.get(id);
+		if (fn != null) {
+			fn.expand();
+			showParentPath(path);			
+			repaint();
+		}
+	}
+}
+
+
+private void showParentPath(TreePath path) {
+	Object o;
+	NodeVector v;
+	String id;
+	FolderNode fn;
+	path = path.getParentPath();
+	if(path != null) {
+		o = path.getPathComponent(0);
+		v = (NodeVector) ((DefaultMutableTreeNode) o).getUserObject();
+		id = v.info.getId();
+		fn = folderById.get(id);
+		if (fn != null)
+			fn.showParent();
+	}
+}
+
+
+@Override
+public void treeCollapsed(TreeExpansionEvent event) {
+	if (editMode) return;
+	Object o = event.getPath().getLastPathComponent();
+	o = ((DefaultMutableTreeNode) o).getUserObject();
+	if (o instanceof NodeVector) {
+		NodeVector v = (NodeVector) o;
+		String id  = v.info.getId();
+		FolderNode fn = folderById.get(id);
+		if (fn != null) {
+			fn.collapse();
+			showParentPath(event.getPath());
+			repaint();
+		}
+	}
+}
+
+
+public void setEditMode(boolean b) {
+	this.editMode = b;
+	if (b) {
+		for (GNode n: graphNodes) {
+			if (n instanceof FolderNode) 
+				((FolderNode) n).expand();
+		}
+	}
+	
+}
+
+	
+
 
 }

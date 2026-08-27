@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 
 import org.osgi.util.promise.Deferred;
 
-class AsyncMediator implements InvocationHandler {
+public class AsyncMediator implements InvocationHandler {
 
 	static final Integer NUL = Integer.valueOf(0);
 	static final Long NULL = Long.valueOf(0);
@@ -30,7 +30,7 @@ class AsyncMediator implements InvocationHandler {
 	
 	
 	
-	AsyncMediator(Async async, Object org) {
+	public AsyncMediator(Async async, Object org) {
 		this.async = async;
 		this.org = org;
 	}

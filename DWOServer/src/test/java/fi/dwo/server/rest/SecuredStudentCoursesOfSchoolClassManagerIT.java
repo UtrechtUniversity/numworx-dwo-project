@@ -2,6 +2,7 @@ package fi.dwo.server.rest;
 
 import static org.junit.Assert.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.SecurityContext;
 
 import org.junit.After;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import fi.dwo.commons.persistence.Dwo2ExceptionJavaTranslator;
 import fi.dwo.commons.persistence.entities.PersistentClassCourse;
@@ -69,6 +71,34 @@ public class SecuredStudentCoursesOfSchoolClassManagerIT {
 		fail("Not yet implemented");
 	}
 
+	@Test
+	public void testIllegalGetCourse() throws Exception {
+	       SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01
+			RestCourse rest = new RestCourse();
+			DomCourse domCourse = new DomCourse();
+			domCourse.setId(PersistentCourse.buildPersistenceId(12L));
+			rest.setDomCourse(domCourse);
+			DomDwoProfile profile = new DomDwoProfile();
+			profile.setId(PersistentDwoProfile.buildPersistenceId(1L));
+			rest.setDomDwoProfile(profile);
+			DomSchoolClassId schoolclass = new DomSchoolClassId();
+			schoolclass.setId(PersistentSchoolClass.buildPersistenceId(1L));
+			rest.setSchoolClassID(schoolclass);
+			DomContext context = new DomContext();
+			rest.setRestContext(context);
+	        DomHasRole domHasRole;
+	        domHasRole = HasRoleUtilManager.getCurrentHasRole(sc.getUserPrincipal().getName(), RoleType.STUDENT).buildDomHasRole();
+	        rest.getRestContext().setDomHasRole(domHasRole);
+			HttpServletRequest mock = Mockito.mock(HttpServletRequest.class);
+			StringBuffer sb = new StringBuffer();
+			sb.append("https://localhost:8080/dwo/rest/secure/student/enz");
+			Mockito.when(mock.getRequestURL()).thenReturn(sb);
+			DomCoursesOfSchoolClass result = manager.getCourse(sc, rest, mock);
+		
+		
+	}
+	
+	
 	@Test
 	public void testGetCourse() throws Exception {
         SecurityContext sc = new TestSecurityContext("user02", RoleType.STUDENT);//school01

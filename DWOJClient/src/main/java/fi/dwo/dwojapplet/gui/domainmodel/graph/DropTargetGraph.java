@@ -31,8 +31,8 @@ public class DropTargetGraph extends DropTargetAdapter {
 				double factor = graph.getFactor();
 				int ex = (int) ((location.x - origin.x) / factor);
 				int ey = (int) ((location.y - origin.y) / factor);
-				List<GraphNode> nodes = graph.getGraphNodes();
-				for (GraphNode node : nodes) {
+				List<GNode> nodes = graph.getGraphNodes();
+				for (GNode node : nodes) {
 					if (node.getID().equals(id)) {
 					    if (node.isVisible()) {
 					        node.getVisibleSet().forEach(t -> node.setSelected(t, true));

@@ -20,7 +20,8 @@ public class DebugGraph extends Graph {
     graphNodes.get(23).setSuccesFailScore(0.0);
     graphNodes.get(25).setSuccesFailScore(0.0);
   }
-
+  private ArrayList<GraphNode> graphNodes = new ArrayList<>();
+  
   public void makeExample() {
   	graphNodes.add(new GraphNode("0", "", "", -1000,-1000));
   	graphNodes.add(new GraphNode("1", "D1.2a", "Roosterpapier", -769, 190));
@@ -95,8 +96,8 @@ public class DebugGraph extends Graph {
   	graphEdges.add(new GraphEdge(graphNodes.get(15), graphNodes.get(21)));
   }
 
-  public ArrayList<GraphNode> transformFromGephi(ArrayList<GraphNode> graphNodes) {
-  	ArrayList<GraphNode> graphNodesNew = new ArrayList<GraphNode>();
+  public ArrayList<GNode> transformFromGephi(ArrayList<GraphNode> graphNodes) {
+  	ArrayList<GNode> graphNodesNew = new ArrayList<>();
   	for(int i=0 ; i<graphNodes.size() ; i++) {
   		GraphNode gn = graphNodes.get(i);
   		double factor = 0.5;

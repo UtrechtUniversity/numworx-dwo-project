@@ -11,6 +11,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public class ChapterGraphNode {
 	private FontMetrics fm;
 	private Font font = defaultFont;
 	
-	private ArrayList<GraphNode> graphNodes = new ArrayList<GraphNode>();
+	private ArrayList<GNode> graphNodes = new ArrayList<GNode>();
 	private ArrayList<GraphNode> voorkennisNodes = new ArrayList<GraphNode>();
 	private ArrayList<GraphEdge> voorkennisEdges = new ArrayList<GraphEdge>();
 	
@@ -48,22 +49,22 @@ public class ChapterGraphNode {
 		return hfstDescriptionsMap.get(hfstCode);
 	}
 	
-	public ChapterGraphNode(String hfstCode, ArrayList<GraphNode> graphNodes, ArrayList<GraphEdge> graphEdges, PersistenceId activeMethod) {
+	public ChapterGraphNode(String hfstCode, List<GNode> graphNodes2, ArrayList<GraphEdge> graphEdges, PersistenceId activeMethod) {
 		if(hfstDescriptionsMap==null) {
 			hfstDescriptionsMap = new HashMap<String, String>();
 			hfstDescriptionsMap.putAll(MethodsProperties.instance().getDescriptionsMap(activeMethod));
 		}
 		this.hfstCode = hfstCode;
-		makeLocation(graphNodes);
+		makeLocation(graphNodes2);
 		setVoorkennis(graphEdges);
 	}
 	
-	public void makeLocation(ArrayList<GraphNode> graphNodes) {
+	public void makeLocation(List<GNode> graphNodes2) {
 		int hfstCumX = 0;
 		int hfstCumY = 0;
 		int hfstCount = 0;
 		
-		for (GraphNode node : graphNodes) {
+		for (GNode node : graphNodes2) {
 			if(node.isVisible(hfstCode) && node.hasMethodCode(hfstCode)) {
 				final Point loc = node.getLocation(hfstCode);
 				if (loc == null) continue; // NPE check
@@ -88,7 +89,7 @@ public class ChapterGraphNode {
 		return hfstCode.startsWith(bookCode);
 	}
 	
-	public ArrayList<GraphNode> getGraphNodes() {
+	public ArrayList<GNode> getGraphNodes() {
 		return graphNodes;
 	}
 	
@@ -98,7 +99,7 @@ public class ChapterGraphNode {
 		for (GraphEdge edge : graphEdges) {
 			if(edge.getTarget().hasChapterCode(hfstCode) && !edge.getSource().hasChapterCode(hfstCode)) {
 				if(!voorkennisNodes.contains(edge.getSource()) && edge.getSource().hasMethodCode(hfstCode))
-					voorkennisNodes.add(edge.getSource());
+					voorkennisNodes.add((GraphNode) edge.getSource());
 				if(!voorkennisEdges.contains(edge))
 					voorkennisEdges.add(edge);
 			}

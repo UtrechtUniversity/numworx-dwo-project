@@ -8,7 +8,7 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>dwo</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.1</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <!-- Adjust artifact, name and description for new projects -->
@@ -52,7 +52,8 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<proguard.lib>${java.home}/lib/rt.jar</proguard.lib>
-		
+
+		<proguard.version>7.5.0</proguard.version>
     </properties>
 
     <dependencies>
@@ -118,7 +119,6 @@
         <dependency>
             <groupId>com.owlike</groupId>
             <artifactId>genson</artifactId>
-            <version>1.4</version>
         </dependency> 
         
 <!-- 4MB file with dependencies 
@@ -359,14 +359,6 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addClasspath>false</addClasspath>
                         </manifest>
-<!--                          <manifestEntries> -->
-<!--                             <Class-Path>swingbrowser-jxb.jar swingbrowser-jfx.jar swingbrowser-api.jar</Class-Path> -->
-<!--                             <DWOJApplet-Implementation-Version>${project.version}</DWOJApplet-Implementation-Version> -->
-<!--                             <Implementation-Build>${buildNumber}</Implementation-Build> -->
-<!--                             <Implementation-Timestamp>${timestamp}</Implementation-Timestamp> -->
-<!--                             <Implementation-ScmBranch>${buildScmBranch}</Implementation-ScmBranch> -->
-<!--                             <DWOJApplet-Implementation-Build>${buildNumber}</DWOJApplet-Implementation-Build> -->
-<!--  						 </manifestEntries> -->
     				</archive> 
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -529,14 +521,13 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <proguardVersion>7.4.2</proguardVersion>
+                            <proguardVersion>${proguard.version}</proguardVersion>
                             <options>
                                 <option>-verbose</option>
                                 <option>-dontwarn</option> 
                                 <option>-printconfiguration ${project.build.directory}/mapping.txt</option>
                             </options>
-                            <obfuscate>true</obfuscate>                    
-                            <inputDirectory>${project.build.directory}</inputDirectory>
+                            <obfuscate>true</obfuscate>
                             <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
                             <outFilter>!org/xml/sax/**.class</outFilter>
                             <!-- uncomment to change the output file 
@@ -555,7 +546,7 @@
                             <dependency>
                                 <groupId>com.guardsquare</groupId>
                                 <artifactId>proguard-base</artifactId>
-                                <version>7.4.2</version>
+                                <version>${proguard.version}</version>
                                 <scope>runtime</scope>
                             </dependency>
                         </dependencies>

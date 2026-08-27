@@ -31,6 +31,7 @@ public class ExportAction extends AbstractAction {
   interface ExportPanel {
     Component asComponent();
     DomStudentModelStructure getModel();
+	void save(DomStudentModelStructure model);
   }
   
   

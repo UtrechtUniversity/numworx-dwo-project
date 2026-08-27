@@ -9,11 +9,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-class GraphTreeAction implements ActionListener {
+public class GraphTreeAction implements ActionListener {
 
   private JTree tree;
 
-  GraphTreeAction(JTree tree) {
+  public GraphTreeAction(JTree tree) {
     this.tree = tree;
   }
 
@@ -34,6 +34,10 @@ class GraphTreeAction implements ActionListener {
         tree.setSelectionPath(new TreePath(nodes));
         tree.scrollPathToVisible(tree.getSelectionPath());
         break;
+      } else if(uo instanceof NodeVector && id.equals(((NodeVector) uo).info.getId())) {
+    	  tree.setSelectionPath(new TreePath(node.getPath()));
+    	  tree.scrollPathToVisible(tree.getSelectionPath());
+    	  break;
       }
     }
 

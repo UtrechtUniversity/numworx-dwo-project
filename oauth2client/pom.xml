@@ -11,7 +11,7 @@
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>dwo</artifactId>
 		<relativePath>../DWO</relativePath>
-		<version>3.0.0</version>
+		<version>3.0.1</version>
   </parent>
 
   <properties>

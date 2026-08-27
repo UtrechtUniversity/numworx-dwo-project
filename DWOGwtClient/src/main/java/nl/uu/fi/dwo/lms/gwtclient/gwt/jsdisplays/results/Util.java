@@ -87,10 +87,9 @@ class Util {
              DomResultStudentScoPage page = (DomResultStudentScoPage) node;
              json.put("maxScore", dnull(page.getMaxScore()));
              json.put("bonus", new JSONNumber(d(page.getCorrectie())));
-             //json.put("label", new JSONString(page.getLabel()));
              json.put("sequence", new JSONNumber(page.getNodeId()));
+             json.put("maxFactor", dnull(page.getMaxFactor()));
          }
-  //        json.put("node-id", new JSONNumber(node.getNodeId()));
           //Add children.
           if (node.getChildren() != null && !node.getChildren().isEmpty()) {
               //there are children
@@ -113,7 +112,7 @@ class Util {
     return 0.0;
   }
 
-  private static JSONValue dnull(Double d) { // Voorkom npe op double
+  private static JSONValue dnull(Number d) { // Voorkom npe op double
 	    if (d != null) return new JSONNumber(d.doubleValue());
 	    return JSONNull.getInstance();
 	  }

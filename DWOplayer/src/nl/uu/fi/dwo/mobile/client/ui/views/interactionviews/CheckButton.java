@@ -349,7 +349,7 @@ public class CheckButton implements InteractionStub, CBookEventListener
 			checkButton.setTextColor(CssColor.make(textColorString));
 			checkButton.setSize(breedte, hoogte);
 		}
-		
+		checkButton.getWidget().getElement().setAttribute("aria-label", Text.constants.klaarKnopLabel());
 		breedte = imWidth;
 		hoogte = imHeight + 5;
 		ashoogte = hoogte / 2 + 7;

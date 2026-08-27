@@ -306,7 +306,12 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     } else {
     	if (!Boolean.TRUE.equals(pcc.hasResults()))
     	{
-    		pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE);
+    		// hier NPE als pcc niet persistent is.
+    		if (pcc.getClassCourseID() != 0)
+    			pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE);
+    		else { // niet persistent 
+    			pcc.setResults(Boolean.TRUE);
+    		}
     	}  	
       DomClassCourse dcc = pcc.buildDomClassCourse();
       URI uri = URI.create(request.getRequestURL().toString());

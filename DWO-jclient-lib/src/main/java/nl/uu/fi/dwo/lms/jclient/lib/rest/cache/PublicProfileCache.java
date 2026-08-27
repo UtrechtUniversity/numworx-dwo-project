@@ -34,7 +34,7 @@ public class PublicProfileCache {
 			} catch(Dwo2Exception ex) {
 				if (ex.getDwo2Code() == Dwo2ExceptionCode.Rest_ResourceNotFound)
 					putInCache(name, NULL);				
-			} catch (Exception e) {
+			} catch (Exception|NoClassDefFoundError e) {
 			}
 		} else if (result.getId() == null)
 			return null;		
@@ -44,7 +44,7 @@ public class PublicProfileCache {
 	public static void putInCache(String name, DomDwoProfileFull result) {
 		try {
 			cache().put(name, result);
-		} catch (Exception e) {
+		} catch (Exception|NoClassDefFoundError e) {
 		} catch (Error oops) {
 			oops.printStackTrace();
 		}
@@ -62,7 +62,7 @@ public class PublicProfileCache {
 		DomDwoProfileFull result = null;
 		try {
 			result = cache().get(name);
-		} catch (Exception e) {
+		} catch (Exception|NoClassDefFoundError e) {
 		} catch (Error oops) {
 			oops.printStackTrace();
 		}
@@ -80,7 +80,7 @@ public class PublicProfileCache {
 	public static void clear() {
 		try {
 			cache().clear();
-		} catch (Exception e) {
+		} catch (Exception|NoClassDefFoundError e) {
 		} catch (Error oops) {
 			oops.printStackTrace();
 		}
