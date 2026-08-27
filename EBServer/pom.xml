@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>dwo</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<version>3.0.2-SNAPSHOT</version>
 		<relativePath>../DWO/pom.xml</relativePath>
 	</parent>
 	<artifactId>ebserver</artifactId>
@@ -99,7 +99,7 @@
 				<dependency>			
 				    <groupId>nl.uu.fi.dwo.lms</groupId>
     				<artifactId>dwogwtclient</artifactId>
-					<version>3.0.1-SNAPSHOT</version>
+					<version>3.0.2-SNAPSHOT</version>
 					<classifier>classes</classifier>
 					<exclusions>
 						<exclusion>
@@ -294,7 +294,7 @@
 	<dependency>
 		<groupId>nl.uu.fi.dwo.lms</groupId>
 		<artifactId>dwogwtclient</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<version>3.0.2-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
@@ -347,7 +347,7 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>oauth2client</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<version>3.0.2-SNAPSHOT</version>
 		<classifier>classes</classifier>
 		<exclusions>
 			<exclusion>
@@ -359,7 +359,7 @@
 	<dependency>
 		<groupId>nl.numworx.oauth2</groupId>
 		<artifactId>oauth2client</artifactId>
-		<version>3.0.1-SNAPSHOT</version>
+		<version>3.0.2-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
