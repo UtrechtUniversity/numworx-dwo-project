@@ -122,49 +122,6 @@ class ScoMapper  {
 		return objects.get(oid);
 	}
    	
-    /*
-     * (non-Javadoc)
-     * 
-     * @see fi.dwo.client.persistence.XmlRpcMapper#update(java.lang.Object,
-     *      java.util.Hashtable)
-     */
-     private Sco update(Sco obj, Hashtable data) throws PersistenceException {
-        Sco s = (Sco) obj;
-        s.setScoID(((Integer) data.get("scoID")).intValue());
-        s.setName((String) data.get("sconame"));
-        s.setDescription((String) data.get("description"));
-        s.setSequencenr(((Integer) data.get("sequencenr")).intValue());
-        if (!data.get("appletID").equals("")) {
-            s.setAppletID(((Integer) data.get("appletID")).intValue());
-        }
-
-        if (!data.get("courseID").equals("")) {
-            Course c;
-            Number courseID = (Number) data.get("courseID");
-            c = PersistenceFacade.instance().getCourse(courseID.intValue());
-            if (c != null) {
-                s.setCourse(c);
-            }
-        }
-        if (data.containsKey("showscore")) {
-            s.setShowScore(!Boolean.TRUE.equals(data.get("showscore"))); // Reverse logic, 
-        }
-
-        final Object object = data.get("launchdata");
-        if (object != null && !object.equals("")) {
-            s.setLaunchdata((Hashtable) new StringCodeObject((String) object).toObject());
-            s.setDataChanged(false);
-        }
-// FIXME als s instanceof Lazy, set launchdata null anders meteen ophalen.
-/*		else 
-         * 		{ s.setLaunchdata stale...
-         * 		}		
-         */
-
-        s.setCourseChanged(false);
-        return s;
-    }
-
     /* (non-Javadoc)
      * @see fi.dwo.client.persistence.XmlRpcMapper#createArray(int)
      */
@@ -235,6 +192,7 @@ class ScoMapper  {
         s.setAppletID(PersistenceFacade.idOf(item.getAppletId()));
         s.setCourse(parent);
         s.setShowScore(!Boolean.TRUE.equals(item.getShowScore())); // Reverse logic, 
+        s.setShowDocent(item.getShowDocent());
         s.setCourseChanged(false);
         objects.putIfAbsent(id, s);
         result[i++] = s;
