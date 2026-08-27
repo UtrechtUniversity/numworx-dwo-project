@@ -117,6 +117,30 @@ public class WrapSco extends Sco {
     }
 
     /**
+	 * @return
+	 * @see fi.dwo.dwojapplet.domain.Sco#isShowDocent()
+	 */
+	public boolean isShowDocent() {
+		return delegate.isShowDocent();
+	}
+
+	/**
+	 * @return
+	 * @see fi.dwo.dwojapplet.domain.Sco#getShowDocent()
+	 */
+	public Boolean getShowDocent() {
+		return delegate.getShowDocent();
+	}
+
+	/**
+	 * @param showDocent
+	 * @see fi.dwo.dwojapplet.domain.Sco#setShowDocent(java.lang.Boolean)
+	 */
+	public void setShowDocent(Boolean showDocent) {
+		delegate.setShowDocent(showDocent);
+	}
+
+	/**
      * @param key
      * @return
      * @see fi.beans.scorm.ScormAdapter#LMSGetValue(java.lang.String)
