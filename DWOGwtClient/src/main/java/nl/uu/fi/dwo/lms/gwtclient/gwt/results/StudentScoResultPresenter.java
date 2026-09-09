@@ -579,9 +579,10 @@ LOG.severe("log studentscopages : " + ssc.getChildren().size());
   }
   @JsMethod
   public String print(JavaScriptObject context) {
+	Deferred<Boolean> startPrint = this.startPrint;
 	if (startPrint == null) {
-		startPrint = new Deferred<>();
-		updateFrame(ssc.getStudentSco());
+		this.startPrint = startPrint = new Deferred<>();
+		updateFrame(ssc.getStudentSco()); // Note: can clear and resolve this.startPrint
 	}
 	 
 	startPrint.getPromise().onResolve( () -> {
