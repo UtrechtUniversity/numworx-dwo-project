@@ -3,6 +3,7 @@ algebrapijlengwt/
 graphtoolgwt/
 aimodelgwt/
 leerdoelwidgetgwt/
+fsmgwt/
 GeoDefinerGWT.*
 GraphToolGWT.*
 AIModelGWT.*
@@ -19,3 +20,4 @@ streamgwt/
 Stream.css
 StreamGWT.html
 main.js
+Fsmgwt.*
