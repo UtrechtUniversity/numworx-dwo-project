@@ -17,7 +17,6 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <chatGWTVersion>2.5.26</chatGWTVersion>
         <tomcat7.version>7.0.108</tomcat7.version>
-        <dwoVersion>3.0.1</dwoVersion>
     </properties>
     
     <!-- should move project role names here that fall in the full project scope -->
@@ -113,12 +112,12 @@
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-api</artifactId>
-			<version>0.0.20</version>
+			<version>0.0.22-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>nl.numworx.swingbrowser</groupId>
 			<artifactId>swingbrowser-jxb</artifactId>
-			<version>0.0.20</version>
+			<version>0.0.22-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
