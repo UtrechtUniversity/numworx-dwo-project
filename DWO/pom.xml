@@ -26,7 +26,7 @@
 <!--        <module>../DWO-gwt-lib</module> -->
 <!--   	   <module>../Account</module> -->
 <!--  	   <module>../DWOformule</module> -->
-<!--  	 	<module>../DWOmAccess</module> -->
+  	 	<module>../DWOmAccess</module>
        <module>../DWO-commons-lib</module>
          <module>../DWO-jclient-lib</module>
    	 	<module>../DWO-apps</module>
