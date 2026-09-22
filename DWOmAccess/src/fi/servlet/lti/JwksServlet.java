@@ -54,7 +54,7 @@ public class JwksServlet extends HttpServlet {
   @SuppressWarnings("restriction")
   private void extractJwks(HttpServletResponse resp) throws IOException {
 	  
-	  ProviderInfo info = ProviderInfo.get("http://localhost:9001"); // the one and only....
+	  ProviderInfo info = ProviderInfo.get("http://localhost:8000"); // the one and only....
 
       String privateKeyPem = info.privateKey;
       DerInputStream derReader = new DerInputStream(Base64.getDecoder().decode(privateKeyPem));

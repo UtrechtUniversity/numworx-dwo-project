@@ -36,6 +36,8 @@
 <%@ page import="edu.uoc.elc.lti.platform.*" %>
 <%@ page import="edu.uoc.lti.deeplink.content.*" %>
 <%@ page import="edu.uoc.elc.lti.tool.deeplinking.*" %>
+<%@ page import="nl.uu.fi.dwo.rest.dom.entities.DomSamlUser" %>
+<%@ page import="java.nio.charset.StandardCharsets" %>
 <%! 
 	private DbAccess instance;
 	
@@ -60,24 +62,36 @@
   Enumeration<String> en = request.getParameterNames();
   while (en.hasMoreElements()) {
     String paramName = (String) en.nextElement();
-    out.println(paramName + " = " + request.getParameter(paramName) );
+   /// out.println(paramName + " = " + request.getParameter(paramName) );
   }
 
   String token = request.getParameter("id_token");
   String state = request.getParameter("state");
+  String auth = "";
   boolean valid = tool.isValid() || tool.validate(token, state);
   if (valid) {
     if (tool.isDeepLinkingRequest()) {
     	
     } else {
-    	if (getDbAccess().setEntreeCookie(tool, request, response)) return;
+    	DomSamlUser u = getDbAccess().setEntreeCookie(tool, request, response);
+    	if (u == null) return;
+		 { 
+			 String lti_id = u.getSamlUserId();
+			 String org_id = u.getSamlOrgId();
+			 String authToken = u.getAuthToken();
+			 String t = "3\f" + lti_id + '\f' + org_id + '\f' + authToken;
+		     t = java.util.Base64.getEncoder().encodeToString(t.getBytes(StandardCharsets.UTF_8));
+    		 auth = "&a=" + t;
+	   }
     }
   } else {
 	   response.sendError(400, tool.getReason());
 	   return;
   }
   Settings presentation = tool.getDeepLinkingSettings();
-  String return_url = presentation.getDeep_link_return_url();
+  String return_url = 
+		  presentation == null ? "about:blank" :
+		  presentation.getDeep_link_return_url();
   String language = tool.getLocale(); if (language == null) language = "nl";
   // FIXME width and height from claimsaccessor enum/class Presentation
   int width = 0 /*presentation.getWidth()*/;
@@ -98,6 +112,6 @@
 <a id='return_url' href='<%=return_url%>'>Logout</a>
 </div>
 <iframe id='bodypane'
-	src="player.jsp?profile=<%=profile %>&locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
+	src="player.jsp?profile=<%=profile %><%=auth %>&locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
 >
 </iframe>

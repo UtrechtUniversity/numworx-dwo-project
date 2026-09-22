@@ -59,8 +59,8 @@ public class ProviderInfo {
         key_set_url = "http://localhost:9001/platform/jwks.php",
         kid = "58f36e10-c1c1-4df0-af8b-85c857d1634f",   
 		deploymentId = "8c49a5fa-f955-405e-865f-3d7e959e809f";	
-/* Moodle
-Platform ID: http://localhost
+/* Moodle op spindle
+Platform ID: http://localhost:8000
 Client ID: Fyod8LYgnpG084A
 Deployment ID: 1
 Public keyset URL: http://localhost/mod/lti/certs.php
@@ -68,13 +68,13 @@ Access token URL: http://localhost/mod/lti/token.php
 Authentication request URL: http://localhost/mod/lti/auth.php
  */
 	
-	{
-		platform = "http://localhost";
-		client_id = "EY04ivgJDZcxcGE";
+	{  // moodle op localhost:8000
+		platform = "http://localhost:8000";
+		client_id = "lznKE3Yaw3nEw47";
 		deploymentId = "1";	
-        key_set_url = "http://localhost/mod/lti/certs.php";
-        auth_token_url = "http://localhost/mod/lti/token.php";
-        auth_login_url = "http://localhost/mod/lti/auth.php";
+        key_set_url = "http://localhost:8000/mod/lti/certs.php";
+        auth_token_url = "http://localhost:8000/mod/lti/token.php";
+        auth_login_url = "http://localhost:8000/mod/lti/auth.php";
 	}
 	
     String publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0MkrXiaPUxRzGOwrmSQKlDXUFn9veJlUybecFN07QIlqU758DxsSAvv8ZGPnzQVBKy9ykoXoaxecpKEIe/kK5qPbAVvnK6lGFbUl1QkK/NnHwf2zDy4S1f/OLh0oyKcI7izkUUl4lLzim5jsNChxpY00xqi5lh8Sk2qRppbbUR8rojTnl64mZq3P6Rl3GlXKj4GpRCFTdWb4Gyrx6KU6IZ2rufnGSSfRK4jnuASvTBW4PBbipxXN3mjPukx0tsWIYHh3hhv0DZUnOPBShPf0aTeT4c8+rjZ7EhDZJJr/OlLW9d+wonFKIz+fCdjzBxdGUEdoMsU7pW5xsmp8obAHUQIDAQAB";
@@ -247,7 +247,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 	    String target = request.getParameter("target_link_uri");
 	    // FIXME security: check target vs launch_url
 	    // if (not okay) target = launch_url
-	    if (false) target = launch_url;
+	    if (true) target = launch_url;
 	    builder.target_link_uri(target);
 		String login_hint = request.getParameter("login_hint");
 		login_hint = URLEncoder.encode(login_hint);

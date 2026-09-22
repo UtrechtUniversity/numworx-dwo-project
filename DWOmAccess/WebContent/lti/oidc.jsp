@@ -10,8 +10,10 @@
 
 <%
 	ProviderInfo info = ProviderInfo.get(request);
-	String launch_url = "http://localhost:8081/DWOmAccess/lti/tool13.jsp";
-	//session.setAttribute("tool", info.tool);
+	String launch_url = "http://spindle.fisme.uu.nl:8080/DWOmAccess/lti/tool13.jsp";
+//	launch_url = response.encodeURL(launch_url);
+//	launch_url = launch_url.replace(";", "%3B");
+//	//session.setAttribute("tool", info.tool);
 %>
 </head>
 <body>

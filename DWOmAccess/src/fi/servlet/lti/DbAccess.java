@@ -189,7 +189,7 @@ public class DbAccess {
     return String.valueOf(o);
   }
 
-	public boolean setEntreeCookie(Tool tool, HttpServletRequest request, HttpServletResponse response ) {
+	public DomSamlUser setEntreeCookie(Tool tool, HttpServletRequest request, HttpServletResponse response ) {
 		User tuser = tool.getUser();
 		Platform platform = tool.getPlatform();
 		Context context = tool.getContext();
@@ -197,17 +197,17 @@ public class DbAccess {
 		String lti_id = tuser.getId();
 		if (user_id == null) user_id = lti_id;
 		String organisation = platform.getName();
-		String org_id = "\"lti13:" + tool.getIssuer() + "\"";
+		String org_id = "lti13:" + tool.getIssuer();
 		String context_label = context.getLabel();
 
 		   DomSamlUser u = new DomSamlUser();
-		   u.setSamlOrgId(s(org_id));
+		   u.setSamlOrgId(s(org_id)); // zonder ""
 		   u.setSamlUserId(s(user_id));
 		   String path = "/";
 	       Cookie user = new Cookie(DWO_SAML_USER_ID, u.getSamlUserId());
 	       user.setPath(path);
 	       user.setSecure(request.isSecure());
-	       Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId());
+	       Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId()); // MET ???
 	       orgid.setPath(path);
 	       orgid.setSecure(request.isSecure());
 	       response.addCookie(user);
@@ -218,18 +218,23 @@ public class DbAccess {
 		       authToken.setSecure(request.isSecure());
 		       authToken.setPath(path);
 		       response.addCookie(authToken);
-		       return false;	  	       
+		       return u;	  	       
 		   } catch(Dwo2Exception e) {
 		       LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
 		       try {
-		         response.sendRedirect("/dwo/register/Register.html?cancel="
-		        	    + URLEncoder.encode(tool.getDeepLinkingSettings().getDeep_link_return_url(), "UTF-8")
+		         String return_url = 
+		        		 tool.isDeepLinkingRequest() ?
+		        		 tool.getDeepLinkingSettings().getDeep_link_return_url()
+		        		 : request.getRequestURL().toString();
+		         
+				response.sendRedirect("/dwo/register/Register.html?cancel="
+		        	    + URLEncoder.encode(return_url, "UTF-8")
 		         		+ "&next=" + 
 		         		  URLEncoder.encode(request.getRequestURL().toString(), "UTF-8")
 		         );
 		       } catch (IOException e1) {
 		       }
-		       return true;
+		       return null;
 		   }
 		}
 
