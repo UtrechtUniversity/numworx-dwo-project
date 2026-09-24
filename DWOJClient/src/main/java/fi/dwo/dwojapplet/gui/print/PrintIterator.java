@@ -24,6 +24,7 @@ public class PrintIterator implements Printable {
 	@Override
 	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)
 			throws PrinterException {
+		System.runFinalization();
 		if(pageIndex < page ) {
 			current = null;
 			pages = collection.iterator();
