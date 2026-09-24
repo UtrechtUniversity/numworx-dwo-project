@@ -64,7 +64,21 @@ public class StudentModelChoicePanel extends JSplitPane implements TreeSelection
     private  NodeLeaf leaf;
     private boolean readonly;
  
-    public LeafNodeEditor(JTree tree, boolean b, ChoiceCellRenderer renderer, Consumer<TreePath> savePath) {
+    /**
+	 * @return the readonly
+	 */
+	public boolean isReadonly() {
+		return readonly;
+	}
+
+	/**
+	 * @param readonly the readonly to set
+	 */
+	public void setReadonly(boolean readonly) {
+		this.readonly = readonly;
+	}
+
+	public LeafNodeEditor(JTree tree, boolean b, ChoiceCellRenderer renderer, Consumer<TreePath> savePath) {
        this.renderer = renderer;
        this.enabled = renderer.enabled;
        this.savePath = savePath;
