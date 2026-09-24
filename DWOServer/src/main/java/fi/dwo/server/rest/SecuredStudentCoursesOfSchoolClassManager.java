@@ -366,6 +366,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     	  pcc.setClassID(psc.getClassID());
     	  pcc.setCourseID(pc.getCourseID());
     	  pcc.setLastChangeTimeStamp(NOW.getTime());
+    	  pcc.setResults(Boolean.TRUE); // most likely student starts an activity!
     	  pcc.setType(0);
     	  pcc.setViewState(ViewState.none);
     	  long parentpid = pc.getParentID();

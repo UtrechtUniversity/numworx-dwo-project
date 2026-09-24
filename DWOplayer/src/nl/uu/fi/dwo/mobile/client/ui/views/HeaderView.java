@@ -34,5 +34,6 @@ public interface HeaderView extends IsWidget {
 	
 	default HeaderView install() {return this; }
 	default void installTop(Widget w) { }
+	default boolean isHeaderVisible() { return true; }
 
 }

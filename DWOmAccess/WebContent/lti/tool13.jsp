@@ -26,7 +26,7 @@
     }
 	#bodypane {
 		width: 100%;
-		height: 90%;
+		height: 100%;
 		margin: 0px;
 	}
   </style> 
@@ -117,6 +117,6 @@
 <a id='return_url' href='<%=return_url%>'>Logout</a>
 </div>
 <iframe id='bodypane'
-	src="player.jsp?profile=<%=profile %><%=auth %>&locale=<%=language%><%=sconr%>"
+	src="player.jsp?header=less&profile=<%=profile %><%=auth %>&locale=<%=language%><%=sconr%>"
 >
 </iframe>

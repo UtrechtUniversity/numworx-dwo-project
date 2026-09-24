@@ -91,7 +91,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 	
 	static {  // moodle op localhost:8000
 		String platform = "http://localhost:8000";
-		String client_id = "lznKE3Yaw3nEw47";
+		String client_id = "6wRd5hhCBn4ruoh";
 		String deploymentId = "1";	
         String key_set_url = "http://localhost:8000/mod/lti/certs.php";
         String auth_token_url = "http://localhost:8000/mod/lti/token.php";
