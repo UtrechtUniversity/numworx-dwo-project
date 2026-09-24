@@ -23,7 +23,12 @@
   	}
     #headerpane {
     	display: none;
-    } 
+    }
+	#bodypane {
+		width: 100%;
+		height: 90%;
+		margin: 0px;
+	}
   </style> 
 </head>
 <body style="font-family:sans-serif">
@@ -112,6 +117,6 @@
 <a id='return_url' href='<%=return_url%>'>Logout</a>
 </div>
 <iframe id='bodypane'
-	src="player.jsp?profile=<%=profile %><%=auth %>&locale=<%=language%><%=sconr%>" width="<%=width%>" height="<%=height%>"
+	src="player.jsp?profile=<%=profile %><%=auth %>&locale=<%=language%><%=sconr%>"
 >
 </iframe>

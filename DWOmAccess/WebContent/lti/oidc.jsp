@@ -10,9 +10,9 @@
 
 <%
 	ProviderInfo info = ProviderInfo.get(request);
-	String launch_url = "http://spindle.fisme.uu.nl:8080/DWOmAccess/lti/tool13.jsp";
-//	launch_url = response.encodeURL(launch_url);
-//	launch_url = launch_url.replace(";", "%3B");
+	String launch_url = "http://localhost:8080/DWOmAccess/lti/tool13.jsp";
+//	launch_url = response.encodeURL(launch_url); // does not work in Moodle! No wildcards allowed
+
 //	//session.setAttribute("tool", info.tool);
 %>
 </head>
