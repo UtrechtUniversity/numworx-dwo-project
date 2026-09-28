@@ -71,7 +71,7 @@ public class ProviderInfo {
 		
 	}
 	
-    public Tool tool; // = new Tool(toolDefinition, claimAccessor, oidcLaunchSession, toolBuilders)
+    public LtiTool tool; // = new Tool(toolDefinition, claimAccessor, oidcLaunchSession, toolBuilders)
     public LaunchSession launchSession;
     static String publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0MkrXiaPUxRzGOwrmSQKlDXUFn9veJlUybecFN07QIlqU758DxsSAvv8ZGPnzQVBKy9ykoXoaxecpKEIe/kK5qPbAVvnK6lGFbUl1QkK/NnHwf2zDy4S1f/OLh0oyKcI7izkUUl4lLzim5jsNChxpY00xqi5lh8Sk2qRppbbUR8rojTnl64mZq3P6Rl3GlXKj4GpRCFTdWb4Gyrx6KU6IZ2rufnGSSfRK4jnuASvTBW4PBbipxXN3mjPukx0tsWIYHh3hhv0DZUnOPBShPf0aTeT4c8+rjZ7EhDZJJr/OlLW9d+wonFKIz+fCdjzBxdGUEdoMsU7pW5xsmp8obAHUQIDAQAB";
     static String privateKey = "MIIEpQIBAAKCAQEA0MkrXiaPUxRzGOwrmSQKlDXUFn9veJlUybecFN07QIlqU758DxsSAvv8ZGPnzQVBKy9ykoXoaxecpKEIe/kK5qPbAVvnK6lGFbUl1QkK/NnHwf2zDy4S1f/OLh0oyKcI7izkUUl4lLzim5jsNChxpY00xqi5lh8Sk2qRppbbUR8rojTnl64mZq3P6Rl3GlXKj4GpRCFTdWb4Gyrx6KU6IZ2rufnGSSfRK4jnuASvTBW4PBbipxXN3mjPukx0tsWIYHh3hhv0DZUnOPBShPf0aTeT4c8+rjZ7EhDZJJr/OlLW9d+wonFKIz+fCdjzBxdGUEdoMsU7pW5xsmp8obAHUQIDAQABAoIBAQC9MX4t++0mkMJXlDNRu1omwbxlgqcFdpRhkhNKyMqXia4jItqSaaphr+wfIHT90MQkGQPOiK9609OrTw08IgnhxBuB2MDbTLHom9UjfeVKCSK9xGKM3+hLqVkxalT5tnseMOnYSyaMSbli3Ck2fmu1ZAat+ljqE1Am64v+lHc6wsq4tUXvZ6/dIthvcnbuPP0RwdZH05GWqiI8sUz0W2zi7rqFJadaEZbxb/WFhO51MbyrZh34/MpxfqJEIkFnrzt+FgJ4F7mbQrv+XXo1mQ2I0MCknzWspYLwCsVyGV9jSuK+zmD9R/JGByf2rCeO3BAlNBnnE/Fu103DkZIFD5vBAoGBAPtEruX93ggJfK/dY/Bq3WRC7S5dGnRQZ7Z5lErK2ZX448HOhwdOH5e9FXPH5X+QpYkDFMe49BD6eDNCPrdF+0ttMrQfV2HtKiTbRae7rYrsRBkY+MKENixz4ENVNQdueyv0CvBe7Ba7bXHdrPdiSUwEBmkn9wG+btDy+ItHYX65AoGBANS3r63tVIraNT5mhfBHChmmy35A2YaJc2IJGWTOZjNb+CHu/99DwiHWvYhWp4RZ0BKK/7GkBetDhVg21sscL2981oTOIiul8wc5P252QJvjsyumuB5+NcdmzYF7PbvotuKI4o8hu7dHYY4Qp/MGz2eQhYGBSB9GqbRMJShtjkFZAoGBAIaxI7xAIRRX2ZIAcIFBF9qWEcRnvjWZoG7tr3OEV60QFS8gAbwFweO6RVSiVEDUjhfrIemKGLM9QM/hc/MUvYeKSsLJhjMFSjElpaorbfTpf/ugKkFDVDLyDsapV1rbe4VtNavyhkYNRLbkKMMX2ci446Lc/Ijfx1GU3Wzz36xpAoGAQ4mutcJMvWlazl0u2YM0qcBTi9p7NkQd5lqNPXxq5pOkzOFdTD3vPV84/jjFJzh83+ZSGMzDNFdT1xZSTFq+lN9GHRR1tPYTm4+JnEDfcp9xG8LrYoMgABeb2CiRCUByEKr1hAxp1V9MkhanvHnFEFTKjrvFcmi1KRGkGpnuOMECgYEA88kCnSMb1yHfexJQZ+WUgb8m+WeyOgW2a2DzU1yXLFoCEZlbNQYFFWbDeTHfmaur3rox0ZvcoDv1ohXCsULZz9uu72cgRaObgGsjFAo9J0btEJT7s1ljUr55NwLsaPUkWzTIce2BnIE388y74i9DcPRrFkbOlxXPzvP0E1r6SK4=";
@@ -209,7 +209,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 		// find tool definition ..
 		Registration toolDefinition = getToolDefinition(iss);
 		ClaimAccessor claimAccessor = new JWSClaimAccessor(toolDefinition.getKeySetUrl());
-		tool = new Tool(toolDefinition, claimAccessor, launchSession, toolBuilders);
+		tool = new LtiTool(toolDefinition, claimAccessor, launchSession, toolBuilders);
 	}
 	
 	/**
@@ -258,7 +258,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 		return new ProviderInfo(session);
 	}
 	
-	public static Tool getTool(HttpServletRequest request) {
+	public static LtiTool getTool(HttpServletRequest request) {
 		String state = request.getParameter("state");
 		ProviderInfo info = restore(state);
 		return info.tool;

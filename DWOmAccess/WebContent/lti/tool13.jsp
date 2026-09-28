@@ -71,7 +71,7 @@
 	}
 %>
 <%
-  Tool tool = ProviderInfo.getTool(request); // (Tool) session.getAttribute("tool");
+  LtiTool tool = ProviderInfo.getTool(request); // (Tool) session.getAttribute("tool");
 
   Enumeration<String> en = request.getParameterNames();
   while (en.hasMoreElements()) {
@@ -107,18 +107,21 @@
 	   response.sendError(400, tool.getReason());
 	   return;
   }
-  Settings presentation = tool.getDeepLinkingSettings();
+  Presentation presentation = tool.getPresentation();
+  
   String return_url = 
 		  presentation == null ? "about:blank" :
-		  presentation.getDeep_link_return_url();
+		  presentation.getReturnUrl();
   String language = tool.getLocale(); if (language == null) language = "nl";
   // FIXME width and height from claimsaccessor enum/class Presentation
-  int width = 0 /*presentation.getWidth()*/;
-  int height = 0  /*presentation.getHeight()*/;
+  if (presentation != null) {
+  	int width = presentation.getWidth();
+  	int height = presentation.getHeight();
 // fullscreen
-  if (width == 0) width = 1024;
-  if (height == 0) height = 768;
-
+  	if (width == 0) width = 1024;
+  	if (height == 0) height = 768;
+  }
+  
   String provider = tool.getPlatform().getName();
   String profile =  tool.getCustomParameter("profile"); if (profile == null) profile = "77";
   String sconr = getScoNr(tool);

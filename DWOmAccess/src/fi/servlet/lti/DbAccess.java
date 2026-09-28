@@ -228,6 +228,8 @@ public class DbAccess {
 		       try {
 		         String return_url = 
 		        		 request.getRequestURL().toString().replace("tool13.jsp", "tool13r.jsp");
+		         String cancel_url = return_url;
+		         //String cancel_url = tool.getPresentation().getReturnUrl();
 		         
 				response.sendRedirect("/dwo/register/Register.html?cancel="
 		        	    + URLEncoder.encode(return_url, "UTF-8")
