@@ -199,6 +199,10 @@ public class DbAccess {
 		String organisation = platform.getName();
 		String org_id = "lti13:" + tool.getIssuer();
 		String context_label = context.getLabel();
+		String gn = tuser.getGivenName();
+		String sn = tuser.getFamilyName();
+		String email = tuser.getEmail();
+		String middle = tuser.getMiddleName();
 
 		   DomSamlUser u = new DomSamlUser();
 		   u.setSamlOrgId(s(org_id)); // zonder ""
@@ -223,14 +227,12 @@ public class DbAccess {
 		       LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
 		       try {
 		         String return_url = 
-		        		 tool.isDeepLinkingRequest() ?
-		        		 tool.getDeepLinkingSettings().getDeep_link_return_url()
-		        		 : request.getRequestURL().toString();
+		        		 request.getRequestURL().toString().replace("tool13.jsp", "tool13r.jsp");
 		         
 				response.sendRedirect("/dwo/register/Register.html?cancel="
 		        	    + URLEncoder.encode(return_url, "UTF-8")
 		         		+ "&next=" + 
-		         		  URLEncoder.encode(request.getRequestURL().toString(), "UTF-8")
+		         		  URLEncoder.encode(return_url, "UTF-8")
 		         );
 		       } catch (IOException e1) {
 		       }
@@ -238,6 +240,25 @@ public class DbAccess {
 		   }
 		}
 
+	public DomSamlUser getSamlAuthorization(HttpServletRequest request) {
+		DomSamlUser u = new DomSamlUser();
+		Cookie[] cookies = request.getCookies();
+		for(Cookie c: cookies) {
+			if (DWO_SAML_ORGANIZATION_ID.equals(c.getName())) {
+				u.setSamlOrgId(c.getValue());
+			} else
+			if (DWO_SAML_USER_ID.equals(c.getName())) {
+				u.setSamlUserId(c.getValue());
+			}
+		}
+		try {
+			u = systemManager.requestSamlToken(u);
+			return u;
+		} catch(Dwo2Exception e) {
+			LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
+			return null;
+		}
+	}
   
   
   

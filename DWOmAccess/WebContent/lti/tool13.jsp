@@ -59,7 +59,16 @@
 		} catch(Exception io) {
 			
 		}
-}
+	}
+	
+	String getScoNr(Tool tool) {
+		  String sco  = tool.getCustomParameter("sco");
+		  String course = tool.getCustomParameter("course");
+		  String sconr = "#LoginPlace:";
+		  if(sco != null) sconr = "#LoginPlace:s/" + sco;
+		  else if(course != null) sconr = "#LoginPlace:c/" + course;
+		return sconr;
+	}
 %>
 <%
   Tool tool = ProviderInfo.getTool(request); // (Tool) session.getAttribute("tool");
@@ -79,8 +88,13 @@
     	
     } else {
     	DomSamlUser u = getDbAccess().setEntreeCookie(tool, request, response);
-    	if (u == null) return;
-		 { 
+    	if (u == null) {
+        	session.setAttribute("tool13.tool.language", tool.getLocale());
+        	session.setAttribute("tool13.tool.profile", tool.getCustomParameter("profile"));
+        	session.setAttribute("tool13.tool.sconr", getScoNr(tool));
+    		return;
+    	}
+		{ 
 			 String lti_id = u.getSamlUserId();
 			 String org_id = u.getSamlOrgId();
 			 String authToken = u.getAuthToken();
@@ -106,12 +120,9 @@
   if (height == 0) height = 768;
 
   String provider = tool.getPlatform().getName();
-  String sco  = tool.getCustomParameter("sco");
-  String course = tool.getCustomParameter("course");
   String profile =  tool.getCustomParameter("profile"); if (profile == null) profile = "77";
-  String sconr = "#LoginPlace:";
-  if(sco != null) sconr = "#LoginPlace:s/" + sco;
-  else if(course != null) sconr = "#LoginPlace:c/" + course;
+  String sconr = getScoNr(tool);
+  
 %>
 <div id='headerpane' >
 <a id='return_url' href='<%=return_url%>'>Logout</a>

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.cache.Cache;
 import javax.servlet.http.HttpServletRequest;
 
 import edu.uoc.elc.lti.tool.Deployment;
@@ -33,6 +34,7 @@ import edu.uoc.lti.jwt.deeplink.JWSTokenBuilder;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.CacheUtilManager;
 
 /** DTO voor LTI 1.3 providers
  * 
@@ -226,12 +228,17 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 		return new ProviderInfo(session);
 	}
 	
-	static Map<String, LaunchSession> cache = new HashMap<>();
+	static Cache<String, LaunchSession> cache = CacheUtilManager.createCache("OIDCLaunchSession", String.class, LaunchSession.class);
 	
 	public static void save(ProviderInfo info) {
 		String id = info.launchSession.getState();
 		cache.put(id, info.launchSession);
 	}
+	public static void remove(ProviderInfo info) {
+		String id = info.launchSession.getState();
+		cache.remove(id, info.launchSession);
+	}
+	
 	public static ProviderInfo restore(String id) {
 		LaunchSession session = cache.get(id);
 		if (session == null) return null;

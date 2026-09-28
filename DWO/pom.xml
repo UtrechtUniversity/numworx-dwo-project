@@ -21,7 +21,7 @@
     
     <!-- should move project role names here that fall in the full project scope -->
     <modules>
-<!--	   <module>../Register</module>-->
+	   <module>../Register</module>
        <module>../DWO-rest-lib</module> 
 <!--        <module>../DWO-gwt-lib</module> -->
 <!--   	   <module>../Account</module> -->
