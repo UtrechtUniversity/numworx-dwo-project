@@ -101,15 +101,32 @@ Authentication request URL: http://localhost/mod/lti/auth.php
  
         register(platform, client_id, deploymentId, key_set_url, auth_token_url, auth_login_url);
 
-        // reference op localhost:9100
-        platform = "http://localhost:9100";
-		client_id = "d42df408-70f5-4b60-8274-6c98d3b9468d";
-        auth_login_url = "http://localhost:9001/platform/login.php";
-        auth_token_url = "http://localhost:9001/platform/token.php";
-        key_set_url = "http://localhost:9001/platform/jwks.php";
+//        // reference op localhost:9100
+//        platform = "http://localhost:9100";
+//		client_id = "d42df408-70f5-4b60-8274-6c98d3b9468d";
+//        auth_login_url = "http://localhost:9001/platform/login.php";
+//        auth_token_url = "http://localhost:9001/platform/token.php";
+//        key_set_url = "http://localhost:9001/platform/jwks.php";
+//		deploymentId = "8c49a5fa-f955-405e-865f-3d7e959e809f";	
+//        register(platform, client_id, deploymentId, key_set_url, auth_token_url, auth_login_url);
+
+        
+    // wiskunde online testomgeving    
+        platform = "https://wiskundeonline-stage.eu.aldryn.io";
+		client_id = "XWJxeBlEKs2x0qT2lqoSmA";
+        auth_login_url = "https://wiskundeonline-stage.eu.aldryn.io/courses/lti/numworx/auth/";
+        auth_token_url = "https://wiskundeonline-stage.eu.aldryn.io/courses/lti/numworx/auth/"; // deze is twijfelachtig.
+        key_set_url = "https://wiskundeonline-stage.eu.aldryn.io/courses/lti/numworx/jwks/";
 		deploymentId = "8c49a5fa-f955-405e-865f-3d7e959e809f";	
         register(platform, client_id, deploymentId, key_set_url, auth_token_url, auth_login_url);
-	
+
+  
+        
+        
+        
+        
+        
+        
 	}
 
 	private static void register(String platform, String client_id, String deploymentId, String key_set_url,
@@ -291,7 +308,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 	    String target = request.getParameter("target_link_uri");
 	    // FIXME security: check target vs launch_url
 	    // if (not okay) target = launch_url
-	    if (true) target = launch_url;
+	    if (false) target = launch_url;
 	    builder.target_link_uri(target);
 		String login_hint = request.getParameter("login_hint");
 		login_hint = URLEncoder.encode(login_hint);

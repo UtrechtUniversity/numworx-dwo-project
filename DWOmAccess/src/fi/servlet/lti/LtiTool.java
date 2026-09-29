@@ -33,4 +33,12 @@ public class LtiTool extends Tool {
 		return presentation;
 	}
 
+	@Override
+	public String getLocale() {
+		String locale = super.getLocale();
+		if (locale == null && presentation != null) 
+			return presentation.getLocale();
+		return locale;
+	}
+
 }

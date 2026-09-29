@@ -189,58 +189,67 @@ public class DbAccess {
     return String.valueOf(o);
   }
 
-	public DomSamlUser setEntreeCookie(Tool tool, HttpServletRequest request, HttpServletResponse response ) {
+	public DomSamlUser setEntreeCookie(LtiTool tool, HttpServletRequest request, HttpServletResponse response ) {
 		User tuser = tool.getUser();
 		Platform platform = tool.getPlatform();
 		Context context = tool.getContext();
 		String user_id = tool.getCustomParameter("userid");
 		String lti_id = tuser.getId();
 		if (user_id == null) user_id = lti_id;
-		String organisation = platform.getName();
+		String organisation = platform.getGuid(); // school ID
 		String org_id = "lti13:" + tool.getIssuer();
 		String context_label = context.getLabel();
 		String gn = tuser.getGivenName();
 		String sn = tuser.getFamilyName();
 		String email = tuser.getEmail();
 		String middle = tuser.getMiddleName();
+		List<String> roles = tool.getRoles();
 
 		   DomSamlUser u = new DomSamlUser();
 		   u.setSamlOrgId(s(org_id)); // zonder ""
 		   u.setSamlUserId(s(user_id));
 		   String path = "/";
-	       Cookie user = new Cookie(DWO_SAML_USER_ID, u.getSamlUserId());
-	       user.setPath(path);
-	       user.setSecure(request.isSecure());
-	       Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId()); // MET ???
-	       orgid.setPath(path);
-	       orgid.setSecure(request.isSecure());
-	       response.addCookie(user);
-	       response.addCookie(orgid);
 		   try {
 		       u = systemManager.requestSamlToken(u);
-		       Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, u.getAuthToken());
-		       authToken.setSecure(request.isSecure());
-		       authToken.setPath(path);
-		       response.addCookie(authToken);
+		       //cookie(DWO_SAML_AUTH_TOKEN, u.getAuthToken(), response, request, path);
 		       return u;	  	       
 		   } catch(Dwo2Exception e) {
 		       LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
 		       try {
 		         String return_url = 
 		        		 request.getRequestURL().toString().replace("tool13.jsp", "tool13r.jsp");
-		         String cancel_url = return_url;
-		         //String cancel_url = tool.getPresentation().getReturnUrl();
+		         String cancel_url = tool.getPresentation().getReturnUrl();
+				 cookie(DWO_SAML_USER_ID,u.getSamlUserId(), response, request, path);
+			     cookie(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId(), response, request, path); // MET ???
+				 cookie("givenName", gn, response, request, path);
+				 cookie("insertion", middle, response, request, path);
+				 cookie("familyName",sn, response, request, path);
+				 cookie("email", email, response, request, path);
+				 // more cookies: return_url, suggestion, schoolLogin, schoolCode, className schoolGroup=STUDENT/TEACHER
+				 
+				 // next and cancel also as cookies.
+				 cookie("cancel", cancel_url, response, request, path);
+		         cookie("next", return_url, response, request, path);
 		         
-				response.sendRedirect("/dwo/register/Register.html?cancel="
-		        	    + URLEncoder.encode(return_url, "UTF-8")
-		         		+ "&next=" + 
-		         		  URLEncoder.encode(return_url, "UTF-8")
-		         );
+		         
+				response.sendRedirect("/dwo/register/Register.html");
 		       } catch (IOException e1) {
 		       }
 		       return null;
 		   }
 		}
+
+	private void cookie(String key, String value, HttpServletResponse response, HttpServletRequest request, String path) {
+		Cookie cookie;
+		if (value == null || value.isEmpty()) {
+			cookie = new Cookie(key, "");
+			cookie.setMaxAge(0);
+		} else
+			cookie = new Cookie(key , value);
+		cookie.setSecure(request.isSecure());
+		cookie.setPath(path);
+		response.addCookie(cookie);
+	}
 
 	public DomSamlUser getSamlAuthorization(HttpServletRequest request) {
 		DomSamlUser u = new DomSamlUser();
