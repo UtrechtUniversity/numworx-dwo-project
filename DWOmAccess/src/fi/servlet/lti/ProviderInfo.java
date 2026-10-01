@@ -31,6 +31,7 @@ import edu.uoc.lti.deeplink.DeepLinkingResponse;
 import edu.uoc.lti.jwt.AlgorithmFactory;
 import edu.uoc.lti.jwt.claims.JWSClaimAccessor;
 import edu.uoc.lti.jwt.deeplink.JWSTokenBuilder;
+import edu.uoc.lti.oidc.OIDCLaunchSession;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -52,9 +53,14 @@ import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.CacheUtilManager;
  */
 public class ProviderInfo {
 	
-	static class LaunchSession extends InMemoryOIDCLaunchSession implements Serializable {
+	static class LaunchSession implements Serializable, OIDCLaunchSession {
 
 		private static final long serialVersionUID = 717245164519047001L;
+		private String state;
+		private String nonce;
+		private String targetLinkUri;
+		private String clientId;
+		private String deploymentId;
 		private String issuer;
 		/**
 		 * @return the issuer
@@ -67,6 +73,66 @@ public class ProviderInfo {
 		 */
 		public void setIssuer(String issuer) {
 			this.issuer = issuer;
+		}
+		/**
+		 * @return the state
+		 */
+		public String getState() {
+			return state;
+		}
+		/**
+		 * @param state the state to set
+		 */
+		public void setState(String state) {
+			this.state = state;
+		}
+		/**
+		 * @return the nonce
+		 */
+		public String getNonce() {
+			return nonce;
+		}
+		/**
+		 * @param nonce the nonce to set
+		 */
+		public void setNonce(String nonce) {
+			this.nonce = nonce;
+		}
+		/**
+		 * @return the targetLinkUri
+		 */
+		public String getTargetLinkUri() {
+			return targetLinkUri;
+		}
+		/**
+		 * @param targetLinkUri the targetLinkUri to set
+		 */
+		public void setTargetLinkUri(String targetLinkUri) {
+			this.targetLinkUri = targetLinkUri;
+		}
+		/**
+		 * @return the clientId
+		 */
+		public String getClientId() {
+			return clientId;
+		}
+		/**
+		 * @param clientId the clientId to set
+		 */
+		public void setClientId(String clientId) {
+			this.clientId = clientId;
+		}
+		/**
+		 * @return the deploymentId
+		 */
+		public String getDeploymentId() {
+			return deploymentId;
+		}
+		/**
+		 * @param deploymentId the deploymentId to set
+		 */
+		public void setDeploymentId(String deploymentId) {
+			this.deploymentId = deploymentId;
 		}
 		
 	}
@@ -304,21 +370,9 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 	}
 
 	public String redirect_url(String launch_url, HttpServletRequest request) {
-	    LoginRequestBuilder builder = LoginRequest.builder();
-	    String target = request.getParameter("target_link_uri");
-	    // FIXME security: check target vs launch_url
-	    // if (not okay) target = launch_url
-	    if (false) target = launch_url;
-	    builder.target_link_uri(target);
-		String login_hint = request.getParameter("login_hint");
-		login_hint = URLEncoder.encode(login_hint);
-        builder.login_hint(login_hint);
-		String lti_message_hint = request.getParameter("lti_message_hint");
-		if (lti_message_hint != null) 
-			lti_message_hint = URLEncoder.encode(lti_message_hint);
-        builder.lti_message_hint(lti_message_hint);
+	    LoginRequest login = LoginRequestFactory.from(request);
 		try {
-          String oidcAuthUrl = tool.getOidcAuthUrl(builder.build());
+          String oidcAuthUrl = tool.getOidcAuthUrl(login);
           save(this);
 		  return oidcAuthUrl;
         } catch (URISyntaxException e) {
