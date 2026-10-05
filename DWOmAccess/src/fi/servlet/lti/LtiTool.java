@@ -1,5 +1,7 @@
 package fi.servlet.lti;
 
+import java.util.logging.Logger;
+
 import edu.uoc.elc.lti.tool.Registration;
 import edu.uoc.elc.lti.tool.Tool;
 import edu.uoc.elc.lti.tool.ToolBuilders;
@@ -11,16 +13,24 @@ import edu.uoc.lti.oidc.OIDCLaunchSession;
 public class LtiTool extends Tool {
 	private Presentation presentation;
 	private ClaimAccessor claimAccessor;
+	private OIDCLaunchSession launchSession;
+	private Logger LOG = Logger.getLogger(getClass().getName());
 
 	public LtiTool(Registration registration, ClaimAccessor claimAccessor, OIDCLaunchSession oidcLaunchSession,
 			ToolBuilders toolBuilders) {
 		super(registration, claimAccessor, oidcLaunchSession, toolBuilders);
 		this.claimAccessor = claimAccessor;
+		this.launchSession = oidcLaunchSession;
 	}
 
 	@Override
 	public boolean validate(String token, String state) {
-		// TODO Auto-generated method stub
+		
+		LOG.warning("deployment id = " + launchSession.getDeploymentId() );
+
+		launchSession.setDeploymentId("1"); // ons kent ons!
+		
+		
 		boolean validate = super.validate(token, state);
 		presentation = claimAccessor.get(ClaimsEnum.PRESENTATION, Presentation.class);
 		return validate;

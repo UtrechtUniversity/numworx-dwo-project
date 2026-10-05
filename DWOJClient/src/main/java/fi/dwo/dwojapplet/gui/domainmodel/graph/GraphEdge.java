@@ -21,7 +21,7 @@ public class GraphEdge {
 	private boolean blur = false;
 	private boolean voorkennisTree;
 	
-	private Color edgeColor = LeerdomeinGraphPanel.colorBlue4;
+	public Color edgeColor = LeerdomeinGraphPanel.colorBlue4;
 	private Color edgeInterChapColor = new Color(238,209,180);//230,210,210);
 	
 	public GraphEdge(GraphNode source, GraphNode target) {

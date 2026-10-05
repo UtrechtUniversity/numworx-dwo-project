@@ -192,17 +192,19 @@ public class DbAccess {
 	public DomSamlUser setEntreeCookie(LtiTool tool, HttpServletRequest request, HttpServletResponse response ) {
 		User tuser = tool.getUser();
 		Platform platform = tool.getPlatform();
+		String iss = tool.getIssuer();
 		Context context = tool.getContext();
 		String user_id = tool.getCustomParameter("userid");
 		String lti_id = tuser.getId();
 		if (user_id == null) user_id = lti_id;
-		String organisation = platform.getGuid(); // school ID
-		String org_id = "lti13:" + tool.getIssuer();
-		String context_label = context.getLabel();
+		String organisation = platform == null ? iss : platform.getGuid(); // school ID
+		String org_id = "lti13:" + iss;
+		String context_label = context == null ? "" : context.getLabel();
 		String gn = tuser.getGivenName();
 		String sn = tuser.getFamilyName();
 		String email = tuser.getEmail();
 		String middle = tuser.getMiddleName();
+		String name = tuser.getName();
 		List<String> roles = tool.getRoles();
 
 		   DomSamlUser u = new DomSamlUser();
@@ -225,6 +227,7 @@ public class DbAccess {
 				 cookie("insertion", middle, response, request, path);
 				 cookie("familyName",sn, response, request, path);
 				 cookie("email", email, response, request, path);
+				 cookie("suggestion", name, response, request, path);
 				 // more cookies: return_url, suggestion, schoolLogin, schoolCode, className schoolGroup=STUDENT/TEACHER
 				 
 				 // next and cancel also as cookies.

@@ -183,7 +183,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
         auth_login_url = "https://wiskundeonline-stage.eu.aldryn.io/courses/lti/numworx/auth/";
         auth_token_url = "https://wiskundeonline-stage.eu.aldryn.io/courses/lti/numworx/auth/"; // deze is twijfelachtig.
         key_set_url = "https://wiskundeonline-stage.eu.aldryn.io/courses/lti/numworx/jwks/";
-		deploymentId = "8c49a5fa-f955-405e-865f-3d7e959e809f";	
+		deploymentId = "1";	
         register(platform, client_id, deploymentId, key_set_url, auth_token_url, auth_login_url);
 
   

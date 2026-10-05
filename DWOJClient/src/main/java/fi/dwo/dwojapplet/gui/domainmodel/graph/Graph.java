@@ -366,8 +366,16 @@ private String voorkennisPopupVariant;
 //				source.setTempLocation(null);
 			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target, selectedMethod) || edge.isVoorkennisTree())
 			{
-				edge.paint(g, origin, factor);
+				double f = factor;
+				
+				if (target.isSelected()||source.isSelected())
+				{
+					edge.edgeColor = Color.red;
+					f = Math.max(f*2,2);
+				}
+				edge.paint(g, origin, f);
 				if (!edge.isVoorkennisTree()) {
+				boolean blur = edge.getBlur();
 				int size[] = new int[1];
 				GNode s = visibleParent(source, size);
 				int   ssize = size[0];
@@ -378,6 +386,7 @@ private String voorkennisPopupVariant;
 				int maxsize = Math.max(tsize, ssize);
 				if (s != null && t != null && s != t && maxsize > 0) {
 					edge = new GraphEdge(s, t, msize + 1);
+					edge.setBlur(blur);
 					edge.paint(g, origin, factor);
 				}
 				}
@@ -1179,7 +1188,7 @@ private String voorkennisPopupVariant;
 				//blurVoorkennis(mouseOverNode);
 				crash = false;
 			}
-		} else if (!crash) {
+		} else if (isUnblurAtMove()) {
 			for (int i = 0; i < graphNodes.size(); i++) {
 				graphNodes.get(i).setBlur(false);
 			}
@@ -1189,6 +1198,11 @@ private String voorkennisPopupVariant;
 			repaint();
 		}
 
+	}
+
+
+	protected boolean isUnblurAtMove() {
+		return !crash;
 	}
 
 
