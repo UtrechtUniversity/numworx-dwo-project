@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,12 +26,16 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.entities.util.SchoolAttrType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
@@ -213,7 +218,6 @@ public class DbAccess {
 		   String path = "/";
 		   try {
 		       u = systemManager.requestSamlToken(u);
-		       //cookie(DWO_SAML_AUTH_TOKEN, u.getAuthToken(), response, request, path);
 		       return u;	  	       
 		   } catch(Dwo2Exception e) {
 		       LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
@@ -234,9 +238,41 @@ public class DbAccess {
 				 cookie("familyName",sn, response, request, path);
 				 location += "&" + 
 				 cookie("email", email, response, request, path);
+				 name = validUsername(name);
+
+				 // more cookies: return_url, suggestion, schoolLogin, schoolCode, className schoolGroup=STUDENT/TEACHER
+					String role = "STUDENT";
+					if(!tool.isLearner())
+						role = "TEACHER";
+				 location += "&" + 
+				 cookie("schoolGroup", role, response, request, path);
+				 String schoolID = tool.BRIN();
+				 DomSchoolFull fullschool = systemManager.getSchool(schoolID);
+				 String className = tool.className();
+				 if (fullschool != null) {
+					 location += "&" + 
+					cookie("schoolLogin", fullschool.getSchoolLogin(), response, request, path);
+					 location += "&" + 
+					cookie("schoolCode", getSchoolCode(fullschool, role), response, request, path);
+					if (AboType.premium != fullschool.getAboType()) className = null;
+					Optional<String> realm =
+							fullschool.getAttributes().stream().filter(a -> a.getKey() == SchoolAttrType.REALM).findAny().map(DomMapEntry::getValue);
+					if (realm.isPresent()) {
+						name = name.split("@",2)[0] + "@" + realm.get();
+					}
+				 } else {
+					 location += "&" + 
+					cookie("schoolLogin", null, response, request, path);
+					 location += "&" + 
+					cookie("schoolCode", null, response, request, path);
+					className = null;
+				 }
+				 location += "&" + 
+				 cookie("className", className, response, request, path);
+				 
+
 				 location += "&" + 
 				 cookie("suggestion", name, response, request, path);
-				 // more cookies: return_url, suggestion, schoolLogin, schoolCode, className schoolGroup=STUDENT/TEACHER
 				 
 				 // next and cancel also as cookies.
 				 location += "&" + 
@@ -249,11 +285,41 @@ public class DbAccess {
 		        request.getSession().setAttribute(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId());
 		        location = response.encodeURL(location);
 				response.sendRedirect(location);
-		       } catch (IOException e1) {
+		       } catch (IOException | Dwo2Exception e1) {
 		       }
 		       return null;
 		   }
 		}
+
+// shared with oauth2client, use import static
+	public static String validUsername(String sugg) {
+		// no spaces or other weird stuff
+		if (! SimpleValidUserFieldsChecker.isValidUserName(sugg)) {
+			StringBuilder sb = new StringBuilder();
+			for (char ch : sugg.toCharArray()) {
+				if (validUsername(ch)) sb.append(ch);
+			}
+			sugg = sb.toString();
+			
+		}
+		return sugg;
+	}
+	
+	static boolean validUsername(char ch) {
+		return SimpleValidUserFieldsChecker.isValidUserName("--"+ch);
+	}
+	public static String getSchoolCode(DomSchoolFull school, String role) {
+		if (school != null && AboType.premium == school.getAboType()) {
+			
+			List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
+			if (passwords != null) 
+				for (DomMapEntry<RoleType, String> item : passwords) {
+				if (role.equals(item.getKey().name()))
+					return item.getValue();
+			}
+		}
+		return null;
+	}
 
 	private String cookie(String key, String value, HttpServletResponse response, HttpServletRequest request, String path) {
 //		Cookie cookie;

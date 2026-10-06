@@ -84,13 +84,14 @@
   String auth = "";
   boolean valid = tool.isValid() || tool.validate(token, state);
   if (valid) {
-    if (tool.isDeepLinkingRequest()) {
+	String profile = tool.profile();	
+	if (tool.isDeepLinkingRequest()) {
     	
     } else {
     	DomSamlUser u = getDbAccess().setEntreeCookie(tool, request, response);
     	if (u == null) {
         	session.setAttribute("tool13.tool.language", tool.getLocale());
-        	session.setAttribute("tool13.tool.profile", tool.getCustomParameter("profile"));
+        	session.setAttribute("tool13.tool.profile", profile));
         	session.setAttribute("tool13.tool.sconr", getScoNr(tool));
     		return;
     	}
@@ -122,7 +123,6 @@
   	if (height == 0) height = 768;
   }
   
-  String profile =  tool.getCustomParameter("profile"); if (profile == null) profile = "77";
   String sconr = getScoNr(tool);
   
 %>

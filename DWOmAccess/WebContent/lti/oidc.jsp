@@ -10,10 +10,7 @@
 
 <%
 	ProviderInfo info = ProviderInfo.get(request);
-	String launch_url = "http://localhost:8080/DWOmAccess/lti/tool13.jsp";
-//	launch_url = response.encodeURL(launch_url); // does not work in Moodle! No wildcards allowed
-
-//	//session.setAttribute("tool", info.tool);
+	String launch_url = "/DWOmAccess/lti/tool13.jsp";
 %>
 </head>
 <body>

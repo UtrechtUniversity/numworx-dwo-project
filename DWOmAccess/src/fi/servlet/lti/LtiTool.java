@@ -1,5 +1,6 @@
 package fi.servlet.lti;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.uoc.elc.lti.tool.Registration;
@@ -9,6 +10,8 @@ import edu.uoc.lti.claims.ClaimAccessor;
 import edu.uoc.lti.claims.ClaimsEnum;
 import edu.uoc.lti.deeplink.content.Presentation;
 import edu.uoc.lti.oidc.OIDCLaunchSession;
+import nl.uu.fi.dwo.lms.jclient.lib.rest.cache.PublicProfileCache;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 
 public class LtiTool extends Tool {
 	private Presentation presentation;
@@ -51,4 +54,28 @@ public class LtiTool extends Tool {
 		return locale;
 	}
 
+// from registration: default profile and default school (as BRIN)
+	public String profile() {
+		String profile = getCustomParameter("profile"); 
+		if (profile == null) 
+			profile = "bv"; // TODO: default from registration
+		try {
+			profile = PublicProfileCache.get(profile).asLong().toString();
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, "no profile " + profile, e);
+			profile = null; 
+		}
+		return profile;
+	}
+	
+	public String BRIN() {
+		return "20AI00";
+	}
+
+	public String className() {
+// bijvoorbeeld context.label als klasnaam
+		if (getContext() != null) 
+			return getContext().getLabel();
+		return null;
+	}
 }

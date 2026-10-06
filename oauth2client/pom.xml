@@ -86,7 +86,7 @@
 	<dependency>
 	    <groupId>fi.servlet</groupId>
 	    <artifactId>dwomaccess</artifactId>
-	    <version>2.5.48</version>
+	    <version>3.0.2-SNAPSHOT</version>
 	    <classifier>classes</classifier>	
 	</dependency>
 	<dependency>

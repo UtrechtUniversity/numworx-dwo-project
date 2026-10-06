@@ -194,14 +194,7 @@
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>dwomaccess</artifactId>
-			<version>3.0.2-SNAPSHOT</version>
 			<classifier>classes</classifier>
-			<exclusions>
-				<exclusion>
-					<groupId>aelfred</groupId>
-					<artifactId>aelfred</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>fi.servlet</groupId>
@@ -334,7 +327,6 @@
 	<dependency>
 		<groupId>fi.servlet</groupId>
 		<artifactId>dwomaccess</artifactId>
-		<version>3.0.2-SNAPSHOT</version>
 		<type>war</type>
 		<scope>runtime</scope>
 	</dependency>
