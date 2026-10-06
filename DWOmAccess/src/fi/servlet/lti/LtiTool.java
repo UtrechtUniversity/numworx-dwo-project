@@ -69,11 +69,14 @@ public class LtiTool extends Tool {
 	}
 	
 	public String BRIN() {
+// platform.guid als schoolidentifier
+		if (getPlatform() != null) 
+			return getPlatform().getGuid();
 		return "20AI00";
 	}
 
 	public String className() {
-// bijvoorbeeld context.label als klasnaam
+// context.label als klasnaam
 		if (getContext() != null) 
 			return getContext().getLabel();
 		return null;

@@ -82,16 +82,17 @@
   String token = request.getParameter("id_token");
   String state = request.getParameter("state");
   String auth = "";
+  String profile = "VO";
   boolean valid = tool.isValid() || tool.validate(token, state);
   if (valid) {
-	String profile = tool.profile();	
+	profile = tool.profile();	
 	if (tool.isDeepLinkingRequest()) {
     	
     } else {
     	DomSamlUser u = getDbAccess().setEntreeCookie(tool, request, response);
     	if (u == null) {
         	session.setAttribute("tool13.tool.language", tool.getLocale());
-        	session.setAttribute("tool13.tool.profile", profile));
+        	session.setAttribute("tool13.tool.profile", profile);
         	session.setAttribute("tool13.tool.sconr", getScoNr(tool));
     		return;
     	}
