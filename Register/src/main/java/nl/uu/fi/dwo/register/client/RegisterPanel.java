@@ -146,7 +146,9 @@ public class RegisterPanel extends ResizeComposite {
 	static String getCookie(String string) {
 		String result = Cookies.getCookie(string);
 		LOG.info("VOOR " + string + "="  + result);
-		if (result == null) return null;
+		if (result == null) {
+			return Window.Location.getParameter(string);
+		}
 		if(result.startsWith("\"")) {
 			result = result.substring(1, result.length()-1); // cookie decoder!
 			for(int i = 0; i < result.length(); i++) {

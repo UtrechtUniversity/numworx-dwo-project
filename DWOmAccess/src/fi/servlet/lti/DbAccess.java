@@ -218,45 +218,61 @@ public class DbAccess {
 		   } catch(Dwo2Exception e) {
 		       LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
 		       try {
+				 String location = "/dwo/register/Register.html";
 		         String return_url = 
 		        		 request.getRequestURL().toString().replace("tool13.jsp", "tool13r.jsp");
 		         String cancel_url = tool.getPresentation().getReturnUrl();
-				 cookie(DWO_SAML_USER_ID,u.getSamlUserId(), response, request, path);
+		         location += "?" + 
+		         cookie(DWO_SAML_USER_ID,u.getSamlUserId(), response, request, path);
+				 location += "&" + 
 			     cookie(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId(), response, request, path); // MET ???
+				 location += "&" + 
 				 cookie("givenName", gn, response, request, path);
+				 location += "&" + 
 				 cookie("insertion", middle, response, request, path);
+				 location += "&" + 
 				 cookie("familyName",sn, response, request, path);
+				 location += "&" + 
 				 cookie("email", email, response, request, path);
+				 location += "&" + 
 				 cookie("suggestion", name, response, request, path);
 				 // more cookies: return_url, suggestion, schoolLogin, schoolCode, className schoolGroup=STUDENT/TEACHER
 				 
 				 // next and cancel also as cookies.
+				 location += "&" + 
 				 cookie("cancel", cancel_url, response, request, path);
-		         cookie("next", return_url, response, request, path);
+				 location += "&" + 
+		         cookie("next", response.encodeURL(return_url), response, request, path);
 		         
-		         
-				response.sendRedirect("/dwo/register/Register.html");
+		        request.getSession().setAttribute("return_url", cancel_url);
+		        request.getSession().setAttribute(DWO_SAML_USER_ID,u.getSamlUserId());
+		        request.getSession().setAttribute(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId());
+		        location = response.encodeURL(location);
+				response.sendRedirect(location);
 		       } catch (IOException e1) {
 		       }
 		       return null;
 		   }
 		}
 
-	private void cookie(String key, String value, HttpServletResponse response, HttpServletRequest request, String path) {
-		Cookie cookie;
-		if (value == null || value.isEmpty()) {
-			cookie = new Cookie(key, "");
-			cookie.setMaxAge(0);
-		} else
-			cookie = new Cookie(key , value);
-		cookie.setSecure(request.isSecure());
-		cookie.setPath(path);
-		response.addCookie(cookie);
+	private String cookie(String key, String value, HttpServletResponse response, HttpServletRequest request, String path) {
+//		Cookie cookie;
+//		if (value == null || value.isEmpty()) {
+//			cookie = new Cookie(key, "");
+//			cookie.setMaxAge(0);
+//		} else
+//			cookie = new Cookie(key , value);
+//		cookie.setSecure(request.isSecure());
+//		cookie.setPath(path);
+//		response.addCookie(cookie);
+		return key + "=" + URLEncoder.encode(s(value));
 	}
 
 	public DomSamlUser getSamlAuthorization(HttpServletRequest request) {
 		DomSamlUser u = new DomSamlUser();
 		Cookie[] cookies = request.getCookies();
+		u.setSamlOrgId((String)request.getSession().getAttribute(DWO_SAML_ORGANIZATION_ID));
+		u.setSamlUserId((String)request.getSession().getAttribute(DWO_SAML_USER_ID));
 		for(Cookie c: cookies) {
 			if (DWO_SAML_ORGANIZATION_ID.equals(c.getName())) {
 				u.setSamlOrgId(c.getValue());

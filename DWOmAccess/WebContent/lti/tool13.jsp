@@ -122,7 +122,6 @@
   	if (height == 0) height = 768;
   }
   
-  String provider = tool.getPlatform().getName();
   String profile =  tool.getCustomParameter("profile"); if (profile == null) profile = "77";
   String sconr = getScoNr(tool);
   
