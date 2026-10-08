@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +38,7 @@ import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.SchoolAttrType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -216,10 +218,38 @@ public class DbAccess {
 		   u.setSamlOrgId(s(org_id)); // zonder ""
 		   u.setSamlUserId(s(user_id));
 		   String path = "/";
-		   try {
-		       u = systemManager.requestSamlToken(u);
+		   String role = "STUDENT";
+		   if(!tool.isLearner())
+			  role = "TEACHER";
+		String schoolID = tool.BRIN();
+		String className = tool.className();
+		
+		DomSchoolFull fullschool;
+		try {
+			fullschool = systemManager.getSchool(schoolID);
+		} catch (Dwo2Exception e) {
+			LOG.log(Level.SEVERE, "cannot get schoolID", e);
+			fullschool = null;
+		}
+		if (fullschool != null) {
+			name = validUsername(name);
+			Optional<String> realm =
+					fullschool.getAttributes().stream().filter(a -> a.getKey() == SchoolAttrType.REALM).findAny().map(DomMapEntry::getValue);
+			if (realm.isPresent()) {
+				name = name.split("@",2)[0] + "@" + realm.get();
+			}
+			if (AboType.premium != fullschool.getAboType()) className = null;
+			u.setSamlUnit(className);
+		}
+		
+		try {
+
+			   //u = systemManager.requestSamlToken(u);
+		   
+			   u = tryRegisterSaml(u, fullschool, name, gn, middle, sn, email, role);
+			   
 		       return u;	  	       
-		   } catch(Dwo2Exception e) {
+		   } catch(IOException|Dwo2Exception e) {
 		       LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
 		       try {
 				 String location = "/dwo/register/Register.html";
@@ -238,28 +268,17 @@ public class DbAccess {
 				 cookie("familyName",sn, response, request, path);
 				 location += "&" + 
 				 cookie("email", email, response, request, path);
-				 name = validUsername(name);
 
 				 // more cookies: return_url, suggestion, schoolLogin, schoolCode, className schoolGroup=STUDENT/TEACHER
-					String role = "STUDENT";
-					if(!tool.isLearner())
-						role = "TEACHER";
 				 location += "&" + 
 				 cookie("schoolGroup", role, response, request, path);
-				 String schoolID = tool.BRIN();
-				 DomSchoolFull fullschool = systemManager.getSchool(schoolID);
-				 String className = tool.className();
+				 
 				 if (fullschool != null) {
 					 location += "&" + 
 					cookie("schoolLogin", fullschool.getSchoolLogin(), response, request, path);
 					 location += "&" + 
 					cookie("schoolCode", getSchoolCode(fullschool, role), response, request, path);
-					if (AboType.premium != fullschool.getAboType()) className = null;
-					Optional<String> realm =
-							fullschool.getAttributes().stream().filter(a -> a.getKey() == SchoolAttrType.REALM).findAny().map(DomMapEntry::getValue);
-					if (realm.isPresent()) {
-						name = name.split("@",2)[0] + "@" + realm.get();
-					}
+					
 				 } else {
 					 location += "&" + 
 					cookie("schoolLogin", null, response, request, path);
@@ -285,13 +304,33 @@ public class DbAccess {
 		        request.getSession().setAttribute(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId());
 		        location = response.encodeURL(location);
 				response.sendRedirect(location);
-		       } catch (IOException | Dwo2Exception e1) {
+		       } catch (IOException e1) {
 		       }
 		       return null;
 		   }
 		}
 
-// shared with oauth2client, use import static
+	private DomSamlUser tryRegisterSaml(DomSamlUser u, DomSchoolFull fullschool, String name, String gn, String middle,
+			String sn, String email, String role) throws Dwo2Exception, IOException {
+		if (fullschool == null)
+			return systemManager.requestSamlToken(u);
+		middle = Objects.toString(middle, "");
+		gn = Objects.toString(gn, "");
+		sn = Objects.toString(sn,"");
+		email = Objects.toString(email, "");
+		String token = rest.registerSAML(name, u.getSamlUserId(), u.getSamlOrgId(), gn, middle, sn, email, role, nr(fullschool.getId()), Objects.toString(u.getSamlUnit(),""));
+		if (token == null||token.isEmpty()) throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, "oops");
+		u.setAuthToken(token);
+		return u;
+	}
+
+	private String nr(PersistenceId id) {
+		String n = id.getIdString();
+		n = n.substring(n.length()-20); // ons kent ons: nummer is laatste n cijfers.
+		return n;
+	}
+
+	// shared with oauth2client, use import static
 	public static String validUsername(String sugg) {
 		// no spaces or other weird stuff
 		if (! SimpleValidUserFieldsChecker.isValidUserName(sugg)) {

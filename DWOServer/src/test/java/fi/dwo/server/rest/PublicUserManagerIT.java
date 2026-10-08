@@ -363,6 +363,38 @@ public class PublicUserManagerIT {
    	
     }
 
+    @Test
+    public void testRegisterSAMLempty() {
+    	PublicUserManager instance = new PublicUserManager();  	
+    	SecurityContext sc = null;
+		String userIdent = "user01";
+		String samlUserId = "samluser01";
+		String samlOrgId = "samlORG";
+		String givenName = "";
+		String insertion = "";
+		String familyName = "";
+		String email = "";
+		String role = RoleType.STUDENT.name();
+		long schoolID = 1;  // ???
+		String schoolClassName = "";
+		String result = instance.registerSAML(sc , userIdent , samlUserId , samlOrgId , givenName , insertion , familyName , email , role , schoolID, schoolClassName );
+    	assertNull(result);
+    	userIdent = "user01@";
+		result = instance.registerSAML(sc , userIdent , samlUserId , samlOrgId , givenName , insertion , familyName , email , role , schoolID, schoolClassName );
+    	assertNotNull(result);
+    	SamlUserManager.destroy(1L);
+    	userIdent = "user01@example.com";
+    	familyName = "01";
+    	givenName = "user";   	
+		result = instance.registerSAML(sc , userIdent , samlUserId , samlOrgId , givenName , insertion , familyName , email , role , schoolID, schoolClassName );
+    	assertNotNull(result);
+   	
+    }
+
+    
+    
+    
+    
     /**
      * Test of getSamlUser method, of class PublicUserManager.
      */

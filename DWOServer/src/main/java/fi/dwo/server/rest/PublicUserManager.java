@@ -535,28 +535,28 @@ public class PublicUserManager {
         LOG.log(Level.FINE, "Checking samluser.");
         PersistentSamlUser samlUser = SamlUserManager.findEntity(samlUserId, samlOrgId);
         if (samlUser == null) {
-
-        	pUser = UserManager.findByUserName(userIdent + '@' + school.getSchoolLogin());
+        	String userName = userNameAt(userIdent, school);
+			pUser = UserManager.findByUserName(userName);
         	if (pUser != null) {
-        		pUser.setEmail(email);
-        		pUser.setGivenName(givenName);
-        		pUser.setInsertion(insertion);
-        		pUser.setLastname(familyName);
+        		if (!email.isEmpty()) pUser.setEmail(email);
+        		if (!givenName.isEmpty()) pUser.setGivenName(givenName);
+        		if (!insertion.isEmpty()) pUser.setInsertion(insertion);
+        		if (!familyName.isEmpty()) pUser.setLastname(familyName);
         		pUser = UserManager.edit(pUser);
         		LOG.info("registerSAML edit " + pUser.getUsername() + " " + givenName + " " + insertion + " " + familyName);
         	} else {
-        	
+ // can't do if invalid 
+        	if (!SimpleValidUserFieldsChecker.isNonEmptyNorNull(givenName, familyName, userIdent)) return null;
         	//generate new persistentUser
             pUser = new PersistentUser();
             pUser.setEmail(email);
             pUser.setGivenName(givenName);
             pUser.setInsertion(insertion);
             pUser.setLastname(familyName);
-            pUser.setPassword(Long.toHexString(secureRandom.nextLong()));
-pUser.setPassword("");
+            pUser.setPassword("");
             pUser.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
             //TODO Wim change the parameters.
-            pUser.setUsername(userIdent + '@' + school.getSchoolLogin());
+            pUser.setUsername(userName);
             pUser.setSchoolGroupId(SchoolGroupManager.findBySchoolAndRole(school, roleType).getSchoolGroupID());
 
             try {
@@ -643,6 +643,20 @@ pUser.setPassword("");
         return authToken.toString();
     }
 
+
+
+
+	private String userNameAt(String userIdent, PersistentSchool school) {
+		if (userIdent.endsWith("@")) {
+			return userIdent.substring(0, userIdent.length()-1);
+		}
+		if (userIdent.contains("@"))
+			return userIdent; // no need for suffix
+		String suffix = school.getSchoolLogin();
+		// TODO: pick "realm" from schooldata if (...) suffix = realm
+		return userIdent + '@' + suffix;
+	}
+
     /**
      *
      * @param sc
@@ -664,7 +678,7 @@ pUser.setPassword("");
 //    @Consumes({"application/x-www-form-urlencoded"})
 //    @Path("/registerSAMLV2")
 //    public
-    String registerSAMLV2(@Context SecurityContext sc,
+    private String registerSAMLV2(@Context SecurityContext sc,
             @FormParam("userident") String userIdent,
             @FormParam("samluserid") String samlUserId,
             @FormParam("samlorgid") String samlOrgId,
@@ -728,7 +742,7 @@ pUser.setPassword("");
             pUser.setPassword(MD5.getHashString(random));
 pUser.setPassword(""); // INVALID PASSWORD
             pUser.setRegisterDate(DwoDateUtilities.getCurrentDwoDate());
-            pUser.setUsername(userIdent + '@' + school.getSchoolLogin());
+            pUser.setUsername(userNameAt(userIdent, school));
             pUser.setSchoolGroupId(SchoolGroupManager.findBySchoolAndRole(school, roleType).getSchoolGroupID());
             //must be multi-school 
             pUser.setSingleSchoolAccount(false);
