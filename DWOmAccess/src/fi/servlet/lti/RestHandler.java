@@ -93,6 +93,7 @@ public class RestHandler {
 		int status = uc.getResponseCode();
 		int size = uc.getContentLength();
 		LOG.log(Level.INFO, "status {0}, size {1}", new Object[]{status, size});
+		if (status == 204) return null; // No Content, size = -1;
 		InputStream in = uc.getInputStream();
 		byte[] bytes = new byte[size];
 		in.read(bytes);
