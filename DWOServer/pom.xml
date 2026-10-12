@@ -4,7 +4,7 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>dwo</artifactId>
-        <version>3.0.2</version>
+        <version>3.0.3-SNAPSHOT</version>
         <relativePath>../DWO/pom.xml</relativePath>
     </parent>
     <artifactId>dwoserver</artifactId>
