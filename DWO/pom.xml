@@ -4,7 +4,7 @@
     <parent>
         <groupId>nl.uu.fi.dwo</groupId>
         <artifactId>dwo.master.pom</artifactId>
-        <version>3.0.3-SNAPSHOT</version>
+        <version>3.0.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>dwo</artifactId>
@@ -58,23 +58,23 @@
     		<dependency>
     			<artifactId>dwo-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>3.0.3-SNAPSHOT</version>
+    			<version>3.0.2</version>
     		</dependency>
     		<dependency>
     			<artifactId>dwo-rest-lib</artifactId>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
-    			<version>3.0.3-SNAPSHOT</version>
+    			<version>3.0.2</version>
 			<classifier>sources</classifier>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo</groupId>
     			<artifactId>dwo-commons-lib</artifactId>
-    			<version>3.0.3-SNAPSHOT</version>
+    			<version>3.0.2</version>
     		</dependency>
     		<dependency>
     			<groupId>nl.uu.fi.dwo.rest</groupId>
     			<artifactId>dwo-jclient-lib</artifactId>
-    			<version>3.0.3-SNAPSHOT</version>
+    			<version>3.0.2</version>
     		</dependency>
         <dependency>
             <groupId>nl.uu.fi.dwo</groupId>
@@ -90,19 +90,19 @@
         <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>dwoserver</artifactId>
-        	<version>3.0.3-SNAPSHOT</version>
+        	<version>3.0.2</version>
         	<type>war</type>
         </dependency>
          <dependency>
         	<groupId>nl.uu.fi.dwo</groupId>
         	<artifactId>dwoserver</artifactId>
-        	<version>3.0.3-SNAPSHOT</version>
+        	<version>3.0.2</version>
         	<classifier>classes</classifier>
         </dependency>
          <dependency>
          	<groupId>nl.uu.fi.dwo</groupId>
          	<artifactId>dwojclient</artifactId>
-         	<version>3.0.3-SNAPSHOT</version>
+         	<version>3.0.2</version>
          </dependency>
          <dependency>
          	<groupId>fi.beans</groupId>
@@ -122,19 +122,19 @@
 		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>dwoplayer</artifactId>
-	  		<version>3.0.3-SNAPSHOT</version>
+	  		<version>3.0.2</version>
 	  		<classifier>classes</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>dwoplayer</artifactId>
-	  		<version>3.0.3-SNAPSHOT</version>
+	  		<version>3.0.2</version>
 	  		<classifier>sources</classifier>		
 		</dependency>
  		<dependency>
 	  		<groupId>nl.uu.fi.dwo.mobile</groupId>
 	  		<artifactId>dwoplayer</artifactId>
-	  		<version>3.0.3-SNAPSHOT</version>
+	  		<version>3.0.2</version>
   			<type>war</type>
 		</dependency>
 		<dependency>
@@ -189,13 +189,13 @@
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>dwo-apps</artifactId>
-			<version>3.0.3-SNAPSHOT</version>
+			<version>3.0.2</version>
 			<classifier>classes</classifier>
 		</dependency>
 		<dependency>
 			<groupId>fi.dwo</groupId>
 			<artifactId>dwo-apps</artifactId>
-			<version>3.0.3-SNAPSHOT</version>
+			<version>3.0.2</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
@@ -221,13 +221,13 @@
 		<dependency>
 		    <groupId>fi.servlet</groupId>
 		    <artifactId>dwomaccess</artifactId>
-		    <version>3.0.3-SNAPSHOT</version>
+		    <version>3.0.2</version>
 		    <classifier>classes</classifier>	
 		</dependency>
 		<dependency>
 			<groupId>fi.servlet</groupId>
 			<artifactId>dwomaccess</artifactId>
-			<version>3.0.3-SNAPSHOT</version>
+			<version>3.0.2</version>
 			<type>war</type>
 			<scope>runtime</scope>
 		</dependency>
