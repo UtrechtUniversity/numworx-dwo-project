@@ -366,6 +366,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     	  pcc.setClassID(psc.getClassID());
     	  pcc.setCourseID(pc.getCourseID());
     	  pcc.setLastChangeTimeStamp(NOW.getTime());
+    	  pcc.setResults(Boolean.TRUE); // most likely student starts an activity!
     	  pcc.setType(0);
     	  pcc.setViewState(ViewState.none);
     	  long parentpid = pc.getParentID();
@@ -398,6 +399,8 @@ public class SecuredStudentCoursesOfSchoolClassManager {
 // FIXME nog over denken: 
       
       //if (pcc != null && (pcc.getViewState() != ViewState.studentsAndTeachers) && pcc.getViewState() != ViewState.students) pcc = null;
+// XXX Same logic as SecureCommonScoDataManager.getJSONLaunchDataBytes
+      if (pcc != null && pcc.getViewState() == ViewState.invisible) pcc = null;
       if (pcc != null && inExam(pcc)) pcc = null; // No deeplink for exams
 
       if (pcc == null) {

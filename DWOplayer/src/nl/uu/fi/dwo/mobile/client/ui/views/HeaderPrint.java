@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import nl.uu.fi.dwo.mobile.client.sco.Memento;
 import nl.uu.fi.dwo.mobile.client.sco.Scorm2004IF;
+import nl.uu.fi.dwo.mobile.client.text.Text;
 import nl.uu.fi.dwo.rest.util.RestyDateTimeFormat;
 
 public class HeaderPrint extends Composite {
@@ -50,6 +51,11 @@ public class HeaderPrint extends Composite {
 				nowstr = timestamp;
 			}
 		}
+		int attempts = memento.getAantalSessies();
+// extra Attempts: > 0
+		String extra = Text.constants.attemps() + attempts + ". ";
+		if (attempts > 0) nowstr = extra + nowstr;
+		
 		description.setText("Score: " + score + " in " + duration + ". " + nowstr);
 		String sconame = memento.getValue("dme.sco_name");
 		String team  = memento.getValue("dme.team");

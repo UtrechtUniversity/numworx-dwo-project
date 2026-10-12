@@ -35,9 +35,16 @@ public class GraphTreeAction implements ActionListener {
         tree.scrollPathToVisible(tree.getSelectionPath());
         break;
       } else if(uo instanceof NodeVector && id.equals(((NodeVector) uo).info.getId())) {
-    	  tree.setSelectionPath(new TreePath(node.getPath()));
+    	  TreePath path = new TreePath(node.getPath());
+    	  tree.setSelectionPath(path);
     	  tree.scrollPathToVisible(tree.getSelectionPath());
-    	  break;
+    	  if (e.getActionCommand().endsWith("/expand")) {
+    		  tree.expandPath(path);
+    	  } else
+    	  if (e.getActionCommand().endsWith("/collaps")) {
+    		  tree.collapsePath(path);
+    	  }
+   	  break;
       }
     }
 

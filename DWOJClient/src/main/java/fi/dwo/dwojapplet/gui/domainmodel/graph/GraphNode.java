@@ -292,7 +292,7 @@ public class GraphNode extends AbstractNode implements GNode {
 				// g.setFont(defaultFont.deriveFont((int)(defaultFontSize*factor)));
 				g.setFont(new Font("SansSerif", Font.PLAIN, (int) (defaultFontSize * factor)));
 				if (selected.contains(code))
-					g.setFont(new Font("SansSerif", Font.BOLD, (int) (defaultFontSize * factor)));
+					g.setFont(new Font("SansSerif", Font.BOLD, selectedSize((defaultFontSize * factor))));
 				fm = g.getFontMetrics();
 
 				String space = "";
@@ -352,6 +352,11 @@ public class GraphNode extends AbstractNode implements GNode {
 	}
 
 
+
+	protected int selectedSize(double d) {
+		Float f = (float)(d) * 2f; // Grooooter.
+		return Math.max(10, Math.round(f)); // 6 punts voor leesbaarheid.
+	}
 
 	private int compare(DomStudentModelMethodInfo a, DomStudentModelMethodInfo b) {
 	  String ma = Objects.toString(a.getMethod(), "");

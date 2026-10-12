@@ -99,4 +99,9 @@ private Optional<NavigationMenu> menu;
   public Widget getDisplay() {
 	  return root;
   }
+  
+  @Override
+  public boolean isHeaderVisible() {
+  	return false;
+  }
 }

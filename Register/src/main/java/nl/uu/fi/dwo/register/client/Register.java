@@ -10,6 +10,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
 import static nl.uu.fi.dwo.register.client.RegisterPanel.getCookieOnce;
+import static nl.uu.fi.dwo.register.client.RegisterPanel.getCookie;
 
 public class Register implements EntryPoint, Command {
 
@@ -47,8 +48,8 @@ public class Register implements EntryPoint, Command {
         	cancelURL = newURL;
         
         boolean free = getFree();
-		String user_id = getCookieOnce(DWO_SAML_USER_ID);
-		String org_id = getCookieOnce(DWO_SAML_ORGANIZATION_ID);
+		String user_id = getCookie(DWO_SAML_USER_ID); // Keep Cookies for use at "next";
+		String org_id = getCookie(DWO_SAML_ORGANIZATION_ID);
         boolean saml = getSAML();
         
         saml = saml || user_id != null && org_id != null;
@@ -60,6 +61,7 @@ public class Register implements EntryPoint, Command {
 
 			@Override
 			public void execute() {
+				getCookieOnce(DWO_SAML_USER_ID);
 				Window.Location.assign(cancelURL);
 				
 			}});

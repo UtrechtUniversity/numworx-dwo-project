@@ -7,6 +7,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,13 +27,18 @@ import fi.dwo.commons.persistence.entities.PersistentSchool;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.managers.SystemManager;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.RestAuthenticator;
 import nl.uu.fi.dwo.lms.jclient.lib.rest.transport.StoredRestManager;
+import nl.uu.fi.dwo.rest.dom.entities.DomMapEntry;
 import nl.uu.fi.dwo.rest.dom.entities.DomSamlUser;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchool;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolFull;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.SimpleValidUserFieldsChecker;
+import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.entities.util.SchoolAttrType;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
+import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 
@@ -189,50 +196,204 @@ public class DbAccess {
     return String.valueOf(o);
   }
 
-	public boolean setEntreeCookie(Tool tool, HttpServletRequest request, HttpServletResponse response ) {
+	public DomSamlUser setEntreeCookie(LtiTool tool, HttpServletRequest request, HttpServletResponse response ) {
 		User tuser = tool.getUser();
 		Platform platform = tool.getPlatform();
+		String iss = tool.getIssuer();
 		Context context = tool.getContext();
 		String user_id = tool.getCustomParameter("userid");
 		String lti_id = tuser.getId();
 		if (user_id == null) user_id = lti_id;
-		String organisation = platform.getName();
-		String org_id = "\"lti13:" + tool.getIssuer() + "\"";
-		String context_label = context.getLabel();
+		String organisation = platform == null ? iss : platform.getGuid(); // school ID
+		String org_id = "lti13:" + iss;
+		String context_label = context == null ? "" : context.getLabel();
+		String gn = tuser.getGivenName();
+		String sn = tuser.getFamilyName();
+		String email = tuser.getEmail();
+		String middle = tuser.getMiddleName();
+		String name = tuser.getName();
+		List<String> roles = tool.getRoles();
 
 		   DomSamlUser u = new DomSamlUser();
-		   u.setSamlOrgId(s(org_id));
+		   u.setSamlOrgId(s(org_id)); // zonder ""
 		   u.setSamlUserId(s(user_id));
 		   String path = "/";
-	       Cookie user = new Cookie(DWO_SAML_USER_ID, u.getSamlUserId());
-	       user.setPath(path);
-	       user.setSecure(request.isSecure());
-	       Cookie orgid = new Cookie(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId());
-	       orgid.setPath(path);
-	       orgid.setSecure(request.isSecure());
-	       response.addCookie(user);
-	       response.addCookie(orgid);
-		   try {
-		       u = systemManager.requestSamlToken(u);
-		       Cookie authToken = new Cookie(DWO_SAML_AUTH_TOKEN, u.getAuthToken());
-		       authToken.setSecure(request.isSecure());
-		       authToken.setPath(path);
-		       response.addCookie(authToken);
-		       return false;	  	       
-		   } catch(Dwo2Exception e) {
+		   String role = "STUDENT";
+		   if(!tool.isLearner())
+			  role = "TEACHER";
+		String schoolID = tool.BRIN();
+		String className = tool.className();
+		
+		DomSchoolFull fullschool;
+		try {
+			fullschool = systemManager.getSchool(schoolID);
+		} catch (Dwo2Exception e) {
+			LOG.log(Level.SEVERE, "cannot get schoolID", e);
+			fullschool = null;
+		}
+		if (fullschool != null) {
+			name = validUsername(name);
+			Optional<String> realm =
+					fullschool.getAttributes().stream().filter(a -> a.getKey() == SchoolAttrType.REALM).findAny().map(DomMapEntry::getValue);
+			if (realm.isPresent()) {
+				name = name.split("@",2)[0] + "@" + realm.get();
+			}
+			if (AboType.premium != fullschool.getAboType()) className = null;
+			u.setSamlUnit(className);
+		}
+		
+		try {
+
+			   //u = systemManager.requestSamlToken(u);
+		   
+			   u = tryRegisterSaml(u, fullschool, name, gn, middle, sn, email, role);
+			   
+		       return u;	  	       
+		   } catch(IOException|Dwo2Exception e) {
 		       LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
 		       try {
-		         response.sendRedirect("/dwo/register/Register.html?cancel="
-		        	    + URLEncoder.encode(tool.getDeepLinkingSettings().getDeep_link_return_url(), "UTF-8")
-		         		+ "&next=" + 
-		         		  URLEncoder.encode(request.getRequestURL().toString(), "UTF-8")
-		         );
+				 String location = "/dwo/register/Register.html";
+		         String return_url = 
+		        		 request.getRequestURL().toString().replace("tool13.jsp", "tool13r.jsp");
+		         String cancel_url = tool.getPresentation().getReturnUrl();
+		         location += "?" + 
+		         cookie(DWO_SAML_USER_ID,u.getSamlUserId(), response, request, path);
+				 location += "&" + 
+			     cookie(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId(), response, request, path); // MET ???
+				 location += "&" + 
+				 cookie("givenName", gn, response, request, path);
+				 location += "&" + 
+				 cookie("insertion", middle, response, request, path);
+				 location += "&" + 
+				 cookie("familyName",sn, response, request, path);
+				 location += "&" + 
+				 cookie("email", email, response, request, path);
+
+				 // more cookies: return_url, suggestion, schoolLogin, schoolCode, className schoolGroup=STUDENT/TEACHER
+				 location += "&" + 
+				 cookie("schoolGroup", role, response, request, path);
+				 
+				 if (fullschool != null) {
+					 location += "&" + 
+					cookie("schoolLogin", fullschool.getSchoolLogin(), response, request, path);
+					 location += "&" + 
+					cookie("schoolCode", getSchoolCode(fullschool, role), response, request, path);
+					
+				 } else {
+					 location += "&" + 
+					cookie("schoolLogin", null, response, request, path);
+					 location += "&" + 
+					cookie("schoolCode", null, response, request, path);
+					className = null;
+				 }
+				 location += "&" + 
+				 cookie("className", className, response, request, path);
+				 
+
+				 location += "&" + 
+				 cookie("suggestion", name, response, request, path);
+				 
+				 // next and cancel also as cookies.
+				 location += "&" + 
+				 cookie("cancel", cancel_url, response, request, path);
+				 location += "&" + 
+		         cookie("next", response.encodeURL(return_url), response, request, path);
+		         
+		        request.getSession().setAttribute("return_url", cancel_url);
+		        request.getSession().setAttribute(DWO_SAML_USER_ID,u.getSamlUserId());
+		        request.getSession().setAttribute(DWO_SAML_ORGANIZATION_ID, u.getSamlOrgId());
+		        location = response.encodeURL(location);
+				response.sendRedirect(location);
 		       } catch (IOException e1) {
 		       }
-		       return true;
+		       return null;
 		   }
 		}
 
+	private DomSamlUser tryRegisterSaml(DomSamlUser u, DomSchoolFull fullschool, String name, String gn, String middle,
+			String sn, String email, String role) throws Dwo2Exception, IOException {
+		if (fullschool == null)
+			return systemManager.requestSamlToken(u);
+		middle = Objects.toString(middle, "");
+		gn = Objects.toString(gn, "");
+		sn = Objects.toString(sn,"");
+		email = Objects.toString(email, "");
+		String token = rest.registerSAML(name, u.getSamlUserId(), u.getSamlOrgId(), gn, middle, sn, email, role, nr(fullschool.getId()), Objects.toString(u.getSamlUnit(),""));
+		if (token == null||token.isEmpty()) throw new Dwo2Exception(Dwo2ExceptionCode.Rest_InterfaceError, "oops");
+		u.setAuthToken(token);
+		return u;
+	}
+
+	private String nr(PersistenceId id) {
+		String n = id.getIdString();
+		n = n.substring(n.length()-20); // ons kent ons: nummer is laatste n cijfers.
+		return n;
+	}
+
+	// shared with oauth2client, use import static
+	public static String validUsername(String sugg) {
+		// no spaces or other weird stuff
+		if (! SimpleValidUserFieldsChecker.isValidUserName(sugg)) {
+			StringBuilder sb = new StringBuilder();
+			for (char ch : sugg.toCharArray()) {
+				if (validUsername(ch)) sb.append(ch);
+			}
+			sugg = sb.toString();
+			
+		}
+		return sugg;
+	}
+	
+	static boolean validUsername(char ch) {
+		return SimpleValidUserFieldsChecker.isValidUserName("--"+ch);
+	}
+	public static String getSchoolCode(DomSchoolFull school, String role) {
+		if (school != null && AboType.premium == school.getAboType()) {
+			
+			List<DomMapEntry<RoleType, String>> passwords = school.getPasswords();
+			if (passwords != null) 
+				for (DomMapEntry<RoleType, String> item : passwords) {
+				if (role.equals(item.getKey().name()))
+					return item.getValue();
+			}
+		}
+		return null;
+	}
+
+	private String cookie(String key, String value, HttpServletResponse response, HttpServletRequest request, String path) {
+//		Cookie cookie;
+//		if (value == null || value.isEmpty()) {
+//			cookie = new Cookie(key, "");
+//			cookie.setMaxAge(0);
+//		} else
+//			cookie = new Cookie(key , value);
+//		cookie.setSecure(request.isSecure());
+//		cookie.setPath(path);
+//		response.addCookie(cookie);
+		return key + "=" + URLEncoder.encode(s(value));
+	}
+
+	public DomSamlUser getSamlAuthorization(HttpServletRequest request) {
+		DomSamlUser u = new DomSamlUser();
+		Cookie[] cookies = request.getCookies();
+		u.setSamlOrgId((String)request.getSession().getAttribute(DWO_SAML_ORGANIZATION_ID));
+		u.setSamlUserId((String)request.getSession().getAttribute(DWO_SAML_USER_ID));
+		for(Cookie c: cookies) {
+			if (DWO_SAML_ORGANIZATION_ID.equals(c.getName())) {
+				u.setSamlOrgId(c.getValue());
+			} else
+			if (DWO_SAML_USER_ID.equals(c.getName())) {
+				u.setSamlUserId(c.getValue());
+			}
+		}
+		try {
+			u = systemManager.requestSamlToken(u);
+			return u;
+		} catch(Dwo2Exception e) {
+			LOG.log(Level.WARNING, "request SAML token: " + u.getSamlUserId() + " " + u.getSamlOrgId(), e);
+			return null;
+		}
+	}
   
   
   

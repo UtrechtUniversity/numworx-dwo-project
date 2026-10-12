@@ -366,8 +366,16 @@ private String voorkennisPopupVariant;
 //				source.setTempLocation(null);
 			if(voorkennisArea || GraphNode.hasSameChapterCode(source, target, selectedMethod) || edge.isVoorkennisTree())
 			{
-				edge.paint(g, origin, factor);
+				double f = factor;
+				
+				if (target.isSelected()||source.isSelected())
+				{
+					edge.edgeColor = Color.red;
+					f = Math.max(f*2,2);
+				}
+				edge.paint(g, origin, f);
 				if (!edge.isVoorkennisTree()) {
+				boolean blur = edge.getBlur();
 				int size[] = new int[1];
 				GNode s = visibleParent(source, size);
 				int   ssize = size[0];
@@ -378,6 +386,7 @@ private String voorkennisPopupVariant;
 				int maxsize = Math.max(tsize, ssize);
 				if (s != null && t != null && s != t && maxsize > 0) {
 					edge = new GraphEdge(s, t, msize + 1);
+					edge.setBlur(blur);
 					edge.paint(g, origin, factor);
 				}
 				}
@@ -1179,7 +1188,7 @@ private String voorkennisPopupVariant;
 				//blurVoorkennis(mouseOverNode);
 				crash = false;
 			}
-		} else if (!crash) {
+		} else if (isUnblurAtMove()) {
 			for (int i = 0; i < graphNodes.size(); i++) {
 				graphNodes.get(i).setBlur(false);
 			}
@@ -1189,6 +1198,11 @@ private String voorkennisPopupVariant;
 			repaint();
 		}
 
+	}
+
+
+	protected boolean isUnblurAtMove() {
+		return !crash;
 	}
 
 
@@ -1258,10 +1272,24 @@ private String voorkennisPopupVariant;
 			GNode tmpnode = graphNodes.get(i);
 			if(tmpnode.contains(ex, ey) || tmpnode.contains(e.getX(), e.getY())) {
 				node = tmpnode;
+				if (node instanceof FolderNode) {
+					// produceAction doet nix
+					FolderNode fn = (FolderNode) node;
+					produceExpand( fn );
+					return;
+				}
+				
+				
 				String code = node.search(ex, ey);
 				String v = node.getVariant(code);
 				if (v != null) nodeVariant = "/" + v;
 				break;
+			} else if (tmpnode instanceof FolderNode) {
+				FolderNode fn = (FolderNode) tmpnode;
+				if (fn.isHull(e.getX(), e.getY())) {
+					produceCollaps(fn);
+					return;
+				}
 			}
 		}
 		if(node!=null) {
@@ -1300,6 +1328,14 @@ private String voorkennisPopupVariant;
 
 	}
 	
+	private void produceExpand(FolderNode fn) {
+		produceAction(fn.getID() + "/expand"); // EXPAND tree 
+	}
+	private void produceCollaps(FolderNode fn) {
+		produceAction(fn.getID() + "/collaps"); // EXPAND tree 
+	}
+
+
 	public ArrayList<Point> maakVoorkennisPosities() {
 		ArrayList<Point> posities = new ArrayList<Point>();
 		posities.add(new Point(getWidth()/2, getHeight()/8));

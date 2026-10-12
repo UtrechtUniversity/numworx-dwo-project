@@ -36,6 +36,7 @@ public class FolderNode extends AbstractNode implements GNode {
 	final Collection<GNode> folder = new ArrayList<>();
 	boolean collaps;
 	Shape last = EMPTY_RECT;
+	private Shape shape;
 	
 	@Override
 	public void paint(Graphics gr, Point origin, double factor, boolean connectInstances) {
@@ -108,6 +109,7 @@ if (!collaps) {
 }
 				Shape shape = path;
 				last = shape.getBounds(); // contains
+				this.shape = shape;
 if (!collaps&&!blur) { // chapter color if expanded
 	g.setColor(new Color(222, 229, 240, 200));
 	if(factor<0.3)
@@ -280,6 +282,11 @@ if (collaps) 		g.drawString(label, x - textLength / 2, y + textHeight / 2);
 	@Override
 	public String search(int x, int y) {
 		return NULLKEY;
+	}
+
+
+	public boolean isHull(int ex, int ey) {
+		return !collaps && shape != null && shape.contains(ex, ey) && !visible.isEmpty();
 	}
 
 }

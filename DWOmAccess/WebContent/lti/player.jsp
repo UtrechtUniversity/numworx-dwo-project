@@ -5,10 +5,11 @@
 <%
 	String profile = request.getParameter("profile");
 	if(profile == null) profile = "77";
+	String cdn = System.getProperty("CDNURL", "http://cdn.dwo.nl");
 %>
 	<meta charset="UTF-8">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <link type="text/css" rel="stylesheet" href="/dwo/tablet/DWOplayer.css">
+    <link type="text/css" rel="stylesheet" href="<%=cdn%>/apps/DWOplayer.css">
     <meta name="gwt:property" content="locale=nl" >
         <script>
     	function logout() {

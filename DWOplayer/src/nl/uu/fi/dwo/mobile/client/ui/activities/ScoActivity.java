@@ -288,7 +288,7 @@ public class ScoActivity extends AbstractActivity implements AnchorContext, View
 
 	@Override
 	public String mayStop() {
-		if (started && withUser)
+		if (started && withUser && headerView.isHeaderVisible())
 			return Text.constants.maybe_lost_data();
 		return super.mayStop();
 	}
