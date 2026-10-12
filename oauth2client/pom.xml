@@ -11,7 +11,7 @@
 		<groupId>nl.uu.fi.dwo</groupId>
 		<artifactId>dwo</artifactId>
 		<relativePath>../DWO</relativePath>
-		<version>3.0.2-SNAPSHOT</version>
+		<version>3.0.3-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -86,7 +86,7 @@
 	<dependency>
 	    <groupId>fi.servlet</groupId>
 	    <artifactId>dwomaccess</artifactId>
-	    <version>3.0.2-SNAPSHOT</version>
+	    <version>3.0.3-SNAPSHOT</version>
 	    <classifier>classes</classifier>	
 	</dependency>
 	<dependency>
