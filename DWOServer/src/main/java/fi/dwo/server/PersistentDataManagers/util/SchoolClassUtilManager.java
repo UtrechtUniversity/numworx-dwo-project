@@ -175,6 +175,7 @@ where cc.classid = 2  and withchildren = 0 group by cc.classcourseid, cc.coursei
 		
 	}
 	
+	@Deprecated
 	public static boolean hasNoResults(PersistentCourse pc, PersistentSchoolClass sc, boolean trash) {
         List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
         if (trash) scos.addAll(ScoContextManager.findTrashedEntities(pc));

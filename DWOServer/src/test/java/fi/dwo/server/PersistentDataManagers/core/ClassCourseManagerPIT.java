@@ -12,6 +12,8 @@ import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
 import java.util.Date;
 import javax.persistence.EntityNotFoundException;
+
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.util.Dwo2ExceptionTranslator;
 import org.junit.After;
@@ -235,7 +237,7 @@ public class ClassCourseManagerPIT {
     @Test
     public void testUncacheResultsFromCourse() {
     	PersistentClassCourse cc = ClassCourseManager.findEntity(1L);
-    	cc.setResults(Boolean.TRUE);
+    	cc.setResults(ResultState.RESULTS);
     	cc = ClassCourseManager.edit(cc);
     	PersistentCourse course = CourseManager.findEntity(cc.getCourseID());
    
@@ -243,13 +245,13 @@ public class ClassCourseManagerPIT {
     	ClassCourseManager.uncacheResults(course);
     	
     	PersistentClassCourse ccc = ClassCourseManager.findEntity(1L);
-    	assertNull(ccc.hasResults());
+    	assertNull(ccc.getResults());
     }
     
     @Test
     public void testUncacheResultsFromClass() {
     	PersistentClassCourse cc = ClassCourseManager.findEntity(1L);
-    	cc.setResults(Boolean.TRUE);
+    	cc.setResults(ResultState.RESULTS);
     	cc = ClassCourseManager.edit(cc);
     	PersistentSchoolClass sc = SchoolClassManager.findEntity(cc.getClassID());
    
@@ -257,7 +259,7 @@ public class ClassCourseManagerPIT {
     	ClassCourseManager.uncacheResults(sc);
     	
     	PersistentClassCourse ccc = ClassCourseManager.findEntity(1L);
-    	assertNull(ccc.hasResults());
+    	assertNull(ccc.getResults());
     	// what about version?
     }
   

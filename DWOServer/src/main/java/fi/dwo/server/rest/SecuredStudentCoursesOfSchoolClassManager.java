@@ -81,6 +81,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestClassCourse;
 import nl.uu.fi.dwo.rest.entities.RestCourse;
@@ -304,13 +305,13 @@ public class SecuredStudentCoursesOfSchoolClassManager {
       result.setCourses(Collections.emptyList());
       result.setScoContexts(Collections.emptyList());
     } else {
-    	if (!Boolean.TRUE.equals(pcc.hasResults()))
+    	if (!pcc.isResults())
     	{
     		// hier NPE als pcc niet persistent is.
     		if (pcc.getClassCourseID() != 0)
-    			pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE);
+    			pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), ResultState.RESULTS);
     		else { // niet persistent 
-    			pcc.setResults(Boolean.TRUE);
+    			pcc.setResults(ResultState.RESULTS);
     		}
     	}  	
       DomClassCourse dcc = pcc.buildDomClassCourse();
@@ -366,7 +367,7 @@ public class SecuredStudentCoursesOfSchoolClassManager {
     	  pcc.setClassID(psc.getClassID());
     	  pcc.setCourseID(pc.getCourseID());
     	  pcc.setLastChangeTimeStamp(NOW.getTime());
-    	  pcc.setResults(Boolean.TRUE); // most likely student starts an activity!
+    	  pcc.setResults(ResultState.RESULTS); // most likely student starts an activity!
     	  pcc.setType(0);
     	  pcc.setViewState(ViewState.none);
     	  long parentpid = pc.getParentID();
@@ -408,7 +409,9 @@ public class SecuredStudentCoursesOfSchoolClassManager {
         result.setCourses(Collections.emptyList());
         result.setScoContexts(Collections.emptyList());
       } else {
-    	if (! Boolean.TRUE.equals(pcc.hasResults())) { pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE); }
+    	if (! pcc.isResults()) { 
+    		if (pcc.getClassCourseID() != 0)
+    			pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), ResultState.RESULTS); }
     	  
         DomClassCourse dcc = pcc.buildDomClassCourse();
         dcc.setType(pcc.getType()); // geen fratsen voor een student!

@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 
 /**
@@ -389,6 +390,7 @@ public class ClassCourseManager extends AbstractManager {
 		return findEntities(schoolClass); // FIXME nu is er toch nog een test op een bestaande course.
 	}
 
+	@Deprecated
 	public static PersistentClassCourse editResults(long id, Boolean results) {
         EntityManager em = null;
         PersistentClassCourse cc = null;
@@ -407,6 +409,27 @@ public class ClassCourseManager extends AbstractManager {
             }
         }
 	}
+
+	public static PersistentClassCourse editResults(long id, ResultState results) {
+        EntityManager em = null;
+        PersistentClassCourse cc = null;
+        try {
+            em = getEntityManager();
+            em.getTransaction().begin();
+            cc = em.find(PersistentClassCourse.class, id);
+            cc.setResults(results);
+            cc.changeTimestamp();
+            cc = em.merge(cc);
+            em.getTransaction().commit();
+            return cc;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+	}
+
+	
 	
 	public static void uncacheResults(PersistentCourse course) {
 		EntityManager em = getEntityManager();

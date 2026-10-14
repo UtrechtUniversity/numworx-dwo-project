@@ -766,25 +766,6 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
               // check for studentscocontexts in sco_of_course X student_of_class
               PersistentCourse pc = build.getCourse();
               if (!SchoolClassUtilManager.hasNoResults(pc, build.getSchoolClass(), true)) return false;
-//              List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
-//              scos.addAll(ScoContextManager.findTrashedEntities(pc));
-//              List<PersistentStudentOfClass> students = StudentOfClassManager.findEntities(build.getSchoolClass());
-//              if( ! students.isEmpty() && scos.size() > 0 ) { // kan >1 zijn, als de bovenstaande clear goed z'n best doet.
-//                long sgId = students.get(0).getPersistentStudentOfClassPK().getSchoolGroupID().longValue();
-//                Set<Long> users = students.stream().map(s -> s.getPersistentStudentOfClassPK().getUserID()).collect(Collectors.toSet());
-//                for ( PersistentScoContext scoContext: scos) {
-//// Bulk: all students results of a school
-//                  List<PersistentStudentScoContext> ss = StudentScoContextManager.findEntities(scoContext, sgId);
-//                  boolean match = ss.stream().anyMatch(pss -> 
-//                      {
-//                        Long uid = pss.getPersistentHasRolePK().getUserID();
-//                        return users.contains(uid);
-//                      }
-//                      
-//                      );
-//                  
-//                  if (match) return false;
-//                }
                 try {
                   ClassCourseManager.destroy(cc.getClassCourseID());
                 } catch (PersistenceException e) {

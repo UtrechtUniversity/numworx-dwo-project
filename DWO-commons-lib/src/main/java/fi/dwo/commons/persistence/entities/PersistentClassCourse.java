@@ -23,6 +23,7 @@ import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse;
 import nl.uu.fi.dwo.rest.dom.entities.util.CourseType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourse4Teacher;
 import nl.uu.fi.dwo.rest.dom.entities.DomClassCourseFull;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
@@ -147,10 +148,12 @@ public class PersistentClassCourse implements Serializable, PersistentEntity {
     private String syExamID;
 
     /**
+     * Note: Change in model: Boolean -> ResultState (threeway logic).
+     * In MySQL Boolean uses TINYINT.
      * @Since 1.5.7
      */
     @Column(name = "results")
-    private Boolean results;
+    private ResultState results;
     
     public void changeTimestamp() {
     	lastChangeTimeStamp = System.currentTimeMillis();
@@ -261,23 +264,6 @@ public class PersistentClassCourse implements Serializable, PersistentEntity {
         return result;
     }
 
-//    /**
-//     * Builds a PersistentClassCourse
-//     *
-//     * @return
-//     */
-//    public static PersistentClassCourse buildFilledPersistentClassCourse() {
-//        PersistentClassCourse result = new PersistentClassCourse();
-//        result.setClassCourseID(01);
-//        result.setClassID(02);
-//        result.setCourseID(03);
-//        result.setNotBefore(DwoDateUtilities.getStartOfDay());
-//        result.setNotAfter(DwoDateUtilities.getEndOfDay());
-//        result.setType(CourseType.normal.ordinal());
-//        result.setViewState(ViewState.invisible);
-//        return result;
-//    }
-
     public DomClassCourse4Teacher buildDomClassCourse4Teacher() {
         DomClassCourse4Teacher classCourse = new DomClassCourse4Teacher();
         PersistentClassCourse.this.fillDomClassCourse4Teacher(classCourse);
@@ -295,7 +281,7 @@ public class PersistentClassCourse implements Serializable, PersistentEntity {
         classCourse.setCourseType(CourseType.values()[this.type]);
         classCourse.setViewState(this.viewState);
         classCourse.setAccessKey(this.accessKey);
-        classCourse.setResults(this.results);
+        classCourse.setResultState(this.results);
     }
 
     private void fillDomClassCourseFull(DomClassCourseFull classCourse) {
@@ -402,15 +388,34 @@ public void setSyExamID(String syExamId) {
 /**
  * @return the results
  */
-public Boolean hasResults() {
+public ResultState getResults() {
 	return results;
 }
 
 /**
  * @param results the results to set
  */
-public void setResults(Boolean results) {
+public void setResults(ResultState results) {
 	this.results = results;
 }
+
+@Deprecated
+public void setResults(Boolean result) {
+	if (result == null) this.results = null;
+	else if (result.booleanValue()) this.results = ResultState.RESULTS;
+	else this.results = ResultState.NONE;
+}
     
+@Deprecated
+public Boolean hasResults() {
+	if (results == null) return null;
+	if (results == ResultState.NONE) return Boolean.FALSE;
+	return Boolean.TRUE;
+}
+
+public boolean isResults() {
+	return results == ResultState.CHECKS || results == ResultState.RESULTS;
+}
+
+
 }

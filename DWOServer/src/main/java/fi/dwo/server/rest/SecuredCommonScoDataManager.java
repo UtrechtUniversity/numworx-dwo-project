@@ -80,6 +80,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomScormValues;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentModelStructureScore;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
 import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.entities.RestScoContext;
 import nl.uu.fi.dwo.rest.entities.RestScormValues;
@@ -635,8 +636,8 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
                       LOG.severe("ClassCourse not open " + rest.getDomScormValues().getScoContext().getId());
                       return Response.ok(Boolean.FALSE, MediaType.APPLICATION_JSON_TYPE).build();                       
                 }
-                if (!Boolean.TRUE.equals(pcc.hasResults())) {
-                	pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE);
+                if (!pcc.isResults()) {
+                	pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), ResultState.RESULTS);
                 }
             }
          } else if (rstate.getRoleType() == RoleType.STUDENT) {
@@ -648,8 +649,8 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				 List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
 				 if (!pccList.isEmpty()) {
 				 PersistentClassCourse pcc = pccList.get(0);
-				 if (!Boolean.TRUE.equals(pcc.hasResults())) {
-				 	pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), Boolean.TRUE);
+				 if (!pcc.isResults()) {
+				 	pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), ResultState.RESULTS);
 				 }}}
 			} catch (Exception e) {
 				LOG.log(Level.WARNING, "Not fatal", e);

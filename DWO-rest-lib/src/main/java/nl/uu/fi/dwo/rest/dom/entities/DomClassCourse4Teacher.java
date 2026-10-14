@@ -1,6 +1,8 @@
 package nl.uu.fi.dwo.rest.dom.entities;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 
 /**
@@ -12,7 +14,7 @@ import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 public class DomClassCourse4Teacher extends DomClassCourse{
     private ViewState viewState;
 	private String accessKey;
-	private Boolean results;
+	private ResultState results;
 
 	/**
 	 * @return the accessKey
@@ -42,16 +44,29 @@ public class DomClassCourse4Teacher extends DomClassCourse{
         this.viewState = viewState;
     }
 
+    @Deprecated
 	public void setResults(Boolean results) {
-		this.results = results;
+		if (results == null) this.results = null;
+		else if (results.booleanValue()) this.results = ResultState.RESULTS; // cannot set CHECKS
+		else this.results = ResultState.NONE;
 	}
 	
 	public boolean hasResults() {
-		return Boolean.TRUE.equals(results);
+		return Boolean.TRUE == getResults();
 	}
 
 	public Boolean getResults() {
-		return results;
+		if (results == null) return null;
+		if (results == ResultState.NONE) return Boolean.FALSE;
+		return Boolean.TRUE;
 	}
 
+	
+	public void setResultState(ResultState r) {
+		results = r;
+	}
+	
+	public ResultState getResultState() {
+		return results;
+	}
 }

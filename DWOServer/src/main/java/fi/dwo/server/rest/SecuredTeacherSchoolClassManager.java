@@ -1637,11 +1637,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                         LOG.log(Level.INFO, "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
                     } else {
                     	if (scc.getViewState() == ViewState.students || scc.getViewState() == ViewState.studentsOrTeachers) {
-                    		if (scc.hasResults() == null) {
+                    		if (scc.getResults() == null) {
                     			try {
                     				boolean results = SchoolClassUtilManager.hasNoResults(course, schoolClass, false);
                     				scc.setResults(!results);
-                    				PersistentClassCourse copy = ClassCourseManager.editResults(scc.getClassCourseID(), scc.hasResults());
+                    				PersistentClassCourse copy = ClassCourseManager.editResults(scc.getClassCourseID(), scc.getResults());
                     				scc.setOptlock(copy.getOptlock()); // more????
                     			} catch(Exception oops) { 
                     				LOG.log(Level.WARNING, "ignored", oops);
