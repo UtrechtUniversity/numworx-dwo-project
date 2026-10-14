@@ -17,11 +17,11 @@
 </head>
 <body>
 <!-- <ul> -->
-<-- 	<li>iss: <%=request.getParameter("iss") %> -->
-<-- 	<li>login_hint: <%=request.getParameter("login_hint") %> -->
-<-- 	<li>target_link_uri: <%=request.getParameter("target_link_uri") %> -->
-<-- 	<li>lti_message_hint: <%=request.getParameter("lti_message_hint") %> -->
+<!-- 	<li>iss: <%=request.getParameter("iss") %> -->
+<!-- 	<li>login_hint: <%=request.getParameter("login_hint") %> -->
+<!-- 	<li>target_link_uri: <%=request.getParameter("target_link_uri") %> -->
+<!-- 	<li>lti_message_hint: <%=request.getParameter("lti_message_hint") %> -->
 <!-- </ul> -->
-	<p>to <a href='<%=redirect_url%>'>login</a>
+<p>to <a href='<%=redirect_url%>'>login</a>
 </body>
 </html>

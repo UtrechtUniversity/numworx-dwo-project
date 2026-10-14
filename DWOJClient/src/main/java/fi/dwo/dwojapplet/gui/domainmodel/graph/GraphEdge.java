@@ -16,7 +16,7 @@ public class GraphEdge {
 	private GNode source;
 	private GNode target;
 	private float vkFactor = 1;
-	private int arrowSize = 5;
+	int arrowSize = 5;
 	
 	private boolean blur = false;
 	private boolean voorkennisTree;
@@ -133,7 +133,9 @@ public class GraphEdge {
 					if(!sameChapters && target.getMethodeInfo()!=null)
 						g.setPaint(edgeInterChapColor);
 					if(blur)
+					{
 						g.setPaint(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
+					}
 					
 			        g.setStroke(new BasicStroke(1.3f*(float)factor));
 			        if(target.getSuccesFailScore()!=null && target.getEdgeSuccesFailColor()!=null)// ||  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)

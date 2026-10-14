@@ -76,9 +76,17 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
 	    instance = vars;
 	    activity = builder.loggingModule(loggingModule).build();
 	    Promise<DomDwoProfileFull> p = rpc.getDwoProfile();
-	    p.then (q -> { noBottom = q.getValue().getDwoProfileRights().contains("b"); return q; });
+	    boolean done = p.isDone();
+	    p = p.then (q -> { noBottom = q.getValue().getDwoProfileRights().contains("b"); return q; });
 	    
 	    initialize(activity.api());
+	    
+	    if (!done)
+	    p.then( q -> {
+	    	applyNoBottom();
+	    	root.forceLayout();
+	    	return q;
+	    } );
 	}
 
 	
@@ -105,19 +113,25 @@ public class ViewModuleViewNumworx extends ResizeComposite implements ViewModule
       initWidget(root = uiBinder.createAndBindUi(this));
       headerView.installTop(headerTop);
       delegate.initialize();
-      if (noBottom) {
-    	  root.setWidgetHidden(headerBottom, noBottom);
-    	  delegate.setWindowTop(50);
-      } else {
-    	  delegate.setWindowTop(90); // 90 pixels header
-      }
-      delegate.zetMaat();
+	  applyNoBottom();
       center.setWidget(delegate);
       if(seb) {
           removeBtns();
       }
       up2Btn.setVisible(false && Actions.isAvailable());
       root.forceLayout();	  
+	}
+
+
+
+	private void applyNoBottom() {
+		root.setWidgetHidden(headerBottom, noBottom);
+		  if (noBottom) {
+			  delegate.setWindowTop(50);
+		  } else {
+			  delegate.setWindowTop(90); // 90 pixels header
+		  }
+		  delegate.zetMaat();
 	}
 	
 //	public ViewModuleViewNumworx(Scorm2004IF api) {

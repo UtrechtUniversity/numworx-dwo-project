@@ -368,12 +368,15 @@ private String voorkennisPopupVariant;
 			{
 				double f = factor;
 				
-				if (target.isSelected()||source.isSelected())
+				if (target.isSelected()||source.isSelected() && !edge.getBlur())
 				{
-					edge.edgeColor = Color.red;
-					f = Math.max(f*2,2);
+					edge.edgeColor = Color.BLACK;
+					edge.arrowSize = 10;
 				}
 				edge.paint(g, origin, f);
+// restore "selected" 
+				edge.arrowSize = 5;
+				edge.edgeColor = LeerdomeinGraphPanel.colorBlue4;
 				if (!edge.isVoorkennisTree()) {
 				boolean blur = edge.getBlur();
 				int size[] = new int[1];
