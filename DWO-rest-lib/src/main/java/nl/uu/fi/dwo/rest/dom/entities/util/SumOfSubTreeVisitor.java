@@ -78,7 +78,13 @@ public class SumOfSubTreeVisitor extends DomResultScoreVisitor {
             	course.setFraction(course.getStudentScoCount() / course.getScoCount());
             	course.setTitle(String.valueOf(Math.round(course.getScore() / course.getScoCount())));
             	if (course.getStudentScoCount() != 0)
-            		course.setDescription("gedaan " + Math.round(course.getFraction()*100) + "%, score " + Math.round(course.getScore() / course.getStudentScoCount()) + "%");
+            	{	course.setDescription("gedaan " + Math.round(course.getFraction()*100) + "%, score " + Math.round(course.getScore() / course.getStudentScoCount()) + "%");
+	            	if (KijkNaVisitor.isSeen(KIJK_NA, course))
+	            	{	course.setTitle(KIJK_NA);
+	            	    //course.setScore(0.0);
+	            	    course.setResultState(ResultState.CHECKS);
+	            	}
+            	}
             	else {
             		course.setDescription("gedaan 0%");
             		course.setTitle("");

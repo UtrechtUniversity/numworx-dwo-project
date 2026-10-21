@@ -2,6 +2,7 @@ package nl.uu.fi.dwo.lms.gwtclient.gwt.jsdisplays.results;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.gwt.json.client.JSONNull;
@@ -69,6 +70,8 @@ class Util {
              DomResultCourseInClass resultCourse = (DomResultCourseInClass) node;
              String viewState = resultCourse.getViewState().name();
              json.put("viewState", new JSONString(viewState));
+             String resultState = Objects.toString(resultCourse.getResultState(), "UNKNOWN"); // NONE, RESULTS, CHECKS, null=UNKNOWN
+             json.put("resultState",  new JSONString(resultState));
              Long sequenceNr = resultCourse.getCourse().getSequenceNr();
              if (sequenceNr != null )
                json.put("sequence", new JSONNumber(sequenceNr));

@@ -3,6 +3,7 @@ package nl.uu.fi.dwo.rest.dom.entities;
 import java.util.Collection;
 
 import nl.uu.fi.dwo.rest.dom.entities.util.DomResultScoreVisitor;
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 
 /**
@@ -14,15 +15,23 @@ public class DomResultCourseInClass extends DomResultScore<DomResultScoContext> 
 
     private DomCourse course;
     private ViewState viewState;
+    private ResultState resultState;
 
-    public DomResultCourseInClass(DomCourse aCourse, ViewState aState) {
+    public DomResultCourseInClass(DomCourse aCourse, ViewState aState, ResultState results) {
         course = aCourse;
         viewState = aState;
+        setResultState(results);
         super.setLabel(course.getName());
     }
 
+    @Deprecated // use with results
+    public DomResultCourseInClass(DomCourse aCourse, ViewState aState) {
+    	this(aCourse, aState, null);
+    }
+    
+    
     public DomResultCourseInClass(DomResultCourseInClass copy) {
-    	this(copy.getCourse(), copy.getViewState());
+    	this(copy.getCourse(), copy.getViewState(), copy.getResultState());
     }
     
     
@@ -54,7 +63,21 @@ public class DomResultCourseInClass extends DomResultScore<DomResultScoContext> 
         this.viewState = viewState;
     }
 
-    /** Sets the ViewState for all descendents and ancestors of the node. 
+    /**
+	 * @return the resultState
+	 */
+	public ResultState getResultState() {
+		return resultState;
+	}
+
+	/**
+	 * @param resultState the resultState to set
+	 */
+	public void setResultState(ResultState resultState) {
+		this.resultState = resultState;
+	}
+
+	/** Sets the ViewState for all descendents and ancestors of the node. 
      * 
      * @param state 
      */

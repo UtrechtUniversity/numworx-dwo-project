@@ -55,6 +55,7 @@ public class DomClassCourse4Teacher extends DomClassCourse{
 		return Boolean.TRUE == getResults();
 	}
 
+	@Deprecated
 	public Boolean getResults() {
 		if (results == null) return null;
 		if (results == ResultState.NONE) return Boolean.FALSE;

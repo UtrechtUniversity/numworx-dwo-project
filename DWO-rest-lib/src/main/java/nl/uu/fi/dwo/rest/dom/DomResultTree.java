@@ -27,6 +27,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomStudent;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentOfClass;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoContext;
 import nl.uu.fi.dwo.rest.dom.entities.DomStudentScoPage;
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.util.SumOfSubTreeVisitor;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.persistence.PersistenceId;
@@ -158,11 +159,11 @@ public class DomResultTree {
             		cc.getViewState() != ViewState.none &&
             		cc.getViewState() != ViewState.onlyStudents &&
             		cc.getViewState() != ViewState.studentsNorTeachers &&
-            		! (cc.getViewState() == ViewState.students && Boolean.FALSE.equals(cc.getResults())) &&
-            		! (cc.getViewState() == ViewState.studentsOrTeachers && Boolean.FALSE.equals(cc.getResults()))
+            		! (cc.getViewState() == ViewState.students && cc.getResultState() == ResultState.NONE) &&
+            		! (cc.getViewState() == ViewState.studentsOrTeachers && cc.getResultState() == ResultState.NONE)
             		
             ) {
-                DomResultCourseInClass resultCourse = new DomResultCourseInClass(resultData.getCourses().get(cc.getCourseId()), cc.getViewState());
+                DomResultCourseInClass resultCourse = new DomResultCourseInClass(resultData.getCourses().get(cc.getCourseId()), cc.getViewState(), cc.getResultState());
                 //attach to class
                 schoolClasses.get(cc.getClassId()).getChildren().put(cc.getCourseId(), resultCourse); //add course to parent
                 resultCourse.setParent(schoolClasses.get(cc.getClassId())); //add parent to course
