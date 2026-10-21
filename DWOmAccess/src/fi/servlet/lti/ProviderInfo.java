@@ -186,7 +186,14 @@ Authentication request URL: http://localhost/mod/lti/auth.php
 		deploymentId = "1";	
         register(platform, client_id, deploymentId, key_set_url, auth_token_url, auth_login_url);
 
-  
+    // wiskunde online productie
+        platform = "https://coornhert.wiskunde-actief.nl";
+		client_id = "2x0qT2lqoSmAXWJxeBlEKs";
+        auth_login_url = "https://coornhert.wiskunde-actief.nl/courses/lti/numworx/auth/";
+        auth_token_url = "https://coornhert.wiskunde-actief.nl/courses/lti/numworx/auth/"; // deze is twijfelachtig.
+        key_set_url = "https://coornhert.wiskunde-actief.nl/courses/lti/numworx/jwks/";
+		deploymentId = "2";	
+        register(platform, client_id, deploymentId, key_set_url, auth_token_url, auth_login_url);
         
         
         
