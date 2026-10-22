@@ -64,6 +64,7 @@ import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoPageManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentModelDataManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
@@ -597,7 +598,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
     PersistentStudentScoContext pssc = null;
     PersistentStudentScoData pssd = null;
 	UserState_HR_R_S_SG_U rstate = ustate.setHasRole(domHasRole);
-
+	PersistentClassCourse pcc = null;
     PersistentHasRole phr = rstate.getHasRole();
     PersistentHasRolePK hasRoleKey = phr.getPersistentHasRolePK();
 //userid must match
@@ -627,7 +628,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
                 Long classID = MySQLPersistenceId.getNativeId(domClassID);
                 PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
                 List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
-                PersistentClassCourse pcc = pccList.get(0);
+                pcc = pccList.get(0);
                 boolean ok = pcc.getViewState() != ViewState.invisible;
                 ok &= isSoC(phr, schoolClass);
                 if (pcc.getNotAfter() != null) ok &= pcc.getNotAfter().after(new java.util.Date());
@@ -648,7 +649,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 				 PersistentSchoolClass schoolClass = new PersistentSchoolClass(classID);
 				 List<PersistentClassCourse> pccList = ClassCourseManager.findEntities(schoolClass, course);
 				 if (!pccList.isEmpty()) {
-				 PersistentClassCourse pcc = pccList.get(0);
+				 pcc = pccList.get(0);
 				 if (!pcc.isResults()) {
 				 	pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), ResultState.RESULTS);
 				 }}}
@@ -671,6 +672,7 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
 		pssc.setCompletionStatus("");
 		pssc.setSessionTime("");
 		pssc.setTotalTime("");
+		if (pcc != null) pssc.setClassID(pcc.getClassID());
         StudentScoContextManager.create(pssc); // throw duplicate error
         LOG.fine("studentsco1 = " + pssc.getStudentSco());
         list = StudentScoContextManager.findEntities(scoContext, hasRoleKey);
@@ -743,7 +745,20 @@ public Response getValues(SecurityContext sc, RestScormValues rest) throws Dwo2E
             }
         	if (COMPLETE.equals(value) ) {
         		if (!COMPLETE.equals(pssc.getCompletionStatus()))
+        		{
         			xml.LMSSetValue("cmi.comments_from_lms.0.timestamp", new SimpleDateFormat(RestyDateTimeFormat.RESTY_DATETIME_FORMAT).format(new java.util.Date()));
+        			if (pcc != null && pcc.getResults() != ResultState.CHECKS) {
+        				if (ScoPageManager.find(pssc).stream().anyMatch(
+        						page -> 
+        							Boolean.TRUE.equals(page.getCheckDocent())
+        				))
+        						pcc = ClassCourseManager.editResults(pcc.getClassCourseID(), ResultState.CHECKS);
+        			}
+        			if (pcc != null) // to find the classcourse
+        				pssc.setClassID(pcc.getClassID());
+        		
+        		
+        		}
         	} else {
         		xml.LMSSetValue("cmi.comments_from_lms.0.timestamp", ""); // or remove?
         	}

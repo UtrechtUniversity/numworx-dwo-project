@@ -20,13 +20,18 @@ import javax.json.JsonReader;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 
+import fi.dwo.commons.persistence.entities.PersistentClassCourse;
+import fi.dwo.commons.persistence.entities.PersistentCourse;
+import fi.dwo.commons.persistence.entities.PersistentSchoolClass;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentScoData;
 import fi.dwo.commons.persistence.entities.PersistentScoPage;
 import fi.dwo.commons.persistence.entities.PersistentScoPagePK;
 import fi.dwo.commons.persistence.entities.PersistentStudentScoContext;
+import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoPageManager;
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 
 public class ScoPageUtilManager {
 	
@@ -277,7 +282,24 @@ public class ScoPageUtilManager {
 				}
 				page.setCorrectie(sumCorrectie(state));
 				Boolean result = sumDocentCorrectie(state);
-				if (result != null) page.setCheckDocent(result);
+				if (result != null) {
+					page.setCheckDocent(result);
+
+					if (!result.booleanValue()) {
+						try {
+							PersistentSchoolClass schoolclass = new PersistentSchoolClass(pssc.getClassID());
+							PersistentCourse course = new PersistentCourse(page.getCourseID());
+							List<PersistentClassCourse>list = ClassCourseManager.findEntities(schoolclass, course);
+							list.forEach(pcc -> ClassCourseManager.editResults(pcc.getClassCourseID(), ResultState.RESULTS));
+						} catch (Exception e) {
+							LOG.log(Level.WARNING, "cannot update classcourse", e);
+						}
+							
+						}
+						// remove "checks"
+				
+					}
+				
 			}
 			ScoPageManager.edit(page);
 		}

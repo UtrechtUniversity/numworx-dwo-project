@@ -819,6 +819,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
          ssc.setLocation("");
          ssc.setScore(0);
          ssc.setSessionTime("");
+         ssc.setClassID(schoolClass.getClassID());
          StudentScoContextManager.create(ssc);
          dssc = ssc.buildDomStudentScoContext();
        } else {
@@ -886,6 +887,7 @@ public class SecuredTeacherResultsManager extends AbstractSchoolClassManager {
          ssc.setLocation("");
          ssc.setScore(0);
          ssc.setSessionTime("");
+         ssc.setClassID(schoolClass.getClassID());
          StudentScoContextManager.create(ssc);
          dssc = ssc.buildDomStudentScoContext();
        } else {

@@ -25,6 +25,7 @@ import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoDataManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoPageManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoDataManager;
@@ -44,6 +45,7 @@ import nl.uu.fi.dwo.rest.dom.entities.DomHasRole;
 import nl.uu.fi.dwo.rest.dom.entities.DomSchoolClassId;
 import nl.uu.fi.dwo.rest.dom.entities.DomScoContextId;
 import nl.uu.fi.dwo.rest.dom.entities.RoleType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2Exception;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
@@ -657,7 +659,7 @@ public class CascadingPersistenceBuilder {
             //detach classcourse to ensure no new results occur.
             //TODO mark marked for deleted in the future.
             instance.context.classCourse = 
-            ClassCourseManager.editResults(this.getClassCourse().getClassCourseID(), Boolean.FALSE);
+            ClassCourseManager.editResults(this.getClassCourse().getClassCourseID(), ResultState.NONE);
             //clean all existing results
             for (PersistentStudentOfClass soc : socList) {
                 PersistentHasRolePK key = new PersistentHasRolePK(soc.getPersistentStudentOfClassPK().getUserID(), soc.getPersistentStudentOfClassPK().getSchoolGroupID());
@@ -665,6 +667,7 @@ public class CascadingPersistenceBuilder {
                 for (PersistentStudentScoContext ssc : sscList) {
                     String msg = MessageFormat.format("Username {0} is clearing studentSco id {1} for userid  {2} schoolgroupid {3} and course {4} {5}.", new Object[]{instance.context.user.getUsername(), ssc.getScoID(), ssc.getPersistentHasRolePK().getUserID(), ssc.getPersistentHasRolePK().getSchoolGroupID(), instance.context.course.getCourseID(), instance.context.course.getName()});
                     LOG.log(Level.INFO, msg);
+                    ScoPageManager.find(ssc).forEach(ScoPageManager::destroy);
                     if(StudentScoDataManager.findEntity(ssc.getStudentSco()) != null)
                       StudentScoDataManager.destroy(ssc.getStudentSco());
                     StudentScoContextManager.destroy(ssc.getStudentSco());

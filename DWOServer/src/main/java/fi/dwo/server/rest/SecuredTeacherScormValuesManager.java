@@ -155,7 +155,7 @@ public class SecuredTeacherScormValuesManager {
 			pssc.setCompletionStatus("");
 			pssc.setSessionTime("");
 			pssc.setTotalTime("");
-			
+// FIXME unknown schoolclass of student AND teacher			
 			try {
 				StudentScoContextManager.create(pssc);
 			} catch (PersistenceException e) {
