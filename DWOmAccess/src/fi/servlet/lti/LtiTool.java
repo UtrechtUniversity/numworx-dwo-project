@@ -31,7 +31,7 @@ public class LtiTool extends Tool {
 		
 		LOG.warning("deployment id = " + launchSession.getDeploymentId() );
 
-		launchSession.setDeploymentId("1"); // ons kent ons!
+		//launchSession.setDeploymentId("1"); // ons kent ons!
 		
 		
 		boolean validate = super.validate(token, state);
