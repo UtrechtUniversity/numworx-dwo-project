@@ -17,11 +17,13 @@ import fi.dwo.commons.persistence.entities.PersistentCourse;
 import fi.dwo.commons.persistence.entities.PersistentDwoProfile;
 import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentSchool;
+import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.CourseManager;
 import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.PersistentDataManagers.util.HasRoleUtilManager;
 import fi.dwo.server.mysql.DatabaseManager;
@@ -118,6 +120,34 @@ public class SecuredTeacherCourseManagerIT {
     
    }
 
+  /**
+   * Should fail! no updates in nullschool for normal teacher!
+   * @throws Exception
+   */
+  @Test
+  public void testUpdateToNullSchool() throws Exception {
+    SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+    PersistentUser pUser = UserManager.findByUserName("user07");
+    PersistentSchool pSchool = SchoolManager.findBySchoolLogin("school01");//id =3
+    PersistentHasRole pHasRole = HasRoleUtilManager.getUsersHasRoleInSchoolAndRole(pUser, pSchool, RoleType.TEACHER);
+    PersistentCourse  course = CourseManager.findEntity(13333L);
+    
+    RestCourseFull rest = new RestCourseFull();
+    DomCourseFull domCourse = course.buildDomCourseFull();     
+    domCourse.setSchoolId(PersistentSchool.buildPersistenceId(0L)); // NUL-school
+    rest.setDomCourse(domCourse);
+    DomContext restContext = new DomContext();
+    DomHasRole domHasRole = pHasRole.buildDomHasRole();
+    restContext.setDomHasRole(domHasRole);
+    rest.setRestContext(restContext);
+    manager.update(sc, rest);
+    List<PersistentScoContext> list = ScoContextManager.findEntities(course);
+    assertNull(list.get(0).getSchoolID());
+    
+   }
+
+  
+  
   @Test @Ignore
   public void testUpdateDuplicateInNullSchool() throws Exception {
     SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01

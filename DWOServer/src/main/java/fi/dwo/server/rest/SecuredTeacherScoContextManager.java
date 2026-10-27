@@ -115,6 +115,11 @@ public class SecuredTeacherScoContextManager extends AbstractSchoolClassManager 
       Long scoID = MySQLPersistenceId.getNativeId(scoContext);
       PersistentScoContext pc = ScoContextManager.findEntity(scoID);
       PersistentScoData sd = ScoDataManager.findEntity(scoID);
+      if (sd == null) {
+    	  sd = new PersistentScoData(scoID);
+    	  sd.setDescription("");
+    	  ScoDataManager.create(sd);
+      }
       return MySQLScoContextActions.update(pc, sd, scoContext, scoData, true);
     }
       

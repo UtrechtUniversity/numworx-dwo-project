@@ -21,6 +21,7 @@ import fi.dwo.commons.persistence.entities.PersistentHasRole;
 import fi.dwo.commons.persistence.entities.PersistentScoContext;
 import fi.dwo.commons.persistence.entities.PersistentUser;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.UserManager;
 import fi.dwo.server.mysql.DatabaseManager;
 import fi.dwo.server.persistence.DwoEmfFactory;
@@ -103,6 +104,36 @@ public class SecuredTeacherScoContextManagerIT {
 		assertNull(result.getImageData());
 	}
 
+	@Test
+	public void testUpdateToNullSchool() throws Exception {
+        SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01
+        PersistentUser user = UserManager.findByUserName("user07");
+        List<PersistentHasRole> list = HasRoleManager.findEntities(user);
+        DomHasRole dhr = list.get(0).buildDomHasRole();
+        
+        RestScoContextFull rest = new RestScoContextFull();
+		DomDwoProfile domDwoProfile = new DomDwoProfile();
+		PersistenceId id = PersistentDwoProfile.buildPersistenceId(Long.valueOf(1));
+		domDwoProfile.setId(id);
+		rest.setDomDwoProfile(domDwoProfile);
+		
+		DomScoContextFull domScoContext = new DomScoContextFull();
+		PersistenceId sco = PersistentScoContext.buildPersistenceId(Long.valueOf(4));
+		domScoContext.setId(sco);
+		domScoContext.setCourseId(PersistentCourse.buildPersistenceId(1L)); // null school course.	
+		rest.setDomScoContext(domScoContext);
+		DomContext restContext = new DomContext();
+		restContext.setDomHasRole(dhr);
+		rest.setRestContext(restContext);
+		TestUriInfo info = new TestUriInfo();
+		DomScoContextFull result = manager.update(sc, rest);
+		PersistentScoContext psc = ScoContextManager.findEntity(4L);
+		assertNull(psc.getSchoolID());
+	}
+
+	
+	
+	
 	@Test
 	public void testAdd() {
         SecurityContext sc = new TestSecurityContext("user07", RoleType.TEACHER);//school01

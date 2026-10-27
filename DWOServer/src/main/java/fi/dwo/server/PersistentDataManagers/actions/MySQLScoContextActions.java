@@ -112,7 +112,9 @@ public class MySQLScoContextActions {
                 relocateScos(course, oldseq.longValue(), -1L);
                 // 2) make room in new Course.scos
                 course = CourseManager.findEntity(newcourseID);
-                relocateScos(course, newseq.longValue()-1L, +1L);                
+                relocateScos(course, newseq.longValue()-1L, +1L);
+                pc.setSchoolID(course.getSchoolID());
+                pc.setCourseID(course.getCourseID());
               }
               
             }
@@ -121,12 +123,6 @@ public class MySQLScoContextActions {
                 pc.setSequencenr(scoContext.getSequencenr());
             }
 
-            if (scoContext.getCourseId() != null) {
-                DomCourse dc = new DomCourse();
-                dc.setId(scoContext.getCourseId());
-                Long courseID = MySQLPersistenceId.getNativeId(dc);
-                pc.setCourseID(courseID);
-            }
             pc.setTrashID(0L);
             pc = ScoContextManager.edit(pc);
             // if edit fails skip this.
