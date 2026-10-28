@@ -192,9 +192,7 @@ Authentication request URL: http://localhost/mod/lti/auth.php
         auth_login_url = "https://coornhert.wiskunde-actief.nl/courses/lti/numworx/auth/";
         auth_token_url = "https://coornhert.wiskunde-actief.nl/courses/lti/numworx/auth/"; // deze is twijfelachtig.
         key_set_url = "https://coornhert.wiskunde-actief.nl/courses/lti/numworx/jwks/";
-		deploymentId = "2";	
-		deploymentId = "1";	// FIXED!!!!
-		
+		deploymentId = "1";	
         register(platform, client_id, deploymentId, key_set_url, auth_token_url, auth_login_url);
         
         

@@ -30,9 +30,6 @@ public class LtiTool extends Tool {
 	public boolean validate(String token, String state) {
 		
 		LOG.warning("deployment id = " + launchSession.getDeploymentId() );
-
-		//launchSession.setDeploymentId("1"); // ons kent ons!
-		
 		
 		boolean validate = super.validate(token, state);
 		presentation = claimAccessor.get(ClaimsEnum.PRESENTATION, Presentation.class);
