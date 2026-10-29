@@ -26,6 +26,7 @@ import fi.dwo.server.PersistentDataManagers.core.ClassCourseManager;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.SchoolClassManager;
 import fi.dwo.server.PersistentDataManagers.core.ScoContextManager;
+import fi.dwo.server.PersistentDataManagers.core.ScoPageManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentOfClassManager;
 import fi.dwo.server.PersistentDataManagers.core.StudentScoContextManager;
 import fi.dwo.server.PersistentDataManagers.core.TeacherOfClassManager;
@@ -35,6 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2ExceptionCode;
 import nl.uu.fi.dwo.rest.exceptions.Dwo2RestException;
@@ -175,7 +177,6 @@ where cc.classid = 2  and withchildren = 0 group by cc.classcourseid, cc.coursei
 		
 	}
 	
-	@Deprecated
 	public static boolean hasNoResults(PersistentCourse pc, PersistentSchoolClass sc, boolean trash) {
         List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
         if (trash) scos.addAll(ScoContextManager.findTrashedEntities(pc));
@@ -199,6 +200,47 @@ where cc.classid = 2  and withchildren = 0 group by cc.classcourseid, cc.coursei
         }
         return true;
 	}
+
+	final static String COMPLETE = "completed";
+	public static ResultState allResults(PersistentCourse pc, PersistentSchoolClass sc, boolean trash) {
+        List<PersistentScoContext> scos = ScoContextManager.findEntities(pc);
+        if (trash) scos.addAll(ScoContextManager.findTrashedEntities(pc));
+        List<PersistentStudentOfClass> students = StudentOfClassManager.findEntities(sc);
+        if( ! students.isEmpty() && scos.size() > 0 ) { // kan >1 zijn, als de bovenstaande clear goed z'n best doet.
+          long sgId = students.get(0).getPersistentStudentOfClassPK().getSchoolGroupID().longValue();
+          Set<Long> users = students.stream().map(s -> s.getPersistentStudentOfClassPK().getUserID()).collect(Collectors.toSet());
+          for ( PersistentScoContext scoContext: scos) {
+//Bulk: all students results of a school
+            List<PersistentStudentScoContext> ss = StudentScoContextManager.findEntities(scoContext, sgId);
+            ss  = ss.stream().filter(pss -> 
+                {
+                  Long uid = pss.getPersistentHasRolePK().getUserID();
+                  return users.contains(uid);
+                }
+                
+                ).collect(Collectors.toList());
+            if (!ss.isEmpty()) {
+            	boolean match = ss.stream().anyMatch(pss -> 
+            	{
+            		if (COMPLETE.equals(pss.getCompletionStatus())) {
+            			return ScoPageManager.find(pss).stream().anyMatch(
+        						page -> 
+    							Boolean.TRUE.equals(page.getCheckDocent())
+            				);
+            		}
+            	
+            		return false;
+            	}
+            	
+            	);
+            
+            	if (match) return ResultState.CHECKS;
+            	return ResultState.RESULTS;   
+          }
+        }
+        }
+        return ResultState.NONE;
+  }
 	
 	
 }

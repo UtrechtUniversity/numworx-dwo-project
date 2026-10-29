@@ -62,6 +62,7 @@ import fi.dwo.server.PersistentDataManagers.core.DwoProfileManager;
 import nl.uu.fi.dwo.rest.dom.entities.ValidUserFieldsChecker;
 import nl.uu.fi.dwo.rest.dom.entities.util.ACL;
 import nl.uu.fi.dwo.rest.dom.entities.util.AboType;
+import nl.uu.fi.dwo.rest.dom.entities.util.ResultState;
 import nl.uu.fi.dwo.rest.dom.entities.util.ViewState;
 import fi.dwo.server.PersistentDataManagers.core.HasRoleManager;
 import fi.dwo.server.PersistentDataManagers.core.LoginContextManager;
@@ -1636,11 +1637,11 @@ public class SecuredTeacherSchoolClassManager extends AbstractSchoolClassManager
                     if (course == null) {
                         LOG.log(Level.INFO, "course null for courseid = " + courseID + " sccid = " + scc.getClassCourseID());
                     } else {
-                    	if (scc.getViewState() == ViewState.students || scc.getViewState() == ViewState.studentsOrTeachers) {
+                    	if (scc.getViewState() == ViewState.students || scc.getViewState() == ViewState.studentsOrTeachers || scc.getViewState() == ViewState.studentsAndTeachers) {
                     		if (scc.getResults() == null) {
                     			try {
-                    				boolean results = SchoolClassUtilManager.hasNoResults(course, schoolClass, false);
-                    				scc.setResults(!results);
+                    				ResultState results = SchoolClassUtilManager.allResults(course, schoolClass, false);
+                    				scc.setResults(results);
                     				PersistentClassCourse copy = ClassCourseManager.editResults(scc.getClassCourseID(), scc.getResults());
                     				scc.setOptlock(copy.getOptlock()); // more????
                     			} catch(Exception oops) { 
