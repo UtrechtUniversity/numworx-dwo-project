@@ -313,7 +313,7 @@
     	<servlet-class>fi.servlet.ideas.IdeasServlet</servlet-class>
       <init-param>
          <param-name>ideascgi</param-name>
-         <param-value>https://ideas.science.uu.nl/cgi-bin/ideas.cgi</param-value>
+         <param-value>http://ideas.dwo.nl/cgi-bin/ideas.cgi</param-value>
       </init-param>
       <init-param>
          <param-name>extra-ideascgi</param-name>
