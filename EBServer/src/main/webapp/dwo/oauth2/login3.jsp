@@ -41,6 +41,10 @@ function later() {
             if (hint) {
             	doSetValue("dme.oauth.idphint", hint);
             }
+            hint = args.get("login_hint");
+            if (hint) {
+				doSetValue("dme.oauth.loginhint", hint);
+			}
         }
 		if ("false" == doInitialize()) {
 			throw "Illegal use"
@@ -51,6 +55,7 @@ function later() {
        	var codeChallenge = doGetValue("dme.oauth.code_challenge");
        	var state = doGetValue("dme.oauth.state")||"";
        	var idphint = doGetValue("dme.oauth.idphint")||"";
+       	var loginHint = doGetValue("dme.oauth.loginhint")||"";
         var redirectUri = window.top.location.href.split('?')[0];
         var args = new URLSearchParams({
                response_type: "code",
@@ -59,7 +64,8 @@ function later() {
                code_challenge_method: "S256",
                code_challenge: codeChallenge,
                redirect_uri: redirectUri,
-               "idphint": idphint
+               "idphint": idphint,
+               "login_hint": loginHint
            });
            window.open( authorizeEndpoint + "?" + args , "_top");
          	
