@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.ServletConfig;
@@ -38,14 +39,14 @@ class DwoLogin implements Login {
 		cookie.setSecure(req.isSecure());
 		cookie.setPath("/");
 		resp.addCookie(cookie);
-
+		String username = Objects.toString(req.getParameter("login_hint"),"");
 		String format = getLoginForm();
 		byte[] random = new byte[16];
 		ThreadLocalRandom.current().nextBytes(random);
 		String nonce = Base64.getEncoder().withoutPadding().encodeToString(random);
 		session.setAttribute("dwologin.nonce", nonce);
 		resp.setContentType("text/html");
-		resp.getWriter().format(format, nonce, "");
+		resp.getWriter().format(format, username, nonce, "");
 	}
 
 	static String getLoginForm() throws IOException {

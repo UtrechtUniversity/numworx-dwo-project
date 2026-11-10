@@ -6,6 +6,8 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Objects;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,8 +45,9 @@ public class DwoRedirect extends HttpServlet {
 		state = state.substring(komma+1);
 		
 		String nonce = (String) session.getAttribute("dwologin.nonce");
+		String username = "";
 		try {
-			String username = req.getParameter("username");
+			username = Objects.toString( req.getParameter("username"),"");
 			String password = req.getParameter("password");
 			if (nonce != null && nonce.equals(req.getParameter("nonce"))) {
 				String code = getBearerToken(username, password);
@@ -64,7 +67,7 @@ public class DwoRedirect extends HttpServlet {
 			log("doPost login exception " + code, d);
 			String form = DwoLogin.getLoginForm();
 			resp.setContentType("text/html");
-			resp.getWriter().format(form, nonce, d.getLocalizedMessage());
+			resp.getWriter().format(form, username, nonce, d.getLocalizedMessage());
 		}
 	}
 
