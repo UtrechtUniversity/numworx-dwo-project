@@ -1798,7 +1798,9 @@ private String voorkennisPopupVariant;
   }
 
 public void syncFolderNodes(JTree tree) {
-	if (graphNodes.get(0) instanceof FolderNode) {
+	if (
+			graphNodes.size() > 0 &&
+			graphNodes.get(0) instanceof FolderNode) {
 //		DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
 //		Enumeration e = root.depthFirstEnumeration();
 //		while (e.hasMoreElements()) {
