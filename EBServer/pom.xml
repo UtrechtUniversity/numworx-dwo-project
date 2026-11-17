@@ -841,7 +841,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<DWOmAccessVersion>3.0.2-SNAPSHOT</DWOmAccessVersion>
 		<aws.serverId>prod</aws.serverId>
 		<aws.applicationName>DWO-EBServer</aws.applicationName>
 		<aws.environmentName>testip6server</aws.environmentName>
@@ -849,9 +848,9 @@
         <http.port>80</http.port>
         <upload.servlet />
         <upload.servlet.mapping />
-        <OAuth2ClientVersion>2.5.47-SNAPSHOT</OAuth2ClientVersion>
     	<aws.java.sdk.version>2.31.40</aws.java.sdk.version>
     	<Register.html>Register.html</Register.html>
+    	<ideas.dwo.nl>ideas.dwo.nl</ideas.dwo.nl>
 	</properties>
 	<profiles>
 		<profile>
