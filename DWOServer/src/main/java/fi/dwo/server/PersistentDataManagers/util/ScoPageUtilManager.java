@@ -58,7 +58,7 @@ public class ScoPageUtilManager {
 				scopage.setId(pk);
 				list.add(scopage);
 			}
-
+// update courseid, label, maxfactor, maxscore, checkdocent. optlock?.
 			for(int i = 0; i < list.size(); i++) {
 				PersistentScoPage scopage = list.get(i);
 				scopage.setCourseID(sc.getCourseID());
@@ -381,6 +381,31 @@ public class ScoPageUtilManager {
 			break;		
 		}
 		return null;
+	}
+
+	public static void transferPages(PersistentScoContext pc) {
+		List<PersistentScoPage> all = ScoPageManager.findAll(pc);
+		Map<Long, PersistentScoPage> org = all.stream()
+				.filter(p -> 
+					p.getId().getHasRolePK() == null
+				)
+				.collect(Collectors.toMap(p -> p.getId().getSequencenr(), Function.identity()));
+		all.forEach(p -> {
+			Long seq = p.getId().getSequencenr();
+			PersistentScoPage other = org.getOrDefault(seq, p);
+			if (p != other) {
+				//update courseid, label, maxfactor, maxscore, checkdocent
+				p.setCourseID(other.getCourseID());
+				p.setLabel(other.getLabel());
+				p.setMaxFactor(other.getMaxFactor());
+				p.setMaxScore(other.getMaxScore());
+				p.setCheckDocent(other.getCheckDocent());
+				ScoPageManager.edit(p);
+			}
+			
+			
+		} );
+	
 	}
 	
 	

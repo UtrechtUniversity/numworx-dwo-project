@@ -143,6 +143,8 @@ public class MySQLScoContextActions {
                 }
                 sd = ScoDataManager.edit(sd);
                 ScoPageUtilManager.updatePages(pc, sd);
+                if (!delete)
+                	ScoPageUtilManager.transferPages(pc);
             }
 
             pc.fillDomScoContextFull(scoContext);

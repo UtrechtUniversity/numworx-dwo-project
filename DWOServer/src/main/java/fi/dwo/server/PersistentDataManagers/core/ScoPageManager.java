@@ -60,6 +60,20 @@ public class ScoPageManager extends AbstractManager {
     	}
     }
 
+    public static List<PersistentScoPage> findAll(PersistentScoContext sco) throws PersistenceException
+    {
+    	EntityManager em = getEntityManager();
+    	try {
+    		em.getTransaction().begin();
+    		TypedQuery<PersistentScoPage> q;
+    		q = em.createQuery("SELECT p FROM PersistentScoPage p WHERE p.id.scoID = :scoID", PersistentScoPage.class);
+    		q.setParameter("scoID", sco.getScoID());
+    		return q.getResultList();
+    	} finally {
+    		em.close();
+    	}
+    }
+
     public static List<PersistentScoPage> find(PersistentStudentScoContext ssc) throws PersistenceException
     {
     	EntityManager em = getEntityManager();
