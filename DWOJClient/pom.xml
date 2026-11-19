@@ -616,7 +616,6 @@
 		    		<groupId>nl.numworx.swingbrowser</groupId>
 		    		<artifactId>swingbrowser-jxb</artifactId>
 	    			<scope>runtime</scope>
-	    			<version>0.0.22-SNAPSHOT</version>
 		    	</dependency>
         	</dependencies>
         </profile>
