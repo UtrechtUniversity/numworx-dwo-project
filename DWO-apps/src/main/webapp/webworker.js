@@ -129,7 +129,7 @@ self.makeObject = (x) => {
 
 async function loadPyodideAndPackages() {
   self.pyodide = await loadPyodide();
-  self.pyodide.setStdout( { isatty: true, raw: self.output })
+  self.pyodide.setStdout( { isatty: true, raw: function(ch) { }  })
   self.pyodide.setStderr( { isatty: true, raw: self.output })
   self.pyodide.setStdin(  { isatty: true, stdin: self.input, autoEOF: true })
  // FIXME make OPTIONAL????
@@ -146,6 +146,7 @@ async function loadPyodideAndPackages() {
       };
   	self.pyodide.registerJsModule("basthon", fakeBasthonPackage)
     await self.pyodide.loadPackage(deploy + "replgwt/turtle-0.0.1-py3-none-any.whl")
+    self.pyodide.setStdout( { isatty: true, raw: self.output })
   
 }
 let pyodideReadyPromise = loadPyodideAndPackages();
