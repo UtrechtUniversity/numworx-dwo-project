@@ -39,7 +39,9 @@ import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.plaf.TreeUI;
@@ -91,8 +93,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 	//private MenuItem menuItemGR;
 	//private MenuItem menuItemMW;
 	
-	private PopupMenu voorkennisPopupMenu;
-    private MenuItem miVoorkennis;
+	private JPopupMenu voorkennisPopupMenu;
+    private JMenuItem miVoorkennis;
     private GNode voorkennisPopupNode;
     private boolean voorkennisTree;
 	
@@ -127,8 +129,8 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
     DomMethod activeRow;
 	
 	private Map<String,Map<String,Set<Integer>>> filter = Collections.emptyMap();
-  private MenuItem diVoorkennis;
-private String voorkennisPopupVariant;
+	private JMenuItem diVoorkennis;
+	private String voorkennisPopupVariant;
 
 	public Map<String,Map<String,Set<Integer>>> getFilter() { 
 	  return filter;
@@ -267,14 +269,14 @@ private String voorkennisPopupVariant;
 		voorkennisWegButton.setVisible(false);
 		add(voorkennisWegButton);
 		
-		voorkennisPopupMenu = new PopupMenu();
+		voorkennisPopupMenu = new JPopupMenu();
 		voorkennisPopupMenu.setFont(new Font("SansSerif",Font.PLAIN,13));
 		
-		miVoorkennis = new MenuItem("Toon alle voorkennis");
+		miVoorkennis = new JMenuItem("Toon alle voorkennis");
 		miVoorkennis.addActionListener(this);
 		voorkennisPopupMenu.add(miVoorkennis);
 
-		diVoorkennis = new MenuItem("Toon directe voorkennis");
+		diVoorkennis = new JMenuItem("Toon directe voorkennis");
 		diVoorkennis.addActionListener(this);
 		voorkennisPopupMenu.add(diVoorkennis);
 		
@@ -806,37 +808,6 @@ private String voorkennisPopupVariant;
 		this.isScoreGraph = isScoreGraph;
 	}
 
-//	public void deselectMethode() {
-//		deselectMethode(true);
-//	}
-//	
-//	public void deselectMethode(boolean b) {
-//		selectedChapter = null;
-//		selectedBook = null;
-//		selectedMethod = null;
-//		for(int i=0 ; i<graphNodes.size() ; i++) {
-//			graphNodes.get(i).setVisible(true);
-//			graphNodes.get(i).setTempLocation(null);
-//		}
-//		if(b)
-//			produceAction("filter");
-//		zoomFit();
-//		for(int i=0 ; i<chapterNodes.size() ; i++) {
-//			chapterNodes.get(i).makeLocation(graphNodes);
-//		}
-//		for(int i=0 ; i<bookNodes.size() ; i++) {
-//			bookNodes.get(i).makeLocation(chapterNodes);
-//		}
-//		verbergVoorkennis(b);
-//		methodeLabel.setText("Alle leerdoelen");
-//		tussenLabel1.setText("");
-//		bookLabel.setText("");
-//		tussenLabel2.setText("");
-//		chapterLabel.setText("");
-//		voorkennisButton.setVisible(false);
-//	}
-	
-
 	public void selectMethode(String methodeCode) { 
 		selectMethode(methodeCode, true); 
 	}
@@ -1231,6 +1202,16 @@ private String voorkennisPopupVariant;
 
 	}
 
+	public void showVoorkennisPopup(String uuid, String code, MouseEvent e) {
+		Optional<GNode> optionalNode = graphNodes.stream().filter(t -> uuid.equals(t.getID())).findAny();
+		if (optionalNode.isPresent()) {
+			voorkennisPopupNode = optionalNode.get();
+			voorkennisPopupVariant = voorkennisPopupNode.getVariant(code);
+			voorkennisPopupMenu.show(e.getComponent(),  e.getX(), e.getY());			
+		}
+	}
+	
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		crash = false;
@@ -1858,7 +1839,7 @@ public void setModel(JTree tree, Map<String, Map<String, Set<Integer>>> filter2,
 
 @Override
 public void treeExpanded(TreeExpansionEvent event) {
-	if (editMode) return;	
+	if (editMode||voorkennisTree) return;	
 	JTree tree = (JTree) event.getSource();
 	syncFolderNodes(tree);
 	TreePath path = event.getPath();
@@ -1896,7 +1877,7 @@ private void showParentPath(TreePath path) {
 
 @Override
 public void treeCollapsed(TreeExpansionEvent event) {
-	if (editMode) return;
+	if (editMode||voorkennisTree) return;
 	Object o = event.getPath().getLastPathComponent();
 	o = ((DefaultMutableTreeNode) o).getUserObject();
 	if (o instanceof NodeVector) {
