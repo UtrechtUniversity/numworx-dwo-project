@@ -324,7 +324,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 			GraphNode helpNode = new GraphNode(ex,ey);
 			helpNode.setVisible(true);
 			helpNode.setSelected(true);
-			tempEdge = new GraphEdge((GraphNode) possibleSourceNode, helpNode);
+			tempEdge = graph.newGraphEdge((GraphNode) possibleSourceNode, helpNode, 1);
 			graphEdges.add(tempEdge);
 			activeNode = null;
 		}
@@ -351,7 +351,7 @@ public class EditGraph extends JPanel implements MouseListener, MouseMotionListe
 		if(e.isShiftDown()) {
 			possibleTargetNode = activeNode;
 			if(possibleTargetNode != possibleSourceNode && possibleTargetNode instanceof GraphNode) {
-				graphEdges.add(new GraphEdge((GraphNode) possibleSourceNode, (GraphNode) possibleTargetNode));
+				graphEdges.add(graph.newGraphEdge((GraphNode) possibleSourceNode, (GraphNode) possibleTargetNode, 1));
 				repaint();
 			}
 		}

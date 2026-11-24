@@ -9,7 +9,6 @@ import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.geom.GeneralPath;
 import java.util.Objects;
-import java.util.Set;
 
 public class GraphEdge {
 
@@ -125,13 +124,8 @@ public class GraphEdge {
 					float rx = mx+a*(y1-my)/dm1;
 					float ry = my-a*(x1-mx)/dm1;
 					
-					g.setPaint(edgeColor);
-					if(target.getSuccesFailScore()!=null)
-						g.setPaint(target.getEdgeSuccesFailColor());
-			//		if((target.getSuccesFailScore()==null || target.getSuccesFailScore() < 45)) // &&  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)
-			//			g.setPaint(source.getSuccesFailColor());
-					if(!sameChapters && target.getMethodeInfo()!=null)
-						g.setPaint(edgeInterChapColor);
+					setPaint(g, sameChapters);
+
 					if(blur)
 					{
 						g.setPaint(new Color(g.getColor().getRed(), g.getColor().getGreen(), g.getColor().getBlue(), 30));
@@ -164,6 +158,16 @@ public class GraphEdge {
 				}
 			}
 		}
+	}
+
+	protected void setPaint(Graphics2D g, boolean sameChapters) {
+		g.setPaint(edgeColor);
+		if(target.getSuccesFailScore()!=null)
+			g.setPaint(target.getEdgeSuccesFailColor());
+//		if((target.getSuccesFailScore()==null || target.getSuccesFailScore() < 45)) // &&  source.getSuccesFailScore()!=null && source.getSuccesFailScore() < 45)
+//			g.setPaint(source.getSuccesFailColor());
+		if(!sameChapters && target.getMethodeInfo()!=null)
+			g.setPaint(edgeInterChapColor);
 	}
 	
 //	public int getLength() {

@@ -390,7 +390,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				int msize = Math.min(tsize, ssize);
 				int maxsize = Math.max(tsize, ssize);
 				if (s != null && t != null && s != t && maxsize > 0) {
-					edge = new GraphEdge(s, t, msize + 1);
+					edge = newGraphEdge(s, t, (float) msize + 1);
 					edge.setBlur(blur);
 					edge.paint(g, origin, factor);
 				}
@@ -730,7 +730,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		String id = voorkennisPopupNode2.getID();
 		// find variant structures of id.
 		NodeLeaf leaf = mapById.get(id);
-		List<DomStudentModelVariant> variants = leaf.getInfo().getVariants();
+		List<DomStudentModelVariant> variants = leaf == null ? null : leaf.getInfo().getVariants();
 		if (variants == null)
 			variants = Collections.emptyList();
 		Optional<Set<String>> deselections = variants.stream()
@@ -1502,11 +1502,16 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 				    }
 				    GraphNode gns = graphMap.get(source);
 					if (gns != null) {
-						GraphEdge edge = new GraphEdge(gns, gnd, vkfactor);
+						GraphEdge edge = newGraphEdge(gns, gnd, vkfactor);
 						edges.add(edge);
 					}
 				}
 		}
+	}
+
+
+	protected GraphEdge newGraphEdge(GNode s, GNode t, float vkfactor) {
+		return new GraphEdge(s, t, vkfactor);
 	}
 
 	private void searchNodes(TreeModel model, Object node, Map<String, GraphNode> graphMap, String parent, 	List<NodeLeaf> leaves, List<NodeVector> folders) {
@@ -1740,6 +1745,7 @@ public class Graph extends JPanel implements MouseListener, MouseMotionListener,
 		factor = Math.min((float)(getWidth()-240)/(float)(xMax-xMin), (float)(getHeight()-80-vkHeight)/(float)(yMax-yMin));
 		if(factor<0 || factor>1)
 			factor=1;
+		factor = Math.max(0.15, factor); 
 		int ruimteX = getWidth() - (int)((xMax-xMin)*factor);
 		int ruimteY = getHeight() - (int)((yMax-yMin)*factor) - (int)(vkHeight);
 		origin.x = ruimteX/2 + (int)(-xMin*factor);
